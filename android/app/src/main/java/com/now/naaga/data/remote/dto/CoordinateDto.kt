@@ -3,7 +3,7 @@ package com.now.naaga.data.remote.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PositionDto(
+data class CoordinateDto(
     val latitude: Double,
     val longitude: Double,
 )
