@@ -3,10 +3,12 @@ package com.now.naaga.presentation.onadventure
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
@@ -58,6 +60,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.addOnLocationChangeListener { location ->
             viewModel.calculateDistance(Coordinate(location.latitude, location.longitude))
         }
+        addMarker(DESTINATION_COORDINATE)
     }
 
     private fun enableLocationButton() {
@@ -70,7 +73,17 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
+    private fun addMarker(coordinate: Coordinate) {
+        Marker().apply {
+            position = LatLng(coordinate.latitude, coordinate.longitude)
+            map = naverMap
+        }
+    }
+
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        private const val DESTINATION_LATITUDE = 37.514907
+        private const val DESTINATION_LONGITUDE = 127.103198
+        private val DESTINATION_COORDINATE = Coordinate(DESTINATION_LATITUDE, DESTINATION_LONGITUDE)
     }
 }
