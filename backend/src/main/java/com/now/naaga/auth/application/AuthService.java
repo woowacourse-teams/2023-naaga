@@ -18,17 +18,9 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public void validateAuthentication(final MemberCommand memberCommand) {
-        final Member member = findMember(memberCommand);
+        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
         if (!memberCommand.getPassword().equals(member.getPassword())) {
             throw new RuntimeException("로그인 실패 - 비밀번호 불일치");
-        }
-    }
-
-    private Member findMember(final MemberCommand memberCommand) {
-        try {
-            return memberService.findMemberByEmail(memberCommand.getEmail());
-        } catch (RuntimeException e) {
-            throw new RuntimeException("로그인 실패 - 이메일 불일치");
         }
     }
 }

@@ -16,7 +16,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public Member findMemberByEmail(final String email) {
-        // TODO: 2023/07/19 costom 예외로 변경
+        // TODO: 2023/07/19 custom 예외로 변경
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("멤버 정보가 없습니다."));
     }
