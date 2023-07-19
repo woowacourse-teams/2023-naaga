@@ -32,11 +32,14 @@ class LocationDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setFragmentWidth()
-        binding.btnDialogLocationSetting.setOnClickListener { goSetting() }
+        binding.btnDialogLocationSetting.setOnClickListener {
+            goSetting()
+            dismiss()
+        }
     }
 
     private fun setFragmentWidth() {
-        dialog?.window?.setLayout(getWidth(), convertDpToPx(400))
+        dialog?.window?.setLayout(getWidth(), convertDpToPx())
     }
 
     private fun getWidth(): Int {
@@ -50,9 +53,9 @@ class LocationDialogFragment : DialogFragment() {
         }
     }
 
-    private fun convertDpToPx(dp: Int): Int {
+    private fun convertDpToPx(): Int {
         val density = requireContext().resources.displayMetrics.density
-        return (dp.toFloat() * density).roundToInt()
+        return (DP.toFloat() * density).roundToInt()
     }
 
     private fun goSetting() {
@@ -65,5 +68,6 @@ class LocationDialogFragment : DialogFragment() {
 
     companion object {
         const val WIDTH_PERCENTAGE = 0.83
+        const val DP = 400
     }
 }
