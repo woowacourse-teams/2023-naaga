@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.fragment.app.DialogFragment
+import com.bumptech.glide.Glide
 import com.now.naaga.databinding.DialogDestinationPhotoBinding
 import com.now.naaga.util.getWidthProportionalToDevice
 
@@ -29,6 +30,14 @@ class DestinationPhotoDialog : DialogFragment() {
         dialog?.setCanceledOnTouchOutside(false)
         clickClose()
         setSize()
+        setPhoto()
+    }
+
+    private fun setPhoto() {
+        val photo: String? = arguments?.getString(PHOTO)
+        Glide.with(binding.ivImageDialogDestinationImage)
+            .load(photo)
+            .into(binding.ivImageDialogDestinationImage)
     }
 
     private fun clickClose() {
@@ -38,7 +47,20 @@ class DestinationPhotoDialog : DialogFragment() {
     }
 
     private fun setSize() {
-        val dialogWidth = getWidthProportionalToDevice(requireContext(), 0.9f)
+        val dialogWidth = getWidthProportionalToDevice(requireContext(), WIDTH_RATE)
         dialog?.window?.setLayout(dialogWidth, WRAP_CONTENT)
+    }
+
+    companion object {
+        private const val WIDTH_RATE = 0.9f
+        private const val PHOTO = "PHOTO"
+
+        fun makeDialog(photo: String): DestinationPhotoDialog {
+            return DestinationPhotoDialog().apply {
+                val bundle = Bundle()
+                bundle.putString(PHOTO, photo)
+                arguments = bundle
+            }
+        }
     }
 }
