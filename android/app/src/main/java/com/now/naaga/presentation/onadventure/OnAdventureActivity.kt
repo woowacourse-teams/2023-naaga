@@ -17,7 +17,7 @@ import com.now.domain.model.Coordinate
 import com.now.naaga.R
 import com.now.naaga.data.repository.MockDestinationRepository
 import com.now.naaga.databinding.ActivityOnAdventureBinding
-import com.now.naaga.presentation.beginadventure.DestinationPhotoDialog
+import com.now.naaga.presentation.beginadventure.PolaroidDialog
 
 class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityOnAdventureBinding
@@ -89,7 +89,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
                     .makeText(this, R.string.onAdventure_loading_photo, Toast.LENGTH_SHORT).show()
             val fragment: Fragment? = supportFragmentManager.findFragmentByTag(DESTINATION_PHOTO)
             if (fragment == null) {
-                DestinationPhotoDialog.makeDialog(image)
+                PolaroidDialog.makeDialog(image)
                     .show(supportFragmentManager, DESTINATION_PHOTO)
             } else {
                 (fragment as DialogFragment).dialog?.show()

@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.now.naaga.databinding.DialogDestinationPhotoBinding
 import com.now.naaga.util.getWidthProportionalToDevice
 
-class DestinationPhotoDialog : DialogFragment() {
+class PolaroidDialog : DialogFragment() {
     private lateinit var binding: DialogDestinationPhotoBinding
 
     override fun onCreateView(
@@ -55,8 +55,8 @@ class DestinationPhotoDialog : DialogFragment() {
         private const val WIDTH_RATE = 0.9f
         private const val PHOTO = "PHOTO"
 
-        fun makeDialog(photo: String): DestinationPhotoDialog {
-            return DestinationPhotoDialog().apply {
+        fun makeDialog(photo: String): PolaroidDialog {
+            return PolaroidDialog().apply {
                 val bundle = Bundle()
                 bundle.putString(PHOTO, photo)
                 arguments = bundle

@@ -14,7 +14,7 @@ import com.now.naaga.databinding.DialogLocationPermissionBinding
 import com.now.naaga.util.dpToPx
 import com.now.naaga.util.getWidthProportionalToDevice
 
-class LocationDialogFragment : DialogFragment() {
+class LocationDialog : DialogFragment() {
     private lateinit var binding: DialogLocationPermissionBinding
 
     override fun onCreateView(
@@ -29,15 +29,15 @@ class LocationDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setFragmentWidth()
+        setSize()
         binding.btnDialogLocationSetting.setOnClickListener {
             goSetting()
             dismiss()
         }
     }
 
-    private fun setFragmentWidth() {
-        val dialogWidth = getWidthProportionalToDevice(requireContext(), WIDTH_PERCENTAGE)
+    private fun setSize() {
+        val dialogWidth = getWidthProportionalToDevice(requireContext(), WIDTH_RATE)
         val dialogHeight = dpToPx(requireContext(), HEIGHT)
         dialog?.window?.setLayout(dialogWidth, dialogHeight)
     }
@@ -51,7 +51,7 @@ class LocationDialogFragment : DialogFragment() {
     }
 
     companion object {
-        const val WIDTH_PERCENTAGE = 0.83f
+        const val WIDTH_RATE = 0.83f
         const val HEIGHT = 400
     }
 }
