@@ -1,10 +1,10 @@
-package com.now.naaga.config.infrastructure;
+package com.now.naaga.auth.infrastructure;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BasicAuthorizationDecoder {
+public class BasicAuthenticationDecoder {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";

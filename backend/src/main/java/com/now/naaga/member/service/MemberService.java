@@ -10,12 +10,14 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(final MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
     @Transactional(readOnly = true)
-    public Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email).get();
+    public Member findMemberByEmail(final String email) {
+        // TODO: 2023/07/19 costom 예외로 변경
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("멤버 정보가 없습니다."));
     }
 }

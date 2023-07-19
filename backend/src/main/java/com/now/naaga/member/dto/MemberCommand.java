@@ -1,15 +1,15 @@
 package com.now.naaga.member.dto;
 
-public class MemberRequest {
+public class MemberCommand {
 
     private String email;
 
     private String password;
 
-    private MemberRequest() {
+    private MemberCommand() {
     }
 
-    public MemberRequest(final String email, final String password) {
+    public MemberCommand(final String email, final String password) {
         this.email = email;
         this.password = password;
     }
