@@ -26,7 +26,7 @@ class BeginAdventureActivity : AppCompatActivity() {
 
         binding.btnBeginAdventureButton.setOnClickListener {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-                LocationDialogFragment().show(supportFragmentManager, "location")
+                LocationPermissionDialog().show(supportFragmentManager, "location")
             } else {
                 startActivity(Intent(this, OnAdventureActivity::class.java))
             }
