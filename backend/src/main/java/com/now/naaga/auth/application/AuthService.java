@@ -2,7 +2,7 @@ package com.now.naaga.auth.application;
 
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.dto.MemberCommand;
-import com.now.naaga.member.service.MemberService;
+import com.now.naaga.member.application.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

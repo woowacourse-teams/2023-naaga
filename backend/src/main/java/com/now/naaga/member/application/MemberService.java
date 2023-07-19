@@ -1,4 +1,4 @@
-package com.now.naaga.member.service;
+package com.now.naaga.member.application;
 
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
