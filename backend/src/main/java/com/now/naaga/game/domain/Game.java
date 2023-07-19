@@ -30,6 +30,9 @@ public class Game {
     @JoinColumn(name = "place_id")
     private Place place;
 
+    protected Game() {
+    }
+
     @Override
     public boolean equals(final Object o) {
 
