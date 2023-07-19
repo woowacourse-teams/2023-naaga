@@ -30,10 +30,20 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView = mapFragment
     }
 
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
+    override fun onMapReady(map: NaverMap) {
+        naverMap = map
+        enableLocationButton()
+        setFollowMode()
+    }
+
+    private fun setFollowMode() {
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    }
+
+    private fun enableLocationButton() {
+        val uiSetting = naverMap.uiSettings
+        uiSetting.isLocationButtonEnabled = true
     }
 
     companion object {
