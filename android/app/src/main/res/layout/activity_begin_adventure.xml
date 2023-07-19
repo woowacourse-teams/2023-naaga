@@ -30,7 +30,7 @@
             android:backgroundTint="@color/main_mint"
             android:fontFamily="@font/pretendard_bold"
             android:paddingVertical="12dp"
-            android:text="지금 나아가 볼까요?"
+            android:text="@string/beginAdventure_begin_adventure"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
