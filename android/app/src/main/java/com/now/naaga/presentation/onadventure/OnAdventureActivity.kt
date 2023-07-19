@@ -17,12 +17,11 @@ import com.now.naaga.databinding.ActivityOnAdventureBinding
 
 class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityOnAdventureBinding
+    private lateinit var viewModel: OnAdventureViewModel
+
     private lateinit var mapView: MapFragment
     private lateinit var naverMap: NaverMap
-
     private lateinit var locationSource: FusedLocationSource
-
-    private lateinit var viewModel: OnAdventureViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
