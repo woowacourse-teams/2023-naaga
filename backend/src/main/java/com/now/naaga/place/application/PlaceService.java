@@ -4,7 +4,6 @@ import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import org.springframework.stereotype.Service;
 
