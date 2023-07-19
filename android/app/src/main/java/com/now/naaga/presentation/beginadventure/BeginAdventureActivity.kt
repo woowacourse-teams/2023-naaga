@@ -1,25 +1,31 @@
 package com.now.naaga.presentation.beginadventure
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.now.naaga.R
+import com.now.naaga.databinding.ActivityBeginAdventureBinding
 
 class BeginAdventureActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityBeginAdventureBinding
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
-    ) { isGranted ->
-        if (!isGranted) {
-            // TODO : 설정페이지로 이동시키는 다이얼로그 생성
-        }
-    }
+    ) { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_begin_adventure)
+
+        binding = ActivityBeginAdventureBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        binding.btnBeginAdventureButton.setOnClickListener {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                LocationDialogFragment().show(supportFragmentManager, "location")
+            }
+        }
     }
 }
