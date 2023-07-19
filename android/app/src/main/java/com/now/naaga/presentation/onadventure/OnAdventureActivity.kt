@@ -1,6 +1,7 @@
 package com.now.naaga.presentation.onadventure
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -83,9 +84,12 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun clickPhotoIcon() {
         binding.ivOnAdventurePhoto.setOnClickListener {
+            val image = viewModel.destination.value?.image
+                ?: return@setOnClickListener Toast
+                    .makeText(this, R.string.onAdventure_loading_photo, Toast.LENGTH_SHORT).show()
             val fragment: Fragment? = supportFragmentManager.findFragmentByTag(DESTINATION_PHOTO)
             if (fragment == null) {
-                DestinationPhotoDialog.makeDialog("")
+                DestinationPhotoDialog.makeDialog(image)
                     .show(supportFragmentManager, DESTINATION_PHOTO)
             } else {
                 (fragment as DialogFragment).dialog?.show()
