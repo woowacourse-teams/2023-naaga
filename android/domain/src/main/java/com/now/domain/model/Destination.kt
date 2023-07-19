@@ -2,7 +2,7 @@ package com.now.domain.model
 
 import kotlin.math.acos
 import kotlin.math.cos
-import kotlin.math.roundToLong
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 data class Destination(
@@ -10,7 +10,7 @@ data class Destination(
     val coordinate: Coordinate,
     val image: String,
 ) {
-    fun getDistance(other: Coordinate): Long {
+    fun getDistance(other: Coordinate): Int {
         val rad = Math.PI / 180
         val radLat1 = rad * coordinate.latitude
         val radLat2 = rad * other.latitude
@@ -20,7 +20,7 @@ data class Destination(
         distance += cos(radLat1) * cos(radLat2) * cos(radDist)
         val ret = 6371000.0 * acos(distance)
 
-        return ret.roundToLong()
+        return ret.roundToInt()
     }
 
     fun isArrived(coordinate: Coordinate): Boolean {
