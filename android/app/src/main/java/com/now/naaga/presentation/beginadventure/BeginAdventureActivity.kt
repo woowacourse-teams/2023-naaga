@@ -1,11 +1,13 @@
 package com.now.naaga.presentation.beginadventure
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
+import com.now.naaga.presentation.onadventure.OnAdventureActivity
 
 class BeginAdventureActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBeginAdventureBinding
@@ -25,6 +27,8 @@ class BeginAdventureActivity : AppCompatActivity() {
         binding.btnBeginAdventureButton.setOnClickListener {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
                 LocationDialogFragment().show(supportFragmentManager, "location")
+            } else {
+                startActivity(Intent(this, OnAdventureActivity::class.java))
             }
         }
     }
