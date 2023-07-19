@@ -33,6 +33,33 @@ public class Game {
     protected Game() {
     }
 
+    public Game(final Member member, final Place place) {
+        this(null, GameStatus.IN_PROGRESSING, member, place);
+    }
+
+    public Game(final Long id, final GameStatus gameStatus, final Member member, final Place place) {
+        this.id = id;
+        this.gameStatus = gameStatus;
+        this.member = member;
+        this.place = place;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
     @Override
     public boolean equals(final Object o) {
 
