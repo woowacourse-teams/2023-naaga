@@ -9,18 +9,18 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
-import com.now.naaga.databinding.DialogDestinationPhotoBinding
+import com.now.naaga.databinding.DialogPolaroidBinding
 import com.now.naaga.util.getWidthProportionalToDevice
 
 class PolaroidDialog : DialogFragment() {
-    private lateinit var binding: DialogDestinationPhotoBinding
+    private lateinit var binding: DialogPolaroidBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = DialogDestinationPhotoBinding.inflate(layoutInflater)
+        binding = DialogPolaroidBinding.inflate(layoutInflater)
         return binding.root
     }
 

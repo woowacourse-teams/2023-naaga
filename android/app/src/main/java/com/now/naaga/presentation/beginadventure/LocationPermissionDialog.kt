@@ -14,7 +14,7 @@ import com.now.naaga.databinding.DialogLocationPermissionBinding
 import com.now.naaga.util.dpToPx
 import com.now.naaga.util.getWidthProportionalToDevice
 
-class LocationDialog : DialogFragment() {
+class LocationPermissionDialog : DialogFragment() {
     private lateinit var binding: DialogLocationPermissionBinding
 
     override fun onCreateView(
