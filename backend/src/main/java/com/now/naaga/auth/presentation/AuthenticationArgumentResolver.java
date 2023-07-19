@@ -1,5 +1,7 @@
 package com.now.naaga.auth.presentation;
 
+import static com.now.naaga.auth.presentation.AuthInterceptor.AUTH_KEY;
+
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.member.dto.MemberCommand;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,8 +11,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-
-import static com.now.naaga.auth.presentation.AuthInterceptor.AUTH_KEY;
 
 @Component
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
