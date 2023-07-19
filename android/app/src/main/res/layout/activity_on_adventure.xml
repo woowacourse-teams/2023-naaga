@@ -25,6 +25,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:id="@+id/btn_onAdventure_arrived"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_default_medium"
+            android:layout_marginBottom="@dimen/space_default_medium"
+            android:background="@drawable/ic_arrived"
+            android:enabled="@{viewModel.isArrived}"
+            android:fontFamily="@font/pretendard_bold"
+            android:paddingHorizontal="28dp"
+            android:paddingVertical="@dimen/space_default_medium"
+            android:text="@{viewModel.isArrived ? `모험 종료` : `모험 중`}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/cl_onAdventure_distance"
+            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_photo"
+            tools:text="모험 종료" />
+
         <ImageView
             android:id="@+id/iv_onAdventure_photo"
             android:layout_width="54dp"
