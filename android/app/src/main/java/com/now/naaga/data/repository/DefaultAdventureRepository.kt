@@ -7,10 +7,8 @@ import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
-import com.now.naaga.data.remote.dto.EndedAdventureDto
 import com.now.naaga.data.remote.retrofit.ERROR_500
 import com.now.naaga.data.remote.retrofit.ERROR_NOT_400_500
-import com.now.naaga.data.remote.retrofit.ServicePool
 import com.now.naaga.data.remote.retrofit.ServicePool.adventureService
 import com.now.naaga.data.remote.retrofit.fetchNaagaResponse
 import com.now.naaga.data.remote.retrofit.getFailureDto
@@ -22,7 +20,7 @@ import retrofit2.Response
 
 class DefaultAdventureRepository : AdventureRepository {
     override fun beginAdventure(coordinate: Coordinate, callback: (Result<Long>) -> Unit) {
-        val call = ServicePool.adventureService.beginGame(coordinate.toDto())
+        val call = adventureService.beginGame(coordinate.toDto())
 
         call.enqueue(object : Callback<Unit> {
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
@@ -53,7 +51,7 @@ class DefaultAdventureRepository : AdventureRepository {
     }
 
     override fun getAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit) {
-        val call = ServicePool.adventureService.getGame(adventureId)
+        val call = adventureService.getGame(adventureId)
 
         call.fetchNaagaResponse(
             { adventureDto ->
@@ -70,11 +68,11 @@ class DefaultAdventureRepository : AdventureRepository {
         coordinate: Coordinate,
         callback: (Result<AdventureStatus>) -> Unit,
     ) {
-        val call: Call<EndedAdventureDto> = adventureService.endGame(adventureId, coordinate.toDto())
+        val call = adventureService.endGame(adventureId, coordinate.toDto())
         call.fetchNaagaResponse(
-            { AdventureEndDto ->
-                if (AdventureEndDto != null) {
-                    callback(Result.success(AdventureEndDto.toDomain()))
+            { EndedAdventureDto ->
+                if (EndedAdventureDto != null) {
+                    callback(Result.success(EndedAdventureDto.toDomain()))
                 }
             },
             { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
