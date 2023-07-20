@@ -13,11 +13,11 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
+import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
-import com.now.naaga.data.repository.MockDestinationRepository
+import com.now.naaga.data.repository.MockAdventureRepository
 import com.now.naaga.databinding.ActivityOnAdventureBinding
-import com.now.naaga.presentation.beginadventure.PolaroidDialog
 
 class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityOnAdventureBinding
@@ -35,6 +35,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         initViewModel()
         setMapView()
         clickPhotoIcon()
+        startObserving()
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
         binding.viewModel = viewModel
@@ -42,7 +43,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initViewModel() {
-        val repository = MockDestinationRepository()
+        val repository = MockAdventureRepository()
         val factory = OnAdventureFactory(repository)
         viewModel = ViewModelProvider(this, factory)[OnAdventureViewModel::class.java]
     }
@@ -58,12 +59,15 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap = map
         enableLocationButton()
         setFollowMode()
+        addOnLocationChangeListener()
+        viewModel.fetchDestination(MOCK_ADVENTURE_ID)
+    }
 
+    private fun addOnLocationChangeListener() {
         naverMap.addOnLocationChangeListener { location ->
             viewModel.calculateDistance(Coordinate(location.latitude, location.longitude))
             viewModel.checkArrived(Coordinate(location.latitude, location.longitude))
         }
-        addMarker(DESTINATION_COORDINATE)
     }
 
     private fun enableLocationButton() {
@@ -76,10 +80,30 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
+    private fun startObserving() {
+        viewModel.destination.observe(this) { destination ->
+            addMarker(destination.coordinate)
+        }
+        viewModel.status.observe(this) { status ->
+            stopAdventure(status)
+        }
+    }
+
     private fun addMarker(coordinate: Coordinate) {
         Marker().apply {
             position = LatLng(coordinate.latitude, coordinate.longitude)
             map = naverMap
+        }
+    }
+
+    private fun stopAdventure(status: AdventureStatus?) {
+        if (status == AdventureStatus.ERROR) {
+            Toast.makeText(
+                this,
+                getString(R.string.onAdventure_fail_load_description),
+                Toast.LENGTH_SHORT,
+            ).show()
+            finish()
         }
     }
 
@@ -100,9 +124,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-        private const val DESTINATION_LATITUDE = 37.514907
-        private const val DESTINATION_LONGITUDE = 127.103198
-        private val DESTINATION_COORDINATE = Coordinate(DESTINATION_LATITUDE, DESTINATION_LONGITUDE)
         private const val DESTINATION_PHOTO = "DESTINATION_PHOTO"
+        private const val MOCK_ADVENTURE_ID = 3L
     }
 }
