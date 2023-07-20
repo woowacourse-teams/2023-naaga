@@ -1,11 +1,15 @@
 package com.now.naaga.game.domain;
 
+import com.now.naaga.game.exception.GameException;
+import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import jakarta.persistence.*;
 
 import java.util.Objects;
+
+import static com.now.naaga.game.exception.GameExceptionType.*;
 
 @Entity
 public class Game {
@@ -43,13 +47,13 @@ public class Game {
 
     public void validateOwner(final Member member) {
         if (!member.equals(this.member)) {
-            throw new IllegalArgumentException("접근할 수 없는 게임입니다.");
+            throw new GameException(INACCESSIBLE_AUTHENTICATION);
         }
     }
 
     public void validateInRange(final Position position) {
         if (!place.isInValidRange(position)) {
-            throw new IllegalArgumentException("도착범위안에 위치하지 않습니다.");
+            throw new GameException(NOT_ARRIVED);
         }
     }
 
