@@ -23,13 +23,17 @@ public class PlaceService {
         this.placeRepository = placeRepository;
     }
 
+    @Transactional(readOnly = true)
     public Place recommendPlaceByPosition(final Position position) {
         final List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, DISTANCE);
         if (places.isEmpty()) {
             throw new PlaceException(PLACE_NOT_FOUND);
         }
+        return places.get(getRandomIndex(places));
+    }
+
+    private int getRandomIndex(final List<Place> places) {
         final Random random = new Random();
-        final int index = random.nextInt(places.size());
-        return places.get(index);
+        return random.nextInt(places.size());
     }
 }

@@ -33,7 +33,7 @@ public class GameService {
     }
 
     public Game createGame(final MemberCommand memberCommand, final Position position) {
-        final List<Game> gamesByStatus = findGamesByStatus(memberCommand, GameStatus.IN_PROGRESSING.name());
+        final List<Game> gamesByStatus = findGamesByStatus(memberCommand, GameStatus.IN_PROGRESS.name());
         if (!gamesByStatus.isEmpty()) {
             throw new GameException(ALREADY_IN_PROGRESS);
         }
@@ -43,6 +43,7 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    @Transactional(readOnly = true)
     public Game findGame(final MemberCommand memberCommand, final Long id) {
         final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
         final Game game = gameRepository.findById(id)
@@ -53,6 +54,7 @@ public class GameService {
         return game;
     }
 
+    @Transactional(readOnly = true)
     public List<Game> findGamesByStatus(final MemberCommand memberCommand, final String gameStatus) {
         final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
         final Long memberId = member.getId();
