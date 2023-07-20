@@ -1,4 +1,4 @@
-package com.now.naaga.member.dto;
+package com.now.naaga.member.application.dto;
 
 public class MemberCommand {
 

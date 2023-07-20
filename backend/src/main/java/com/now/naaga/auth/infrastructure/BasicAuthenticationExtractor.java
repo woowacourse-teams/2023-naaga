@@ -1,6 +1,6 @@
 package com.now.naaga.auth.infrastructure;
 
-import com.now.naaga.member.dto.MemberCommand;
+import com.now.naaga.member.application.dto.MemberCommand;
 import org.springframework.stereotype.Component;
 
 @Component

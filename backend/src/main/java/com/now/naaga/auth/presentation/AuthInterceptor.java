@@ -2,7 +2,7 @@ package com.now.naaga.auth.presentation;
 
 import com.now.naaga.auth.application.AuthService;
 import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
-import com.now.naaga.member.dto.MemberCommand;
+import com.now.naaga.member.application.dto.MemberCommand;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
