@@ -1,5 +1,6 @@
 package com.now.naaga.presentation.onadventure
 
+import android.location.Location
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,8 +17,11 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
-import com.now.naaga.data.repository.MockAdventureRepository
+import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.databinding.ActivityOnAdventureBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 
 class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityOnAdventureBinding
@@ -37,13 +41,12 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         clickPhotoIcon()
         startObserving()
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
 
     private fun initViewModel() {
-        val repository = MockAdventureRepository()
+        val repository = DefaultAdventureRepository()
         val factory = OnAdventureFactory(repository)
         viewModel = ViewModelProvider(this, factory)[OnAdventureViewModel::class.java]
     }
@@ -60,7 +63,19 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         enableLocationButton()
         setFollowMode()
         addOnLocationChangeListener()
-        viewModel.fetchDestination(MOCK_ADVENTURE_ID)
+        beginAdventure()
+    }
+
+    private fun beginAdventure() {
+        GlobalScope.async {
+            val lastLocation: Location = getCurrentLocation(locationSource)
+            viewModel.beginAdventure(Coordinate(lastLocation.latitude, lastLocation.longitude))
+        }
+    }
+
+    private suspend fun getCurrentLocation(locationSource: FusedLocationSource): Location {
+        delay(200L)
+        return locationSource.lastLocation ?: getCurrentLocation(locationSource)
     }
 
     private fun addOnLocationChangeListener() {
@@ -86,6 +101,12 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         viewModel.status.observe(this) { status ->
             stopAdventure(status)
+        }
+        viewModel.adventureId.observe(this) { adventureId ->
+            viewModel.fetchDestination(adventureId)
+        }
+        viewModel.errorMessage.observe(this) { message ->
+            // TODO
         }
     }
 
@@ -125,6 +146,5 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         private const val DESTINATION_PHOTO = "DESTINATION_PHOTO"
-        private const val MOCK_ADVENTURE_ID = 3L
     }
 }
