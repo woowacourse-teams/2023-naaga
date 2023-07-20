@@ -1,4 +1,4 @@
-package com.now.naaga.data.remote.service
+package com.now.naaga.data.remote.retrofit.service
 
 import com.now.naaga.data.remote.dto.AdventureDto
 import com.now.naaga.data.remote.dto.CoordinateDto
