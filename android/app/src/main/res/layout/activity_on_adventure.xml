@@ -37,7 +37,7 @@
             android:fontFamily="@font/pretendard_bold"
             android:paddingHorizontal="28dp"
             android:paddingVertical="@dimen/space_default_medium"
-            android:text="@{viewModel.isArrived ? `모험 종료` : `모험 중`}"
+            android:text="@{viewModel.isArrived ? @string/end_adventure : @string/on_adventure}"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/cl_onAdventure_distance"
             app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_photo"
