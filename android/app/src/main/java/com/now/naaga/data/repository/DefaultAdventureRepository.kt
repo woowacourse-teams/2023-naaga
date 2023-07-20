@@ -23,7 +23,7 @@ class DefaultAdventureRepository : AdventureRepository {
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if (response.isSuccessful) {
                     val headerEmptyError = NaagaThrowable.NaagaUnknownError("Location 헤더가 비어있습니다.")
-                    val responsePath: String = response.headers().get("Location")
+                    val responsePath: String = response.headers()["Location"]
                         ?: return callback(Result.failure(headerEmptyError))
                     val adventureId: Long = responsePath.substringAfterLast("/").toLongOrNull()
                         ?: return callback(Result.failure(headerEmptyError))
