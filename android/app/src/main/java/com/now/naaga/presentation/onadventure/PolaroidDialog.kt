@@ -1,4 +1,4 @@
-package com.now.naaga.presentation.beginadventure
+package com.now.naaga.presentation.onadventure
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable

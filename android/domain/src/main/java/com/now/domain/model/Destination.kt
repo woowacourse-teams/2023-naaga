@@ -6,7 +6,7 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 
 data class Destination(
-    val id: Int,
+    val id: Long,
     val coordinate: Coordinate,
     val image: String,
 ) {
