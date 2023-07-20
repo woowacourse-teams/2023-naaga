@@ -5,9 +5,9 @@ import com.now.naaga.place.domain.Position;
 
 public class PlaceResponse {
 
-    private Long id;
-    private Position position;
-    private String imageUrl;
+    private final Long id;
+    private final Position position;
+    private final String imageUrl;
 
     private PlaceResponse(final Long id, final Position position, final String imageUrl) {
         this.id = id;
