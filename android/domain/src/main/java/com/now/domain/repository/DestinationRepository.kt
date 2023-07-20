@@ -1,10 +1,12 @@
 package com.now.domain.repository
 
+import com.now.domain.model.Adventure
 import com.now.domain.model.Coordinate
-import com.now.domain.model.Destination
 
 interface DestinationRepository {
-    fun getDestination(gameId: Long): Destination
+    fun beginAdventure(callback: (Result<Unit>) -> Unit)
 
-    fun getIsArrival(coordinate: Coordinate): Boolean
+    fun getAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit)
+
+    fun endAdventure(adventureId: Long, coordinate: Coordinate, callback: (Result<Unit>) -> Unit)
 }
