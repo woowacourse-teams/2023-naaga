@@ -61,6 +61,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
 
         naverMap.addOnLocationChangeListener { location ->
             viewModel.calculateDistance(Coordinate(location.latitude, location.longitude))
+            viewModel.checkArrived(Coordinate(location.latitude, location.longitude))
         }
         addMarker(DESTINATION_COORDINATE)
     }
