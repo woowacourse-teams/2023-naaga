@@ -75,4 +75,8 @@ dependencies {
     // 네이버 지도 SDK
     implementation("com.naver.maps:map-sdk:3.12.0")
     api 'com.google.android.gms:play-services-location:19.0.1'
+
+    // coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.2")
 }
