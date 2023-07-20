@@ -2,6 +2,7 @@ package com.now.naaga.data.repository
 
 import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
+import com.now.domain.model.AdventureStatus.DONE
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Destination
 import com.now.domain.repository.AdventureRepository
@@ -22,9 +23,9 @@ class MockAdventureRepository : AdventureRepository {
     override fun endAdventure(
         adventureId: Long,
         coordinate: Coordinate,
-        callback: (Result<Unit>) -> Unit,
+        callback: (Result<AdventureStatus>) -> Unit,
     ) {
-        TODO("Not yet implemented")
+        callback(Result.success(DONE))
     }
 
     companion object {

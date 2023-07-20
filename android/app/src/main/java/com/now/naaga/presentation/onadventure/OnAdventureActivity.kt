@@ -1,5 +1,6 @@
 package com.now.naaga.presentation.onadventure
 
+import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.widget.Toast
@@ -19,6 +20,7 @@ import com.now.domain.model.Coordinate
 import com.now.naaga.R
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.databinding.ActivityOnAdventureBinding
+import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -82,6 +84,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.addOnLocationChangeListener { location ->
             viewModel.calculateDistance(Coordinate(location.latitude, location.longitude))
             viewModel.checkArrived(Coordinate(location.latitude, location.longitude))
+            setBinding(Coordinate(location.latitude, location.longitude))
         }
     }
 
@@ -95,12 +98,17 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
+    private fun setBinding(coordinate: Coordinate) {
+        binding.currentMyCoordinate = coordinate
+    }
+
     private fun startObserving() {
         viewModel.destination.observe(this) { destination ->
             addMarker(destination.coordinate)
         }
         viewModel.status.observe(this) { status ->
             stopAdventure(status)
+            onStatusChanged(status)
         }
         viewModel.adventureId.observe(this) { adventureId ->
             viewModel.fetchDestination(adventureId)
@@ -140,6 +148,20 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
             } else {
                 (fragment as DialogFragment).dialog?.show()
             }
+        }
+    }
+
+    private fun onStatusChanged(status: AdventureStatus) {
+        when (status) {
+            AdventureStatus.DONE -> {
+                Toast.makeText(this, getString(R.string.onAdventure_adventure_success), Toast.LENGTH_LONG).show()
+                startActivity(Intent(this, BeginAdventureActivity::class.java))
+                finish()
+            }
+            AdventureStatus.IN_PROGRESS -> {
+                Toast.makeText(this, getString(R.string.onAdventure_retry), Toast.LENGTH_LONG).show()
+            }
+            AdventureStatus.ERROR -> { stopAdventure(status) }
         }
     }
 
