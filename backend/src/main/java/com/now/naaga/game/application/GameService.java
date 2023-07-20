@@ -32,16 +32,6 @@ public class GameService {
         this.memberService = memberService;
     }
 
-    public Place recommendPlaceByPosition(final MemberCommand memberCommand, final Position position) {
-        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
-        final Long memberId = member.getId();
-
-        Game game = gameRepository.findByMemberIdAndGameStatus(memberId, GameStatus.IN_PROGRESSING)
-                .orElseGet(() -> createGame(member, position));
-
-        return game.getPlace();
-    }
-
     public Game createGame(final MemberCommand memberCommand, final Position position) {
         final List<Game> gamesByStatus = findGamesByStatus(memberCommand, GameStatus.IN_PROGRESSING.name());
         if (!gamesByStatus.isEmpty()) {
@@ -51,5 +41,22 @@ public class GameService {
         final Place place = placeService.recommendPlaceByPosition(position);
         final Game game = new Game(member, place);
         return gameRepository.save(game);
+    }
+
+    public Game findGame(final MemberCommand memberCommand, final Long id) {
+        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
+        final Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new GameException(NOT_EXIST));
+        if (!member.equals(game.getMember())) {
+            throw new GameException(INACCESSIBLE_AUTHENTICATION);
+        }
+        return game;
+    }
+
+    public List<Game> findGamesByStatus(final MemberCommand memberCommand, final String gameStatus) {
+        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
+        final Long memberId = member.getId();
+
+        return gameRepository.findByMemberIdAndGameStatus(memberId, GameStatus.valueOf(gameStatus));
     }
 }
