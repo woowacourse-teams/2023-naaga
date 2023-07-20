@@ -16,7 +16,7 @@ interface AdventureService {
         @Body coordinateDto: CoordinateDto,
     ): Call<Unit>
 
-    @GET("/games")
+    @GET("/games/{gameId}")
     fun getGame(
         @Path("gameId") gameId: Long,
     ): Call<AdventureDto>

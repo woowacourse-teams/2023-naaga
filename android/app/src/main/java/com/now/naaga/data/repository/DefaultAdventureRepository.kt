@@ -53,7 +53,16 @@ class DefaultAdventureRepository : AdventureRepository {
     }
 
     override fun getAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit) {
-        // TODO("Not yet implemented")
+        val call = ServicePool.adventureService.getGame(adventureId)
+
+        call.fetchNaagaResponse(
+            { adventureDto ->
+                if (adventureDto != null) {
+                    callback(Result.success(adventureDto.toDomain()))
+                }
+            },
+            { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
+        )
     }
 
     override fun endAdventure(
