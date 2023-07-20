@@ -15,7 +15,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
-import com.now.naaga.data.repository.MockDestinationRepository
+import com.now.naaga.data.repository.MockAdventureRepository
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 
 class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -41,7 +41,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initViewModel() {
-        val repository = MockDestinationRepository()
+        val repository = MockAdventureRepository()
         val factory = OnAdventureFactory(repository)
         viewModel = ViewModelProvider(this, factory)[OnAdventureViewModel::class.java]
     }
