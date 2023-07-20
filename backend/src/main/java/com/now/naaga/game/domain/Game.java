@@ -2,18 +2,15 @@ package com.now.naaga.game.domain;
 
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.now.naaga.place.domain.Position;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Entity
 public class Game {
+
+    public static final double MIN_RANGE = 0.05;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -42,6 +39,22 @@ public class Game {
         this.gameStatus = gameStatus;
         this.member = member;
         this.place = place;
+    }
+
+    public void validateOwner(final Member member) {
+        if (!member.equals(this.member)) {
+            throw new IllegalArgumentException("접근할 수 없는 게임입니다.");
+        }
+    }
+
+    public void validateInRange(final Position position) {
+        if (!place.isInValidRange(position)) {
+            throw new IllegalArgumentException("도착범위안에 위치하지 않습니다.");
+        }
+    }
+
+    public void changeGameStatus(final GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
     }
 
     public Long getId() {
