@@ -84,6 +84,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.addOnLocationChangeListener { location ->
             viewModel.calculateDistance(Coordinate(location.latitude, location.longitude))
             viewModel.checkArrived(Coordinate(location.latitude, location.longitude))
+            setBinding(Coordinate(location.latitude, location.longitude))
         }
     }
 
@@ -95,6 +96,10 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun setFollowMode() {
         naverMap.locationSource = locationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    }
+
+    private fun setBinding(coordinate: Coordinate) {
+        binding.currentMyCoordinate = coordinate
     }
 
     private fun startObserving() {

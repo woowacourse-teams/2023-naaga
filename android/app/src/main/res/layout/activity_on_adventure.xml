@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="com.now.naaga.presentation.onadventure.OnAdventureViewModel" />
+
+        <variable
+            name="CurrentMyCoordinate"
+            type="com.now.domain.model.Coordinate" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +38,7 @@
             android:background="@drawable/rect_radius_small"
             android:backgroundTint="@color/selector_main_gray_purple"
             android:enabled="@{viewModel.isArrived}"
-            android:onClick="@{() -> viewModel.endAdventure()}"
+            android:onClick="@{() -> viewModel.endAdventure(viewModel.adventureId, CurrentMyCoordinate)}"
             android:fontFamily="@font/pretendard_bold"
             android:paddingHorizontal="28dp"
             android:paddingVertical="@dimen/space_default_medium"
