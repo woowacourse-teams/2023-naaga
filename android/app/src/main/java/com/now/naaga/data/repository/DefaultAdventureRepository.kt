@@ -48,7 +48,7 @@ class DefaultAdventureRepository : AdventureRepository {
     }
 
     override fun getAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit) {
-        TODO("Not yet implemented")
+        // TODO("Not yet implemented")
     }
 
     override fun endAdventure(
@@ -56,6 +56,6 @@ class DefaultAdventureRepository : AdventureRepository {
         coordinate: Coordinate,
         callback: (Result<Unit>) -> Unit,
     ) {
-        TODO("Not yet implemented")
+        // TODO("Not yet implemented")
     }
 }
