@@ -21,7 +21,7 @@ interface AdventureService {
         @Path("gameId") gameId: Long,
     ): Call<AdventureDto>
 
-    @PATCH("/games")
+    @PATCH("/games/{gameId}")
     fun endGame(
         @Path("gameId") gameId: Long,
         @Body coordinateDto: CoordinateDto,
