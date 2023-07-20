@@ -1,6 +1,7 @@
 package com.now.naaga.data.remote.retrofit
 
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.NaagaThrowable.NaagaUnknownError
@@ -24,8 +25,8 @@ fun <T> Response<T>.isFailure500(): Boolean {
 }
 
 fun <T> Response<T>.getFailureDto(): FailureDto {
-    val errorString = this.errorBody().toString()
-    val jsonObject = JsonParser.parseString(errorString).asJsonObject
+    val errorString = this.errorBody()?.string()
+    val jsonObject: JsonObject = JsonParser.parseString(errorString).asJsonObject
     val failureDto: FailureDto = Gson().fromJson(jsonObject, FailureDto::class.java)
     return failureDto
 }
