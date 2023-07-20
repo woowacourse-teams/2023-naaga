@@ -1,12 +1,12 @@
 package com.now.naaga.game.application;
 
-import static com.now.naaga.game.exception.GameExceptionType.*;
 import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
 
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.member.application.MemberService;
 import com.now.naaga.member.domain.Member;
