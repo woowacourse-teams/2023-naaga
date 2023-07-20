@@ -48,8 +48,8 @@ public class GameController {
 
     @GetMapping
     public ResponseEntity<List<GameResponse>> findGamesByGameStatus(@Auth final MemberCommand memberCommand,
-                                                                    @RequestParam final String gameStatus) {
-        final List<Game> games = gameService.findGamesByStatus(memberCommand, gameStatus);
+                                                                    @RequestParam final String status) {
+        final List<Game> games = gameService.findGamesByStatus(memberCommand, status);
         final List<GameResponse> gameResponses = games.stream()
                 .map(GameResponse::from)
                 .collect(Collectors.toList());
