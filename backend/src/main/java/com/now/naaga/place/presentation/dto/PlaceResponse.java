@@ -1,4 +1,4 @@
-package com.now.naaga.game.presentation.dto;
+package com.now.naaga.place.presentation.dto;
 
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;

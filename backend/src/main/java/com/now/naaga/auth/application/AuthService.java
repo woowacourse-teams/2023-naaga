@@ -4,8 +4,8 @@ import static com.now.naaga.auth.exception.AuthExceptionType.PASSWORD_MISMATCH;
 
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.member.application.MemberService;
+import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.member.domain.Member;
-import com.now.naaga.member.dto.MemberCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

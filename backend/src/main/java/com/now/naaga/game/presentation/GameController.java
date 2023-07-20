@@ -4,7 +4,7 @@ import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.presentation.dto.GameResponse;
-import com.now.naaga.member.dto.MemberCommand;
+import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.place.domain.Position;
 import java.net.URI;
 import java.util.List;

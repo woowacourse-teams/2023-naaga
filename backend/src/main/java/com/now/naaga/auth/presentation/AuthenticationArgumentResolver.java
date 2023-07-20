@@ -3,7 +3,7 @@ package com.now.naaga.auth.presentation;
 import static com.now.naaga.auth.presentation.AuthInterceptor.AUTH_KEY;
 
 import com.now.naaga.auth.annotation.Auth;
-import com.now.naaga.member.dto.MemberCommand;
+import com.now.naaga.member.application.dto.MemberCommand;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
