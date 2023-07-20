@@ -4,7 +4,6 @@ import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.presentation.dto.GameResponse;
-import com.now.naaga.game.presentation.dto.GameStatusResponse;
 import com.now.naaga.member.dto.MemberCommand;
 import com.now.naaga.place.domain.Position;
 import java.net.URI;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,11 +32,6 @@ public class GameController {
     public ResponseEntity<Void> createGame(@Auth final MemberCommand memberCommand, @RequestBody final Position position) {
         final Game game = gameService.createGame(memberCommand, position);
         return ResponseEntity.created(URI.create("/games/" + game.getId())).build();
-    }
-
-    @PatchMapping("/{gameId}")
-    public ResponseEntity<GameStatusResponse> updateGameStatus(@Auth final MemberCommand memberCommand, @PathVariable final Long gameId, @RequestBody final Position position) {
-        return null;
     }
 
     @GetMapping("/{gameId}")
