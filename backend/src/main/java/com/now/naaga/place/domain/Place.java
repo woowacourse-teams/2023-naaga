@@ -1,11 +1,10 @@
 package com.now.naaga.place.domain;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.util.Objects;
+
+import static com.now.naaga.game.domain.Game.MIN_RANGE;
 
 @Entity
 public class Place {
@@ -20,6 +19,10 @@ public class Place {
     private String imageUrl;
 
     protected Place() {
+    }
+
+    public boolean isInValidRange(final Position other) {
+        return position.calculateDistance(other) <= MIN_RANGE;
     }
 
     public Long getId() {
