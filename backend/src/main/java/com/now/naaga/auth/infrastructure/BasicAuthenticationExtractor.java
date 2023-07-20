@@ -1,7 +1,11 @@
 package com.now.naaga.auth.infrastructure;
 
+import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.member.application.dto.MemberCommand;
 import org.springframework.stereotype.Component;
+
+import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_HEADER;
+import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
 
 @Component
 public class BasicAuthenticationExtractor implements AuthenticationExtractor<MemberCommand> {
@@ -16,16 +20,16 @@ public class BasicAuthenticationExtractor implements AuthenticationExtractor<Mem
         this.basicAuthenticationDecoder = basicAuthenticationDecoder;
     }
 
-    public MemberCommand extract(String header) {
+    public MemberCommand extract(final String header) {
         if (header == null) {
-            throw new RuntimeException("헤더가 존재하지 않습니다.");
+            throw new AuthException(NOT_EXIST_HEADER);
         }
         if (!header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
-            throw new RuntimeException("헤더 정보가 잘못됐습니다.");
+            throw new AuthException(INVALID_HEADER);
         }
-        String[] credentials = basicAuthenticationDecoder.decode(header);
-        String email = credentials[EMAIL_INDEX];
-        String password = credentials[PASSWORD_INDEX];
+        final String[] credentials = basicAuthenticationDecoder.decode(header);
+        final String email = credentials[EMAIL_INDEX];
+        final String password = credentials[PASSWORD_INDEX];
         return new MemberCommand(email, password);
     }
 }

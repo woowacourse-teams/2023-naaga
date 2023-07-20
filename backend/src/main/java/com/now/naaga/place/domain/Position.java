@@ -2,6 +2,7 @@ package com.now.naaga.place.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -17,9 +18,16 @@ public class Position {
     protected Position() {
     }
 
-    public Position(final BigDecimal latitude, final BigDecimal longitude) {
+    public Position(final BigDecimal latitude,
+                    final BigDecimal longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public double calculateDistance(final Position other) {
+        return Math.acos(Math.sin(Math.toRadians(other.latitude.doubleValue())) * Math.sin(Math.toRadians(this.latitude.doubleValue()))
+                + (Math.cos(Math.toRadians(other.latitude.doubleValue())) * Math.cos(Math.toRadians(this.latitude.doubleValue())) * Math.cos(Math.toRadians(other.longitude.doubleValue() - this.longitude.doubleValue())))
+        ) * 6371.0;
     }
 
     public BigDecimal getLatitude() {

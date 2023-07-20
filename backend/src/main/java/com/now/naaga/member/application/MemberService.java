@@ -1,12 +1,12 @@
 package com.now.naaga.member.application;
 
-import static com.now.naaga.member.exception.MemberExceptionType.NOT_EXIST_MEMBER;
-
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.exception.MemberException;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.now.naaga.member.exception.MemberExceptionType.NOT_EXIST_MEMBER;
 
 @Transactional
 @Service

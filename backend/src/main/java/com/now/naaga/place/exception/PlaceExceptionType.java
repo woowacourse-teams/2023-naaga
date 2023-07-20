@@ -16,7 +16,9 @@ public enum PlaceExceptionType implements BaseExceptionType {
     private final HttpStatus httpStatus;
     private final String errorMessage;
 
-    PlaceExceptionType(final int errorCode, final HttpStatus httpStatus, final String errorMessage) {
+    PlaceExceptionType(final int errorCode,
+                       final HttpStatus httpStatus,
+                       final String errorMessage) {
         this.errorCode = errorCode;
         this.httpStatus = httpStatus;
         this.errorMessage = errorMessage;
