@@ -10,7 +10,9 @@ import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class GameService {
 
@@ -38,5 +40,14 @@ public class GameService {
         final Place place = placeService.recommendPlaceByPosition(position);
         final Game game = new Game(member, place);
         return gameRepository.save(game);
+    }
+
+    public void finishGame(final MemberCommand memberCommand, final Position requestPosition, final Long gameId) {
+        final Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
+        Member member = memberService.findMemberByEmail(memberCommand.getEmail());
+        game.validateOwner(member);
+        game.validateInRange(requestPosition);
+        game.changeGameStatus(GameStatus.DONE);
     }
 }

@@ -6,9 +6,7 @@ import com.now.naaga.game.presentation.dto.PlaceResponse;
 import com.now.naaga.member.dto.MemberCommand;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class GameController {
@@ -23,5 +21,12 @@ public class GameController {
     public PlaceResponse findDestination(@Auth MemberCommand memberCommand, @ModelAttribute final Position position) {
         final Place place = gameService.recommendPlaceByPosition(memberCommand, position);
         return PlaceResponse.from(place);
+    }
+
+    @PatchMapping("/destinations/{gameId}")
+    public void findDestination(@Auth final MemberCommand memberCommand,
+                                @RequestBody final Position position,
+                                @PathVariable final Long gameId) {
+        gameService.finishGame(memberCommand, position, gameId);
     }
 }
