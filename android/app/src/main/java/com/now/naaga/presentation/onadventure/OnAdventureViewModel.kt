@@ -18,6 +18,10 @@ class OnAdventureViewModel(
     private val _distance = MutableLiveData(0)
     val distance: LiveData<Int> get() = _distance
 
+    private val _isArrived = MutableLiveData(false)
+    val isArrived: LiveData<Boolean>
+        get() = _isArrived
+
     init {
         getDestination()
     }
@@ -28,5 +32,9 @@ class OnAdventureViewModel(
 
     fun calculateDistance(coordinate: Coordinate) {
         _distance.value = destination.value?.getDistance(coordinate)
+    }
+
+    fun checkArrived(coordinate: Coordinate) {
+        _isArrived.value = destination.value?.isArrived(coordinate)
     }
 }

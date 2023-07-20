@@ -2,15 +2,21 @@ package com.now.naaga.game.application;
 
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
+import com.now.naaga.game.exception.GameException;
+import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.member.application.MemberService;
+import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.member.domain.Member;
-import com.now.naaga.member.dto.MemberCommand;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static com.now.naaga.game.exception.GameExceptionType.*;
 
 @Transactional
 @Service
@@ -26,28 +32,43 @@ public class GameService {
         this.memberService = memberService;
     }
 
-    public Place recommendPlaceByPosition(final MemberCommand memberCommand, final Position position) {
+    public Game createGame(final MemberCommand memberCommand, final Position position) {
+        final List<Game> gamesByStatus = findGamesByStatus(memberCommand, GameStatus.IN_PROGRESS.name());
+        if (!gamesByStatus.isEmpty()) {
+            throw new GameException(ALREADY_IN_PROGRESS);
+        }
         final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
-        final Long memberId = member.getId();
-
-        Game game = gameRepository.findByMemberIdAndGameStatus(memberId, GameStatus.IN_PROGRESSING)
-                .orElseGet(() -> createGame(member, position));
-
-        return game.getPlace();
-    }
-
-    private Game createGame(final Member member, final Position position) {
         final Place place = placeService.recommendPlaceByPosition(position);
         final Game game = new Game(member, place);
         return gameRepository.save(game);
     }
 
-    public void finishGame(final MemberCommand memberCommand, final Position requestPosition, final Long gameId) {
+    public Game finishGame(final MemberCommand memberCommand, final Position requestPosition, final Long gameId) {
         final Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
+                .orElseThrow(() -> new GameException(NOT_EXIST));
         Member member = memberService.findMemberByEmail(memberCommand.getEmail());
         game.validateOwner(member);
         game.validateInRange(requestPosition);
         game.changeGameStatus(GameStatus.DONE);
+        return game;
+    }
+
+    @Transactional(readOnly = true)
+    public Game findGame(final MemberCommand memberCommand, final Long id) {
+        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
+        final Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new GameException(NOT_EXIST));
+        if (!member.equals(game.getMember())) {
+            throw new GameException(INACCESSIBLE_AUTHENTICATION);
+        }
+        return game;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Game> findGamesByStatus(final MemberCommand memberCommand, final String gameStatus) {
+        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
+        final Long memberId = member.getId();
+
+        return gameRepository.findByMemberIdAndGameStatus(memberId, GameStatus.valueOf(gameStatus));
     }
 }

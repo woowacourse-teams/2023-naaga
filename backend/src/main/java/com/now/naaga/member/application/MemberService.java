@@ -1,10 +1,14 @@
 package com.now.naaga.member.application;
 
+import static com.now.naaga.member.exception.MemberExceptionType.NOT_EXIST_MEMBER;
+
 import com.now.naaga.member.domain.Member;
+import com.now.naaga.member.exception.MemberException;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class MemberService {
 
@@ -16,8 +20,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public Member findMemberByEmail(final String email) {
-        // TODO: 2023/07/19 custom 예외로 변경
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("멤버 정보가 없습니다."));
+                .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
     }
 }

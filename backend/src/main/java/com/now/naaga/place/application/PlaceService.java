@@ -1,12 +1,17 @@
 package com.now.naaga.place.application;
 
+import static com.now.naaga.place.exception.PlaceExceptionType.PLACE_NOT_FOUND;
+
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
+import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import java.util.List;
 import java.util.Random;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class PlaceService {
 
@@ -18,14 +23,17 @@ public class PlaceService {
         this.placeRepository = placeRepository;
     }
 
-    // TODO: 2023/07/19 커스텀 예외 만들기
+    @Transactional(readOnly = true)
     public Place recommendPlaceByPosition(final Position position) {
         final List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, DISTANCE);
         if (places.isEmpty()) {
-            throw new RuntimeException();
+            throw new PlaceException(PLACE_NOT_FOUND);
         }
+        return places.get(getRandomIndex(places));
+    }
+
+    private int getRandomIndex(final List<Place> places) {
         final Random random = new Random();
-        final int index = random.nextInt(places.size());
-        return places.get(index);
+        return random.nextInt(places.size());
     }
 }

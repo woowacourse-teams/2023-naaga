@@ -31,7 +31,7 @@ public class Game {
     }
 
     public Game(final Member member, final Place place) {
-        this(null, GameStatus.IN_PROGRESSING, member, place);
+        this(null, GameStatus.IN_PROGRESS, member, place);
     }
 
     public Game(final Long id, final GameStatus gameStatus, final Member member, final Place place) {
