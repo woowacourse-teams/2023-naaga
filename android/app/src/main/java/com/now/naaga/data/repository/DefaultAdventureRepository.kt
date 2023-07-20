@@ -1,14 +1,17 @@
 package com.now.naaga.data.repository
 
 import com.now.domain.model.Adventure
+import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
+import com.now.naaga.data.remote.dto.EndedAdventureDto
 import com.now.naaga.data.remote.retrofit.ERROR_500
 import com.now.naaga.data.remote.retrofit.ERROR_NOT_400_500
 import com.now.naaga.data.remote.retrofit.ServicePool
+import com.now.naaga.data.remote.retrofit.ServicePool.adventureService
 import com.now.naaga.data.remote.retrofit.fetchNaagaResponse
 import com.now.naaga.data.remote.retrofit.getFailureDto
 import com.now.naaga.data.remote.retrofit.isFailure400
@@ -65,8 +68,16 @@ class DefaultAdventureRepository : AdventureRepository {
     override fun endAdventure(
         adventureId: Long,
         coordinate: Coordinate,
-        callback: (Result<Unit>) -> Unit,
+        callback: (Result<AdventureStatus>) -> Unit,
     ) {
-        // TODO("Not yet implemented")
+        val call: Call<EndedAdventureDto> = adventureService.endGame(adventureId, coordinate.toDto())
+        call.fetchNaagaResponse(
+            { AdventureEndDto ->
+                if (AdventureEndDto != null) {
+                    callback(Result.success(AdventureEndDto.toDomain()))
+                }
+            },
+            { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
+        )
     }
 }
