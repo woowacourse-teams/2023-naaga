@@ -17,7 +17,6 @@ import com.now.domain.model.Coordinate
 import com.now.naaga.R
 import com.now.naaga.data.repository.MockDestinationRepository
 import com.now.naaga.databinding.ActivityOnAdventureBinding
-import com.now.naaga.presentation.beginadventure.PolaroidDialog
 
 class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityOnAdventureBinding
