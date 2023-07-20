@@ -7,7 +7,8 @@ public class GameStatusResponse {
     private final Long id;
     private final String gameStatus;
 
-    private GameStatusResponse(final Long id, final String gameStatus) {
+    private GameStatusResponse(final Long id,
+                               final String gameStatus) {
         this.id = id;
         this.gameStatus = gameStatus;
     }

@@ -9,7 +9,9 @@ public class GameResponse {
     private final PlaceResponse place;
     private final String gameStatus;
 
-    private GameResponse(final Long id, final PlaceResponse place, final String gameStatus) {
+    private GameResponse(final Long id,
+                         final PlaceResponse place,
+                         final String gameStatus) {
         this.id = id;
         this.place = place;
         this.gameStatus = gameStatus;

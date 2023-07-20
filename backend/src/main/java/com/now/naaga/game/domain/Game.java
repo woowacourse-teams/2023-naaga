@@ -1,7 +1,6 @@
 package com.now.naaga.game.domain;
 
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
@@ -9,7 +8,8 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
-import static com.now.naaga.game.exception.GameExceptionType.*;
+import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
 
 @Entity
 public class Game {
@@ -34,11 +34,15 @@ public class Game {
     protected Game() {
     }
 
-    public Game(final Member member, final Place place) {
+    public Game(final Member member,
+                final Place place) {
         this(null, GameStatus.IN_PROGRESS, member, place);
     }
 
-    public Game(final Long id, final GameStatus gameStatus, final Member member, final Place place) {
+    public Game(final Long id,
+                final GameStatus gameStatus,
+                final Member member,
+                final Place place) {
         this.id = id;
         this.gameStatus = gameStatus;
         this.member = member;

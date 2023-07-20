@@ -9,7 +9,9 @@ public class PlaceResponse {
     private final Position position;
     private final String imageUrl;
 
-    private PlaceResponse(final Long id, final Position position, final String imageUrl) {
+    private PlaceResponse(final Long id,
+                          final Position position,
+                          final String imageUrl) {
         this.id = id;
         this.position = position;
         this.imageUrl = imageUrl;

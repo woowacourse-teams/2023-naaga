@@ -18,7 +18,8 @@ public class Position {
     protected Position() {
     }
 
-    public Position(final BigDecimal latitude, final BigDecimal longitude) {
+    public Position(final BigDecimal latitude,
+                    final BigDecimal longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

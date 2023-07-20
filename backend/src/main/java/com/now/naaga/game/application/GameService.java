@@ -3,7 +3,6 @@ package com.now.naaga.game.application;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.member.application.MemberService;
 import com.now.naaga.member.application.dto.MemberCommand;
@@ -26,13 +25,16 @@ public class GameService {
     private final PlaceService placeService;
     private final MemberService memberService;
 
-    public GameService(final GameRepository gameRepository, final PlaceService placeService, final MemberService memberService) {
+    public GameService(final GameRepository gameRepository,
+                       final PlaceService placeService,
+                       final MemberService memberService) {
         this.gameRepository = gameRepository;
         this.placeService = placeService;
         this.memberService = memberService;
     }
 
-    public Game createGame(final MemberCommand memberCommand, final Position position) {
+    public Game createGame(final MemberCommand memberCommand,
+                           final Position position) {
         final List<Game> gamesByStatus = findGamesByStatus(memberCommand, GameStatus.IN_PROGRESS.name());
         if (!gamesByStatus.isEmpty()) {
             throw new GameException(ALREADY_IN_PROGRESS);
@@ -43,7 +45,9 @@ public class GameService {
         return gameRepository.save(game);
     }
 
-    public Game finishGame(final MemberCommand memberCommand, final Position requestPosition, final Long gameId) {
+    public Game finishGame(final MemberCommand memberCommand,
+                           final Position requestPosition,
+                           final Long gameId) {
         final Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new GameException(NOT_EXIST));
         Member member = memberService.findMemberByEmail(memberCommand.getEmail());
@@ -54,7 +58,8 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public Game findGame(final MemberCommand memberCommand, final Long id) {
+    public Game findGame(final MemberCommand memberCommand,
+                         final Long id) {
         final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
         final Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new GameException(NOT_EXIST));
@@ -65,7 +70,8 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public List<Game> findGamesByStatus(final MemberCommand memberCommand, final String gameStatus) {
+    public List<Game> findGamesByStatus(final MemberCommand memberCommand,
+                                        final String gameStatus) {
         final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
         final Long memberId = member.getId();
 

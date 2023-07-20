@@ -9,7 +9,8 @@ public class MemberCommand {
     private MemberCommand() {
     }
 
-    public MemberCommand(final String email, final String password) {
+    public MemberCommand(final String email,
+                         final String password) {
         this.email = email;
         this.password = password;
     }
