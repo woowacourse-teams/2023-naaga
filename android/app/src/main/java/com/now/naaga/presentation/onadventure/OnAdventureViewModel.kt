@@ -76,4 +76,29 @@ class OnAdventureViewModel(
                 }
         }
     }
+
+    fun endAdventure(adventureId: Long, coordinate: Coordinate) {
+        adventureRepository.endAdventure(adventureId, coordinate, callback = { result ->
+            result
+                .onSuccess { adventureStatus -> _status.value = adventureStatus }
+                .onFailure { throwable ->
+                    when (throwable) {
+                        is NaagaThrowable.AuthenticationError ->
+                            _errorMessage.value =
+                                throwable.userMessage
+
+                        is NaagaThrowable.UserError -> _errorMessage.value = throwable.userMessage
+                        is NaagaThrowable.PlaceError -> _errorMessage.value = throwable.userMessage
+                        is NaagaThrowable.GameError -> _errorMessage.value = throwable.userMessage
+                        is NaagaThrowable.ServerConnectFailure ->
+                            _errorMessage.value =
+                                throwable.userMessage
+
+                        is NaagaThrowable.NaagaUnknownError ->
+                            _errorMessage.value =
+                                throwable.userMessage
+                    }
+                }
+        })
+    }
 }
