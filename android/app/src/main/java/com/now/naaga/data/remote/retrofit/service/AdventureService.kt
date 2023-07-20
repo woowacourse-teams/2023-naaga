@@ -2,6 +2,7 @@ package com.now.naaga.data.remote.retrofit.service
 
 import com.now.naaga.data.remote.dto.AdventureDto
 import com.now.naaga.data.remote.dto.CoordinateDto
+import com.now.naaga.data.remote.dto.EndedAdventureDto
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -24,5 +25,5 @@ interface AdventureService {
     fun endGame(
         @Path("gameId") gameId: Long,
         @Body coordinateDto: CoordinateDto,
-    ): Call<Unit>
+    ): Call<EndedAdventureDto>
 }
