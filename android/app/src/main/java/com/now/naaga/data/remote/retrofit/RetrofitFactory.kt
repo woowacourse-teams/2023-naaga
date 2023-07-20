@@ -10,8 +10,8 @@ import retrofit2.Retrofit
 object RetrofitFactory {
     private const val BASIC_USER_TOKEN = "Basic MTExQHdvb3dhLmNvbToxMTEx"
 
-    val retrofit = Retrofit.Builder()
-        .baseUrl("")
+    val retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl("http://43.202.67.161")
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .client(createOkHttpClient())
         .build()

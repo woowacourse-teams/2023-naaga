@@ -7,8 +7,8 @@ import com.now.domain.model.Destination
 import com.now.domain.repository.AdventureRepository
 
 class MockAdventureRepository : AdventureRepository {
-    override fun beginAdventure(callback: (Result<Unit>) -> Unit) {
-        TODO("Not yet implemented")
+    override fun beginAdventure(coordinate: Coordinate, callback: (Result<Long>) -> Unit) {
+        callback(Result.success(3))
     }
 
     override fun getAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit) {

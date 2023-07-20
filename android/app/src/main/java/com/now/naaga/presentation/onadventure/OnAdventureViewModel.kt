@@ -7,6 +7,7 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Destination
 import com.now.domain.repository.AdventureRepository
+import com.now.naaga.data.NaagaThrowable
 
 class OnAdventureViewModel(
     private val adventureRepository: AdventureRepository,
@@ -27,13 +28,19 @@ class OnAdventureViewModel(
     val status: LiveData<AdventureStatus>
         get() = _status
 
+    private val _adventureId = MutableLiveData<Long>()
+    val adventureId: LiveData<Long>
+        get() = _adventureId
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String>
+        get() = _errorMessage
+
     fun fetchDestination(adventureId: Long) {
         adventureRepository.getAdventure(adventureId, callback = { result ->
             result
                 .onSuccess { _destination.value = it.destination }
-                .onFailure {
-                    _status.value = AdventureStatus.ERROR
-                }
+                .onFailure { _status.value = AdventureStatus.ERROR }
         })
     }
 
@@ -43,5 +50,30 @@ class OnAdventureViewModel(
 
     fun checkArrived(coordinate: Coordinate) {
         _isArrived.value = destination.value?.isArrived(coordinate)
+    }
+
+    fun beginAdventure(coordinate: Coordinate) {
+        adventureRepository.beginAdventure(coordinate) { result ->
+            result
+                .onSuccess { _adventureId.value = it }
+                .onFailure { throwable ->
+                    when (throwable) {
+                        is NaagaThrowable.AuthenticationError ->
+                            _errorMessage.value =
+                                throwable.userMessage
+
+                        is NaagaThrowable.UserError -> _errorMessage.value = throwable.userMessage
+                        is NaagaThrowable.PlaceError -> _errorMessage.value = throwable.userMessage
+                        is NaagaThrowable.GameError -> _errorMessage.value = throwable.userMessage
+                        is NaagaThrowable.ServerConnectFailure ->
+                            _errorMessage.value =
+                                throwable.userMessage
+
+                        is NaagaThrowable.NaagaUnknownError ->
+                            _errorMessage.value =
+                                throwable.userMessage
+                    }
+                }
+        }
     }
 }
