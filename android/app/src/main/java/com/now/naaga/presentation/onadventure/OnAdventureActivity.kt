@@ -168,5 +168,16 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         private const val DESTINATION_PHOTO = "DESTINATION_PHOTO"
+        private const val ADVENTURE = "ADVENTURE"
+
+        fun getIntent(context: Context): Intent {
+            return Intent(context, OnAdventureActivity::class.java)
+        }
+
+        fun getIntentWithAdventure(context: Context, adventure: Adventure): Intent {
+            return Intent(context, OnAdventureActivity::class.java).apply {
+                putExtra(ADVENTURE, adventure.toUi())
+            }
+        }
     }
 }
