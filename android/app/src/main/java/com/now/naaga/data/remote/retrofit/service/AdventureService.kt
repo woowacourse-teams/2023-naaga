@@ -9,8 +9,14 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface AdventureService {
+    @GET("/games")
+    fun getGamesByStatus(
+        @Query("status") status: String,
+    ): Call<List<AdventureDto>>
+
     @POST("/games")
     fun beginGame(
         @Body coordinateDto: CoordinateDto,
