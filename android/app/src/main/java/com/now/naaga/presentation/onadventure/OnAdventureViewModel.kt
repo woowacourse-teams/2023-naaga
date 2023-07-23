@@ -3,6 +3,7 @@ package com.now.naaga.presentation.onadventure
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Destination
@@ -50,6 +51,11 @@ class OnAdventureViewModel(
 
     fun checkArrived(coordinate: Coordinate) {
         _isArrived.value = destination.value?.isArrived(coordinate)
+    }
+
+    fun setAdventure(adventure: Adventure) {
+        _adventureId.value = adventure.id
+        _destination.value = adventure.destination
     }
 
     fun beginAdventure(coordinate: Coordinate) {
