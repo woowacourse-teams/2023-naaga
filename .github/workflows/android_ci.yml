@@ -62,6 +62,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Add Google Service Json file
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
+
       - name: Run Build
         run: ./gradlew assembleDebug
 
@@ -91,6 +94,9 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Add Google Service Json file
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
 
       - name: Run Build
         run: ./gradlew testDebugUnitTest
