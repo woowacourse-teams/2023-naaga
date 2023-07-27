@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "96387929631",
+    "project_id": "naaga-664c7",
+    "storage_bucket": "naaga-664c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96387929631:android:dd0e43332d3f1638c0e72a",
+        "android_client_info": {
+          "package_name": "com.now.naaga"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "96387929631-1is80sf5h5812jtjeaa4p25id4b3237i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA22sz2s_4wAoCJGe4M6eTC_ZBXXYnAEUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "96387929631-1is80sf5h5812jtjeaa4p25id4b3237i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
