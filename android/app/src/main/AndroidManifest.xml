@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Naaga"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
+        <activity
+            android:name=".presentation.upload.UploadActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -29,7 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.onadventure.OnAdventureActivity"
             android:exported="true"/>
