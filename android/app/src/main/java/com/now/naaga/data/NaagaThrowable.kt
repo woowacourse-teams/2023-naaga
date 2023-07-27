@@ -16,5 +16,6 @@ sealed class NaagaThrowable(override val message: String?, val userMessage: Stri
     class GameError(errorMessage: String) :
         NaagaThrowable(errorMessage, "게임에 오류가 발생했습니다. 게임을 다시 시작합니다")
 
-    class NaagaUnknownError(errorMessage: String) : NaagaThrowable(errorMessage, "예상치 못한 오류가 발생했습니다")
+    class NaagaUnknownError(errorMessage: String) :
+        NaagaThrowable(errorMessage, "예상치 못한 오류가 발생했습니다")
 }
