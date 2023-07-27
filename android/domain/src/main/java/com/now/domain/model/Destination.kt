@@ -8,7 +8,7 @@ import kotlin.math.sin
 data class Destination(
     val id: Long,
     val coordinate: Coordinate,
-    val image: String,
+    val image: String
 ) {
     fun getDistance(other: Coordinate): Int {
         val rad = Math.PI / 180

@@ -7,6 +7,6 @@ fun DestinationDto.toDomain(): Destination {
     return Destination(
         id = id,
         coordinate = coordinate.toDomain(),
-        image = imageUrl,
+        image = imageUrl
     )
 }

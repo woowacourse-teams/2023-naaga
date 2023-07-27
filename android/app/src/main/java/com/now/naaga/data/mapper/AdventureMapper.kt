@@ -9,7 +9,7 @@ fun AdventureDto.toDomain(): Adventure {
     return Adventure(
         id = id,
         destination = destinationDto.toDomain(),
-        adventureStatus = AdventureStatus.getStatus(adventureStatus),
+        adventureStatus = AdventureStatus.getStatus(adventureStatus)
     )
 }
 
