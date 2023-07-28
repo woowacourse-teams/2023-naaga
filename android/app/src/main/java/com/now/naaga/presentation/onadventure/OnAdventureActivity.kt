@@ -154,14 +154,23 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun onStatusChanged(status: AdventureStatus) {
         when (status) {
             AdventureStatus.DONE -> {
-                Toast.makeText(this, getString(R.string.onAdventure_adventure_success), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    getString(R.string.onAdventure_adventure_success),
+                    Toast.LENGTH_LONG,
+                ).show()
                 startActivity(Intent(this, BeginAdventureActivity::class.java))
                 finish()
             }
+
             AdventureStatus.IN_PROGRESS -> {
-                Toast.makeText(this, getString(R.string.onAdventure_retry), Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.onAdventure_retry), Toast.LENGTH_LONG)
+                    .show()
             }
-            AdventureStatus.ERROR -> { stopAdventure(status) }
+
+            AdventureStatus.ERROR -> {
+                stopAdventure(status)
+            }
         }
     }
 
