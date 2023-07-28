@@ -6,23 +6,23 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-            android:allowBackup="true"
-            android:dataExtractionRules="@xml/data_extraction_rules"
-            android:fullBackupContent="@xml/backup_rules"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:supportsRtl="true"
-            android:theme="@style/Theme.Naaga"
-            android:usesCleartextTraffic="true"
-            tools:targetApi="33">
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Naaga"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="33">
 
         <meta-data
-                android:name="com.naver.maps.map.CLIENT_ID"
-                android:value="hl7nqvg6bj" />
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="hl7nqvg6bj" />
 
         <activity
-                android:name=".presentation.beginadventure.BeginAdventureActivity"
-                android:exported="true">
+            android:name=".presentation.beginadventure.BeginAdventureActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,8 +31,8 @@
         </activity>
 
         <activity
-                android:name=".presentation.onadventure.OnAdventureActivity"
-                android:exported="true" />
+            android:name=".presentation.onadventure.OnAdventureActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

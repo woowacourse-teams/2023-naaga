@@ -12,6 +12,6 @@ interface AdventureRepository {
     fun endAdventure(
         adventureId: Long,
         coordinate: Coordinate,
-        callback: (Result<AdventureStatus>) -> Unit
+        callback: (Result<AdventureStatus>) -> Unit,
     )
 }

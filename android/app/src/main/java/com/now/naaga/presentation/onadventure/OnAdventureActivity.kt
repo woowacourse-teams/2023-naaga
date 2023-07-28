@@ -130,7 +130,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
             Toast.makeText(
                 this,
                 getString(R.string.onAdventure_fail_load_description),
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
             finish()
         }
@@ -157,7 +157,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
                 Toast.makeText(
                     this,
                     getString(R.string.onAdventure_adventure_success),
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
                 startActivity(Intent(this, BeginAdventureActivity::class.java))
                 finish()
