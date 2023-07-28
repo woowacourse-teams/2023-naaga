@@ -52,7 +52,7 @@ class BeginAdventureActivity : AppCompatActivity() {
     }
 
     private fun setClickListeners() {
-        binding.btnBeginAdventureButton.setOnClickListener {
+        binding.clBeginAdventureBegin.setOnClickListener {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
                 LocationPermissionDialog().show(supportFragmentManager, "location")
             } else {
