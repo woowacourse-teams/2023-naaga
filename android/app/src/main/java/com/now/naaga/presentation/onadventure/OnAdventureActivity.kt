@@ -1,5 +1,6 @@
 package com.now.naaga.presentation.onadventure
 
+import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -15,12 +16,17 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
+import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
+import com.now.naaga.presentation.uimodel.mapper.toDomain
+import com.now.naaga.presentation.uimodel.mapper.toUi
+import com.now.naaga.presentation.uimodel.model.AdventureUiModel
+import com.now.naaga.util.getParcelable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -38,13 +44,17 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityOnAdventureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initViewModel()
         setMapView()
+        initViewModel()
         clickPhotoIcon()
         startObserving()
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+    }
+
+    private fun getIntentData(): Adventure? {
+        return intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
     }
 
     private fun initViewModel() {
@@ -69,6 +79,19 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun beginAdventure() {
+        val adventure: Adventure? = getIntentData()
+        if (adventure == null) {
+            beginNewAdventure()
+        } else {
+            beginExistingAdventure(adventure)
+        }
+    }
+
+    private fun beginExistingAdventure(adventure: Adventure) {
+        viewModel.setAdventure(adventure)
+    }
+
+    private fun beginNewAdventure() {
         GlobalScope.async {
             val lastLocation: Location = getCurrentLocation(locationSource)
             viewModel.beginAdventure(Coordinate(lastLocation.latitude, lastLocation.longitude))
@@ -158,15 +181,28 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
                 startActivity(Intent(this, BeginAdventureActivity::class.java))
                 finish()
             }
-            AdventureStatus.IN_PROGRESS -> {
-                Toast.makeText(this, getString(R.string.onAdventure_retry), Toast.LENGTH_LONG).show()
-            }
-            AdventureStatus.ERROR -> { stopAdventure(status) }
+
+            AdventureStatus.IN_PROGRESS ->
+                Toast.makeText(this, getString(R.string.onAdventure_retry), Toast.LENGTH_LONG)
+                    .show()
+
+            AdventureStatus.ERROR -> stopAdventure(status)
         }
     }
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         private const val DESTINATION_PHOTO = "DESTINATION_PHOTO"
+        private const val ADVENTURE = "ADVENTURE"
+
+        fun getIntent(context: Context): Intent {
+            return Intent(context, OnAdventureActivity::class.java)
+        }
+
+        fun getIntentWithAdventure(context: Context, adventure: Adventure): Intent {
+            return Intent(context, OnAdventureActivity::class.java).apply {
+                putExtra(ADVENTURE, adventure.toUi())
+            }
+        }
     }
 }
