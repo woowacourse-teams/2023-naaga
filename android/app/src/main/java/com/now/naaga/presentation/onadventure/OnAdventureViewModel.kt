@@ -3,15 +3,14 @@ package com.now.naaga.presentation.onadventure
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Destination
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.NaagaThrowable
 
-class OnAdventureViewModel(
-    private val adventureRepository: AdventureRepository,
-) : ViewModel() {
+class OnAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
 
     private val _destination = MutableLiveData<Destination>()
     val destination: LiveData<Destination>
@@ -52,6 +51,11 @@ class OnAdventureViewModel(
         _isArrived.value = destination.value?.isArrived(coordinate)
     }
 
+    fun setAdventure(adventure: Adventure) {
+        _adventureId.value = adventure.id
+        _destination.value = adventure.destination
+    }
+
     fun beginAdventure(coordinate: Coordinate) {
         adventureRepository.beginAdventure(coordinate) { result ->
             result
@@ -78,27 +82,31 @@ class OnAdventureViewModel(
     }
 
     fun endAdventure(adventureId: Long, coordinate: Coordinate) {
-        adventureRepository.endAdventure(adventureId, coordinate, callback = { result ->
-            result
-                .onSuccess { adventureStatus -> _status.value = adventureStatus }
-                .onFailure { throwable ->
-                    when (throwable) {
-                        is NaagaThrowable.AuthenticationError ->
-                            _errorMessage.value =
-                                throwable.userMessage
+        adventureRepository.endAdventure(
+            adventureId,
+            coordinate,
+            callback = { result ->
+                result
+                    .onSuccess { adventureStatus -> _status.value = adventureStatus }
+                    .onFailure { throwable ->
+                        when (throwable) {
+                            is NaagaThrowable.AuthenticationError ->
+                                _errorMessage.value =
+                                    throwable.userMessage
 
-                        is NaagaThrowable.UserError -> _errorMessage.value = throwable.userMessage
-                        is NaagaThrowable.PlaceError -> _errorMessage.value = throwable.userMessage
-                        is NaagaThrowable.GameError -> _errorMessage.value = throwable.userMessage
-                        is NaagaThrowable.ServerConnectFailure ->
-                            _errorMessage.value =
-                                throwable.userMessage
+                            is NaagaThrowable.UserError -> _errorMessage.value = throwable.userMessage
+                            is NaagaThrowable.PlaceError -> _errorMessage.value = throwable.userMessage
+                            is NaagaThrowable.GameError -> _errorMessage.value = throwable.userMessage
+                            is NaagaThrowable.ServerConnectFailure ->
+                                _errorMessage.value =
+                                    throwable.userMessage
 
-                        is NaagaThrowable.NaagaUnknownError ->
-                            _errorMessage.value =
-                                throwable.userMessage
+                            is NaagaThrowable.NaagaUnknownError ->
+                                _errorMessage.value =
+                                    throwable.userMessage
+                        }
                     }
-                }
-        })
+            },
+        )
     }
 }
