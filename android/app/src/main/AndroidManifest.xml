@@ -36,6 +36,9 @@
         <activity
             android:name=".presentation.onadventure.OnAdventureActivity"
             android:exported="false" />
+        <activity
+            android:name=".presentation.adventureresult.AdventureResultActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
