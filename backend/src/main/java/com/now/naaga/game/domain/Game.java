@@ -3,10 +3,16 @@ package com.now.naaga.game.domain;
 import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
 import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
 
+import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
+import com.now.naaga.player.domain.Player;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,10 +21,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Game {
+public class Game extends BaseEntity {
 
     public static final double MIN_RANGE = 0.05;
 
@@ -30,33 +40,64 @@ public class Game {
     private GameStatus gameStatus;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "player_id")
+    private Player player;
 
     @ManyToOne
     @JoinColumn(name = "place_id")
     private Place place;
 
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitude", column = @Column(name = "start_latitude", precision = 9, scale = 6)),
+            @AttributeOverride(name = "longitude", column = @Column(name = "start_longitude", precision = 9, scale = 6))
+    })
+    @Embedded
+    private Position startPosition;
+
+    private int remainingAttempts;
+
+    @OneToMany(mappedBy = "game")
+    private List<Hint> hints;
+
+    private LocalDateTime startTime;
+
     protected Game() {
     }
 
-    public Game(final Member member,
-                final Place place) {
-        this(null, GameStatus.IN_PROGRESS, member, place);
+    public Game(final Player player, final Place place, final Position startPosition) {
+        this(null, GameStatus.IN_PROGRESS, player, place, startPosition, 5, new ArrayList<>(), LocalDateTime.now());
+    }
+
+    public Game(final GameStatus gameStatus,
+                final Player player,
+                final Place place,
+                final Position startPosition,
+                final int remainingAttempts,
+                final List<Hint> hints,
+                final LocalDateTime startTime) {
+        this(null, gameStatus, player, place, startPosition, remainingAttempts, hints, startTime);
     }
 
     public Game(final Long id,
                 final GameStatus gameStatus,
-                final Member member,
-                final Place place) {
+                final Player player,
+                final Place place,
+                final Position startPosition,
+                final int remainingAttempts,
+                final List<Hint> hints,
+                final LocalDateTime startTime) {
         this.id = id;
         this.gameStatus = gameStatus;
-        this.member = member;
+        this.player = player;
         this.place = place;
+        this.startPosition = startPosition;
+        this.remainingAttempts = remainingAttempts;
+        this.hints = hints;
+        this.startTime = startTime;
     }
 
     public void validateOwner(final Member member) {
-        if (!member.equals(this.member)) {
+        if (!member.equals(this.player.getMember())) {
             throw new GameException(INACCESSIBLE_AUTHENTICATION);
         }
     }
@@ -79,17 +120,32 @@ public class Game {
         return gameStatus;
     }
 
-    public Member getMember() {
-        return member;
+    public Player getPlayer() {
+        return player;
     }
 
     public Place getPlace() {
         return place;
     }
 
+    public Position getStartPosition() {
+        return startPosition;
+    }
+
+    public int getRemainingAttempts() {
+        return remainingAttempts;
+    }
+
+    public List<Hint> getHints() {
+        return hints;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
     @Override
     public boolean equals(final Object o) {
-
         if (this == o) {
             return true;
         }
@@ -110,8 +166,12 @@ public class Game {
         return "Game{" +
                 "id=" + id +
                 ", gameStatus=" + gameStatus +
-                ", memberId=" + member.getId() +
+                ", playerId=" + player.getId() +
                 ", placeId=" + place.getId() +
+                ", startPosition=" + startPosition +
+                ", remainingAttempts=" + remainingAttempts +
+                ", hints=" + hints +
+                ", startTime=" + startTime +
                 '}';
     }
 }

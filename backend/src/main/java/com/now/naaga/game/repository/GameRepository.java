@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GameRepository extends JpaRepository<Game, Long> {
 
-    List<Game> findByMemberIdAndGameStatus(final Long memberId,
+    List<Game> findByPlayerIdAndGameStatus(final Long playerId,
                                            final GameStatus gameStatus);
 }
