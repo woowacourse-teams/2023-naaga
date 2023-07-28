@@ -8,6 +8,13 @@ import com.now.domain.model.Destination
 import com.now.domain.repository.AdventureRepository
 
 class MockAdventureRepository : AdventureRepository {
+    override fun fetchAdventuresByStatus(
+        status: AdventureStatus,
+        callback: (Result<List<Adventure>>) -> Unit,
+    ) {
+        callback(Result.success(listOf<Adventure>()))
+    }
+
     override fun beginAdventure(coordinate: Coordinate, callback: (Result<Long>) -> Unit) {
         callback(Result.success(3))
     }
