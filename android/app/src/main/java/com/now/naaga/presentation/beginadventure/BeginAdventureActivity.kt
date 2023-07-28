@@ -1,7 +1,6 @@
 package com.now.naaga.presentation.beginadventure
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,7 +27,7 @@ class BeginAdventureActivity : AppCompatActivity() {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
                 LocationPermissionDialog().show(supportFragmentManager, "location")
             } else {
-                startActivity(Intent(this, OnAdventureActivity::class.java))
+                startActivity(OnAdventureActivity.getIntent(this))
             }
         }
     }
