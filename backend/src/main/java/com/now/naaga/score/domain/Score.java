@@ -1,4 +1,4 @@
-package com.now.naaga.game.domain;
+package com.now.naaga.score.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

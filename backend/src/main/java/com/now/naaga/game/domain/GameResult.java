@@ -1,6 +1,7 @@
 package com.now.naaga.game.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
+import com.now.naaga.score.domain.Score;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

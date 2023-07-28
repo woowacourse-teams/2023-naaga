@@ -2,6 +2,8 @@ package com.now.naaga.player.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.member.domain.Member;
+import com.now.naaga.score.domain.Score;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -22,8 +24,9 @@ public class Player extends BaseEntity {
     @Column(nullable = false)
     private String nickname;
 
+    @AttributeOverride(name = "value", column = @Column(name = "total_score"))
     @Embedded
-    private TotalScore totalScore;
+    private Score totalScore;
 
     @OneToOne
     @JoinColumn(name = "member_id")
@@ -33,14 +36,14 @@ public class Player extends BaseEntity {
     }
 
     public Player(final String nickname,
-                  final TotalScore totalScore,
+                  final Score totalScore,
                   final Member member) {
         this(null, nickname, totalScore, member);
     }
 
     public Player(final Long id,
                   final String nickname,
-                  final TotalScore totalScore,
+                  final Score totalScore,
                   final Member member) {
         this.id = id;
         this.nickname = nickname;
@@ -56,7 +59,7 @@ public class Player extends BaseEntity {
         return nickname;
     }
 
-    public TotalScore getTotalScore() {
+    public Score getTotalScore() {
         return totalScore;
     }
 
