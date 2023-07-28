@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.0'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -83,4 +84,8 @@ dependencies {
 
     // splash
     implementation "androidx.core:core-splashscreen:1.0.0"
+
+    // firebase
+    implementation(platform('com.google.firebase:firebase-bom:32.2.0'))
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }
