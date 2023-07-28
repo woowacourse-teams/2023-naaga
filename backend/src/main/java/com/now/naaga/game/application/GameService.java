@@ -1,5 +1,9 @@
 package com.now.naaga.game.application;
 
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
+
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.game.exception.GameException;
@@ -10,12 +14,9 @@ import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static com.now.naaga.game.exception.GameExceptionType.*;
 
 @Transactional
 @Service
