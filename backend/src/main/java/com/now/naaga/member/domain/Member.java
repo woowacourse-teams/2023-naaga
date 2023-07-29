@@ -1,5 +1,6 @@
 package com.now.naaga.member.domain;
 
+import com.now.naaga.common.domain.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,7 +9,7 @@ import jakarta.persistence.Id;
 import java.util.Objects;
 
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -19,6 +20,20 @@ public class Member {
     private String password;
 
     protected Member() {
+    }
+
+    public Member(final String email,
+                  final String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public Member(final Long id,
+                  final String email,
+                  final String password) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
