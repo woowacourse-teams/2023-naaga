@@ -2,6 +2,7 @@ package com.now.naaga.place.domain;
 
 import static com.now.naaga.game.domain.Game.MIN_RANGE;
 
+import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.player.domain.Player;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -13,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity
-public class Place {
+public class Place extends BaseEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
