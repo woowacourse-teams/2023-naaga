@@ -35,6 +35,8 @@ public class PlayerService {
     public Player getRankAndTopPercent(final MemberCommand memberCommand) {
         final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
 
-        return playerRepository.findByMemberId(member.getId());
+        playerRepository.findByMemberId(member.getId());
+        return playerRepository.findByMemberId(member.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 존재하지 않습니다."));
     }
 }

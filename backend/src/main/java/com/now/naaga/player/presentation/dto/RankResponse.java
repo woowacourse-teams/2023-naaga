@@ -8,13 +8,13 @@ public class RankResponse {
     private final String nickname;
     private final int totalScore;
     private final int rank;
-    private final double topPercent;
+    private final int topPercent;
 
     public RankResponse(final Long id,
                         final String nickname,
                         final int totalScore,
                         final int rank,
-                        final double topPercent) {
+                        final int topPercent) {
         this.id = id;
         this.nickname = nickname;
         this.totalScore = totalScore;
@@ -24,7 +24,7 @@ public class RankResponse {
 
     public static RankResponse to(final Player player,
                                   final int rank,
-                                  final double topPercent) {
+                                  final int topPercent) {
         return new RankResponse(player.getId(), player.getNickname(), player.getTotalScore().getValue(), rank, topPercent);
     }
 
@@ -44,7 +44,7 @@ public class RankResponse {
         return rank;
     }
 
-    public double getTopPercent() {
+    public int getTopPercent() {
         return topPercent;
     }
 }

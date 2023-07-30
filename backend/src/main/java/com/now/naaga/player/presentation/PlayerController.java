@@ -31,7 +31,7 @@ public class PlayerController {
         final Player player = playerService.getRankAndTopPercent(memberCommand);
 
         final int rank = players.calculateRank(player);
-        final double topPercent = players.calculateTopPercent(rank);
+        final int topPercent = players.calculateTopPercent(rank);
 
         final RankResponse rankResponse = RankResponse.to(player, rank, topPercent);
         return ResponseEntity.ok(rankResponse);
@@ -48,7 +48,7 @@ public class PlayerController {
         final List<RankResponse> rankResponseList = new ArrayList<>();
         for (Player player : players.getPlayers()) {
             final int rank = players.calculateRank(player);
-            final double topPercent = players.calculateTopPercent(rank);
+            final int topPercent = players.calculateTopPercent(rank);
             rankResponseList.add(RankResponse.to(player, rank, topPercent));
         }
 

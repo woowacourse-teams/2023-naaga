@@ -15,8 +15,8 @@ public class Players {
         return players.indexOf(player) + 1;
     }
 
-    public double calculateTopPercent(final int rank) {
-        return (double) (players.size() - rank) / players.size() * 100.0;
+    public int calculateTopPercent(final int rank) {
+        return (int) Math.floor((double) rank / players.size() * 100.0);
     }
 
     public List<Player> getPlayers() {

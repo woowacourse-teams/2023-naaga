@@ -19,8 +19,11 @@ class MemberRepositoryTest {
 
     @Test
     void 이메일로_회원을_조회한다() {
+        // given
+        final Member saveMember = memberRepository.save(new Member("111@woowa.com", "1234"));
+
         // when
-        Member foundMember = memberRepository.findByEmail("111@woowa.com").get();
+        final Member foundMember = memberRepository.findByEmail(saveMember.getEmail()).get();
 
         // then
         assertThat(foundMember.getId()).isEqualTo(1L);
