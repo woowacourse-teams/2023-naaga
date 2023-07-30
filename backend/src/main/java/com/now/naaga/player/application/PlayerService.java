@@ -1,6 +1,8 @@
 package com.now.naaga.player.application;
 
 import com.now.naaga.member.application.MemberService;
+import com.now.naaga.member.application.dto.MemberCommand;
+import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Players;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
@@ -27,5 +29,12 @@ public class PlayerService {
         players.sort((p1, p2) -> p2.getTotalScore().getValue() - p1.getTotalScore().getValue());
 
         return new Players(players);
+    }
+
+    @Transactional(readOnly = true)
+    public Player getRankAndTopPercent(final MemberCommand memberCommand) {
+        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
+
+        return playerRepository.findByMemberId(member.getId());
     }
 }

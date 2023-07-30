@@ -25,7 +25,17 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<RankResponse> findMyRank(@Auth final MemberCommand memberCommand) {
+        final Players players = playerService.findAllPlayersByRanksAscending();
+        final Player player = playerService.getRankAndTopPercent(memberCommand);
 
+        final int rank = players.calculateRank(player);
+        final double topPercent = players.calculateTopPercent(rank);
+
+        final RankResponse rankResponse = RankResponse.to(player,rank,topPercent);
+        return ResponseEntity.ok(rankResponse);
+    }
 
     @GetMapping
     public ResponseEntity<List<RankResponse>> findAllRank(@Auth final MemberCommand memberCommand,
