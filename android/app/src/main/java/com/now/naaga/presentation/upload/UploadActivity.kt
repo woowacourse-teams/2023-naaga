@@ -19,7 +19,7 @@ class UploadActivity : AppCompatActivity() {
 
         checkPermission()
 
-        binding.btnSubmit.setOnClickListener {
+        binding.btnUploadSubmit.setOnClickListener {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
                 CameraPermissionDialog().show(supportFragmentManager, "1000")
             }

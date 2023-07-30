@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/iv_camera_icon"
+            android:id="@+id/iv_upload_camera_icon"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:src="@drawable/ic_camera_add"
@@ -37,7 +37,7 @@
             app:layout_constraintTop_toTopOf="@id/iv_upload_photo" />
 
         <EditText
-            android:id="@+id/et_photo_title"
+            android:id="@+id/et_upload_photo_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_default_large"
@@ -55,17 +55,17 @@
             tools:text="선정릉 돌담길" />
 
         <ImageView
-            android:id="@+id/iv_photo_coordinate"
+            android:id="@+id/iv_upload_photo_coordinate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_default_medium"
             android:src="@drawable/ic_coordinate"
-            app:layout_constraintEnd_toStartOf="@id/tv_photo_coordinate"
-            app:layout_constraintStart_toStartOf="@id/et_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/et_photo_title" />
+            app:layout_constraintEnd_toStartOf="@id/tv_upload_photo_coordinate"
+            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
+            app:layout_constraintTop_toBottomOf="@id/et_upload_photo_title" />
 
         <TextView
-            android:id="@+id/tv_photo_coordinate"
+            android:id="@+id/tv_upload_photo_coordinate"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/rect_radius_small"
@@ -73,36 +73,36 @@
             android:fontFamily="@font/pretendard_medium"
             android:gravity="center"
             android:textSize="28sp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_photo_coordinate"
-            app:layout_constraintEnd_toEndOf="@id/et_photo_title"
-            app:layout_constraintStart_toEndOf="@id/iv_photo_coordinate"
-            app:layout_constraintTop_toTopOf="@id/iv_photo_coordinate"
+            app:layout_constraintBottom_toBottomOf="@id/iv_upload_photo_coordinate"
+            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
+            app:layout_constraintStart_toEndOf="@id/iv_upload_photo_coordinate"
+            app:layout_constraintTop_toTopOf="@id/iv_upload_photo_coordinate"
             tools:text="35.123, 127.345" />
 
         <View
-            android:id="@+id/v_divide_line_1"
+            android:id="@+id/v_upload_divide_line_1"
             android:layout_width="0dp"
             android:layout_height="3dp"
             android:layout_marginTop="@dimen/space_default_large"
             android:background="@color/black"
-            app:layout_constraintEnd_toEndOf="@id/et_photo_title"
-            app:layout_constraintStart_toStartOf="@id/et_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_photo_coordinate" />
+            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
+            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_photo_coordinate" />
 
         <TextView
-            android:id="@+id/tv_description"
+            android:id="@+id/tv_upload_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_default_large"
             android:fontFamily="@font/pretendard_bold"
             android:text="@string/upload_description"
             android:textSize="28sp"
-            app:layout_constraintEnd_toEndOf="@id/et_photo_title"
-            app:layout_constraintStart_toStartOf="@id/et_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/v_divide_line_1" />
+            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
+            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
+            app:layout_constraintTop_toBottomOf="@id/v_upload_divide_line_1" />
 
         <EditText
-            android:id="@+id/et_photo_description"
+            android:id="@+id/et_upload_photo_description"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/space_default_medium"
@@ -114,25 +114,25 @@
             android:hint="@string/upload_photo_description"
             android:inputType="text"
             android:padding="@dimen/space_default_medium"
-            app:layout_constraintBottom_toTopOf="@id/v_divide_line_2"
-            app:layout_constraintEnd_toEndOf="@id/et_photo_title"
-            app:layout_constraintStart_toStartOf="@id/et_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_description"
+            app:layout_constraintBottom_toTopOf="@id/v_upload_divide_line_2"
+            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
+            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_description"
             app:layout_constraintVertical_chainStyle="spread" />
 
         <View
-            android:id="@+id/v_divide_line_2"
+            android:id="@+id/v_upload_divide_line_2"
             android:layout_width="0dp"
             android:layout_height="3dp"
             android:layout_marginTop="@dimen/space_default_large"
             android:background="@color/black"
-            app:layout_constraintBottom_toTopOf="@id/btn_submit"
-            app:layout_constraintEnd_toEndOf="@id/et_photo_title"
-            app:layout_constraintStart_toStartOf="@id/et_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/et_photo_description" />
+            app:layout_constraintBottom_toTopOf="@id/btn_upload_submit"
+            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
+            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
+            app:layout_constraintTop_toBottomOf="@id/et_upload_photo_description" />
 
         <Button
-            android:id="@+id/btn_submit"
+            android:id="@+id/btn_upload_submit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_default_large"
@@ -144,7 +144,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/v_divide_line_2" />
+            app:layout_constraintTop_toBottomOf="@id/v_upload_divide_line_2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
