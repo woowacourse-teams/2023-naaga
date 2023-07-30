@@ -15,4 +15,16 @@
     <string name="polaroid_description">이곳은 어디일까요?</string>
     <string name="onAdventure_retry">아직 도착하지 못했어요.. 다시 도전해봐요!</string>
     <string name="onAdventure_adventure_success">목적지를 찾는데 성공했어요!!</string>
+
+    <!-- AdventureResultActivity -->
+    <string name="adventureResult_destination_description">오늘의 목적지</string>
+    <string name="adventureResult_fail_destination_name">\????</string>
+    <string name="adventureResult_time_description">TIME</string>
+    <string name="adventureResult_distance_description">DISTANCE</string>
+    <string name="adventureResult_hint_description">HINT USES</string>
+    <string name="adventureResult_try_description">TRY COUNT</string>
+    <string name="adventureResult_score_description">Total Score</string>
+    <string name="adventureResult_return_main">메인으로 돌아가기</string>
+    <string name="adventureResult_value">+%d</string>
+    <string name="adventureResult_rank">%d등 (+%d)</string>
 </resources>
