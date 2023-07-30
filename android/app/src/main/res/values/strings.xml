@@ -11,7 +11,7 @@
     <string name="locationDialog_approximate_description">대략적인 위치 권한만 허용되었어요\n나아가 서비스를 이용하기 위해서는\n정확한 위치에 엑세스할 권한을\n부여해주셔야 해요</string>
 
     <string name="on_adventure">모험 중</string>
-    <string name="end_adventure">모험 종료</string>
+    <string name="end_adventure">도착!</string>
     <string name="polaroid_description">이곳은 어디일까요?</string>
     <string name="onAdventure_retry">아직 도착하지 못했어요.. 다시 도전해봐요!</string>
     <string name="onAdventure_adventure_success">목적지를 찾는데 성공했어요!!</string>
