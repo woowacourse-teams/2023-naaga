@@ -1,35 +1,38 @@
 package com.now.naaga.place.presentation.dto;
 
-import com.now.naaga.place.domain.Place;
-import com.now.naaga.place.domain.Position;
+import java.util.Objects;
 
-public class PlaceResponse {
+public record PlaceResponse(Long id,
+                            String name,
+                            CoordinateResponse coordinate,
+                            String imageUrl,
+                            String description) {
 
-    private final Long id;
-    private final Position position;
-    private final String imageUrl;
-
-    private PlaceResponse(final Long id,
-                          final Position position,
-                          final String imageUrl) {
-        this.id = id;
-        this.position = position;
-        this.imageUrl = imageUrl;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final PlaceResponse that = (PlaceResponse) o;
+        return Objects.equals(id, that.id)
+                && Objects.equals(name, that.name)
+                && Objects.equals(coordinate, that.coordinate)
+                && Objects.equals(imageUrl, that.imageUrl)
+                && Objects.equals(description, that.description);
     }
 
-    public static PlaceResponse from(final Place place) {
-        return new PlaceResponse(place.getId(), place.getPosition(), place.getImageUrl());
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, coordinate, imageUrl, description);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    @Override
+    public String toString() {
+        return "PlaceResponse{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", coordinate=" + coordinate +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
