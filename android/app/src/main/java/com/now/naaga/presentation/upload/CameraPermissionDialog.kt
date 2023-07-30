@@ -52,5 +52,6 @@ class CameraPermissionDialog : DialogFragment() {
     }
 
     companion object {
+        const val TAG_CAMERA_DIALOG = "CAMERA"
     }
 }

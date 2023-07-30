@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.databinding.ActivityUploadBinding
+import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
 
 class UploadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUploadBinding
@@ -21,7 +22,7 @@ class UploadActivity : AppCompatActivity() {
 
         binding.btnUploadSubmit.setOnClickListener {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                CameraPermissionDialog().show(supportFragmentManager, "1000")
+                CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
             }
         }
     }
