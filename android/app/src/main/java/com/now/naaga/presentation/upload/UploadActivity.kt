@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.databinding.ActivityUploadBinding
@@ -19,12 +20,32 @@ class UploadActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         checkPermission()
+        getCoordinate()
 
         binding.btnUploadSubmit.setOnClickListener {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
                 CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
             }
         }
+    }
+
+    private fun getCoordinate() {
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+            if (location != null) {
+                val latitude = roundToFourDecimalPlaces(location.latitude)
+                val longitude = roundToFourDecimalPlaces(location.longitude)
+
+                val coordinate = "$latitude, $longitude"
+                binding.tvUploadPhotoCoordinate.text = coordinate
+            }
+        }
+    }
+
+    private fun roundToFourDecimalPlaces(number: Double): Double {
+        return (number * 10000).toLong().toDouble() / 10000
     }
 
     private fun checkPermission() {
