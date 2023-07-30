@@ -15,6 +15,10 @@
         android:theme="@style/Theme.Naaga"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
+        <activity
+            android:name=".presentation.upload.UploadActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="hl7nqvg6bj" />

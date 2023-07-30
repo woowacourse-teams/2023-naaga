@@ -6,12 +6,14 @@
     <string name="onAdventure_loading_photo">사진을 로딩 중이에요</string>
     <string name="onAdventure_fail_load_description">목적지를 받아오는데 실패했어요!</string>
 
+    <!--locatoinDialog-->
     <string name="locationDialog_setting">설정으로 이동해요</string>
     <string name="locationDialog_description">나아가 서비스를 이용하기 위해서는\n위치에 엑세스할 권한을\n부여해주셔야 해요</string>
-    <string name="locationDialog_approximate_description">대략적인 위치 권한만 허용되었어요\n나아가 서비스를 이용하기 위해서는\n정확한 위치에 엑세스할 권한을\n부여해주셔야 해요</string>
+    <string name="locationDialog_approximate_description">대략적인 위치 권한만 허용되었어요\n나아가 서비스를 이용하기 위해서는\n정확한 위치 권한을\n부여해주셔야 해요</string>
 
-    <string name="on_adventure">모험 중</string>
-    <string name="end_adventure">도착!</string>
+    <!--OnAdventureActivity-->
+    <string name="OnAdventure_on_adventure">모험 중</string>
+    <string name="OnAdventure_end_adventure">도착!</string>
     <string name="polaroid_description">이곳은 어디일까요?</string>
     <string name="onAdventure_retry">아직 도착하지 못했어요.. 다시 도전해봐요!</string>
     <string name="onAdventure_adventure_success">목적지를 찾는데 성공했어요!!</string>
@@ -27,4 +29,10 @@
     <string name="adventureResult_return_main">메인으로 돌아가기</string>
     <string name="adventureResult_value">+%d</string>
     <string name="adventureResult_rank">%d등 (+%d)</string>
+
+    <!-- UploadActivity -->
+    <string name="upload_description">Description</string>
+    <string name="upload_photo_description">장소에 대한 설명을 입력해주세요! \n\n자세할수록 좋습니다!</string>
+    <string name="upload_submit">등록할게요!</string>
+    <string name="upload_photo_title">장소명을 입력해주세요!</string>
 </resources>
