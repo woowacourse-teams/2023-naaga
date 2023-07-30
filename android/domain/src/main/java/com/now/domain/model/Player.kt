@@ -4,5 +4,4 @@ data class Player(
     val id: Long,
     val nickname: String,
     val score: Int,
-    val percent: Int,
 )

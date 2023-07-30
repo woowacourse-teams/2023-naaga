@@ -1,6 +1,6 @@
 package com.now.domain.model
 
-enum class EndType {
+enum class AdventureEndType {
     ARRIVED,
     GIVE_UP,
 }
