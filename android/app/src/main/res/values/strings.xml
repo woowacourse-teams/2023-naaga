@@ -6,7 +6,7 @@
     <string name="onAdventure_loading_photo">사진을 로딩 중이에요</string>
     <string name="onAdventure_fail_load_description">목적지를 받아오는데 실패했어요!</string>
 
-    <!--locatoinDialog-->
+    <!-- LocationDialog-->
     <string name="locationDialog_setting">설정으로 이동해요</string>
     <string name="locationDialog_description">나아가 서비스를 이용하기 위해서는\n위치에 엑세스할 권한을\n부여해주셔야 해요</string>
     <string name="locationDialog_approximate_description">대략적인 위치 권한만 허용되었어요\n나아가 서비스를 이용하기 위해서는\n정확한 위치 권한을\n부여해주셔야 해요</string>
@@ -35,4 +35,8 @@
     <string name="upload_photo_description">장소에 대한 설명을 입력해주세요! \n\n자세할수록 좋습니다!</string>
     <string name="upload_submit">등록할게요!</string>
     <string name="upload_photo_title">장소명을 입력해주세요!</string>
+
+    <!-- CameraDialog-->
+    <string name="cameraDialog_description">장소를 올리기 위해서는\n카메라 접근 권한이 필요해요!</string>
+
 </resources>
