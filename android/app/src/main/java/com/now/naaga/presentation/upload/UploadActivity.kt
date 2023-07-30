@@ -29,11 +29,13 @@ class UploadActivity : AppCompatActivity() {
 
     private fun checkPermission() {
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(arrayOf(Manifest.permission.CAMERA), 1000)
+            requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CODE_CAMERA)
         }
     }
 
     companion object {
+        private const val REQUEST_CODE_CAMERA = 1000
+
         fun getIntent(context: Context): Intent {
             return Intent(context, UploadActivity::class.java)
         }
