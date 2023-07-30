@@ -14,12 +14,20 @@
         android:layout_marginTop="@dimen/space_default_large"
         android:background="@drawable/rect_radius_small"
         android:backgroundTint="@color/white"
-        android:padding="50dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_camera"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_camera_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_camera"
+        app:layout_constraintBottom_toBottomOf="@id/iv_upload_photo"
+        app:layout_constraintEnd_toEndOf="@id/iv_upload_photo"
+        app:layout_constraintStart_toStartOf="@id/iv_upload_photo"
+        app:layout_constraintTop_toTopOf="@id/iv_upload_photo" />
 
     <EditText
         android:id="@+id/et_photo_title"
