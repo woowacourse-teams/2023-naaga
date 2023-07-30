@@ -31,22 +31,48 @@
 
         <Button
             android:id="@+id/btn_onAdventure_arrived"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_default_medium"
-            android:layout_marginBottom="@dimen/space_default_medium"
-            android:background="@drawable/rect_radius_small"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/space_default_medium"
+            android:background="@drawable/rect_white_radius_small"
             android:backgroundTint="@color/selector_main_gray_purple"
+            android:elevation="4dp"
             android:enabled="@{viewModel.isArrived}"
-            android:onClick="@{() -> viewModel.endAdventure(viewModel.adventureId, CurrentMyCoordinate)}"
             android:fontFamily="@font/pretendard_bold"
-            android:paddingHorizontal="28dp"
-            android:paddingVertical="@dimen/space_default_medium"
+            android:onClick="@{() -> viewModel.endAdventure(viewModel.adventureId, CurrentMyCoordinate)}"
             android:text="@{viewModel.isArrived ? @string/end_adventure : @string/on_adventure}"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@id/cl_onAdventure_distance"
-            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_photo"
+            app:layout_constraintBottom_toBottomOf="@id/iv_onAdventure_photo"
+            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_drop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_onAdventure_photo"
             tools:text="모험 종료" />
+
+        <ImageView
+            android:id="@+id/iv_onAdventure_drop"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_marginEnd="@dimen/space_default_medium"
+            android:background="@drawable/rect_white_radius_small"
+            android:backgroundTint="@color/main_red"
+            android:elevation="4dp"
+            android:padding="@dimen/space_default_medium"
+            app:layout_constraintBottom_toBottomOf="@id/iv_onAdventure_photo"
+            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_hint"
+            app:srcCompat="@drawable/ic_drop" />
+
+        <ImageView
+            android:id="@+id/iv_onAdventure_hint"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_marginEnd="@dimen/space_default_medium"
+            android:background="@drawable/rect_white_radius_small"
+            android:backgroundTint="@color/main_mint"
+            android:elevation="4dp"
+            android:padding="@dimen/space_default_medium"
+            app:layout_constraintBottom_toBottomOf="@id/iv_onAdventure_photo"
+            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_photo"
+            app:srcCompat="@drawable/ic_hint" />
 
         <ImageView
             android:id="@+id/iv_onAdventure_photo"
@@ -54,12 +80,27 @@
             android:layout_height="54dp"
             android:layout_marginEnd="@dimen/space_default_medium"
             android:layout_marginBottom="@dimen/space_default_medium"
-            android:background="@drawable/rect_radius_small"
+            android:background="@drawable/rect_white_radius_small"
             android:backgroundTint="@color/main_mint"
+            android:elevation="4dp"
             android:padding="@dimen/space_default_medium"
             app:layout_constraintBottom_toTopOf="@id/cl_onAdventure_distance"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_photo" />
+
+        <TextView
+            android:id="@+id/tv_onAdventure_hint_count"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:background="@drawable/oval_radius_midium"
+            android:backgroundTint="@color/red"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/iv_onAdventure_photo"
+            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_onAdventure_photo"
+            tools:text="1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_onAdventure_distance"

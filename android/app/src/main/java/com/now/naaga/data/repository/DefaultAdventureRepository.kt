@@ -19,6 +19,23 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DefaultAdventureRepository : AdventureRepository {
+    override fun fetchAdventuresByStatus(
+        status: AdventureStatus,
+        callback: (Result<List<Adventure>>) -> Unit,
+    ) {
+        val call = adventureService.getGamesByStatus(status.name)
+        call.fetchNaagaResponse(
+            onSuccess = { adventures ->
+                if (adventures == null) {
+                    callback(Result.failure(NaagaThrowable.NaagaUnknownError("null 값이 넘어왔습니다")))
+                    return@fetchNaagaResponse
+                }
+                callback(Result.success(adventures.map { it.toDomain() }))
+            },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+
     override fun beginAdventure(coordinate: Coordinate, callback: (Result<Long>) -> Unit) {
         val call = adventureService.beginGame(coordinate.toDto())
 

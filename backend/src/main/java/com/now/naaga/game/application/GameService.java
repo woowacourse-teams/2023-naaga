@@ -1,5 +1,9 @@
 package com.now.naaga.game.application;
 
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
+
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.game.exception.GameException;
@@ -10,12 +14,10 @@ import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
+import com.now.naaga.player.domain.Player;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static com.now.naaga.game.exception.GameExceptionType.*;
 
 @Transactional
 @Service
@@ -41,7 +43,7 @@ public class GameService {
         }
         final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
         final Place place = placeService.recommendPlaceByPosition(position);
-        final Game game = new Game(member, place);
+        final Game game = new Game(new Player(null, null, member), place, position);
         return gameRepository.save(game);
     }
 
@@ -63,7 +65,7 @@ public class GameService {
         final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
         final Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new GameException(NOT_EXIST));
-        if (!member.equals(game.getMember())) {
+        if (!member.equals(game.getPlayer().getMember())) {
             throw new GameException(INACCESSIBLE_AUTHENTICATION);
         }
         return game;
@@ -75,6 +77,6 @@ public class GameService {
         final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
         final Long memberId = member.getId();
 
-        return gameRepository.findByMemberIdAndGameStatus(memberId, GameStatus.valueOf(gameStatus));
+        return gameRepository.findByPlayerIdAndGameStatus(null, GameStatus.valueOf(gameStatus));
     }
 }
