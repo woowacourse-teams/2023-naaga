@@ -40,7 +40,7 @@
             android:enabled="@{viewModel.isArrived}"
             android:fontFamily="@font/pretendard_bold"
             android:onClick="@{() -> viewModel.endAdventure(viewModel.adventureId, CurrentMyCoordinate)}"
-            android:text="@{viewModel.isArrived ? @string/end_adventure : @string/on_adventure}"
+            android:text="@{viewModel.isArrived ? @string/OnAdventure_end_adventure : @string/OnAdventure_on_adventure}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_onAdventure_photo"
             app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_drop"
