@@ -33,7 +33,7 @@ public class PlayerController {
         final int rank = players.calculateRank(player);
         final double topPercent = players.calculateTopPercent(rank);
 
-        final RankResponse rankResponse = RankResponse.to(player,rank,topPercent);
+        final RankResponse rankResponse = RankResponse.to(player, rank, topPercent);
         return ResponseEntity.ok(rankResponse);
     }
 
@@ -41,6 +41,9 @@ public class PlayerController {
     public ResponseEntity<List<RankResponse>> findAllRank(@Auth final MemberCommand memberCommand,
                                                           @RequestParam final String sortBy,
                                                           @RequestParam final String order) {
+        if (!sortBy.equals("rank") && order.equals("ascending")) {
+            throw new IllegalArgumentException("잘못된 요청입니다.");
+        }
         final Players players = playerService.findAllPlayersByRanksAscending();
         final List<RankResponse> rankResponseList = new ArrayList<>();
         for (Player player : players.getPlayers()) {
