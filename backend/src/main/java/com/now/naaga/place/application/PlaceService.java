@@ -44,6 +44,7 @@ public class PlaceService {
         Double latitude = placeCommand.latitude();
         Double longitude = placeCommand.longitude();
         Position position = new Position(new BigDecimal(latitude), new BigDecimal(longitude));
+        System.out.println(position);
         List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, 0.02);
 
         // TODO: 7/29/23 이 정책이 진짜 필요할까? 

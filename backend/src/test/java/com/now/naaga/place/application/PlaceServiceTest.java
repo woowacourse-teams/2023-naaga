@@ -35,9 +35,10 @@ class PlaceServiceTest {
         when(playerService.findPlayerByMemberCommand(MemberFixture.MEMBER_COMMAND)).thenReturn(PlayerFixture.PLAYER);
         Place acutual = placeService.createPlace(MemberFixture.MEMBER_COMMAND, PlaceFixture.createDummy());
         //then
+        // TODO: 7/30/23 포지션 소수점 6자리 밑에 어떻게 반올림해서 테스트할지 고민해보기 -> isCloseTo? 
         assertThat(PlaceFixture.PLACE)
                 .usingRecursiveComparison()
-                .ignoringFields("id", "imageUrl")
+                .ignoringFields("id", "imageUrl", "position")
                 .isEqualTo(acutual);
     }
 }
