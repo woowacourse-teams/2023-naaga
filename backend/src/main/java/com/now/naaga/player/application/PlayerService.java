@@ -5,11 +5,14 @@ import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Players;
+import com.now.naaga.player.exception.PlayerException;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
 
 @Transactional
 @Service
@@ -37,6 +40,6 @@ public class PlayerService {
 
         playerRepository.findByMemberId(member.getId());
         return playerRepository.findByMemberId(member.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 존재하지 않습니다."));
+                .orElseThrow(() -> new PlayerException(PLAYER_NOT_FOUND));
     }
 }

@@ -5,6 +5,7 @@ import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Players;
+import com.now.naaga.player.exception.PlayerException;
 import com.now.naaga.player.presentation.dto.RankResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.now.naaga.player.exception.PlayerExceptionType.INVALID_SORTING_REQUEST;
 
 @RequestMapping("/ranks")
 @RestController
@@ -42,7 +45,7 @@ public class PlayerController {
                                                           @RequestParam final String sortBy,
                                                           @RequestParam final String order) {
         if (!sortBy.equals("rank") && order.equals("ascending")) {
-            throw new IllegalArgumentException("잘못된 요청입니다.");
+            throw new PlayerException(INVALID_SORTING_REQUEST);
         }
         final Players players = playerService.findAllPlayersByRanksAscending();
         final List<RankResponse> rankResponseList = new ArrayList<>();
