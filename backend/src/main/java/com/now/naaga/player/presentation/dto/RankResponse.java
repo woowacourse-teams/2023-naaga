@@ -1,5 +1,7 @@
 package com.now.naaga.player.presentation.dto;
 
+import com.now.naaga.player.domain.Player;
+
 public class RankResponse {
 
     private final Long id;
@@ -12,12 +14,18 @@ public class RankResponse {
                         final String nickname,
                         final int totalScore,
                         final int rank,
-                        final int topPercent) {
+                        final double topPercent) {
         this.id = id;
         this.nickname = nickname;
         this.totalScore = totalScore;
         this.rank = rank;
         this.topPercent = topPercent;
+    }
+
+    public static RankResponse to(final Player player,
+                                  final int rank,
+                                  final double topPercent) {
+        return new RankResponse(player.getId(), player.getNickname(), player.getTotalScore().getValue(), rank, topPercent);
     }
 
     public Long getId() {
