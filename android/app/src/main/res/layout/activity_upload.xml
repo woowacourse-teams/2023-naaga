@@ -30,7 +30,7 @@
             android:id="@+id/iv_upload_camera_icon"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:src="@drawable/ic_camera_add"
+            android:src="@drawable/ic_camera"
             app:layout_constraintBottom_toBottomOf="@id/iv_upload_photo"
             app:layout_constraintEnd_toEndOf="@id/iv_upload_photo"
             app:layout_constraintStart_toStartOf="@id/iv_upload_photo"

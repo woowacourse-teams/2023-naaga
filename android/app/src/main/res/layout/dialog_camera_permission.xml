@@ -18,7 +18,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_camera" />
+            app:srcCompat="@drawable/ic_camera_dialog" />
 
         <TextView
             android:id="@+id/tv_dialog_location_description"
