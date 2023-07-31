@@ -1,5 +1,8 @@
-package com.now.naaga.data.remote.dto.second
+package com.now.naaga.data.remote.dto.third
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class StatisticDto(
     val gameCount: Int,
     val successGameCount: Int,

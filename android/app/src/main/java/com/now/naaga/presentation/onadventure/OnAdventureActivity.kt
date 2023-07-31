@@ -146,7 +146,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun stopAdventure(status: AdventureStatus?) {
-        if (status == AdventureStatus.ERROR) {
+        if (status == AdventureStatus.NONE) {
             Toast.makeText(
                 this,
                 getString(R.string.onAdventure_fail_load_description),
@@ -183,7 +183,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
                 Toast.makeText(this, getString(R.string.onAdventure_retry), Toast.LENGTH_LONG)
                     .show()
 
-            AdventureStatus.ERROR -> stopAdventure(status)
+            AdventureStatus.NONE -> stopAdventure(status)
         }
     }
 

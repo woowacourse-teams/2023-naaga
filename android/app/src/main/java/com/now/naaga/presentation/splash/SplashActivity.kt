@@ -7,8 +7,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus.DONE
-import com.now.domain.model.AdventureStatus.ERROR
 import com.now.domain.model.AdventureStatus.IN_PROGRESS
+import com.now.domain.model.AdventureStatus.NONE
 import com.now.naaga.R
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
@@ -40,7 +40,7 @@ class SplashActivity : AppCompatActivity() {
         val intent: Intent = when (adventure.adventureStatus) {
             IN_PROGRESS -> OnAdventureActivity.getIntentWithAdventure(this, adventure)
             DONE -> Intent(this, BeginAdventureActivity::class.java)
-            ERROR -> Intent(this, BeginAdventureActivity::class.java)
+            NONE -> Intent(this, BeginAdventureActivity::class.java)
         }
         startActivity(intent)
         finish()
