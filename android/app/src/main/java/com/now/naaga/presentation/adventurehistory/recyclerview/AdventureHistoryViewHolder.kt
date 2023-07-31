@@ -19,6 +19,7 @@ class AdventureHistoryViewHolder(
         when (resultType) {
             AdventureResultType.SUCCESS -> binding.ivAdventureHistoryStamp.setImageResource(R.drawable.ic_success)
             AdventureResultType.FAIL -> binding.ivAdventureHistoryStamp.setImageResource(R.drawable.ic_fail)
+            AdventureResultType.NONE -> {}
         }
     }
 
@@ -26,6 +27,7 @@ class AdventureHistoryViewHolder(
         when (adventureResult.resultType) {
             AdventureResultType.SUCCESS -> binding.tvAdventureHistoryName.text = adventureResult.destination.name
             AdventureResultType.FAIL -> binding.tvAdventureHistoryName.text = DESTINATION_NAME_IN_FAILURE_CASE
+            AdventureResultType.NONE -> {}
         }
     }
 
