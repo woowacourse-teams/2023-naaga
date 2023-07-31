@@ -16,6 +16,8 @@ class RankActivity : AppCompatActivity() {
         binding = ActivityRankBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViewModel()
+        viewModel.fetchMyRank()
+        viewModel.fetchRanks()
     }
 
     private fun initViewModel() {
