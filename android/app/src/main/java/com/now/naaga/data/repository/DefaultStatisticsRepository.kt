@@ -11,12 +11,12 @@ class DefaultStatisticsRepository : StatisticsRepository {
     override fun getMyStatistics(callback: (Result<Statistics>) -> Unit) {
         val call = statisticsService.getMyStatistics()
         call.fetchNaagaResponse(
-            { statisticsDto ->
+            onSuccess = { statisticsDto ->
                 if (statisticsDto != null) {
                     callback(Result.success(statisticsDto.toDomain()))
                 }
             },
-            { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
+            onFailure = { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
         )
     }
 }
