@@ -2,7 +2,6 @@ package com.now.naaga.data.repository
 
 import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
-import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.retrofit.ServicePool.placeService
@@ -21,13 +20,7 @@ class DefaultPlaceRepository : PlaceRepository {
         val call = placeService.getMyPlace(sortBy, order)
 
         call.fetchNaagaResponse(
-            onSuccess = { places ->
-                if (places == null) {
-                    callback(Result.failure(NaagaThrowable.NaagaUnknownError("null 값이 넘어왔습니다.")))
-                    return@fetchNaagaResponse
-                }
-                callback(Result.success(places.map { it.toDomain() }))
-            },
+            onSuccess = { places -> callback(Result.success(places.map { it.toDomain() })) },
             onFailure = { callback(Result.failure(it)) },
         )
     }
@@ -36,13 +29,7 @@ class DefaultPlaceRepository : PlaceRepository {
         val call = placeService.getPlace(placeId)
 
         call.fetchNaagaResponse(
-            onSuccess = { place ->
-                if (place == null) {
-                    callback(Result.failure(NaagaThrowable.NaagaUnknownError("null 값이 넘어왔습니다.")))
-                    return@fetchNaagaResponse
-                }
-                callback(Result.success(place.toDomain()))
-            },
+            onSuccess = { place -> callback(Result.success(place.toDomain())) },
             onFailure = { callback(Result.failure(it)) },
         )
     }
@@ -56,13 +43,7 @@ class DefaultPlaceRepository : PlaceRepository {
         val call = placeService.submitPlace(place.toDto(), imagePart)
 
         call.fetchNaagaResponse(
-            onSuccess = { place ->
-                if (place == null) {
-                    callback(Result.failure(NaagaThrowable.NaagaUnknownError("null값이 넘어왔습니다.")))
-                    return@fetchNaagaResponse
-                }
-                callback(Result.success(place.toDomain()))
-            },
+            onSuccess = { placeDto -> callback(Result.success(placeDto.toDomain())) },
             onFailure = { callback(Result.failure(it)) },
         )
     }
