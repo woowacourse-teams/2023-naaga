@@ -6,16 +6,20 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.databinding.ActivityRankBinding
+import com.now.naaga.presentation.rank.recyclerview.RankAdapter
 
 class RankActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRankBinding
     private lateinit var viewModel: RankViewModel
+
+    private val rankAdapter = RankAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRankBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViewModel()
+        initRecyclerView()
         viewModel.fetchMyRank()
         viewModel.fetchRanks()
     }
@@ -24,6 +28,14 @@ class RankActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[RankViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+    }
+
+    private fun initRecyclerView() {
+        binding.rvRankWholeRanks.apply {
+            adapter = rankAdapter
+            itemAnimator = null
+            setHasFixedSize(true)
+        }
     }
 
     companion object {
