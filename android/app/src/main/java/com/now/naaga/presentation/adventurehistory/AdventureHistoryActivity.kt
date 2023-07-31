@@ -23,6 +23,7 @@ class AdventureHistoryActivity : AppCompatActivity() {
         initRecyclerView()
         viewModel.fetchHistories()
         startObserving()
+        setClickListeners()
     }
 
     private fun initViewModel() {
@@ -41,6 +42,12 @@ class AdventureHistoryActivity : AppCompatActivity() {
     private fun startObserving() {
         viewModel.places.observe(this) { places ->
             updateHistory(places)
+        }
+    }
+
+    private fun setClickListeners() {
+        binding.ivAdventureHistoryBack.setOnClickListener {
+            finish()
         }
     }
 
