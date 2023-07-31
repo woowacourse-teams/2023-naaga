@@ -4,15 +4,26 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
 
 class UploadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUploadBinding
+
+    private val cameraLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicturePreview(),
+    ) { bitmap ->
+        if (bitmap != null) {
+            setImage(bitmap)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,12 +33,25 @@ class UploadActivity : AppCompatActivity() {
 
         checkPermission()
         setCoordinate()
+        bindListener()
+    }
 
-        binding.btnUploadSubmit.setOnClickListener {
+    private fun bindListener() {
+        binding.ivUploadCameraIcon.setOnClickListener {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
                 CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+            } else {
+                cameraLauncher.launch(null)
             }
         }
+
+        binding.btnUploadSubmit.setOnClickListener {
+        }
+    }
+
+    private fun setImage(bitmap: Bitmap?) {
+        binding.ivUploadCameraIcon.visibility = View.GONE
+        binding.ivUploadPhoto.setImageBitmap(bitmap)
     }
 
     private fun setCoordinate() {
