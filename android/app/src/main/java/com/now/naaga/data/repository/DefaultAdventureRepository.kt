@@ -10,7 +10,7 @@ import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.retrofit.ERROR_500
 import com.now.naaga.data.remote.retrofit.ERROR_NOT_400_500
 import com.now.naaga.data.remote.retrofit.ServicePool.adventureService
-import com.now.naaga.data.remote.retrofit.fetchNaagaResponse
+import com.now.naaga.data.remote.retrofit.fetchNaagaNullableResponse
 import com.now.naaga.data.remote.retrofit.getFailureDto
 import com.now.naaga.data.remote.retrofit.isFailure400
 import com.now.naaga.data.remote.retrofit.isFailure500
@@ -24,11 +24,11 @@ class DefaultAdventureRepository : AdventureRepository {
         callback: (Result<List<Adventure>>) -> Unit,
     ) {
         val call = adventureService.getGamesByStatus(status.name)
-        call.fetchNaagaResponse(
+        call.fetchNaagaNullableResponse(
             onSuccess = { adventures ->
                 if (adventures == null) {
                     callback(Result.failure(NaagaThrowable.NaagaUnknownError("null 값이 넘어왔습니다")))
-                    return@fetchNaagaResponse
+                    return@fetchNaagaNullableResponse
                 }
                 callback(Result.success(adventures.map { it.toDomain() }))
             },
@@ -70,7 +70,7 @@ class DefaultAdventureRepository : AdventureRepository {
     override fun getAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit) {
         val call = adventureService.getGame(adventureId)
 
-        call.fetchNaagaResponse(
+        call.fetchNaagaNullableResponse(
             { adventureDto ->
                 if (adventureDto != null) {
                     callback(Result.success(adventureDto.toDomain()))
@@ -86,7 +86,7 @@ class DefaultAdventureRepository : AdventureRepository {
         callback: (Result<AdventureStatus>) -> Unit,
     ) {
         val call = adventureService.endGame(adventureId, coordinate.toDto())
-        call.fetchNaagaResponse(
+        call.fetchNaagaNullableResponse(
             { EndedAdventureDto ->
                 if (EndedAdventureDto != null) {
                     callback(Result.success(EndedAdventureDto.toDomain()))
