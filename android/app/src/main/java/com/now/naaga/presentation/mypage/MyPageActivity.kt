@@ -2,6 +2,8 @@ package com.now.naaga.presentation.mypage
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.now.domain.model.Player
+import com.now.domain.model.Rank
 import com.now.naaga.databinding.ActivityMyPageBinding
 
 class MyPageActivity : AppCompatActivity() {
@@ -11,11 +13,20 @@ class MyPageActivity : AppCompatActivity() {
         binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.custom1.initContent(getStatisticsData())
-        binding.custom2.initContent(getPlaceData())
+        binding.rank = getRank()
+        binding.customGridStatistics.initContent(getStatisticsData())
+        binding.customGridPlaces.initContent(getPlaceData())
     }
 
-    fun getPlaceData(): List<MyPagePlaceUiModel> = listOf(
+    private fun getRank(): Rank {
+        return Rank(
+            Player(1, "Bixx", 1024),
+            3,
+            2,
+        )
+    }
+
+    private fun getPlaceData(): List<MyPagePlaceUiModel> = listOf(
         MyPagePlaceUiModel(
             "https://i.namu.wiki/i/weOyvjMO4Pv2TzZPXdlaTj3zzbQglcDeBUPrVf9WADE8899wqRWrl1WYknSDDr7BC-lk2WzTdWfBKvDAKChUew.webp", // ktlint-disable max-line-length
             "상암 월드컵 경기장",
@@ -30,7 +41,7 @@ class MyPageActivity : AppCompatActivity() {
         ),
     )
 
-    fun getStatisticsData(): List<MyPageStatisticsUiModel> = listOf(
+    private fun getStatisticsData(): List<MyPageStatisticsUiModel> = listOf(
         MyPageStatisticsUiModel(10, "회", "전체 모험"),
         MyPageStatisticsUiModel(8, "회", "모험 성공"),
         MyPageStatisticsUiModel(2, "회", "모험 실패"),
