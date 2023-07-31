@@ -24,6 +24,7 @@ class RankActivity : AppCompatActivity() {
         viewModel.fetchMyRank()
         viewModel.fetchRanks()
         startObserving()
+        setClickListeners()
     }
 
     private fun initViewModel() {
@@ -48,6 +49,12 @@ class RankActivity : AppCompatActivity() {
 
     private fun updateRank(places: List<Rank>) {
         rankAdapter.submitList(places)
+    }
+
+    private fun setClickListeners() {
+        binding.ivRankClose.setOnClickListener {
+            finish()
+        }
     }
 
     companion object {
