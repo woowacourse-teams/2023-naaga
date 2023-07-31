@@ -5,7 +5,7 @@
     <style name="BeginActivity" />
 
     <style name="BeginActivity.Button">
-        <item name="android:background">@drawable/rect_radius_small_white</item>
+        <item name="android:background">@drawable/rect_white_radius_small</item>
         <item name="android:backgroundTint">@color/main_purple</item>
         <item name="android:elevation">6dp</item>
     </style>

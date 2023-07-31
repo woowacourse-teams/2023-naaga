@@ -76,5 +76,6 @@ class LocationPermissionDialog : DialogFragment() {
     companion object {
         const val WIDTH_RATE = 0.83f
         const val HEIGHT = 400
+        const val TAG_LOCATION_DIALOG = "LOCATION"
     }
 }
