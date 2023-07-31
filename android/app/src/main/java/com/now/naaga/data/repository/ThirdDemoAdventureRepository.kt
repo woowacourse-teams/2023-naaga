@@ -6,9 +6,9 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Game
 import com.now.domain.model.Hint
+import com.now.domain.model.OrderType
+import com.now.domain.model.SortType
 import com.now.domain.repository.AdventureRepository2
-import com.now.domain.repository.OrderType
-import com.now.domain.repository.SortType
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.dto.third.FinishGameDto

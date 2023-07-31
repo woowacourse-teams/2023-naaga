@@ -6,6 +6,8 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Game
 import com.now.domain.model.Hint
+import com.now.domain.model.OrderType
+import com.now.domain.model.SortType
 
 interface AdventureRepository2 {
     fun fetchMyAdventures(callback: (Result<List<Game>>) -> Unit)
