@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Naaga"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
+        <activity
+            android:name=".presentation.rank.RankActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
