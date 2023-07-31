@@ -12,8 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/purple_white">
+        android:layout_height="wrap_content">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 tools:text="36"
                 android:text="@{String.valueOf(model.value)}"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +52,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_mapyge_item_value"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_mapyge_item_value"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_mapyge_item_value"
                 android:id="@+id/tv_mypage_item_unit" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

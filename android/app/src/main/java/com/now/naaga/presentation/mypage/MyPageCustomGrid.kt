@@ -4,11 +4,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.now.naaga.databinding.CustomMypageItemBinding
+import com.now.naaga.databinding.CustomMypageGridBinding
 
-class CustomMyPageItem(context: Context, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
+class MyPageCustomGrid(context: Context, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
     private lateinit var layoutInflater: LayoutInflater
-    private lateinit var binding: CustomMypageItemBinding
+    private lateinit var binding: CustomMypageGridBinding
     private lateinit var adapter: MyPageAdapter
 
     init {
@@ -17,7 +17,7 @@ class CustomMyPageItem(context: Context, attrs: AttributeSet? = null) : Constrai
 
     private fun initView() {
         layoutInflater = LayoutInflater.from(context)
-        binding = CustomMypageItemBinding.inflate(layoutInflater, this, true)
+        binding = CustomMypageGridBinding.inflate(layoutInflater, this, true)
     }
 
     fun initContent(data: List<MyPageItemUiModel>) {
