@@ -11,18 +11,18 @@ class AdventureHistoryViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(adventureResult: AdventureResult) {
         binding.adventureResult = adventureResult
-        setPhoto(binding, adventureResult.resultType)
-        setName(binding, adventureResult)
+        setPhoto(adventureResult.resultType)
+        setName(adventureResult)
     }
 
-    private fun setPhoto(binding: ItemHistoryBinding, resultType: AdventureResultType) {
+    private fun setPhoto(resultType: AdventureResultType) {
         when (resultType) {
             AdventureResultType.SUCCESS -> binding.ivAdventureHistoryStamp.setImageResource(R.drawable.ic_success)
             AdventureResultType.FAIL -> binding.ivAdventureHistoryStamp.setImageResource(R.drawable.ic_fail)
         }
     }
 
-    private fun setName(binding: ItemHistoryBinding, adventureResult: AdventureResult) {
+    private fun setName(adventureResult: AdventureResult) {
         when (adventureResult.resultType) {
             AdventureResultType.SUCCESS -> binding.tvAdventureHistoryName.text = adventureResult.destination.name
             AdventureResultType.FAIL -> binding.tvAdventureHistoryName.text = DESTINATION_NAME_IN_FAILURE_CASE
