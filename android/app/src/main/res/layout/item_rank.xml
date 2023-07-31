@@ -38,7 +38,6 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="263dp"
                 tools:text="BBOTTO" />
 
             <TextView
