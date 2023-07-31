@@ -2,7 +2,7 @@ package com.now.domain.model
 
 import java.time.LocalTime
 
-data class Statistic(
+data class Statistics(
     val adventureCount: Int,
     val successCount: Int,
     val failureCount: Int,
