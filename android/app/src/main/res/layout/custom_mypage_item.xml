@@ -32,7 +32,7 @@
             app:spanCount="3"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/tv_mypage_item_title"
-            tools:listitem="@layout/rv_mypage_item"
+            tools:listitem="@layout/rv_mypage_item_statistics"
             tools:itemCount="6" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
