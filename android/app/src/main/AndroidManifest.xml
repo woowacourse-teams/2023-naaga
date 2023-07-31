@@ -16,9 +16,6 @@
         android:theme="@style/Theme.Naaga"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
-        <activity
-            android:name=".presentation.upload.UploadActivity"
-            android:exported="false" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -30,16 +27,21 @@
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.beginadventure.BeginAdventureActivity"
             android:exported="false" />
-
         <activity
             android:name=".presentation.onadventure.OnAdventureActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.adventurehistory.AdventureHistoryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".presentation.upload.UploadActivity"
             android:exported="false" />
     </application>
 

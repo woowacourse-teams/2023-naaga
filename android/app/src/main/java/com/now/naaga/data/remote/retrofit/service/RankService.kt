@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface RankService {
     @GET("/rank")
-    fun getAllRank(
+    fun getAllRanks(
         @Query("sort-by") sortBy: String,
         @Query("order") order: String,
     ): Call<List<RankDto>>
