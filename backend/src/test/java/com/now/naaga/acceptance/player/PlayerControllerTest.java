@@ -69,9 +69,9 @@ class PlayerControllerTest extends ControllerTest {
 
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(rankResponse.getId()).isEqualTo(1L);
-            softly.assertThat(rankResponse.getNickname()).isEqualTo("채채");
-            softly.assertThat(rankResponse.getTotalScore()).isEqualTo(15);
+            softly.assertThat(rankResponse.getPlayer().getId()).isEqualTo(1L);
+            softly.assertThat(rankResponse.getPlayer().getNickname()).isEqualTo("채채");
+            softly.assertThat(rankResponse.getPlayer().getTotalScore()).isEqualTo(15);
             softly.assertThat(rankResponse.getRank()).isEqualTo(3);
             softly.assertThat(rankResponse.getTopPercent()).isEqualTo(100);
         });
@@ -95,15 +95,15 @@ class PlayerControllerTest extends ControllerTest {
         final List<RankResponse> rankResponseList = response.jsonPath().getList(".", RankResponse.class);
         assertThat(rankResponseList).hasSize(3);
         final RankResponse firstRank = rankResponseList.get(0);
-        assertThat(firstRank.getNickname()).isEqualTo("채리");
+        assertThat(firstRank.getPlayer().getNickname()).isEqualTo("채리");
         assertThat(firstRank.getRank()).isEqualTo(1);
 
         final RankResponse secondRank = rankResponseList.get(1);
-        assertThat(secondRank.getNickname()).isEqualTo("이레");
+        assertThat(secondRank.getPlayer().getNickname()).isEqualTo("이레");
         assertThat(secondRank.getRank()).isEqualTo(2);
 
         final RankResponse thirdRank = rankResponseList.get(2);
-        assertThat(thirdRank.getNickname()).isEqualTo("채채");
+        assertThat(thirdRank.getPlayer().getNickname()).isEqualTo("채채");
         assertThat(thirdRank.getRank()).isEqualTo(3);
     }
 

@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-// TODO: 어플리케이션 실행시켰을때 하이버네이트가 테이블을 못찾는 오류가 발생하는데 이 오류ㅂ때문에 @@DataJpaTest 이게 안돌아가는거같음..ㅜ
 @SpringBootTest
 class PlayerRepositoryTest {
 

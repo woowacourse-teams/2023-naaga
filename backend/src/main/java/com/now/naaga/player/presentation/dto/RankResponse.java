@@ -4,20 +4,17 @@ import com.now.naaga.player.domain.Player;
 
 public class RankResponse {
 
-    private final Long id;
-    private final String nickname;
-    private final int totalScore;
-    private final int rank;
-    private final int topPercent;
+    private PlayerResponse player;
+    private int rank;
+    private int topPercent;
 
-    public RankResponse(final Long id,
-                        final String nickname,
-                        final int totalScore,
+    public RankResponse() {
+    }
+
+    public RankResponse(final PlayerResponse player,
                         final int rank,
                         final int topPercent) {
-        this.id = id;
-        this.nickname = nickname;
-        this.totalScore = totalScore;
+        this.player = player;
         this.rank = rank;
         this.topPercent = topPercent;
     }
@@ -25,19 +22,11 @@ public class RankResponse {
     public static RankResponse to(final Player player,
                                   final int rank,
                                   final int topPercent) {
-        return new RankResponse(player.getId(), player.getNickname(), player.getTotalScore().getValue(), rank, topPercent);
+        return new RankResponse(PlayerResponse.to(player), rank, topPercent);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public int getTotalScore() {
-        return totalScore;
+    public PlayerResponse getPlayer() {
+        return player;
     }
 
     public int getRank() {
