@@ -1,10 +1,11 @@
-package com.now.naaga.data.remote.dto.second
+package com.now.naaga.data.remote.dto.third
 
 import com.now.naaga.data.remote.dto.CoordinateDto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FinishGameDto(
-    val endType: String,
+data class HintDto(
+    val id: Long,
     val coordinate: CoordinateDto,
+    val direction: String,
 )

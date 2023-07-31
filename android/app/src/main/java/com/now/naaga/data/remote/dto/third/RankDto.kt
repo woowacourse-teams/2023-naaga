@@ -1,4 +1,4 @@
-package com.now.naaga.data.remote.dto.second
+package com.now.naaga.data.remote.dto.third
 
 data class RankDto(
     val player: PlayerDto,
