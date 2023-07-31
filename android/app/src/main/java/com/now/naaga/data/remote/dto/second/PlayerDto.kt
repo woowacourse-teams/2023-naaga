@@ -1,4 +1,4 @@
-package com.now.naaga.data.remote.dto
+package com.now.naaga.data.remote.dto.second
 
 import kotlinx.serialization.Serializable
 
@@ -8,10 +8,3 @@ data class PlayerDto(
     val nickname: String,
     val totalScore: Int,
 )
-
-// 바라는 내용
-/*val id: Long,
-val name: String,
-val score: Int,
-val percent: Int,
-val rank: Int,*/

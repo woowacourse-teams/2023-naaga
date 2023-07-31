@@ -1,4 +1,4 @@
-package com.now.naaga.data.remote.dto
+package com.now.naaga.data.remote.dto.second
 
 import kotlinx.serialization.Serializable
 
@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class AdventureResultDto(
     val id: Long,
     val gameId: Long,
-    val place: PlaceDto,
+    val destination: PlaceDto,
     val resultType: String,
     val score: Int,
     val totalPlayTime: String,
