@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.now.domain.model.Rank
 import com.now.naaga.databinding.ActivityRankBinding
 import com.now.naaga.presentation.rank.recyclerview.RankAdapter
 
@@ -22,6 +23,7 @@ class RankActivity : AppCompatActivity() {
         initRecyclerView()
         viewModel.fetchMyRank()
         viewModel.fetchRanks()
+        startObserving()
     }
 
     private fun initViewModel() {
@@ -36,6 +38,16 @@ class RankActivity : AppCompatActivity() {
             itemAnimator = null
             setHasFixedSize(true)
         }
+    }
+
+    private fun startObserving() {
+        viewModel.ranks.observe(this) { ranks ->
+            updateRank(ranks)
+        }
+    }
+
+    private fun updateRank(places: List<Rank>) {
+        rankAdapter.submitList(places)
     }
 
     companion object {
