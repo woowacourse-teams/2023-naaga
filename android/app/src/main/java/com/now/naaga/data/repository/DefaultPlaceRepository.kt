@@ -1,0 +1,69 @@
+package com.now.naaga.data.repository
+
+import com.now.domain.model.Place
+import com.now.domain.repository.PlaceRepository
+import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.mapper.toDomain
+import com.now.naaga.data.mapper.toDto
+import com.now.naaga.data.remote.retrofit.ServicePool.placeService
+import com.now.naaga.data.remote.retrofit.fetchNaagaResponse
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+
+class DefaultPlaceRepository : PlaceRepository {
+    override fun fetchAllPlaces(
+        sortBy: String,
+        order: String,
+        callback: (Result<List<Place>>) -> Unit,
+    ) {
+        val call = placeService.getMyPlace(sortBy, order)
+
+        call.fetchNaagaResponse(
+            onSuccess = { places ->
+                if (places == null) {
+                    callback(Result.failure(NaagaThrowable.NaagaUnknownError("null 값이 넘어왔습니다.")))
+                    return@fetchNaagaResponse
+                }
+                callback(Result.success(places.map { it.toDomain() }))
+            },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+
+    override fun fetchPlace(placeId: Long, callback: (Result<Place>) -> Unit) {
+        val call = placeService.getPlace(placeId)
+
+        call.fetchNaagaResponse(
+            onSuccess = { place ->
+                if (place == null) {
+                    callback(Result.failure(NaagaThrowable.NaagaUnknownError("null 값이 넘어왔습니다.")))
+                    return@fetchNaagaResponse
+                }
+                callback(Result.success(place.toDomain()))
+            },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+
+    override fun registerPlace(place: Place, image: File, callback: (Result<Place>) -> Unit) {
+        val imagePart = MultipartBody.Part.createFormData(
+            "imageFile",
+            image.name,
+            image.asRequestBody("image/jpeg".toMediaTypeOrNull()),
+        )
+        val call = placeService.submitPlace(place.toDto(), imagePart)
+
+        call.fetchNaagaResponse(
+            onSuccess = { place ->
+                if (place == null) {
+                    callback(Result.failure(NaagaThrowable.NaagaUnknownError("null값이 넘어왔습니다.")))
+                    return@fetchNaagaResponse
+                }
+                callback(Result.success(place.toDomain()))
+            },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+}
