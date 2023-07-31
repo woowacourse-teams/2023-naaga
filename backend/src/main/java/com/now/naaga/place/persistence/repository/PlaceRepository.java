@@ -2,11 +2,10 @@ package com.now.naaga.place.persistence.repository;
 
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 

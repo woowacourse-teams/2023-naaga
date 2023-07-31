@@ -8,7 +8,7 @@ data class Game(
     val startCoordinate: Coordinate,
     val destination: Place,
     val player: Player,
-    val gameStatus: AdventureStatus,
-    val restTryCount: RestTryCount,
+    val adventureStatus: AdventureStatus,
+    val remainingTryCount: RemainingTryCount,
     val hints: List<Hint>,
 )

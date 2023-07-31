@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
+import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 
 class BeginAdventureActivity : AppCompatActivity() {
@@ -54,7 +55,7 @@ class BeginAdventureActivity : AppCompatActivity() {
     private fun setClickListeners() {
         binding.clBeginAdventureBegin.setOnClickListener {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-                LocationPermissionDialog().show(supportFragmentManager, "location")
+                LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
             } else {
                 startActivity(OnAdventureActivity.getIntent(this))
             }
@@ -64,13 +65,9 @@ class BeginAdventureActivity : AppCompatActivity() {
 
     private fun checkPermissionAndBeginAdventure() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            LocationPermissionDialog().show(supportFragmentManager, LOCATION_DIALOG_TAG)
+            LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
         } else {
             startActivity(Intent(this, OnAdventureActivity::class.java))
         }
-    }
-
-    companion object {
-        private const val LOCATION_DIALOG_TAG = "LOCATION"
     }
 }

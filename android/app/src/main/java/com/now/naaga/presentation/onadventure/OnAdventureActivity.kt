@@ -126,9 +126,6 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun startObserving() {
-        viewModel.destination.observe(this) { destination ->
-            addMarker(destination.coordinate)
-        }
         viewModel.status.observe(this) { status ->
             stopAdventure(status)
             onStatusChanged(status)
