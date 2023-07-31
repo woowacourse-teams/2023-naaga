@@ -36,8 +36,8 @@ class RankMockWeb {
 
                             path.startsWith("/rank") -> {
                                 val parameters = extractQueryParameters(path)
-                                val sortBy = parameters["sort-by"]?.toIntOrNull()
-                                val order = parameters["order"]?.toIntOrNull()
+                                val sortBy = parameters["sort-by"]
+                                val order = parameters["order"]
                                 if (sortBy == null || order == null) {
                                     return MockResponse().setResponseCode(401)
                                 }
