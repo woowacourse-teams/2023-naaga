@@ -15,24 +15,24 @@ class DefaultRankRepository : RankRepository {
     ) {
         val call = rankService.getAllRanks(sortBy, order)
         call.fetchNaagaResponse(
-            { rankDtos ->
+            onSuccess = { rankDtos ->
                 if (rankDtos != null) {
                     callback(Result.success(rankDtos.map { it.toDomain() }))
                 }
             },
-            { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
+            onFailure = { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
         )
     }
 
     override fun getMyRank(callback: (Result<Rank>) -> Unit) {
         val call = rankService.getMyRank()
         call.fetchNaagaResponse(
-            { rankDto ->
+            onSuccess = { rankDto ->
                 if (rankDto != null) {
                     callback(Result.success(rankDto.toDomain()))
                 }
             },
-            { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
+            onFailure = { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
         )
     }
 }
