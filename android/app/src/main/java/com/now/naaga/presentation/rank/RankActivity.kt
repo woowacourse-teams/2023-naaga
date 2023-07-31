@@ -1,5 +1,7 @@
 package com.now.naaga.presentation.rank
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -20,5 +22,11 @@ class RankActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[RankViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent {
+            return Intent(context, RankActivity::class.java)
+        }
     }
 }
