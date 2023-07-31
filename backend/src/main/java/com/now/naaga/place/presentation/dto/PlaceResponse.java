@@ -1,5 +1,7 @@
 package com.now.naaga.place.presentation.dto;
 
+import com.now.naaga.place.domain.Place;
+
 import java.util.Objects;
 
 public record PlaceResponse(Long id,
@@ -7,6 +9,16 @@ public record PlaceResponse(Long id,
                             CoordinateResponse coordinate,
                             String imageUrl,
                             String description) {
+
+    public static PlaceResponse from(final Place savedPlace) {
+        return new PlaceResponse(
+                savedPlace.getId(),
+                savedPlace.getName(),
+                CoordinateResponse.from(savedPlace.getPosition()),
+                savedPlace.getImageUrl(),
+                savedPlace.getDescription()
+        );
+    }
 
     @Override
     public boolean equals(final Object o) {
