@@ -1,13 +1,16 @@
 package com.now.naaga.presentation.upload
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -45,13 +48,34 @@ class UploadActivity : AppCompatActivity() {
             }
         }
 
+        binding.ivUploadPhoto.setOnClickListener {
+            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+            } else {
+                cameraLauncher.launch(null)
+            }
+        }
+
         binding.btnUploadSubmit.setOnClickListener {
         }
     }
 
-    private fun setImage(bitmap: Bitmap?) {
+    private fun setImage(bitmap: Bitmap) {
         binding.ivUploadCameraIcon.visibility = View.GONE
         binding.ivUploadPhoto.setImageBitmap(bitmap)
+    }
+
+    private fun getImageUri(bitmap: Bitmap): Uri? {
+        val resolver = applicationContext.contentResolver
+        resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            ?.let { imageUri ->
+                val outputStream = resolver.openOutputStream(imageUri)
+                outputStream?.use { stream ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                }
+                return imageUri
+            }
+        return null
     }
 
     private fun setCoordinate() {
@@ -84,6 +108,10 @@ class UploadActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUEST_CODE_CAMERA = 1000
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
 
         fun getIntent(context: Context): Intent {
             return Intent(context, UploadActivity::class.java)
