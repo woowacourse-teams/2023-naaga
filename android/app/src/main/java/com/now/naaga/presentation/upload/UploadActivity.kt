@@ -89,7 +89,7 @@ class UploadActivity : AppCompatActivity() {
     }
 
     private fun roundToFourDecimalPlaces(number: Double): Double {
-        return (number * 10000).toLong().toDouble() / 10000
+        return (number * 10_000).toLong().toDouble() / 10_000
     }
 
     private fun bindListener() {
@@ -102,6 +102,9 @@ class UploadActivity : AppCompatActivity() {
         }
         binding.ivUploadPhotoCoordinate.setOnClickListener {
             checkLocationPermission()
+        }
+        binding.ivUploadClose.setOnClickListener {
+            finish()
         }
     }
 
