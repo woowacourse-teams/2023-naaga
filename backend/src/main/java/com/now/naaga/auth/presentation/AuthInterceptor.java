@@ -12,8 +12,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
-    public static final String AUTH_KEY = "memberCommand";
-
     private final AuthenticationExtractor<MemberAuthRequest> authenticationExtractor;
     private final AuthService authService;
 
