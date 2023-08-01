@@ -1,31 +1,19 @@
 package com.now.naaga.game.domain;
 
-import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
-import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
-
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
 
 @Entity
 public class Game extends BaseEntity {
@@ -96,8 +84,8 @@ public class Game extends BaseEntity {
         this.startTime = startTime;
     }
 
-    public void validateOwner(final Member member) {
-        if (!member.equals(this.player.getMember())) {
+    public void validateOwner(final Player player) {
+        if (!player.equals(this.player)) {
             throw new GameException(INACCESSIBLE_AUTHENTICATION);
         }
     }
