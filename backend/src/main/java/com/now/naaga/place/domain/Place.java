@@ -4,6 +4,7 @@ import static com.now.naaga.game.domain.Game.MIN_RANGE;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.player.domain.Player;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +30,7 @@ public class Place extends BaseEntity {
 
     private String imageUrl;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "player_id")
     private Player registeredPlayer;
 

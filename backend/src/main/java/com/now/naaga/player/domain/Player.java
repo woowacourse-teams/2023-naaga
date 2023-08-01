@@ -4,6 +4,7 @@ import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.score.domain.Score;
 import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -28,7 +29,7 @@ public class Player extends BaseEntity {
     @Embedded
     private Score totalScore;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id")
     private Member member;
 
