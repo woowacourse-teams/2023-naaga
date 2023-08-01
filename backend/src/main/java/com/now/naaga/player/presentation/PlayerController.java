@@ -3,8 +3,7 @@ package com.now.naaga.player.presentation;
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.player.application.PlayerService;
-import com.now.naaga.player.domain.Player;
-import com.now.naaga.player.domain.Players;
+import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.exception.PlayerException;
 import com.now.naaga.player.presentation.dto.RankResponse;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.now.naaga.player.exception.PlayerExceptionType.INVALID_SORTING_REQUEST;
 
@@ -30,13 +29,8 @@ public class PlayerController {
 
     @GetMapping("/my")
     public ResponseEntity<RankResponse> findMyRank(@Auth final MemberCommand memberCommand) {
-        final Players players = playerService.findAllPlayersByRanksAscending();
-        final Player player = playerService.getRankAndTopPercent(memberCommand);
-
-        final int rank = players.calculateRank(player);
-        final int topPercent = players.calculateTopPercent(rank);
-
-        final RankResponse rankResponse = RankResponse.to(player, rank, topPercent);
+        final Rank rank = playerService.getRankAndTopPercent(memberCommand);
+        final RankResponse rankResponse = RankResponse.of(rank);
         return ResponseEntity.ok(rankResponse);
     }
 
@@ -47,14 +41,11 @@ public class PlayerController {
         if (!sortBy.equals("rank") && order.equals("ascending")) {
             throw new PlayerException(INVALID_SORTING_REQUEST);
         }
-        final Players players = playerService.findAllPlayersByRanksAscending();
-        final List<RankResponse> rankResponseList = new ArrayList<>();
-        for (Player player : players.getPlayers()) {
-            final int rank = players.calculateRank(player);
-            final int topPercent = players.calculateTopPercent(rank);
-            rankResponseList.add(RankResponse.to(player, rank, topPercent));
-        }
 
+        final List<Rank> ranks = playerService.getAllPlayersByRanksAscending();
+        final List<RankResponse> rankResponseList = ranks.stream()
+                .map(RankResponse::of)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(rankResponseList);
     }
 }

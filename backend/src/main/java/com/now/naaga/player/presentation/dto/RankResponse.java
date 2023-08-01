@@ -1,6 +1,6 @@
 package com.now.naaga.player.presentation.dto;
 
-import com.now.naaga.player.domain.Player;
+import com.now.naaga.player.domain.Rank;
 
 public class RankResponse {
 
@@ -19,10 +19,8 @@ public class RankResponse {
         this.topPercent = topPercent;
     }
 
-    public static RankResponse to(final Player player,
-                                  final int rank,
-                                  final int topPercent) {
-        return new RankResponse(PlayerResponse.to(player), rank, topPercent);
+    public static RankResponse of(final Rank rank) {
+        return new RankResponse(PlayerResponse.to(rank.getPlayer()), rank.getRank(), rank.getTopPercent());
     }
 
     public PlayerResponse getPlayer() {
