@@ -40,6 +40,28 @@ public class PlaceService {
         this.placeRepository = placeRepository;
     }
 
+    public List<Place> findAllPlace(final FindAllPlaceCommand findAllPlaceCommand) {
+        final List<Place> places = placeRepository.findByRegisteredPlayerId(findAllPlaceCommand.playerId());
+        final SortType sortType = findAllPlaceCommand.sortType();
+        final OrderType orderType = findAllPlaceCommand.orderType();
+        sortType.sort(places, orderType);
+        return places;
+    }
+
+    @Transactional(readOnly = true)
+    public Place recommendPlaceByPosition(final Position position) {
+        final List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, DISTANCE);
+        if (places.isEmpty()) {
+            throw new PlaceException(PLACE_NOT_FOUND);
+        }
+        return places.get(getRandomIndex(places));
+    }
+
+    private int getRandomIndex(final List<Place> places) {
+        final Random random = new Random();
+        return random.nextInt(places.size());
+    }
+
     public Place createPlace(final MemberCommand memberCommand,
                              final PlaceCommand placeCommand) {
         final Position position = Position.of(placeCommand.latitude(), placeCommand.longitude());

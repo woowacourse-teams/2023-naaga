@@ -2,7 +2,8 @@ package com.now.naaga.place.presentation.dto;
 
 import com.now.naaga.place.domain.Place;
 
-import java.util.Objects;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public record PlaceResponse(Long id,
                             String name,
@@ -20,31 +21,9 @@ public record PlaceResponse(Long id,
         );
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final PlaceResponse that = (PlaceResponse) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name)
-                && Objects.equals(coordinate, that.coordinate)
-                && Objects.equals(imageUrl, that.imageUrl)
-                && Objects.equals(description, that.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, coordinate, imageUrl, description);
-    }
-
-    @Override
-    public String toString() {
-        return "PlaceResponse{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", coordinate=" + coordinate +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+    public static List<PlaceResponse> convertToPlaceResponses(final List<Place> places) {
+        return places.stream()
+                .map(PlaceResponse::from)
+                .collect(Collectors.toList());
     }
 }
