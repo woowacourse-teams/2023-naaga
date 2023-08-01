@@ -3,13 +3,11 @@ name: NAAGA BACKEND MERGE CI
 on:
   push:
     branches: 
-      - dev
-    paths:
-      - './backend/**'
+      - feat/#140
 
 jobs:
-  deploy:
-    name: backend deploy
+  build_and_push:
+    name: backend build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -46,3 +44,5 @@ jobs:
         context: ./backend
         push: true
         tags: naaganow/naaga-app:latest
+        platforms: linux/arm64
+
