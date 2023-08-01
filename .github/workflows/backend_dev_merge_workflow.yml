@@ -1,0 +1,24 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub
+        uses: actions/checkout@v2
+        
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+        
+      - name: Build image
+        run: docker build . -t ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-app:latest
+        
+      - name: Docker login
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+        
+      - name: Push image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-app:latest
