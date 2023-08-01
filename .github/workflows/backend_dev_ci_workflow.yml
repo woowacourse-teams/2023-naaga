@@ -1,18 +1,14 @@
-name: Gradle Package
+name: NAAGA BACKEND CI
 
 on:
   pull_request:
-    types: 
-      - closed
     branches: 
       - dev
-
+      
 jobs:
   build_test:
-    if: github.event.pull_request.merged == true
-    
+    name: backend check
     runs-on: ubuntu-latest
-    
     defaults:
       run:
         working-directory: ./backend
@@ -36,3 +32,11 @@ jobs:
     - name: Test with Gradle
       run: ./gradlew test
 
+    - name: Check Build and Test Result
+      run: |
+        if [ $? -ne 0 ]; then
+          echo "Build or tests failed. Closing the pull request."
+          gh pr close ${{ github.event.pull_request.number }}
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
