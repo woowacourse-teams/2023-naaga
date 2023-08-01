@@ -3,6 +3,7 @@ package com.now.naaga.presentation.adventurehistory.recyclerview
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureResultType
 import com.now.naaga.R
@@ -11,6 +12,9 @@ import com.now.naaga.databinding.ItemHistoryBinding
 class AdventureHistoryViewHolder(private val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(adventureResult: AdventureResult) {
         binding.adventureResult = adventureResult
+        Glide.with(binding.ivAdventureHistoryPhoto)
+            .load(adventureResult.destination.image)
+            .into(binding.ivAdventureHistoryPhoto)
         setSuccessOrFailure(adventureResult.resultType)
         setName(adventureResult)
     }
