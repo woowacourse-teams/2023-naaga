@@ -1,4 +1,5 @@
 package com.now.naaga.player.exception;
+
 import com.now.naaga.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
 
@@ -16,8 +17,8 @@ public enum PlayerExceptionType implements BaseExceptionType {
     private final String errorMessage;
 
     PlayerExceptionType(final int errorCode,
-                       final HttpStatus httpStatus,
-                       final String errorMessage) {
+                        final HttpStatus httpStatus,
+                        final String errorMessage) {
         this.errorCode = errorCode;
         this.httpStatus = httpStatus;
         this.errorMessage = errorMessage;

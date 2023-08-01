@@ -1,5 +1,8 @@
 package com.now.naaga.game.application;
 
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
+
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
@@ -13,13 +16,9 @@ import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
-import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
 
 @Transactional
 @Service

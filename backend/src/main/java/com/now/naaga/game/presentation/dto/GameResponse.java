@@ -2,7 +2,6 @@ package com.now.naaga.game.presentation.dto;
 
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

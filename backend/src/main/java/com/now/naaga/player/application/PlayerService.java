@@ -4,10 +4,9 @@ import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.exception.PlayerException;
 import com.now.naaga.player.exception.PlayerExceptionType;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Transactional
 @Service
