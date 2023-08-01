@@ -13,6 +13,8 @@ import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.repository.ThirdDemoAdventureRepository
 import com.now.naaga.databinding.ActivityAdventureResultBinding
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class AdventureResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdventureResultBinding
@@ -50,6 +52,7 @@ class AdventureResultActivity : AppCompatActivity() {
                     Toast.makeText(this, MESSAGE_IN_RESULT_TYPE_NONE, Toast.LENGTH_SHORT).show()
                 }
             }
+            setPlayTime(adventureResult.playTime)
         }
 
         viewModel.errorMessage.observe(this) { errorMessage ->
@@ -57,6 +60,11 @@ class AdventureResultActivity : AppCompatActivity() {
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun setPlayTime(playTime: LocalTime) {
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        binding.tvAdventureResultPlayTime.text = playTime.format(timeFormatter)
     }
 
     private fun setSuccessTypeView(destinationName: String) {
