@@ -65,7 +65,7 @@ class AdventureResultActivity : AppCompatActivity() {
     }
 
     private fun setPlayTime(playTime: LocalTime) {
-        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        val timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMATTER_PATTERN)
         binding.tvAdventureResultPlayTime.text = playTime.format(timeFormatter)
     }
 
@@ -88,6 +88,7 @@ class AdventureResultActivity : AppCompatActivity() {
     companion object {
         private const val GAME_ID = "GAME_ID"
         private const val MESSAGE_IN_RESULT_TYPE_NONE = "네트워크에 문제가 생겼습니다."
+        private const val TIME_FORMATTER_PATTERN = "HH:mm:ss"
 
         fun getIntentWithGameId(context: Context, gameId: Long): Intent {
             return Intent(context, OnAdventureActivity::class.java).apply {
