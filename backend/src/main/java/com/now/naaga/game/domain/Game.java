@@ -19,7 +19,7 @@ import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
 public class Game extends BaseEntity {
 
     public static final double MIN_RANGE = 0.05;
-    private static final int MAXIMUM_HINT_USE_COUNT = 5;
+    private static final int MAXIMUM_HINT_USE_COUNT = 3;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
