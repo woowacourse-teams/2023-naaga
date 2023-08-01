@@ -14,8 +14,15 @@ class MyPageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.rank = getRank()
+        setClickListeners()
         binding.customGridStatistics.initContent(getStatisticsData())
         binding.customGridPlaces.initContent(getPlaceData())
+    }
+
+    private fun setClickListeners() {
+        binding.ivMypageBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun getRank(): Rank {
