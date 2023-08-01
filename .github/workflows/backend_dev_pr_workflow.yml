@@ -1,18 +1,14 @@
-name: Gradle Package
+name: NAAGA BACKEND PULL REQUEST CI
 
 on:
   pull_request:
-    types: 
-      - closed
     branches: 
       - dev
-
+      
 jobs:
   build_test:
-    if: github.event.pull_request.merged == true
-    
+    name: backend check
     runs-on: ubuntu-latest
-    
     defaults:
       run:
         working-directory: ./backend
@@ -35,4 +31,3 @@ jobs:
 
     - name: Test with Gradle
       run: ./gradlew test
-
