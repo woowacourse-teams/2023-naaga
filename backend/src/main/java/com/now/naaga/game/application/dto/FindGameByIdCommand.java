@@ -1,4 +1,4 @@
-package com.now.naaga.game.application;
+package com.now.naaga.game.application.dto;
 
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 
