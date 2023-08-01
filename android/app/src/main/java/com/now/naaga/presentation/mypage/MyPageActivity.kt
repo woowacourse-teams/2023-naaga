@@ -15,7 +15,7 @@ class MyPageActivity : AppCompatActivity() {
 
         binding.rank = getRank()
         setClickListeners()
-        binding.customGridStatistics.initContent(getStatisticsData())
+        binding.customGridMypageStatistics.initContent(getStatisticsData())
         binding.customGridPlaces.initContent(getPlaceData())
     }
 

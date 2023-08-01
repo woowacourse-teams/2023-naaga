@@ -85,13 +85,14 @@
                 android:fontFamily="@font/pretendard_semibold"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                android:id="@+id/btn_mypage_adventure_results"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_percent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/rect_radius_small"
                 android:backgroundTint="@color/light_purple" />
 
             <com.now.naaga.presentation.mypage.MyPageCustomGrid
-                android:id="@+id/customGrid_statistics"
+                android:id="@+id/customGrid_mypage_statistics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="2dp"
@@ -112,7 +113,7 @@
                 android:background="@drawable/rect_radius_small_white"
                 android:backgroundTint="@color/purple_white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/customGrid_statistics" />
+                app:layout_constraintTop_toBottomOf="@id/customGrid_mypage_statistics" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

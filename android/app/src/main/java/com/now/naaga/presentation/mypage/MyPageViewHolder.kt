@@ -30,7 +30,7 @@ class MyPageStatisticsViewHolder(private val binding: RvMypageItemStatisticsBind
         // 숫자가 1자리일 때 36, 2자리일 때 32 ... 이렇게 4단위로 내려가도록 계산함.
         // 단 10자리 부터는 0혹은 음수가 나올 수 있음
         val fontSize = (10 - (data.value / 10)) * 4
-        binding.tvMapygeItemValue.textSize = fontSize.toFloat()
+        binding.tvMypageItemValue.textSize = fontSize.toFloat()
     }
 
     companion object {

@@ -40,7 +40,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintEnd_toStartOf="@id/tv_mypage_item_unit"
                 android:fontFamily="@font/pretendard_bold"
-                android:id="@+id/tv_mapyge_item_value" />
+                android:id="@+id/tv_mypage_item_value" />
 
             <TextView
                 tools:text="회"
@@ -51,8 +51,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_mapyge_item_value"
-                app:layout_constraintBaseline_toBaselineOf="@+id/tv_mapyge_item_value"
+                app:layout_constraintStart_toEndOf="@id/tv_mypage_item_value"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_mypage_item_value"
                 android:id="@+id/tv_mypage_item_unit" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
