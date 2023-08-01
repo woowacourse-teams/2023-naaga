@@ -47,7 +47,7 @@ public class PlaceService {
 
         final Path uploadPath = saveImageFile(placeCommand.imageFile());
 
-        final Player registeredPlayer = playerService.findPlayerByMember(memberCommand);
+        final Player registeredPlayer = playerService.findPlayerByMemberId(1L);
         final Place place = new Place(placeCommand.name(), placeCommand.description(), position, uploadPath.toString(), registeredPlayer);
 
         placeRepository.save(place);
@@ -55,10 +55,8 @@ public class PlaceService {
     }
 
     private Path saveImageFile(final MultipartFile imageFile) {
-        // TODO: 8/1/23 경로 prod, dev, test,... 환경별로 따로 두기
-        final String directory = "/Users/hwan/image";
         final MultipartFileManager multipartFileManager = new MultipartFileManager();
-        return multipartFileManager.save(imageFile, directory);
+        return multipartFileManager.save(imageFile);
         // TODO: 8/1/23 rollback되면 파일을 삭제해야되는데... 뭔가 이상하다
     }
 

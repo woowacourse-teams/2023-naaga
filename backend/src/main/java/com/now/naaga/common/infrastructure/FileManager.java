@@ -4,5 +4,5 @@ import java.nio.file.Path;
 
 public interface FileManager<T> {
 
-    Path save(T t, String saveDirectory);
+    Path save(T t);
 }
