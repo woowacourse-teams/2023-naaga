@@ -35,7 +35,7 @@ class RankViewModel : ViewModel() {
         private const val TEMP_MOCK_MY_RANK_DATA = 1
 
         private val TEMP_MOCK_RANKS_DATA = List(10) {
-            Rank(Player(id = 1, nickname = "뽀또", score = 12300), rank = 1, percent = 1.0)
+            Rank(Player(id = 1, nickname = "뽀또", score = 12300), rank = 1, percent = 1)
         }
     }
 }

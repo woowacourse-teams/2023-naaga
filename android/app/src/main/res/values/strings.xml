@@ -46,4 +46,19 @@
 
     <!-- RankActivity -->
     <string name="rank_title">Leader Board</string>
+
+    <!-- mypage -->
+    <string name="mypage_adventure_record">모험 기록</string>
+    <string name="mypage_rank">%d등</string>
+    <string name="mypage_percentage">(상위%d%%)</string>
+    <string name="mypage_count">회</string>
+    <string name="mypage_number">개</string>
+    <string name="mypage_minute">분</string>
+    <string name="mypage_meter">미터</string>
+    <string name="mypage_total_adventure">전체 모험</string>
+    <string name="mypage_adventure_success">모험 성공</string>
+    <string name="mypage_adventure_failure">모험 실패</string>
+    <string name="mypage_total_play_time">총 모험 시간</string>
+    <string name="mypage_total_adventure_distance">총 직경 거리</string>
+    <string name="mypage_total_hint_uses">사용 힌트 개수</string>
 </resources>
