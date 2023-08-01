@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureResultType
 import com.now.naaga.R
 import com.now.naaga.data.NaagaThrowable
@@ -47,13 +48,7 @@ class AdventureResultActivity : AppCompatActivity() {
 
     private fun subscribeObserving() {
         viewModel.adventureResult.observe(this) { adventureResult ->
-            when (adventureResult.resultType) {
-                AdventureResultType.SUCCESS -> setSuccessTypeView(adventureResult.destination.name)
-                AdventureResultType.FAIL -> setFailTypeView()
-                AdventureResultType.NONE -> {
-                    Toast.makeText(this, MESSAGE_IN_RESULT_TYPE_NONE, Toast.LENGTH_SHORT).show()
-                }
-            }
+            setViewInType(adventureResult)
             setPlayTime(adventureResult.playTime)
         }
 
@@ -64,9 +59,14 @@ class AdventureResultActivity : AppCompatActivity() {
         }
     }
 
-    private fun setPlayTime(playTime: LocalTime) {
-        val timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMATTER_PATTERN)
-        binding.tvAdventureResultPlayTime.text = playTime.format(timeFormatter)
+    private fun setViewInType(adventureResult: AdventureResult) {
+        when (adventureResult.resultType) {
+            AdventureResultType.SUCCESS -> setSuccessTypeView(adventureResult.destination.name)
+            AdventureResultType.FAIL -> setFailTypeView()
+            AdventureResultType.NONE -> {
+                Toast.makeText(this, MESSAGE_IN_RESULT_TYPE_NONE, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setSuccessTypeView(destinationName: String) {
@@ -77,6 +77,11 @@ class AdventureResultActivity : AppCompatActivity() {
     private fun setFailTypeView() {
         binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_fail)
         binding.tvAdventureResultDestination.text = getString(R.string.adventureResult_fail_destination_name)
+    }
+
+    private fun setPlayTime(playTime: LocalTime) {
+        val timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMATTER_PATTERN)
+        binding.tvAdventureResultPlayTime.text = playTime.format(timeFormatter)
     }
 
     private fun setClickListeners() {
