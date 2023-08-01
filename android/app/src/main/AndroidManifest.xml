@@ -43,7 +43,7 @@
             android:exported="false" />
         <activity
             android:name=".presentation.adventurehistory.AdventureHistoryActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".presentation.upload.UploadActivity"
             android:exported="false" />
