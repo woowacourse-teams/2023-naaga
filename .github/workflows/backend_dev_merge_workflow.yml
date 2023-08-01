@@ -33,17 +33,16 @@ jobs:
 
     - name: Test with Gradle
       run: ./gradlew test
-
+      
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_ACCESSTOKEN }}
+        
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
         context: ./backend
         push: true
         tags: naaganow/naaga-app:latest
-        
-        
