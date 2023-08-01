@@ -54,7 +54,7 @@
     <string name="mypage_count">회</string>
     <string name="mypage_number">개</string>
     <string name="mypage_minute">분</string>
-    <string name="mypage_meter">미터</string>
+    <string name="mypage_meter">m</string>
     <string name="mypage_total_adventure">전체 모험</string>
     <string name="mypage_adventure_success">모험 성공</string>
     <string name="mypage_adventure_failure">모험 실패</string>
