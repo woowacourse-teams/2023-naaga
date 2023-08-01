@@ -13,7 +13,8 @@ public class PlaceFixture {
                 "SEOUL",
                 "SEOUL",
                 SEOUL_POSITION(),
-                "imageUrl", PLAYER());
+                "imageUrl",
+                PLAYER());
     }
 
     public static Place JEJU_PLACE() {
@@ -21,6 +22,7 @@ public class PlaceFixture {
                 "JEJU",
                 "JEJU",
                 JEJU_POSITION(),
-                "imageUrl", PLAYER());
+                "imageUrl",
+                PLAYER());
     }
 }

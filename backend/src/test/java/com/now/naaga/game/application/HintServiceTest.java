@@ -2,6 +2,7 @@ package com.now.naaga.game.application;
 
 import static com.now.naaga.game.domain.Game.MAXIMUM_HINT_USE_COUNT;
 import static com.now.naaga.game.fixture.GameFixture.SEOUL_TO_JEJU_GAME;
+import static com.now.naaga.place.fixture.PlaceFixture.JEJU_PLACE;
 import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,6 +15,8 @@ import com.now.naaga.game.domain.Hint;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.game.repository.GameRepository;
+import com.now.naaga.place.domain.Place;
+import com.now.naaga.place.persistence.repository.PlaceRepository;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -35,11 +38,15 @@ class HintServiceTest {
     @Autowired
     private GameRepository gameRepository;
 
+    @Autowired
+    private PlaceRepository placeRepository;
+
     private Game game;
 
     @BeforeEach
     void setUp() {
-        game = gameRepository.save(SEOUL_TO_JEJU_GAME());
+        final Place place = placeRepository.save(JEJU_PLACE());
+        game = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
     }
 
     @Test

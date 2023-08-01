@@ -29,11 +29,11 @@ public class Game extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private GameStatus gameStatus;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "player_id")
     private Player player;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "place_id")
     private Place place;
 
