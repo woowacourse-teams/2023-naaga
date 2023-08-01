@@ -1,11 +1,15 @@
 package com.now.naaga.place.application;
 
+import com.now.naaga.common.domain.OrderType;
 import com.now.naaga.common.infrastructure.MultipartFileManager;
 import com.now.naaga.member.application.dto.MemberCommand;
+import com.now.naaga.place.application.dto.FindAllPlaceCommand;
+import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
 import com.now.naaga.place.application.dto.PlaceCommand;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.PlaceCheckService;
 import com.now.naaga.place.domain.Position;
+import com.now.naaga.place.domain.SortType;
 import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import com.now.naaga.player.application.PlayerService;
@@ -18,7 +22,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Random;
 
-import static com.now.naaga.place.exception.PlaceExceptionType.PLACE_NOT_FOUND;
+import static com.now.naaga.place.exception.PlaceExceptionType.CAN_NOT_FIND_PLACE;
+import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
 
 @Transactional
 @Service
@@ -40,6 +45,7 @@ public class PlaceService {
         this.placeRepository = placeRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Place> findAllPlace(final FindAllPlaceCommand findAllPlaceCommand) {
         final List<Place> places = placeRepository.findByRegisteredPlayerId(findAllPlaceCommand.playerId());
         final SortType sortType = findAllPlaceCommand.sortType();
@@ -49,10 +55,16 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
+    public Place findPlaceById(final FindPlaceByIdCommand findPlaceByIdCommand) {
+        return placeRepository.findById(findPlaceByIdCommand.placeId())
+                .orElseThrow(() -> new PlaceException(NO_EXIST));
+    }
+
+    @Transactional(readOnly = true)
     public Place recommendPlaceByPosition(final Position position) {
         final List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, DISTANCE);
         if (places.isEmpty()) {
-            throw new PlaceException(PLACE_NOT_FOUND);
+            throw new PlaceException(CAN_NOT_FIND_PLACE);
         }
         return places.get(getRandomIndex(places));
     }
@@ -66,12 +78,9 @@ public class PlaceService {
                              final PlaceCommand placeCommand) {
         final Position position = Position.of(placeCommand.latitude(), placeCommand.longitude());
         placeCheckService.checkOtherPlaceNearby(position);
-
         final Path uploadPath = saveImageFile(placeCommand.imageFile());
-
         final Player registeredPlayer = playerService.findPlayerByMemberId(1L);
         final Place place = new Place(placeCommand.name(), placeCommand.description(), position, uploadPath.toString(), registeredPlayer);
-
         placeRepository.save(place);
         return place;
     }
@@ -79,20 +88,5 @@ public class PlaceService {
     private Path saveImageFile(final MultipartFile imageFile) {
         final MultipartFileManager multipartFileManager = new MultipartFileManager();
         return multipartFileManager.save(imageFile);
-        // TODO: 8/1/23 rollback되면 파일을 삭제해야되는데... 뭔가 이상하다
-    }
-
-    @Transactional(readOnly = true)
-    public Place recommendPlaceByPosition(final Position position) {
-        final List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, DISTANCE);
-        if (places.isEmpty()) {
-            throw new PlaceException(PLACE_NOT_FOUND);
-        }
-        return places.get(getRandomIndex(places));
-    }
-
-    private int getRandomIndex(final List<Place> places) {
-        final Random random = new Random();
-        return random.nextInt(places.size());
     }
 }

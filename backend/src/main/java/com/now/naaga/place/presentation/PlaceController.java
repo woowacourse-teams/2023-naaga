@@ -3,9 +3,10 @@ package com.now.naaga.place.presentation;
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.place.application.PlaceService;
+import com.now.naaga.place.application.dto.FindAllPlaceCommand;
+import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
 import com.now.naaga.place.application.dto.PlaceCommand;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.place.application.dto.FindAllPlaceCommand;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,16 @@ public class PlaceController {
         final FindAllPlaceCommand findAllPlaceCommand = FindAllPlaceCommand.of(playerRequest, sortBy, order);
         final List<Place> places = placeService.findAllPlace(findAllPlaceCommand);
         final List<PlaceResponse> response = PlaceResponse.convertToPlaceResponses(places);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @GetMapping("/{placeId}")
+    public ResponseEntity<PlaceResponse> findPlaceById(@PathVariable Long placeId) {
+        final FindPlaceByIdCommand findPlaceByIdCommand = FindPlaceByIdCommand.from(placeId);
+        final Place place = placeService.findPlaceById(findPlaceByIdCommand);
+        final PlaceResponse response = PlaceResponse.from(place);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
