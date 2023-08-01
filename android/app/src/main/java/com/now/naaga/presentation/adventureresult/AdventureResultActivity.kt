@@ -1,9 +1,12 @@
 package com.now.naaga.presentation.adventureresult
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.databinding.ActivityAdventureResultBinding
+import com.now.naaga.presentation.onadventure.OnAdventureActivity
 
 class AdventureResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdventureResultBinding
@@ -18,7 +21,21 @@ class AdventureResultActivity : AppCompatActivity() {
         binding.viewModel = viewModel
     }
 
+    private fun getIntentData(): String? {
+        return intent.getStringExtra(GAME_ID)
+    }
+
     private fun initViewModel() {
         viewModel = ViewModelProvider(this)[AdventureResultViewModel::class.java]
+    }
+
+    companion object {
+        private const val GAME_ID = "GAME_ID"
+
+        fun getIntentWithGameId(context: Context, gameId: Long): Intent {
+            return Intent(context, OnAdventureActivity::class.java).apply {
+                putExtra(GAME_ID, gameId)
+            }
+        }
     }
 }
