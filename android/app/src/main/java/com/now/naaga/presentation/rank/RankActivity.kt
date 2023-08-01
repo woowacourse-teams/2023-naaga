@@ -41,7 +41,6 @@ class RankActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         binding.rvRankWholeRanks.apply {
             adapter = rankAdapter
-            itemAnimator = null
             setHasFixedSize(true)
         }
     }
