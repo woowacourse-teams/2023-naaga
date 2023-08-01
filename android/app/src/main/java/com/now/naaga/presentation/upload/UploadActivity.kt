@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Coordinate
+import com.now.naaga.data.repository.DefaultPlaceRepository
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
@@ -66,7 +67,9 @@ class UploadActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this)[UploadViewModel::class.java]
+        val repository = DefaultPlaceRepository()
+        val factory = UploadFactory(application, repository)
+        viewModel = ViewModelProvider(this, factory)[UploadViewModel::class.java]
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
     }
@@ -122,6 +125,8 @@ class UploadActivity : AppCompatActivity() {
         binding.btnUploadSubmit.setOnClickListener {
             if (isFormValid().not()) {
                 Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.postPlace()
             }
         }
     }
@@ -149,7 +154,7 @@ class UploadActivity : AppCompatActivity() {
     private fun setImage(bitmap: Bitmap) {
         binding.ivUploadCameraIcon.visibility = View.GONE
         binding.ivUploadPhoto.setImageBitmap(bitmap)
-        val uri = getImageUri(bitmap).toString()
+        val uri = getImageUri(bitmap) ?: Uri.EMPTY
         viewModel.setUri(uri)
     }
 
