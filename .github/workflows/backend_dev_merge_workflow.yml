@@ -43,3 +43,5 @@ jobs:
         context: .
         push: true
         tags: naagaNow/naaga-app:latest
+        
+        
