@@ -34,13 +34,13 @@ class DefaultPlaceRepository : PlaceRepository {
         )
     }
 
-    override fun registerPlace(place: Place, image: File, callback: (Result<Place>) -> Unit) {
+    override fun postPlace(place: Place, image: File, callback: (Result<Place>) -> Unit) {
         val imagePart = MultipartBody.Part.createFormData(
             "imageFile",
             image.name,
             image.asRequestBody("image/jpeg".toMediaTypeOrNull()),
         )
-        val call = placeService.submitPlace(place.toDto(), imagePart)
+        val call = placeService.registerPlace(place.toDto(), imagePart)
 
         call.fetchNaagaResponse(
             onSuccess = { placeDto -> callback(Result.success(placeDto.toDomain())) },

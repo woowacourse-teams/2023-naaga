@@ -24,7 +24,7 @@ interface PlaceService {
 
     @Multipart
     @POST("/places")
-    fun submitPlace(
+    fun registerPlace(
         @Part placeDto: PlaceDto,
         @Part file: MultipartBody.Part,
     ): Call<PlaceDto>

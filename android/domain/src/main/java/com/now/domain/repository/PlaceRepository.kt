@@ -15,7 +15,7 @@ interface PlaceRepository {
         callback: (Result<Place>) -> Unit,
     )
 
-    fun registerPlace(
+    fun postPlace(
         place: Place,
         image: File,
         callback: (Result<Place>) -> Unit,
