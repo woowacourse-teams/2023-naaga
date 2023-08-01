@@ -3,9 +3,11 @@ package com.now.naaga.presentation.rank
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Rank
+import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.databinding.ActivityRankBinding
 import com.now.naaga.presentation.rank.recyclerview.RankAdapter
@@ -47,6 +49,12 @@ class RankActivity : AppCompatActivity() {
     private fun startObserving() {
         viewModel.ranks.observe(this) { ranks ->
             updateRank(ranks)
+        }
+        viewModel.errorMessage.observe(this) { errorMessage ->
+            if (NaagaThrowable.ServerConnectFailure().userMessage == errorMessage) {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
     }
 
