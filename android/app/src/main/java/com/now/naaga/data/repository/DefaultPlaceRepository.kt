@@ -12,7 +12,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 class DefaultPlaceRepository : PlaceRepository {
-    override fun fetchAllPlaces(
+    override fun fetchMyPlaces(
         sortBy: String,
         order: String,
         callback: (Result<List<Place>>) -> Unit,
