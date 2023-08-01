@@ -2,9 +2,12 @@ package com.now.naaga.game.presentation;
 
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.game.application.GameService;
+import com.now.naaga.game.application.HintService;
+import com.now.naaga.game.application.dto.CreateHintCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.presentation.dto.GameResponse;
 import com.now.naaga.game.presentation.dto.GameStatusResponse;
+import com.now.naaga.game.presentation.dto.HintResponse;
 import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.place.domain.Position;
 import java.net.URI;
@@ -25,9 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController {
 
     private final GameService gameService;
+    private final HintService hintService;
 
-    public GameController(final GameService gameService) {
+    public GameController(final GameService gameService,
+                          final HintService hintService) {
         this.gameService = gameService;
+        this.hintService = hintService;
     }
 
     @PostMapping
@@ -35,6 +41,13 @@ public class GameController {
                                            @RequestBody final Position position) {
         final Game game = gameService.createGame(memberCommand, position);
         return ResponseEntity.created(URI.create("/games/" + game.getId())).build();
+    }
+
+    @PostMapping("/{gameId}/hints")
+    public ResponseEntity<HintResponse> createHint(@Auth final MemberCommand memberCommand,
+                                                   @RequestBody final Position coordinate,
+                                                   @PathVariable final Long gameId) {
+        return null;
     }
 
     @PatchMapping("/{gameId}")
@@ -48,14 +61,14 @@ public class GameController {
     @GetMapping("/{gameId}")
     public ResponseEntity<GameResponse> findGame(@Auth final MemberCommand memberCommand,
                                                  @PathVariable final Long gameId) {
-        final Game game = gameService.findGame(memberCommand, gameId);
+        final Game game = gameService.findGame(null, gameId);
         return ResponseEntity.ok(GameResponse.from(game));
     }
 
     @GetMapping
     public ResponseEntity<List<GameResponse>> findGamesByGameStatus(@Auth final MemberCommand memberCommand,
                                                                     @RequestParam final String status) {
-        final List<Game> games = gameService.findGamesByStatus(memberCommand, status);
+        final List<Game> games = gameService.findGamesByStatus(null, status);
         final List<GameResponse> gameResponses = games.stream()
                 .map(GameResponse::from)
                 .collect(Collectors.toList());

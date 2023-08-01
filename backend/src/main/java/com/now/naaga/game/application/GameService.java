@@ -14,6 +14,7 @@ import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
+import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -26,18 +27,21 @@ public class GameService {
     private final GameRepository gameRepository;
     private final PlaceService placeService;
     private final MemberService memberService;
+    private final PlayerService playerService;
 
     public GameService(final GameRepository gameRepository,
                        final PlaceService placeService,
-                       final MemberService memberService) {
+                       final MemberService memberService,
+                       final PlayerService playerService) {
         this.gameRepository = gameRepository;
         this.placeService = placeService;
         this.memberService = memberService;
+        this.playerService = playerService;
     }
 
     public Game createGame(final MemberCommand memberCommand,
                            final Position position) {
-        final List<Game> gamesByStatus = findGamesByStatus(memberCommand, GameStatus.IN_PROGRESS.name());
+        final List<Game> gamesByStatus = findGamesByStatus(null, GameStatus.IN_PROGRESS.name());
         if (!gamesByStatus.isEmpty()) {
             throw new GameException(ALREADY_IN_PROGRESS);
         }
@@ -60,9 +64,9 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public Game findGame(final MemberCommand memberCommand,
+    public Game findGame(final Long memberId,
                          final Long id) {
-        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
+        final Member member = memberService.findMemberById(memberId);
         final Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new GameException(NOT_EXIST));
         if (!member.equals(game.getPlayer().getMember())) {
@@ -72,11 +76,9 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public List<Game> findGamesByStatus(final MemberCommand memberCommand,
+    public List<Game> findGamesByStatus(final Long memberId,
                                         final String gameStatus) {
-        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
-        final Long memberId = member.getId();
-
-        return gameRepository.findByPlayerIdAndGameStatus(null, GameStatus.valueOf(gameStatus));
+        final Player player = playerService.findPlayerByMemberId(memberId);
+        return gameRepository.findByPlayerIdAndGameStatus(player.getId(), GameStatus.valueOf(gameStatus));
     }
 }
