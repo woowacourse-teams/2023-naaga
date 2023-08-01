@@ -11,7 +11,9 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -85,7 +87,9 @@ class UploadActivity : AppCompatActivity() {
             val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 
             if (location != null) {
-                binding.tvUploadPhotoCoordinate.text = getCoordinate(location)
+                val coordinate = getCoordinate(location)
+                binding.tvUploadPhotoCoordinate.text = coordinate
+                viewModel.setCoordinate(coordinate)
             }
         }
     }
@@ -116,6 +120,10 @@ class UploadActivity : AppCompatActivity() {
             finish()
         }
         binding.btnUploadSubmit.setOnClickListener {
+            Log.d("krrong", "${isFormValid()}")
+            if (isFormValid().not()) {
+                Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -157,6 +165,26 @@ class UploadActivity : AppCompatActivity() {
                 return imageUri
             }
         return null
+    }
+
+    private fun isFormValid(): Boolean {
+        return (isEmptyPhoto() || isEmptyTitle() || isEmptyCoordinate() || isEmptyDescription()).not()
+    }
+
+    private fun isEmptyPhoto(): Boolean {
+        return viewModel.hasUri()
+    }
+
+    private fun isEmptyTitle(): Boolean {
+        return viewModel.title.value == null
+    }
+
+    private fun isEmptyCoordinate(): Boolean {
+        return viewModel.hasCoordinate()
+    }
+
+    private fun isEmptyDescription(): Boolean {
+        return viewModel.description.value == null
     }
 
     companion object {

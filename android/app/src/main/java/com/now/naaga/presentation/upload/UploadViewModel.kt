@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 
 class UploadViewModel : ViewModel() {
     private var imageUri: String = ""
+    private var coordinate: String = ""
 
     private val _title = MutableLiveData<String>()
     val title: LiveData<String> = _title
@@ -24,5 +25,17 @@ class UploadViewModel : ViewModel() {
 
     fun setUri(uri: String) {
         imageUri = uri
+    }
+
+    fun setCoordinate(coordinate: String) {
+        this.coordinate = coordinate
+    }
+
+    fun hasUri(): Boolean {
+        return imageUri != ""
+    }
+
+    fun hasCoordinate(): Boolean {
+        return coordinate != ""
     }
 }
