@@ -5,7 +5,7 @@ on:
     branches: 
       - dev
     paths:
-      - 'backend/**'   
+      - './backend/**'
 
 jobs:
   deploy:
@@ -29,19 +29,20 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew bootJar
 
     - name: Test with Gradle
       run: ./gradlew test
-
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v2
-
-    - name: Build image
-      run: docker build . -t ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-app:latest
-
-    - name: Docker login
-      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-
-    - name: Push image
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-app:latest
+      
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_ACCESSTOKEN }}
+        
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: ./backend
+        push: true
+        tags: naaganow/naaga-app:latest
