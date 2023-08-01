@@ -19,6 +19,7 @@ import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
 public class Game extends BaseEntity {
 
     public static final double MIN_RANGE = 0.05;
+    private static final int MAXIMUM_HINT_USE_COUNT = 5;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -94,6 +95,10 @@ public class Game extends BaseEntity {
         if (!place.isInValidRange(position)) {
             throw new GameException(NOT_ARRIVED);
         }
+    }
+
+    public boolean canUseMoreHint() {
+        return hints.size() < MAXIMUM_HINT_USE_COUNT;
     }
 
     public void changeGameStatus(final GameStatus gameStatus) {
