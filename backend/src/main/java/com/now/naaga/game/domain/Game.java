@@ -20,6 +20,7 @@ public class Game extends BaseEntity {
 
     public static final double MIN_RANGE = 0.05;
     private static final int MAXIMUM_HINT_USE_COUNT = 3;
+    private static final int MAXIMUM_ATTEMPTS = 5;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -54,7 +55,7 @@ public class Game extends BaseEntity {
     }
 
     public Game(final Player player, final Place place, final Position startPosition) {
-        this(null, GameStatus.IN_PROGRESS, player, place, startPosition, 5, new ArrayList<>(), LocalDateTime.now());
+        this(null, GameStatus.IN_PROGRESS, player, place, startPosition, MAXIMUM_ATTEMPTS, new ArrayList<>(), LocalDateTime.now());
     }
 
     public Game(final GameStatus gameStatus,
