@@ -32,13 +32,7 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
                         _myScore.value = it.player.score
                         _myRank.value = it.rank
                     }
-                    .onFailure { throwable ->
-                        when (throwable) {
-                            is NaagaThrowable.ServerConnectFailure ->
-                                _errorMessage.value =
-                                    throwable.userMessage
-                        }
-                    }
+                    .onFailure { setErrorMessage(it) }
             },
         )
     }
@@ -50,15 +44,16 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
             callback = { result ->
                 result
                     .onSuccess { _ranks.value = it }
-                    .onFailure { throwable ->
-                        when (throwable) {
-                            is NaagaThrowable.ServerConnectFailure ->
-                                _errorMessage.value =
-                                    throwable.userMessage
-                        }
-                    }
+                    .onFailure { setErrorMessage(it) }
             },
         )
+    }
+
+    private fun setErrorMessage(throwable: Throwable) {
+        when (throwable) {
+            is NaagaThrowable.ServerConnectFailure ->
+                _errorMessage.value = throwable.userMessage
+        }
     }
 
     companion object {
