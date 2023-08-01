@@ -7,6 +7,7 @@ import com.now.naaga.data.repository.DefaultPlaceRepository
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.repository.DefaultStatisticsRepository
 import com.now.naaga.databinding.ActivityMyPageBinding
+import com.now.naaga.presentation.adventurehistory.AdventureHistoryActivity
 
 class MyPageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyPageBinding
@@ -19,8 +20,8 @@ class MyPageActivity : AppCompatActivity() {
 
         initViewModel()
         setClickListeners()
-        fetchData()
         subscribe()
+        fetchData()
     }
 
     private fun initViewModel() {
@@ -36,6 +37,10 @@ class MyPageActivity : AppCompatActivity() {
     private fun setClickListeners() {
         binding.ivMypageBack.setOnClickListener {
             finish()
+        }
+        binding.btnMypageAdventureResults.setOnClickListener {
+            val intent = AdventureHistoryActivity.getIntent(this)
+            startActivity(intent)
         }
     }
 
