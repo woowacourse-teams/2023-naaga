@@ -37,6 +37,19 @@ class AdventureResultViewModel(
         )
     }
 
+    fun fetchMyRank() {
+        rankRepository.getMyRank(
+            callback = { result ->
+                result
+                    .onSuccess { _myRank.value = it.rank }
+                    .onFailure {
+                        setErrorMessage(it)
+                        Log.d("test", "랭크 통신 실패")
+                    }
+            },
+        )
+    }
+
     private fun setErrorMessage(throwable: Throwable) {
         when (throwable) {
             is NaagaThrowable.ServerConnectFailure ->

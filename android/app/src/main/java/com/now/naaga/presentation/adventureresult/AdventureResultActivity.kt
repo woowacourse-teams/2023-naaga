@@ -24,6 +24,7 @@ class AdventureResultActivity : AppCompatActivity() {
         setContentView(binding.root)
         initViewModel()
         viewModel.fetchGameResult(getIntentData())
+        viewModel.fetchMyRank()
         subscribeObserving()
     }
 
