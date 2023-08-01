@@ -1,7 +1,7 @@
 package com.now.naaga.game.presentation;
 
 import com.now.naaga.auth.annotation.Auth;
-import com.now.naaga.game.application.FindGameByIdCommand;
+import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;

@@ -6,19 +6,9 @@ import com.now.naaga.place.presentation.dto.PlaceResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GameResponse {
-
-    private final Long id;
-    private final PlaceResponse place;
-    private final String gameStatus;
-
-    private GameResponse(final Long id,
-                         final PlaceResponse place,
-                         final String gameStatus) {
-        this.id = id;
-        this.place = place;
-        this.gameStatus = gameStatus;
-    }
+public record GameResponse(Long id,
+                           PlaceResponse place,
+                           String gameStatus) {
 
     public static GameResponse from(final Game game) {
         return new GameResponse(game.getId(), PlaceResponse.from(game.getPlace()), game.getGameStatus().toString());
@@ -28,17 +18,5 @@ public class GameResponse {
         return games.stream()
                 .map(GameResponse::from)
                 .collect(Collectors.toList());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public PlaceResponse getPlace() {
-        return place;
-    }
-
-    public String getGameStatus() {
-        return gameStatus;
     }
 }
