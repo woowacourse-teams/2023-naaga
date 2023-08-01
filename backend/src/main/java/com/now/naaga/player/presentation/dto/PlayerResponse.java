@@ -19,7 +19,7 @@ public class PlayerResponse {
         this.totalScore = totalScore;
     }
 
-    public static PlayerResponse to(final Player player) {
+    public static PlayerResponse from(final Player player) {
         return new PlayerResponse(player.getId(), player.getNickname(), player.getTotalScore().getValue());
     }
 

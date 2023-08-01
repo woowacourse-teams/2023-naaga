@@ -20,7 +20,7 @@ public class RankResponse {
     }
 
     public static RankResponse of(final Rank rank) {
-        return new RankResponse(PlayerResponse.to(rank.getPlayer()), rank.getRank(), rank.getTopPercent());
+        return new RankResponse(PlayerResponse.from(rank.getPlayer()), rank.getRank(), rank.getTopPercent());
     }
 
     public PlayerResponse getPlayer() {
