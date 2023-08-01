@@ -12,6 +12,7 @@ import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.repository.ThirdDemoAdventureRepository
 import com.now.naaga.databinding.ActivityAdventureResultBinding
+import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -28,6 +29,7 @@ class AdventureResultActivity : AppCompatActivity() {
         viewModel.fetchGameResult(getIntentData())
         viewModel.fetchMyRank()
         subscribeObserving()
+        setClickListeners()
     }
 
     private fun getIntentData(): Long {
@@ -75,6 +77,12 @@ class AdventureResultActivity : AppCompatActivity() {
     private fun setFailTypeView() {
         binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_fail)
         binding.tvAdventureResultDestination.text = getString(R.string.adventureResult_fail_destination_name)
+    }
+
+    private fun setClickListeners() {
+        binding.btnAdventureResultReturn.setOnClickListener {
+            startActivity(BeginAdventureActivity.getIntent(this))
+        }
     }
 
     companion object {
