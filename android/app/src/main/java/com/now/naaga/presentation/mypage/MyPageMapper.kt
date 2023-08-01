@@ -2,10 +2,11 @@ package com.now.naaga.presentation.mypage
 
 import android.content.Context
 import com.now.domain.model.Place
-import com.now.domain.model.Statistic
+import com.now.domain.model.Statistics
 import com.now.naaga.R
+import java.time.LocalTime
 
-fun Statistic.toUiModel(context: Context): List<MyPageStatisticsUiModel> {
+fun Statistics.toUiModel(context: Context): List<MyPageStatisticsUiModel> {
     return listOf(
         MyPageStatisticsUiModel(
             adventureCount,
@@ -23,7 +24,7 @@ fun Statistic.toUiModel(context: Context): List<MyPageStatisticsUiModel> {
             context.getString(R.string.mypage_adventure_failure),
         ),
         MyPageStatisticsUiModel(
-            totalPlayTime,
+            totalPlayTime.getTotalMinute(),
             context.getString(R.string.mypage_minute),
             context.getString(R.string.mypage_total_play_time),
         ),
@@ -38,6 +39,10 @@ fun Statistic.toUiModel(context: Context): List<MyPageStatisticsUiModel> {
             context.getString(R.string.mypage_total_hint_uses),
         ),
     )
+}
+
+private fun LocalTime.getTotalMinute(): Int {
+    return hour * 60 + minute
 }
 
 fun Place.toUiModel(): MyPagePlaceUiModel {
