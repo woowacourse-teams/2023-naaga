@@ -8,6 +8,7 @@
         <variable
             name="viewModel"
             type="com.now.naaga.presentation.adventureresult.AdventureResultViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,7 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretendard_bold"
-            android:text="@{viewModel.adventureResultState ? viewModel.name : @string/adventureResult_fail_destination_name}"
             android:textColor="@color/white"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +57,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:src="@{viewModel.adventureResultState ? @drawable/ic_success : @drawable/ic_fail}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_adventureResult_photo"
@@ -112,6 +111,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
+                        android:id="@+id/tv_adventureResult_playTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_bold"
@@ -153,7 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_bold"
-                    android:text="@{@string/adventureResult_value(0)}"
+                    android:text="@{@string/adventureResult_value(viewModel.adventureResult.distance)}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -191,13 +191,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_bold"
-                    android:text="@{@string/adventureResult_value(0)}"
+                    android:text="@{`` + viewModel.adventureResult.hintUses}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="+13" />
+                    tools:text="13" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -228,13 +228,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_bold"
-                    android:text="@{@string/adventureResult_value(0)}"
+                    android:text="@{``+ viewModel.adventureResult.tryCount}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="+13" />
+                    tools:text="13" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -265,7 +265,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:fontFamily="@font/pretendard_bold"
-                    android:text="@{@string/adventureResult_value(0)}"
+                    android:text="@{@string/adventureResult_value(viewModel.adventureResult.score)}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -282,7 +282,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:fontFamily="@font/pretendard_bold"
-            android:text="@{@string/adventureResult_rank(0, 0)}"
+            android:text="@{@string/adventureResult_rank(viewModel.myRank, viewModel.adventureResult.raisedRank)}"
             android:textColor="@color/black"
             android:textSize="28sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -290,7 +290,7 @@
             tools:text="123등 (+29)" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_adventureResult_return"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
