@@ -48,7 +48,6 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
             },
         )
     }
-    
     private fun setErrorMessage(throwable: Throwable) {
         when (throwable) {
             is NaagaThrowable.ServerConnectFailure ->
