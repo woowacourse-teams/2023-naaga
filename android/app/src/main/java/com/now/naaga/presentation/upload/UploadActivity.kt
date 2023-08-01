@@ -115,6 +115,8 @@ class UploadActivity : AppCompatActivity() {
         binding.ivUploadClose.setOnClickListener {
             finish()
         }
+        binding.btnUploadSubmit.setOnClickListener {
+        }
     }
 
     private fun checkCameraPermission() {
@@ -140,6 +142,8 @@ class UploadActivity : AppCompatActivity() {
     private fun setImage(bitmap: Bitmap) {
         binding.ivUploadCameraIcon.visibility = View.GONE
         binding.ivUploadPhoto.setImageBitmap(bitmap)
+        val uri = getImageUri(bitmap).toString()
+        viewModel.setUri(uri)
     }
 
     private fun getImageUri(bitmap: Bitmap): Uri? {
