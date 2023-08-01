@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="red">#ff0000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="main_purple">#FFD4A5E4</color>
-    <color name="light_purple">#FFE3C6ED</color>
+    <color name="main_purple">#D4A5E4</color>
+    <color name="light_purple">#E3C6ED</color>
+    <color name="purple_white">#F6EBF9</color>
     <color name="main_mint">#FFA5E4DB</color>
     <color name="main_gray">#989898</color>
+    <color name="main_red">#E4A5A5</color>
+    <color name="main_pink">#DBB2E8</color>
 </resources>

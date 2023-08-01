@@ -31,29 +31,65 @@ fun <T> Response<T>.getFailureDto(): FailureDto {
     return failureDto
 }
 
-fun <T> Call<T>.fetchNaagaResponse(
+fun <T> Call<T>.fetchNaagaNullableResponse(
     onSuccess: (T?) -> Unit,
     onFailure: (NaagaThrowable) -> Unit,
 ) {
-    enqueue(object : Callback<T> {
-        override fun onResponse(call: Call<T>, response: Response<T>) {
-            if (response.isSuccessful) {
-                onSuccess(response.body())
-            } else {
-                if (response.isFailure400()) {
-                    onFailure(response.getFailureDto().getThrowable())
-                    return
+    enqueue(
+        object : Callback<T> {
+            override fun onResponse(call: Call<T>, response: Response<T>) {
+                if (response.isSuccessful) {
+                    onSuccess(response.body())
+                } else {
+                    if (response.isFailure400()) {
+                        onFailure(response.getFailureDto().getThrowable())
+                        return
+                    }
+                    if (response.isFailure500()) {
+                        onFailure(NaagaUnknownError(ERROR_500))
+                        return
+                    }
+                    onFailure(NaagaUnknownError(ERROR_NOT_400_500))
                 }
-                if (response.isFailure500()) {
-                    onFailure(NaagaUnknownError(ERROR_500))
-                    return
-                }
-                onFailure(NaagaUnknownError(ERROR_NOT_400_500))
             }
-        }
 
-        override fun onFailure(call: Call<T>, t: Throwable) {
-            onFailure(ServerConnectFailure())
-        }
-    })
+            override fun onFailure(call: Call<T>, t: Throwable) {
+                onFailure(ServerConnectFailure())
+            }
+        },
+    )
+}
+
+fun <T> Call<T>.fetchNaagaResponse(
+    onSuccess: (T) -> Unit,
+    onFailure: (NaagaThrowable) -> Unit,
+) {
+    enqueue(
+        object : Callback<T> {
+            override fun onResponse(call: Call<T>, response: Response<T>) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body == null) {
+                        onFailure(NaagaUnknownError("response body가 null입니다."))
+                        return
+                    }
+                    onSuccess(body)
+                } else {
+                    if (response.isFailure400()) {
+                        onFailure(response.getFailureDto().getThrowable())
+                        return
+                    }
+                    if (response.isFailure500()) {
+                        onFailure(NaagaUnknownError(ERROR_500))
+                        return
+                    }
+                    onFailure(NaagaUnknownError(ERROR_NOT_400_500))
+                }
+            }
+
+            override fun onFailure(call: Call<T>, t: Throwable) {
+                onFailure(ServerConnectFailure())
+            }
+        },
+    )
 }

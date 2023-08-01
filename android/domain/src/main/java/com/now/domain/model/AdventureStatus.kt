@@ -3,7 +3,7 @@ package com.now.domain.model
 enum class AdventureStatus {
     DONE,
     IN_PROGRESS,
-    ERROR,
+    NONE,
     ;
 
     companion object {
@@ -11,7 +11,7 @@ enum class AdventureStatus {
             return when (status) {
                 DONE.name -> DONE
                 IN_PROGRESS.name -> IN_PROGRESS
-                else -> ERROR
+                else -> NONE
             }
         }
     }

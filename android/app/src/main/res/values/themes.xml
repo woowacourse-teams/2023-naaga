@@ -10,7 +10,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@drawable/rectangle_main_gradient</item>
+        <item name="android:windowBackground">@drawable/rect_main_gradient</item>
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">

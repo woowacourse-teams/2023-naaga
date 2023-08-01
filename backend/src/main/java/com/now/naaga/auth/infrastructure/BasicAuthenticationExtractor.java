@@ -1,14 +1,14 @@
 package com.now.naaga.auth.infrastructure;
 
+import com.now.naaga.auth.exception.AuthException;
+import com.now.naaga.member.presentation.dto.MemberAuthRequest;
+import org.springframework.stereotype.Component;
+
 import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_HEADER;
 import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
 
-import com.now.naaga.auth.exception.AuthException;
-import com.now.naaga.member.application.dto.MemberCommand;
-import org.springframework.stereotype.Component;
-
 @Component
-public class BasicAuthenticationExtractor implements AuthenticationExtractor<MemberCommand> {
+public class BasicAuthenticationExtractor implements AuthenticationExtractor<MemberAuthRequest> {
 
     private static final String BASIC_TYPE = "Basic";
     private static final int EMAIL_INDEX = 0;
@@ -20,7 +20,7 @@ public class BasicAuthenticationExtractor implements AuthenticationExtractor<Mem
         this.basicAuthenticationDecoder = basicAuthenticationDecoder;
     }
 
-    public MemberCommand extract(final String header) {
+    public MemberAuthRequest extract(final String header) {
         if (header == null) {
             throw new AuthException(NOT_EXIST_HEADER);
         }
@@ -30,6 +30,6 @@ public class BasicAuthenticationExtractor implements AuthenticationExtractor<Mem
         final String[] credentials = basicAuthenticationDecoder.decode(header);
         final String email = credentials[EMAIL_INDEX];
         final String password = credentials[PASSWORD_INDEX];
-        return new MemberCommand(email, password);
+        return new MemberAuthRequest(email, password);
     }
 }
