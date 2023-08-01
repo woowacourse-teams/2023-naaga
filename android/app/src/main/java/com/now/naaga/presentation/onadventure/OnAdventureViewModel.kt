@@ -3,14 +3,15 @@ package com.now.naaga.presentation.onadventure
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Destination
-import com.now.domain.repository.AdventureRepository
-import com.now.naaga.data.NaagaThrowable
+import com.now.domain.repository.AdventureRepository2
+import com.now.naaga.data.repository.ThirdDemoAdventureRepository
 
-class OnAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
+class OnAdventureViewModel(private val adventureRepository2: AdventureRepository2) : ViewModel() {
 
     private val _destination = MutableLiveData<Destination>()
     val destination: LiveData<Destination>
@@ -36,11 +37,14 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         get() = _errorMessage
 
     fun fetchDestination(adventureId: Long) {
-        adventureRepository.getAdventure(adventureId, callback = { result ->
-            result
-                .onSuccess { _destination.value = it.destination }
-                .onFailure { _status.value = AdventureStatus.NONE }
-        })
+        /*adventureRepository.getAdventure(
+            adventureId,
+            callback = { result ->
+                result
+                    .onSuccess { _destination.value = it.destination }
+                    .onFailure { _status.value = AdventureStatus.NONE }
+            },
+        )*/
     }
 
     fun calculateDistance(coordinate: Coordinate) {
@@ -57,7 +61,7 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
     }
 
     fun beginAdventure(coordinate: Coordinate) {
-        adventureRepository.beginAdventure(coordinate) { result ->
+        /*adventureRepository.beginAdventure(coordinate) { result ->
             result
                 .onSuccess { _adventureId.value = it }
                 .onFailure { throwable ->
@@ -78,11 +82,11 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
                                 throwable.userMessage
                     }
                 }
-        }
+        }*/
     }
 
     fun endAdventure(adventureId: Long, coordinate: Coordinate) {
-        adventureRepository.endAdventure(
+        /*adventureRepository.endAdventure(
             adventureId,
             coordinate,
             callback = { result ->
@@ -107,6 +111,16 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
                         }
                     }
             },
-        )
+        )*/
+    }
+
+    companion object {
+        val Factory = ViewModelFactory(ThirdDemoAdventureRepository())
+
+        class ViewModelFactory(private val adventureRepository2: AdventureRepository2) : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return OnAdventureViewModel(adventureRepository2) as T
+            }
+        }
     }
 }

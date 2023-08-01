@@ -20,7 +20,6 @@ import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
-import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
@@ -58,9 +57,7 @@ class OnAdventureActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initViewModel() {
-        val repository = DefaultAdventureRepository()
-        val factory = OnAdventureFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[OnAdventureViewModel::class.java]
+        viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
     }
 
     private fun setMapView() {
