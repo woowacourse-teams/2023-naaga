@@ -48,6 +48,7 @@ jobs:
 
   pull_and_deploy:
     name: backend deploy
+    needs: build_and_push
     runs-on: naaga
     defaults:
       run:
