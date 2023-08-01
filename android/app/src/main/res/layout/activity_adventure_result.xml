@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:background="@drawable/rect_radius_small"
-                    android:backgroundTint="#0D0C4A"
+                    android:backgroundTint="@color/main_navy"
                     android:paddingVertical="4dp"
                     android:paddingEnd="@dimen/space_default_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
