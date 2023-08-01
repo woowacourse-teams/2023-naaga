@@ -40,7 +40,8 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: ./backend
         push: true
         tags: naaganow/naaga-app:latest
+        
         
