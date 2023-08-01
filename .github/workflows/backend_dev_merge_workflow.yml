@@ -3,7 +3,9 @@ name: NAAGA BACKEND MERGE CI
 on:
   push:
     branches: 
-      - feat/#131  
+      - dev
+    paths:
+      - './backend/**'
 
 jobs:
   deploy:
