@@ -1,14 +1,15 @@
 package com.now.naaga.game.presentation.dto;
 
-import com.now.naaga.game.domain.Direction;
 import com.now.naaga.game.domain.Hint;
-import com.now.naaga.place.domain.Position;
+import com.now.naaga.place.presentation.dto.CoordinateResponse;
 
 public record HintResponse(Long id,
-                           Direction direction,
-                           Position coordinate) {
+                           DirectionResponse direction,
+                           CoordinateResponse coordinate) {
 
     public static HintResponse from(final Hint hint) {
-        return new HintResponse(hint.getId(), hint.getDirection(), hint.getPosition());
+        final DirectionResponse directionResponse = DirectionResponse.from(hint.getDirection());
+        final CoordinateResponse coordinateResponse = CoordinateResponse.from(hint.getPosition());
+        return new HintResponse(hint.getId(), directionResponse, coordinateResponse);
     }
 }
