@@ -28,8 +28,6 @@
         <activity
             android:name=".presentation.mypage.MyPageActivity"
             android:exported="false"/>
-
-
         <activity
             android:name=".presentation.splash.SplashActivity"
             android:exported="true"
@@ -40,13 +38,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.beginadventure.BeginAdventureActivity"
             android:exported="false" />
-
         <activity
             android:name=".presentation.onadventure.OnAdventureActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.adventurehistory.AdventureHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.upload.UploadActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.rank.RankActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.adventureresult.AdventureResultActivity"
