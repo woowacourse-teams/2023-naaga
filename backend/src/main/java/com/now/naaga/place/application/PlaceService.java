@@ -59,6 +59,7 @@ public class PlaceService {
         final String directory = "/Users/hwan/image";
         final MultipartFileManager multipartFileManager = new MultipartFileManager();
         return multipartFileManager.save(imageFile, directory);
+        // TODO: 8/1/23 rollback되면 파일을 삭제해야되는데... 뭔가 이상하다
     }
 
     @Transactional(readOnly = true)
