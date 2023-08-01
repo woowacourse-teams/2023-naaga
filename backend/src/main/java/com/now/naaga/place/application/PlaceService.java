@@ -6,10 +6,8 @@ import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.place.application.dto.FindAllPlaceCommand;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
 import com.now.naaga.place.application.dto.PlaceCommand;
-import com.now.naaga.place.domain.Place;
-import com.now.naaga.place.domain.PlaceCheckService;
-import com.now.naaga.place.domain.Position;
-import com.now.naaga.place.domain.SortType;
+import com.now.naaga.place.application.dto.RecommendPlaceCommand;
+import com.now.naaga.place.domain.*;
 import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import com.now.naaga.player.application.PlayerService;
@@ -29,19 +27,21 @@ import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
 @Service
 public class PlaceService {
 
-    private static final int DISTANCE = 1;
-
     private final PlayerService playerService;
 
     private final PlaceCheckService placeCheckService;
+
+    private final PlaceRecommendService placeRecommendService;
 
     private final PlaceRepository placeRepository;
 
     public PlaceService(final PlayerService playerService,
                         final PlaceCheckService placeCheckService,
+                        final PlaceRecommendService placeRecommendService,
                         final PlaceRepository placeRepository) {
         this.playerService = playerService;
         this.placeCheckService = placeCheckService;
+        this.placeRecommendService = placeRecommendService;
         this.placeRepository = placeRepository;
     }
 
@@ -61,17 +61,9 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
-    public Place recommendPlaceByPosition(final Position position) {
-        final List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, DISTANCE);
-        if (places.isEmpty()) {
-            throw new PlaceException(CAN_NOT_FIND_PLACE);
-        }
-        return places.get(getRandomIndex(places));
-    }
-
-    private int getRandomIndex(final List<Place> places) {
-        final Random random = new Random();
-        return random.nextInt(places.size());
+    public Place recommendPlaceByPosition(final RecommendPlaceCommand recommendPlaceCommand) {
+        Position position = recommendPlaceCommand.position();
+        return placeRecommendService.recommendRandomPlaceNearBy(position);
     }
 
     public Place createPlace(final MemberCommand memberCommand,
