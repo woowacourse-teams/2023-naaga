@@ -1,6 +1,5 @@
 package com.now.naaga.presentation.adventureresult
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,10 +28,7 @@ class AdventureResultViewModel(
             callback = { result ->
                 result
                     .onSuccess { _adventureResult.value = it }
-                    .onFailure {
-                        setErrorMessage(it)
-                        Log.d("test", "게임 결과 통신 실패")
-                    }
+                    .onFailure { setErrorMessage(it) }
             },
         )
     }
@@ -42,10 +38,7 @@ class AdventureResultViewModel(
             callback = { result ->
                 result
                     .onSuccess { _myRank.value = it.rank }
-                    .onFailure {
-                        setErrorMessage(it)
-                        Log.d("test", "랭크 통신 실패")
-                    }
+                    .onFailure { setErrorMessage(it) }
             },
         )
     }
