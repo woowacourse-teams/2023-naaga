@@ -6,6 +6,10 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.now.naaga.presentation.upload.UploadViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,11 +46,13 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_default_large"
             android:layout_marginTop="@dimen/space_default_medium"
+            android:afterTextChanged="@{viewModel::setTitle}"
             android:autofillHints="no"
             android:ellipsize="end"
             android:hint="@string/upload_photo_title"
             android:inputType="text"
             android:maxLines="1"
+            android:text="@{viewModel.title}"
             android:textAlignment="textStart"
             android:textSize="28sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -106,6 +112,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/space_default_medium"
+            android:afterTextChanged="@{viewModel::setDescription}"
             android:autofillHints="no"
             android:background="@drawable/rect_radius_small"
             android:backgroundTint="@color/white"
@@ -114,6 +121,7 @@
             android:hint="@string/upload_photo_description"
             android:inputType="text"
             android:padding="@dimen/space_default_medium"
+            android:text="@{viewModel.description}"
             app:layout_constraintBottom_toTopOf="@id/v_upload_divide_line_2"
             app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
             app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
@@ -146,15 +154,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/v_upload_divide_line_2" />
 
-            <ImageView
-                android:id="@+id/iv_upload_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_close" />
+        <ImageView
+            android:id="@+id/iv_upload_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -15,6 +15,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
@@ -22,6 +23,7 @@ import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CA
 
 class UploadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUploadBinding
+    private lateinit var viewModel: UploadViewModel
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicturePreview(),
@@ -55,9 +57,16 @@ class UploadActivity : AppCompatActivity() {
         binding = ActivityUploadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initViewModel()
         requestPermission()
         setCoordinate()
-        bindListener()
+        setClickListeners()
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this)[UploadViewModel::class.java]
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
     }
 
     private fun requestPermission() {
@@ -92,7 +101,7 @@ class UploadActivity : AppCompatActivity() {
         return (number * 10_000).toLong().toDouble() / 10_000
     }
 
-    private fun bindListener() {
+    private fun setClickListeners() {
         binding.ivUploadCameraIcon.setOnClickListener {
             checkCameraPermission()
         }
