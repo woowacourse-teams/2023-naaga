@@ -2,21 +2,32 @@ package com.now.naaga.presentation.mypage
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.now.domain.model.Player
-import com.now.domain.model.Rank
+import androidx.lifecycle.ViewModelProvider
+import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.databinding.ActivityMyPageBinding
 
 class MyPageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyPageBinding
+    private lateinit var viewModel: MyPageViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.rank = getRank()
+        initViewModel()
         setClickListeners()
+        fetchData()
         binding.customGridMypageStatistics.initContent(getStatisticsData())
         binding.customGridPlaces.initContent(getPlaceData())
+    }
+
+    private fun initViewModel() {
+        val repository = DefaultRankRepository()
+        val factory = MyPageFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[MyPageViewModel::class.java]
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun setClickListeners() {
@@ -25,12 +36,8 @@ class MyPageActivity : AppCompatActivity() {
         }
     }
 
-    private fun getRank(): Rank {
-        return Rank(
-            Player(1, "Bixx", 1024),
-            3,
-            2,
-        )
+    private fun fetchData() {
+        viewModel.fetchRank()
     }
 
     private fun getPlaceData(): List<MyPagePlaceUiModel> = listOf(

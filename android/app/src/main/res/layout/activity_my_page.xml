@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="rank"
-            type="com.now.domain.model.Rank" />
+            name="viewModel"
+            type="com.now.naaga.presentation.mypage.MyPageViewModel" />
     </data>
 
     <ScrollView
@@ -32,7 +32,7 @@
                 android:id="@+id/iv_mypage_back" />
 
             <TextView
-                android:text="@{rank.player.nickname}"
+                android:text="@{viewModel.rank.player.nickname}"
                 tools:text="Bixx"
                 android:fontFamily="@font/pretendard_bold"
                 android:textColor="@color/white"
@@ -48,7 +48,7 @@
 
             <TextView
                 android:id="@+id/tv_mypage_rank"
-                android:text="@{@string/mypage_rank(rank.rank)}"
+                android:text="@{@string/mypage_rank(viewModel.rank.rank)}"
                 tools:text="28등"
                 android:layout_marginTop="36dp"
                 android:layout_marginStart="20dp"
@@ -62,7 +62,7 @@
 
             <TextView
                 android:id="@+id/tv_mypage_percent"
-                android:text="@{@string/mypage_percentage(rank.percent)}"
+                android:text="@{@string/mypage_percentage(viewModel.rank.percent)}"
                 tools:text="(상위 12%)"
                 app:layout_constraintStart_toEndOf="@id/tv_mypage_rank"
                 android:layout_width="wrap_content"
