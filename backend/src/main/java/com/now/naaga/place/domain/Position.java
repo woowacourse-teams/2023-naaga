@@ -1,5 +1,6 @@
 package com.now.naaga.place.domain;
 
+import com.now.naaga.place.application.dto.PlaceCommand;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
@@ -21,6 +22,11 @@ public class Position {
                     final BigDecimal longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public static Position of(final Double latitude,
+                                final Double longitude) {
+        return new Position(new BigDecimal(latitude), new BigDecimal(longitude));
     }
 
     public double calculateDistance(final Position other) {
