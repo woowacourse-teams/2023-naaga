@@ -46,4 +46,5 @@
 
     <!-- RankActivity -->
     <string name="rank_title">Leader Board</string>
+    <string name="rank_my_rank">%d등</string>
 </resources>
