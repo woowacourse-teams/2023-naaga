@@ -120,6 +120,8 @@ class UploadActivity : AppCompatActivity() {
     private fun checkLocationPermission() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
             LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
+        } else {
+            setCoordinate()
         }
     }
 
