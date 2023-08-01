@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.data.repository.DefaultRankRepository
+import com.now.naaga.data.repository.DefaultStatisticsRepository
 import com.now.naaga.databinding.ActivityMyPageBinding
 
 class MyPageActivity : AppCompatActivity() {
@@ -18,13 +19,14 @@ class MyPageActivity : AppCompatActivity() {
         initViewModel()
         setClickListeners()
         fetchData()
-        binding.customGridMypageStatistics.initContent(getStatisticsData())
+        subscribe()
         binding.customGridPlaces.initContent(getPlaceData())
     }
 
     private fun initViewModel() {
-        val repository = DefaultRankRepository()
-        val factory = MyPageFactory(repository)
+        val rankRepository = DefaultRankRepository()
+        val statisticsRepository = DefaultStatisticsRepository()
+        val factory = MyPageFactory(rankRepository, statisticsRepository)
         viewModel = ViewModelProvider(this, factory)[MyPageViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -38,6 +40,13 @@ class MyPageActivity : AppCompatActivity() {
 
     private fun fetchData() {
         viewModel.fetchRank()
+        viewModel.fetchStatistics()
+    }
+
+    private fun subscribe() {
+        viewModel.statistics.observe(this) { statistics ->
+            binding.customGridMypageStatistics.initContent(statistics.toUiModel(this))
+        }
     }
 
     private fun getPlaceData(): List<MyPagePlaceUiModel> = listOf(
