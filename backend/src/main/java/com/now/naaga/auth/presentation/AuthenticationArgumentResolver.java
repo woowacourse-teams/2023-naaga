@@ -1,5 +1,6 @@
 package com.now.naaga.auth.presentation;
 
+import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
 import com.now.naaga.member.application.MemberService;
 import com.now.naaga.member.domain.Member;
@@ -35,7 +36,8 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.getParameterType().equals(PlayerRequest.class);
+        return parameter.hasParameterAnnotation(Auth.class)
+                && parameter.getParameterType().equals(PlayerRequest.class);
     }
 
     @Override
