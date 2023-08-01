@@ -44,4 +44,3 @@ jobs:
         push: true
         tags: naagaNow/naaga-app:latest
         
-        
