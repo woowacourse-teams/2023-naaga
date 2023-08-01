@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.databinding.ActivityAdventureResultBinding
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 
@@ -26,7 +27,9 @@ class AdventureResultActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this)[AdventureResultViewModel::class.java]
+        val repository = DefaultAdventureRepository()
+        val factory = AdventureResultFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[AdventureResultViewModel::class.java]
     }
 
     companion object {

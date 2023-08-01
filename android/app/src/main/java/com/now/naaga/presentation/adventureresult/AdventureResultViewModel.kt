@@ -3,8 +3,9 @@ package com.now.naaga.presentation.adventureresult
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.now.domain.repository.AdventureRepository
 
-class AdventureResultViewModel : ViewModel() {
+class AdventureResultViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
 
     private val _adventureResultState = MutableLiveData(false)
     val adventureResultState: LiveData<Boolean> = _adventureResultState
