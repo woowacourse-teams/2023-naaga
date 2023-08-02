@@ -25,7 +25,7 @@ class SplashViewModel(private val adventureRepository: AdventureRepository) : Vi
         val dummyAdventure = Adventure(
             0,
             Destination(0, Coordinate(0.0, 0.0), ""),
-            AdventureStatus.ERROR,
+            AdventureStatus.NONE,
         )
 
         if (adventures.isNotEmpty()) {

@@ -1,20 +1,20 @@
 package com.now.naaga.player.exception;
-
 import com.now.naaga.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
 
 public enum PlayerExceptionType implements BaseExceptionType {
 
     PLAYER_NOT_FOUND(
-            600,
-            HttpStatus.BAD_REQUEST,
-            "플레이어가 존재하지 않습니다."
+            900,
+            HttpStatus.NOT_FOUND,
+            "해당 플레이어는 존재하지 않습니다."
     ),
     INVALID_SORTING_REQUEST(
-            601,
+            901,
             HttpStatus.BAD_REQUEST,
             "잘못된 정렬 요청입니다."
-    );
+    )
+    ;
 
     private final int errorCode;
     private final HttpStatus httpStatus;

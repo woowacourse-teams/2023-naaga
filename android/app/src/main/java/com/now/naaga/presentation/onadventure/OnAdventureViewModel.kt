@@ -39,7 +39,7 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         adventureRepository.getAdventure(adventureId, callback = { result ->
             result
                 .onSuccess { _destination.value = it.destination }
-                .onFailure { _status.value = AdventureStatus.ERROR }
+                .onFailure { _status.value = AdventureStatus.NONE }
         })
     }
 
