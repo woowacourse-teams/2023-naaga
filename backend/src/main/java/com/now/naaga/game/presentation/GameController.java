@@ -44,7 +44,6 @@ public class GameController {
     public ResponseEntity<GameStatusResponse> changeGameStatus(@Auth final PlayerRequest playerRequest,
                                                                @RequestBody final FinishGameRequest finishGameRequest,
                                                                @PathVariable final Long gameId) {
-        // TODO: 8/1/23 FinishGameCommand에 EndType 추가해야함
         final FinishGameCommand finishGameCommand = FinishGameCommand.of(playerRequest, finishGameRequest, gameId);
         final Game game = gameService.finishGame(finishGameCommand);
         return ResponseEntity

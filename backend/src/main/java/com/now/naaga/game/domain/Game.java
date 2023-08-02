@@ -118,7 +118,7 @@ public class Game extends BaseEntity {
         return FAIL;
     }
 
-    private ResultType endGameByArrival(Position position) {
+    private ResultType endGameByArrival(final Position position) {
         remainingAttempts--;
         if (isPlayerArrived(position)) {
             return endGameWithSuccess();
@@ -126,9 +126,7 @@ public class Game extends BaseEntity {
         return endGameWithFailure();
     }
 
-    // todo : place의 변수명을 isCoordinateInsideBounds 또는 isPositionInsideBounds 또는 isPositionWithinRange로 바꾸고 싶다
-    //또, 이 메서드에 범위를 함께 넘겨주는 것이 마땅해보인다.
-    private boolean isPlayerArrived(Position position) {
+    private boolean isPlayerArrived(final Position position) {
         return place.isInValidRange(position);
     }
 
