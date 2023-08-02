@@ -1,8 +1,8 @@
 package com.now.naaga.common.infrastructure;
 
-import java.nio.file.Path;
+import java.io.File;
 
 public interface FileManager<T> {
 
-    Path save(T t);
+    File save(T t, String saveDirectory);
 }

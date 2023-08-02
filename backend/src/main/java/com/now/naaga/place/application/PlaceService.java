@@ -2,30 +2,31 @@ package com.now.naaga.place.application;
 
 import com.now.naaga.common.domain.OrderType;
 import com.now.naaga.common.infrastructure.MultipartFileManager;
-import com.now.naaga.member.application.dto.MemberCommand;
+import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.application.dto.FindAllPlaceCommand;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
-import com.now.naaga.place.application.dto.PlaceCommand;
 import com.now.naaga.place.application.dto.RecommendPlaceCommand;
 import com.now.naaga.place.domain.*;
 import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.List;
-import java.util.Random;
 
-import static com.now.naaga.place.exception.PlaceExceptionType.CAN_NOT_FIND_PLACE;
 import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
 
 @Transactional
 @Service
 public class PlaceService {
+
+    @Value("${multipartFile.directory.path-local}")
+    private String saveDirectory;
 
     private final PlayerService playerService;
 
@@ -62,23 +63,27 @@ public class PlaceService {
 
     @Transactional(readOnly = true)
     public Place recommendPlaceByPosition(final RecommendPlaceCommand recommendPlaceCommand) {
-        Position position = recommendPlaceCommand.position();
+        final Position position = recommendPlaceCommand.position();
         return placeRecommendService.recommendRandomPlaceNearBy(position);
     }
 
-    public Place createPlace(final MemberCommand memberCommand,
-                             final PlaceCommand placeCommand) {
-        final Position position = Position.of(placeCommand.latitude(), placeCommand.longitude());
+    public Place createPlace(final CreatePlaceCommand createPlaceCommand) {
+        final Position position = createPlaceCommand.position();
         placeCheckService.checkOtherPlaceNearby(position);
-        final Path uploadPath = saveImageFile(placeCommand.imageFile());
-        final Player registeredPlayer = playerService.findPlayerByMemberId(1L);
-        final Place place = new Place(placeCommand.name(), placeCommand.description(), position, uploadPath.toString(), registeredPlayer);
-        placeRepository.save(place);
-        return place;
+        final File uploadPath = saveImageFile(createPlaceCommand.imageFile());
+        try {
+            final Player registeredPlayer = playerService.findPlayerByMemberId(1L);
+            final Place place = new Place(createPlaceCommand.name(), createPlaceCommand.description(), position, uploadPath.toString(), registeredPlayer);
+            placeRepository.save(place);
+            return place;
+        } catch (final RuntimeException exception) {
+            uploadPath.delete();
+            throw exception;
+        }
     }
 
-    private Path saveImageFile(final MultipartFile imageFile) {
+    private File saveImageFile(final MultipartFile imageFile) {
         final MultipartFileManager multipartFileManager = new MultipartFileManager();
-        return multipartFileManager.save(imageFile);
+        return multipartFileManager.save(imageFile, saveDirectory);
     }
 }
