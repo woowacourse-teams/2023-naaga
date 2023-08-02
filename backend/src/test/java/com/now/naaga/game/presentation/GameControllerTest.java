@@ -1,7 +1,10 @@
 package com.now.naaga.game.presentation;
 
+import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.fixture.GameTestFixture.MEMBER1;
 import static com.now.naaga.game.fixture.GameTestFixture.MEMBER2;
+import static com.now.naaga.game.fixture.GameTestFixture.REGISTER;
 import static com.now.naaga.game.fixture.GameTestFixture.잠실_루터회관;
 import static com.now.naaga.game.fixture.GameTestFixture.잠실_루터회관_정문_좌표;
 import static com.now.naaga.game.fixture.GameTestFixture.잠실역_교보문고_좌표;
@@ -33,7 +36,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
 
 class GameControllerTest extends CommonControllerTest {
     
@@ -62,6 +64,38 @@ class GameControllerTest extends CommonControllerTest {
         player = playerRepository.save(new Player("chae", new Score(1000), member));
         destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", player));
         startPosition = 잠실역_교보문고_좌표;
+    }
+    
+    @Test
+    void 게임을_포기하면_게임_결과를_업데이트_한다() throws InterruptedException {
+        game = gameRepository.save(new Game(player, destination, startPosition));
+        Thread.sleep(1000);
+        
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .contentType(ContentType.JSON)
+                .body(new EndGameRequest("GIVE_UP", new CoordinateRequest(37.515546, 127.102902)))// 역삼역 좌표
+                .when()
+                .patch("/games/{gameId}", game.getId())
+                .then().log().all()
+                .extract();
+        
+        // then
+        final int statusCode = extract.statusCode();
+        final GameStatusResponse actual = extract.as(GameStatusResponse.class);
+        
+        final GameStatusResponse expected = new GameStatusResponse(null, "DONE");
+        
+        assertSoftly(softAssertions -> {
+                    softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+                    softAssertions.assertThat(actual)
+                            .usingRecursiveComparison()
+                            .ignoringExpectedNullFields()
+                            .ignoringFieldsOfTypes(LocalDateTime.class)
+                            .isEqualTo(expected);
+                }
+        );
     }
     
     @Test
@@ -96,10 +130,44 @@ class GameControllerTest extends CommonControllerTest {
     }
     
     @Test
-    void 잔여_횟수가_남았지만_도착_실패하면_예외가_발생_한다() throws InterruptedException {
+    void 마지막_시도에_도착_실패하면_게임_결과를_업데이트_한다() throws InterruptedException {
+        // given & when
+        
+        game = gameRepository.save(new Game(IN_PROGRESS, player, destination, startPosition, 1, Collections.emptyList(),
+                LocalDateTime.now(), null));
+        Thread.sleep(1000);
+        
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .contentType(ContentType.JSON)
+                .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
+                .when()
+                .patch("/games/{gameId}", game.getId())
+                .then().log().all()
+                .extract();
+        
+        // then
+        final int statusCode = extract.statusCode();
+        final GameStatusResponse actual = extract.as(GameStatusResponse.class);
+        
+        final GameStatusResponse expected = new GameStatusResponse(null, "DONE");
+        
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                    .ignoringFieldsOfTypes(LocalDateTime.class)
+                    .isEqualTo(expected);
+        });
+    }
+    
+    @Test
+    void 잔여_횟수가_남았지만_도착_실패하면_예외가_발생한다() throws InterruptedException {
         // given & when
         game = gameRepository.save(new Game(player, destination, startPosition));
-        Thread.sleep(1000);
+        
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .auth().preemptive().basic("chae@gmail.com", "0121")
@@ -127,16 +195,14 @@ class GameControllerTest extends CommonControllerTest {
     }
     
     @Test
-    void 마지막_시도에_도착_실패하면_게임_결과를_업데이트_한다() throws InterruptedException {
-        // given & when
-    
-        game = gameRepository.save(new Game(IN_PROGRESS, player, destination, startPosition, 1, Collections.emptyList(), LocalDateTime.now(), null));
-        Thread.sleep(1000);
+    void 사용자의_인증_정보가_존재하지_않는_경우_예외가_발생한다() {
+        game = gameRepository.save(new Game(player, destination, startPosition));
+        
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .auth().preemptive().basic("gamja@gmail.com", "1234")
                 .contentType(ContentType.JSON)
-                .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
+                .body(new EndGameRequest("GIVE_UP", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
                 .patch("/games/{gameId}", game.getId())
                 .then().log().all()
@@ -144,12 +210,12 @@ class GameControllerTest extends CommonControllerTest {
         
         // then
         final int statusCode = extract.statusCode();
-        final GameStatusResponse actual = extract.as(GameStatusResponse.class);
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
         
-        final GameStatusResponse expected = new GameStatusResponse(null, "DONE");
+        final ExceptionResponse expected = new ExceptionResponse(200, "사용자 정보가 존재하지 않습니다.");
         
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.UNAUTHORIZED.value());
             softAssertions.assertThat(actual)
                     .usingRecursiveComparison()
                     .ignoringExpectedNullFields()
@@ -159,15 +225,16 @@ class GameControllerTest extends CommonControllerTest {
     }
     
     @Test
-    void 게임을_포기하면_게임_결과를_업데이트_한다() throws InterruptedException {
+    void 특정_게임에_접근_권한이_없는경우_예외가_발생한다() {
+        final Member member1 = memberRepository.save(MEMBER1);
+        Player otherPlayer = playerRepository.save(new Player(REGISTER.getNickname(), new Score(100), member1));
         game = gameRepository.save(new Game(player, destination, startPosition));
-        Thread.sleep(1000);
-    
+        
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .auth().preemptive().basic(otherPlayer.getMember().getEmail(), otherPlayer.getMember().getPassword())
                 .contentType(ContentType.JSON)
-                .body(new EndGameRequest("GIVE_UP", new CoordinateRequest(37.515546, 127.102902)))// 역삼역 좌표
+                .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
                 .patch("/games/{gameId}", game.getId())
                 .then().log().all()
@@ -175,16 +242,49 @@ class GameControllerTest extends CommonControllerTest {
         
         // then
         final int statusCode = extract.statusCode();
-        final GameStatusResponse actual = extract.as(GameStatusResponse.class);
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
         
-        final GameStatusResponse expected = new GameStatusResponse(null, "DONE");
+        final ExceptionResponse expected = new ExceptionResponse(402, "게임에 접근할 수 있는 권한이 없습니다.");
         
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.FORBIDDEN.value());
             softAssertions.assertThat(actual)
                     .usingRecursiveComparison()
                     .ignoringExpectedNullFields()
                     .ignoringFieldsOfTypes(LocalDateTime.class)
                     .isEqualTo(expected);
         });
-}}
+    }
+    
+    @Test
+    void 제공된_시도횟수를_초과한_경우_또는_이미_종료된_게임인_경우_예외가_발생한다() {
+        game = gameRepository.save(new Game(DONE, player, destination, startPosition, 0, Collections.emptyList(),
+                LocalDateTime.now(), null));
+        
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic(player.getMember().getEmail(), player.getMember().getPassword())
+                .contentType(ContentType.JSON)
+                .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.515546, 127.102902)))
+                .when()
+                .patch("/games/{gameId}", game.getId())
+                .then().log().all()
+                .extract();
+        
+        // then
+        final int statusCode = extract.statusCode();
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+        
+        final ExceptionResponse expected = new ExceptionResponse(404, "이미 종료된 게임입니다.");
+        
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                    .ignoringFieldsOfTypes(LocalDateTime.class)
+                    .isEqualTo(expected);
+        });
+    }
+    
+}
