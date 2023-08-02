@@ -23,9 +23,10 @@ class MyPageCustomGrid(context: Context, attrs: AttributeSet? = null) : Constrai
     fun initContent(data: List<MyPageItemUiModel>) {
         if (data.isNotEmpty()) {
             binding.tvMypageItemTitle.text = data.first().viewType.text
+            val lastIndex = if (data.size > END_PLACE_INDEX) END_PLACE_INDEX else data.size
 
             adapter = if (data.first().viewType == MyPageViewType.PLACES) {
-                MyPageAdapter(data.subList(START_PLACE_INDEX, END_PLACE_INDEX))
+                MyPageAdapter(data.subList(START_PLACE_INDEX, lastIndex))
             } else {
                 MyPageAdapter(data)
             }
