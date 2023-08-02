@@ -12,10 +12,11 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
+@Sql("/truncate.sql")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest
 class MemberRepositoryTest {
-
+    
     @Autowired
     private MemberRepository memberRepository;
 
@@ -23,10 +24,10 @@ class MemberRepositoryTest {
     void 이메일로_회원을_조회한다() {
         final Member saveMember = memberRepository.save(new Member("1111@woowa.com", "1234"));
 
-        // when
+// when
         final Member foundMember = memberRepository.findByEmail(saveMember.getEmail()).get();
 
-        // then
+// then
         assertThat(foundMember.getId()).isEqualTo(1L);
     }
 }

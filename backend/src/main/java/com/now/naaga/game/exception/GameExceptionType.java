@@ -8,7 +8,7 @@ public enum GameExceptionType implements BaseExceptionType {
     ALREADY_IN_PROGRESS(
             400,
             HttpStatus.BAD_REQUEST,
-            "이미 게임이 진행 중 입니다."
+            "게임이 진행 중 입니다."
     ),
 
     NOT_EXIST(
@@ -28,6 +28,24 @@ public enum GameExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "목적지에 도착하지 않았습니다."
     ),
+    
+    ALREADY_DONE(
+            404,
+            HttpStatus.BAD_REQUEST,
+            "이미 종료된 게임입니다."
+    ),
+
+    INVALID_QUERY_PARAMETERS(
+            404,
+            HttpStatus.BAD_REQUEST,
+            "쿼리파라미터가 잘못 요청되었습니다."
+    ),
+
+    GAME_RESULT_NOT_EXIST(
+            405,
+            HttpStatus.NOT_FOUND,
+            "해당게임의 게임결과가 존재하지 않습니다."
+    )
     ;
 
     private final int errorCode;
