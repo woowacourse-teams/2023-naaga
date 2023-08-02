@@ -41,4 +41,16 @@
 
     <!-- AdventureHistoryActivity -->
     <string name="history_title">History</string>
+
+    <!--give up dialog-->
+    <string name="give_up_dialog_title">게임을 포기하시겠어요?</string>
+    <string name="give_up_dialog_description">지금 떠나면 점수가 하락해요</string>
+    <string name="give_up_dialog_continue">이어 하기</string>
+    <string name="give_up_dialog_give_up">포기 하기</string>
+
+    <!--hint using dialog-->
+    <string name="hint_using_dialog_title">힌트를 사용하시겠어요?</string>
+    <string name="hint_using_dialog_description">힌트가 %d개 남았어요</string>
+    <string name="hint_using_dialog_continue">힌트 받기</string>
+    <string name="hint_using_dialog_give_up">취소 하기</string>
 </resources>
