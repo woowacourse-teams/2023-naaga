@@ -90,8 +90,8 @@ public class GameController {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
 
-        List<GameRecord> gameRecords = gameService.findAllGameResult();
-        List<GameResultResponse> gameResultResponseList = gameRecords.stream()
+        final List<GameRecord> gameRecords = gameService.findAllGameResult();
+        final List<GameResultResponse> gameResultResponseList = gameRecords.stream()
                 .map(GameResultResponse::from)
                 .collect(Collectors.toList());
 

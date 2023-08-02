@@ -43,12 +43,14 @@ public class GameRecord {
         return new GameRecord(gameResult, totalPlayTime, distance, hintUses, tryCount, startTime, finishTime);
     }
 
-    private static LocalDateTime calculateTotalPlayTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        Duration duration = Duration.between(startDateTime, endDateTime);
+    private static LocalDateTime calculateTotalPlayTime(final LocalDateTime startDateTime,
+                                                        final LocalDateTime endDateTime) {
+        final Duration duration = Duration.between(startDateTime, endDateTime);
         return startDateTime.plus(duration);
     }
 
-    private static int calculateDistance(Position startPosition, Position destinationPosition) {
+    private static int calculateDistance(final Position startPosition,
+                                         final Position destinationPosition) {
         return (int) startPosition.calculateDistance(destinationPosition);
     }
 
