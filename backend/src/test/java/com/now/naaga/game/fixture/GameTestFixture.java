@@ -13,6 +13,7 @@ public class GameTestFixture {
     public static final Member MEMBER1 = new Member("irye@gmail.com", "0104");
     public static final Member MEMBER2 = new Member("chae@gmail.com", "0121");
     public static final Player REGISTER = new Player(1l,"irye", new Score(1000), MEMBER1);
+    public static final Player PLAYER = new Player(2l,"chae", new Score(1000), MEMBER2);
     
     
     public static final Position 잠실_루터회관_정문_좌표 = new Position(BigDecimal.valueOf(37.515446),

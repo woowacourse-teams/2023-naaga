@@ -11,8 +11,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ScorePolicyImpl implements ScorePolicy {
+    
     // 거리가 멀수록 점수가 높다/ 시간은 짧을수록 점수가 높다/ 힌트는 사용개수가 적을수록 점수가 높다 / 남은 시도횟수는 많을수록 점수가 높다.
     // 점수에 영향을 미치는 정도 시간> 거리 > 힌트 사용횟수 >  시도횟수
     private static final double DISTANCE_WEIGHT = 300.0;
