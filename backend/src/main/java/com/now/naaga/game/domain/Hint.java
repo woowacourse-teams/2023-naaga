@@ -2,7 +2,6 @@ package com.now.naaga.game.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.place.domain.Position;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
