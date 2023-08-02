@@ -1,8 +1,10 @@
-package com.now.naaga.acceptance.player;
+package com.now.naaga.player.presentation;
 
-import com.now.naaga.acceptance.ControllerTest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.member.domain.Member;
-import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.player.presentation.dto.RankResponse;
@@ -10,55 +12,33 @@ import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.util.Base64;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class PlayerControllerTest extends ControllerTest {
-
-    @LocalServerPort
-    int port;
+public class PlayerControllerTest extends CommonControllerTest {
 
     @Autowired
-    PlayerRepository playerRepository;
-
-    @Autowired
-    MemberRepository memberRepository;
+    private PlayerRepository playerRepository;
 
     @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-
-        final Member saveMember1 = memberRepository.save(new Member("chaechae@woo.com", "1234"));
-        final Member saveMember2 = memberRepository.save(new Member("irea@woo.com", "1234"));
-        final Member saveMember3 = memberRepository.save(new Member("cherry@woo.com", "1234"));
-
-        playerRepository.save(new Player("채채", new Score(15), saveMember1));
-        playerRepository.save(new Player("이레", new Score(17), saveMember2));
-        playerRepository.save(new Player("채리", new Score(20), saveMember3));
+    protected void setUp() {
+        super.setUp();
     }
 
     @Test
     void 멤버의_랭크를_조회한다() {
         // given
-        final String encodedCredentials = calculateEncodedCredentials();
-
+        playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com", "1234")));
+        playerRepository.save(new Player("이레", new Score(17), new Member("irea@woo.com", "1234")));
+        playerRepository.save(new Player("채리", new Score(20), new Member("cherry@woo.com", "1234")));
         // when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Basic " + encodedCredentials)
+                .auth().preemptive().basic("chaechae@woo.com", "1234")
                 .when().get("/ranks/my")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -80,12 +60,13 @@ class PlayerControllerTest extends ControllerTest {
     @Test
     void 모든_맴버의_랭크를_조회한다() {
         // given
-        final String encodedCredentials = calculateEncodedCredentials();
-
+        playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com", "1234")));
+        playerRepository.save(new Player("이레", new Score(17), new Member("irea@woo.com", "1234")));
+        playerRepository.save(new Player("채리", new Score(20), new Member("cherry@woo.com", "1234")));
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+        final ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Basic " + encodedCredentials)
                 .when().get("/ranks?sortBy=rank&order=descending")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -105,13 +86,5 @@ class PlayerControllerTest extends ControllerTest {
         final RankResponse thirdRank = rankResponseList.get(2);
         assertThat(thirdRank.getPlayer().getNickname()).isEqualTo("채채");
         assertThat(thirdRank.getRank()).isEqualTo(3);
-    }
-
-
-    private String calculateEncodedCredentials() {
-        final String username = "chaechae@woo.com";
-        final String password = "1234";
-        final String credentials = username + ":" + password;
-        return Base64.getEncoder().encodeToString(credentials.getBytes());
     }
 }

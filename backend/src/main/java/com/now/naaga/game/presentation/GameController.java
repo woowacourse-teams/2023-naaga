@@ -114,9 +114,9 @@ public class GameController {
 
     @GetMapping("/results")
     public ResponseEntity<List<GameResultResponse>> findAllGameResult(@Auth final PlayerRequest playerRequest,
-                                                                      @RequestParam final String sortBy,
-                                                                      @RequestParam final String order) {
-        if (!sortBy.equals("time") && order.equals("descending")) {
+                                                                      @RequestParam(name = "sort-by") final String sortBy,
+                                                                      @RequestParam(name = "order") final String order) {
+        if (!sortBy.equalsIgnoreCase("TIME") || !order.equalsIgnoreCase("DESCENDING")) {
             throw new GameException(INVALID_QUERY_PARAMETERS);
         }
 

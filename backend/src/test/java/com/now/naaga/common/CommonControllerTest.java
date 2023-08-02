@@ -9,10 +9,10 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("/truncate.sql")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class CommonControllerTest {
-    
+
     @LocalServerPort
     private int port;
-    
+
     protected void setUp() {
         RestAssured.port = port;
     }

@@ -1,7 +1,5 @@
 package com.now.naaga.player.domain;
 
-import com.now.naaga.player.presentation.dto.RankResponse;
-
 import java.util.Objects;
 
 public class Rank {
@@ -35,8 +33,12 @@ public class Rank {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         final Rank rank1 = (Rank) o;
         return rank == rank1.rank && topPercent == rank1.topPercent && Objects.equals(player, rank1.player);
     }

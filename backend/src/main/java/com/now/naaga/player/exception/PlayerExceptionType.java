@@ -14,8 +14,7 @@ public enum PlayerExceptionType implements BaseExceptionType {
             901,
             HttpStatus.BAD_REQUEST,
             "잘못된 정렬 요청입니다."
-    )
-    ;
+    );
 
     private final int errorCode;
     private final HttpStatus httpStatus;
