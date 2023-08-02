@@ -24,7 +24,6 @@ public class PlayerService {
 
     @Transactional(readOnly = true)
     public Player findPlayerById(final Long id) {
-        //여기서 터짐.
         return playerRepository.findById(id)
                 .orElseThrow(() -> new PlayerException(PlayerExceptionType.PLAYER_NOT_FOUND));
     }

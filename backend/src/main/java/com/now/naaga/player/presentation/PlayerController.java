@@ -1,10 +1,10 @@
 package com.now.naaga.player.presentation;
 
 import com.now.naaga.auth.annotation.Auth;
-import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.exception.PlayerException;
+import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.player.presentation.dto.RankResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +28,14 @@ public class PlayerController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<RankResponse> findMyRank(@Auth final MemberCommand memberCommand) {
-        final Rank rank = playerService.getRankAndTopPercent(memberCommand);
+    public ResponseEntity<RankResponse> findMyRank(@Auth final PlayerRequest playerRequest) {
+        final Rank rank = playerService.getRankAndTopPercent(playerRequest);
         final RankResponse rankResponse = RankResponse.of(rank);
         return ResponseEntity.ok(rankResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<RankResponse>> findAllRank(@Auth final MemberCommand memberCommand,
+    public ResponseEntity<List<RankResponse>> findAllRank(@Auth final PlayerRequest playerRequest,
                                                           @RequestParam final String sortBy,
                                                           @RequestParam final String order) {
         if (!sortBy.equals("rank") && order.equals("ascending")) {

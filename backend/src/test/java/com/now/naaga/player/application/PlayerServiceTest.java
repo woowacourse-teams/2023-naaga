@@ -1,11 +1,11 @@
 package com.now.naaga.player.application;
 
-import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
+import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.score.domain.Score;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -20,10 +21,10 @@ import java.util.List;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Transactional
 @SpringBootTest
+@Sql(value = "/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class PlayerServiceTest {
 
     @Autowired
@@ -69,7 +70,8 @@ class PlayerServiceTest {
     @Test
     void 플레이어의_랭크점수를_확인한다() {
         // when
-        final Rank rank = playerService.getRankAndTopPercent(new MemberCommand("cherry@woo.com", "1234"));
+        System.out.println("playerList: " + playerList.get(2).getId());
+        final Rank rank = playerService.getRankAndTopPercent(new PlayerRequest(3L));
 
         // then
         assertSoftly(softly -> {

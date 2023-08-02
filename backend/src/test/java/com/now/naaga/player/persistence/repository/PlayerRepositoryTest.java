@@ -30,7 +30,7 @@ class PlayerRepositoryTest {
         final Player savePlayer = playerRepository.save(new Player("채채", new Score(15), foundMember));
 
         // when
-        final Player foundPlayer = playerRepository.findByMemberId(saveMember.getId()).get();
+        final Player foundPlayer = playerRepository.findByMemberId(saveMember.getId()).get(0);
 
         // then
         assertThat(foundPlayer).isEqualTo(savePlayer);
