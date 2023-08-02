@@ -1,4 +1,4 @@
-package com.now.naaga.place.presentation;
+package com.now.naaga.place.presentation.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 

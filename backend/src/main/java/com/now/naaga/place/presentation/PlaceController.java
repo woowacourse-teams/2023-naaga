@@ -6,6 +6,7 @@ import com.now.naaga.place.application.dto.FindAllPlaceCommand;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
 import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.domain.Place;
+import com.now.naaga.place.presentation.dto.CreatePlaceRequest;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.http.HttpStatus;
