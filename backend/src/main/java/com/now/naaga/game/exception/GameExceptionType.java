@@ -34,6 +34,12 @@ public enum GameExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "사용할 수 있는 힌트를 모두 소진했습니다."
     ),
+
+    HINT_NOT_EXIST_IN_GAME(
+            405,
+            HttpStatus.NOT_FOUND,
+            "게임에서 해당 힌트가 존재하지 않습니다."
+    ),
     ;
 
     private final int errorCode;
