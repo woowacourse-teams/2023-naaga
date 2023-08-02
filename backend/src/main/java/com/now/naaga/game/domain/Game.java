@@ -98,22 +98,12 @@ public class Game extends BaseEntity {
     }
 
     public void validatePlayer(final Player player) {
-        if (!player.equals(this.player)) {
+        if (!this.player.equals(player)) {
             throw new GameException(INACCESSIBLE_AUTHENTICATION);
         }
     }
-
-    public void validateInRange(final Position position) {
-        if (!place.isInValidRange(position)) {
-            throw new GameException(NOT_ARRIVED);
-        }
-    }
-
-    public void changeGameStatus(final GameStatus gameStatus) {
-        this.gameStatus = gameStatus;
-    }
     
-    public ResultType endGame(EndType endType, Position position) {
+    public ResultType endGame(final EndType endType, final Position position) {
         if (isDone()) {
             throw new GameException(ALREADY_DONE);
         }
@@ -133,7 +123,7 @@ public class Game extends BaseEntity {
         return FAIL;
     }
     
-    private ResultType endGameByArrival(Position position) {
+    private ResultType endGameByArrival(final Position position) {
         remainingAttempts--;
         if (isPlayerArrived(position)) {
             return endGameWithSuccess();
@@ -143,7 +133,7 @@ public class Game extends BaseEntity {
     
     // todo : place의 변수명을 isCoordinateInsideBounds 또는 isPositionInsideBounds 또는 isPositionWithinRange로 바꾸고 싶다
     //또, 이 메서드에 범위를 함께 넘겨주는 것이 마땅해보인다.
-    private boolean isPlayerArrived(Position position) {
+    private boolean isPlayerArrived(final Position position) {
         return place.isInValidRange(position);
     }
     
