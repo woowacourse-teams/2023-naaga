@@ -70,7 +70,6 @@ class PlayerServiceTest {
     @Test
     void 플레이어의_랭크점수를_확인한다() {
         // when
-        System.out.println("playerList: " + playerList.get(2).getId());
         final Rank rank = playerService.getRankAndTopPercent(new PlayerRequest(3L));
 
         // then
