@@ -92,7 +92,7 @@ public class GameController {
             throw new GameException(INVALID_QUERY_PARAMETERS);
         }
 
-        final List<GameRecord> gameRecords = gameService.findAllGameResult();
+        final List<GameRecord> gameRecords = gameService.findAllGameResult(playerRequest);
         final List<GameResultResponse> gameResultResponseList = gameRecords.stream()
                 .map(GameResultResponse::from)
                 .collect(Collectors.toList());

@@ -82,10 +82,10 @@ class GameControllerTest extends ControllerTest {
         final LocalDateTime startTime2 = LocalDateTime.of(2024, 8, 2, 13, 30);
         final LocalDateTime endTime2 = LocalDateTime.of(2024, 8, 2, 15, 30);
 
-        final Game game1 = new Game(GameStatus.DONE, player3, savePlace1,
+        final Game game1 = new Game(GameStatus.DONE, player1, savePlace1,
                 new Position(BigDecimal.valueOf(37.512256),
                         BigDecimal.valueOf(127.112584)), 2, hints, startTime1, endTime1);
-        final Game game2 = new Game(GameStatus.DONE, player2, savePlace2,
+        final Game game2 = new Game(GameStatus.DONE, player1, savePlace2,
                 new Position(BigDecimal.valueOf(37.512256),
                         BigDecimal.valueOf(127.112584)), 3, hints, startTime2, endTime2);
         final Game saveGame1 = gameRepository.save(game1);

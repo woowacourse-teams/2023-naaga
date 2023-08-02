@@ -16,6 +16,7 @@ import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
+import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,9 +102,13 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public List<GameRecord> findAllGameResult() {
-        final List<GameResult> gameResults = gameResultRepository.findAll();
-        gameResults.sort((gr1, gr2) -> gr2.getCreatedAt().compareTo(gr1.getCreatedAt()));
+    public List<GameRecord> findAllGameResult(final PlayerRequest playerRequest) {
+        List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
+        List<GameResult> gameResults = gamesByPlayerId.stream()
+                .map(game -> findGameResultByGameId(game.getId()))
+                .sorted((gr1, gr2) -> gr2.getCreatedAt().compareTo(gr1.getCreatedAt()))
+                .collect(Collectors.toList());
+
         return gameResults.stream()
                 .map(GameRecord::from)
                 .collect(Collectors.toList());
