@@ -29,6 +29,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.naver.maps.map.widget.LocationButtonView
+            android:id="@+id/btn_onAdventure_navermap_location"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_onAdventure_arrived"
+            android:layout_marginBottom="@dimen/space_default_medium"
+            android:layout_marginStart="@dimen/space_default_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.naver.maps.map.widget.CompassView
+            android:id="@+id/navermap_compass_onAdventure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_default_medium"
+            android:layout_marginTop="@dimen/space_default_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <Button
             android:id="@+id/btn_onAdventure_arrived"
             android:layout_width="0dp"
