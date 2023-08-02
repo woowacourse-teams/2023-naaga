@@ -8,6 +8,7 @@ import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.application.dto.FinishGameCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameRecord;
+import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.presentation.dto.*;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.now.naaga.game.exception.GameExceptionType.INVALID_QUERY_PARAMETERS;
 
 @RequestMapping("/games")
 @RestController
@@ -86,7 +89,7 @@ public class GameController {
                                                                       @RequestParam final String sortBy,
                                                                       @RequestParam final String order) {
         if (!sortBy.equals("time") && order.equals("descending")) {
-            throw new IllegalArgumentException("잘못된 요청입니다.");
+            throw new GameException(INVALID_QUERY_PARAMETERS);
         }
 
         final List<GameRecord> gameRecords = gameService.findAllGameResult();

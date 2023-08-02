@@ -28,6 +28,18 @@ public enum GameExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "목적지에 도착하지 않았습니다."
     ),
+
+    INVALID_QUERY_PARAMETERS(
+            404,
+            HttpStatus.BAD_REQUEST,
+            "쿼리파라미터가 잘못 요청되었습니다."
+    ),
+
+    GAME_RESULT_NOT_EXIST(
+            405,
+            HttpStatus.NOT_FOUND,
+            "해당게임의 게임결과가 존재하지 않습니다."
+    )
     ;
 
     private final int errorCode;

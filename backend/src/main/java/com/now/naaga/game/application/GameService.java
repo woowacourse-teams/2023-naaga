@@ -22,8 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
-import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
+import static com.now.naaga.game.exception.GameExceptionType.*;
 
 @Transactional
 @Service
@@ -89,7 +88,7 @@ public class GameService {
         List<GameResult> gameResultsByGameId = gameResultRepository.findByGameId(gameId);
 
         if (gameResultsByGameId.isEmpty()) {
-            throw new IllegalArgumentException("해당게임의 게임결과가 존재하지 않습니다.");
+            throw new GameException(GAME_RESULT_NOT_EXIST);
         }
 
         return gameResultsByGameId.get(0);
