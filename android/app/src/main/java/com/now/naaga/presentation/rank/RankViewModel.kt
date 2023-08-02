@@ -3,10 +3,11 @@ package com.now.naaga.presentation.rank
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.now.domain.model.Player
 import com.now.domain.model.Rank
+import com.now.domain.repository.RankRepository
+import com.now.naaga.data.NaagaThrowable
 
-class RankViewModel : ViewModel() {
+class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
     private val _myName = MutableLiveData<String>()
     val myName: LiveData<String> = _myName
 
@@ -19,23 +20,43 @@ class RankViewModel : ViewModel() {
     private val _ranks = MutableLiveData<List<Rank>>()
     val ranks: LiveData<List<Rank>> = _ranks
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
     fun fetchMyRank() {
-        _myName.value = TEMP_MOCK_MY_NAME_DATA
-        _myScore.value = TEMP_MOCK_MY_SCORE_DATA
-        _myRank.value = TEMP_MOCK_MY_RANK_DATA
+        rankRepository.getMyRank(
+            callback = { result ->
+                result
+                    .onSuccess {
+                        _myName.value = it.player.nickname
+                        _myScore.value = it.player.score
+                        _myRank.value = it.rank
+                    }
+                    .onFailure { setErrorMessage(it) }
+            },
+        )
     }
 
     fun fetchRanks() {
-        _ranks.value = TEMP_MOCK_RANKS_DATA
+        rankRepository.getAllRanks(
+            SORT_BY_QUERY,
+            ORDER_QUERY,
+            callback = { result ->
+                result
+                    .onSuccess { _ranks.value = it }
+                    .onFailure { setErrorMessage(it) }
+            },
+        )
+    }
+    private fun setErrorMessage(throwable: Throwable) {
+        when (throwable) {
+            is NaagaThrowable.ServerConnectFailure ->
+                _errorMessage.value = throwable.userMessage
+        }
     }
 
     companion object {
-        private const val TEMP_MOCK_MY_NAME_DATA = "뽀또"
-        private const val TEMP_MOCK_MY_SCORE_DATA = 12300
-        private const val TEMP_MOCK_MY_RANK_DATA = 1
-
-        private val TEMP_MOCK_RANKS_DATA = List(10) {
-            Rank(Player(id = 1, nickname = "뽀또", score = 12300), rank = 1, percent = 1)
-        }
+        private const val SORT_BY_QUERY = "rank"
+        private const val ORDER_QUERY = "ascending"
     }
 }

@@ -3,9 +3,12 @@ package com.now.naaga.presentation.rank
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Rank
+import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.databinding.ActivityRankBinding
 import com.now.naaga.presentation.rank.recyclerview.RankAdapter
 
@@ -23,12 +26,14 @@ class RankActivity : AppCompatActivity() {
         initRecyclerView()
         viewModel.fetchMyRank()
         viewModel.fetchRanks()
-        startObserving()
+        subscribeObserving()
         setClickListeners()
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this)[RankViewModel::class.java]
+        val repository = DefaultRankRepository()
+        val factory = RankFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[RankViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
@@ -36,14 +41,19 @@ class RankActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         binding.rvRankWholeRanks.apply {
             adapter = rankAdapter
-            itemAnimator = null
             setHasFixedSize(true)
         }
     }
 
-    private fun startObserving() {
+    private fun subscribeObserving() {
         viewModel.ranks.observe(this) { ranks ->
             updateRank(ranks)
+        }
+        viewModel.errorMessage.observe(this) { errorMessage ->
+            if (NaagaThrowable.ServerConnectFailure().userMessage == errorMessage) {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
     }
 

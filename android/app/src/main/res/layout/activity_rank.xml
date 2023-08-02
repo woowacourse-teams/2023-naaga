@@ -50,7 +50,7 @@
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:text="@{`` + viewModel.myRank}"
+            android:text="@{@string/rank_my_rank(viewModel.myRank)}"
             app:layout_constraintEnd_toStartOf="@id/tv_rank_myName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_rank_myScore"
