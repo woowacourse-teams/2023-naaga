@@ -26,8 +26,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        val viewModelFactory = SplashViewModelFactory(DefaultAdventureRepository())
-        viewModel = ViewModelProvider(this, viewModelFactory)[SplashViewModel::class.java]
+        viewModel = ViewModelProvider(this, SplashViewModel.Factory)[SplashViewModel::class.java]
     }
 
     private fun subscribe() {

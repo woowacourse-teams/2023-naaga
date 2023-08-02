@@ -32,4 +32,13 @@ class SplashViewModel(private val adventureRepository2: AdventureRepository2) : 
             _adventureStatus.value = AdventureStatus.NONE
         }
     }
+
+    companion object {
+        val Factory = ViewModelFactory(ThirdDemoAdventureRepository())
+        class ViewModelFactory(private val adventureRepository2: AdventureRepository2) : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return SplashViewModel(adventureRepository2) as T
+            }
+        }
+    }
 }
