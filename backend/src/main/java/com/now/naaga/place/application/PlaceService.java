@@ -1,6 +1,7 @@
 package com.now.naaga.place.application;
 
 import com.now.naaga.common.domain.OrderType;
+import com.now.naaga.common.infrastructure.FileManager;
 import com.now.naaga.common.infrastructure.MultipartFileManager;
 import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.application.dto.FindAllPlaceCommand;
@@ -25,8 +26,7 @@ import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
 @Service
 public class PlaceService {
 
-    @Value("${multipartFile.directory.path-local}")
-    private String saveDirectory;
+    private final PlaceRepository placeRepository;
 
     private final PlayerService playerService;
 
@@ -34,16 +34,18 @@ public class PlaceService {
 
     private final PlaceRecommendService placeRecommendService;
 
-    private final PlaceRepository placeRepository;
+    private final FileManager<MultipartFile> fileManager;
 
-    public PlaceService(final PlayerService playerService,
+    public PlaceService(final PlaceRepository placeRepository,
+                        final PlayerService playerService,
                         final PlaceCheckService placeCheckService,
                         final PlaceRecommendService placeRecommendService,
-                        final PlaceRepository placeRepository) {
+                        final FileManager<MultipartFile> fileManager) {
+        this.placeRepository = placeRepository;
         this.playerService = playerService;
         this.placeCheckService = placeCheckService;
         this.placeRecommendService = placeRecommendService;
-        this.placeRepository = placeRepository;
+        this.fileManager = fileManager;
     }
 
     @Transactional(readOnly = true)
@@ -70,7 +72,7 @@ public class PlaceService {
     public Place createPlace(final CreatePlaceCommand createPlaceCommand) {
         final Position position = createPlaceCommand.position();
         placeCheckService.checkOtherPlaceNearby(position);
-        final File uploadPath = saveImageFile(createPlaceCommand.imageFile());
+        final File uploadPath = fileManager.save(createPlaceCommand.imageFile());
         try {
             final Player registeredPlayer = playerService.findPlayerByMemberId(1L);
             final Place place = new Place(createPlaceCommand.name(), createPlaceCommand.description(), position, uploadPath.toString(), registeredPlayer);
@@ -80,10 +82,5 @@ public class PlaceService {
             uploadPath.delete();
             throw exception;
         }
-    }
-
-    private File saveImageFile(final MultipartFile imageFile) {
-        final MultipartFileManager multipartFileManager = new MultipartFileManager();
-        return multipartFileManager.save(imageFile, saveDirectory);
     }
 }

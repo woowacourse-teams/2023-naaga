@@ -4,25 +4,12 @@ import org.springframework.http.HttpStatus;
 
 public enum CommonExceptionType implements BaseExceptionType {
 
-    CAN_NOT_FIND_PLACE(
-            500,
+    FILE_SAVE_ERROR(
+            1001,
             HttpStatus.BAD_REQUEST,
-            "배정 할 목적지가 존재하지 않습니다."
+            "파일 저장하다 문제가 발생했습니다."
     ),
-    NO_EXIST(
-            504,
-            HttpStatus.NOT_FOUND,
-            "해당 장소가 존재하지 않습니다."
-    ),
-    INACCESSIBLE_AUTHENTICATION(
-            503,
-            HttpStatus.FORBIDDEN,
-            "해당 장소에 대한 접근권한이 없습니다."
-    ),
-    ALREADY_EXIST_NEARBY(
-            506,
-            HttpStatus.BAD_REQUEST,
-            "이미 주변에 장소가 존재합니다.");
+    ;
 
     private final int errorCode;
     private final HttpStatus httpStatus;

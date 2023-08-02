@@ -1,17 +1,24 @@
 package com.now.naaga.common.infrastructure;
 
+import com.now.naaga.common.exception.CommonException;
+import com.now.naaga.common.exception.CommonExceptionType;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+@Component
 public class MultipartFileManager implements FileManager<MultipartFile> {
 
+    @Value("${multipartFile.directory.path}")
+    private String saveDirectory;
+
     @Override
-    public File save(final MultipartFile multipartFile,
-                     final String saveDirectory) {
-        File directory = new File(saveDirectory);
+    public File save(final MultipartFile multipartFile) {
+        final File directory = new File(saveDirectory);
         if (!directory.exists()) {
             directory.mkdirs();
         }
@@ -22,7 +29,7 @@ public class MultipartFileManager implements FileManager<MultipartFile> {
         try {
             multipartFile.transferTo(uploadPath);
         } catch (IOException e) {
-            throw new RuntimeException("파일저장에 실패하였습니다.");
+            throw new CommonException(CommonExceptionType.FILE_SAVE_ERROR);
         }
         return uploadPath;
     }

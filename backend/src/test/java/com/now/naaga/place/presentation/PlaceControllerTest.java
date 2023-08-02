@@ -1,16 +1,13 @@
-package com.now.naaga.place;
+package com.now.naaga.place.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.domain.BaseEntity;
-import com.now.naaga.common.exception.BaseException;
 import com.now.naaga.common.exception.ExceptionResponse;
+import com.now.naaga.common.infrastructure.FileManager;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.exception.PlaceExceptionType;
-import com.now.naaga.place.fixture.PlaceFixture;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
 import com.now.naaga.player.domain.Player;
@@ -18,33 +15,28 @@ import com.now.naaga.player.persistence.repository.PlayerRepository;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.now.naaga.place.fixture.PlaceFixture.JEJU_PLACE;
 import static com.now.naaga.place.fixture.PlaceFixture.SEOUL_PLACE;
-import static com.now.naaga.place.fixture.PositionFixture.JEJU_POSITION;
-import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;
 import static com.now.naaga.player.fixture.PlayerFixture.PLAYER;
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.useRelaxedHTTPSValidation;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -56,6 +48,9 @@ public class PlaceControllerTest extends CommonControllerTest {
     @Autowired
     private PlaceRepository placeRepository;
 
+    @MockBean
+    private FileManager<MultipartFile> fileManager;
+
     @BeforeEach
     protected void setUp() {
         super.setUp();
@@ -66,6 +61,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         //given
         final Player player = playerRepository.save(PLAYER());
         final Place SEOUL = SEOUL_PLACE();
+        when(fileManager.save(any())).thenReturn(new File("/임시경로","이미지.png"));
         //when
         final ExtractableResponse<Response> extract = given()
                 .log().all()

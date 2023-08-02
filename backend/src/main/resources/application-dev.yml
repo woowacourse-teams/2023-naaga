@@ -20,5 +20,4 @@ spring:
 
 multipartFile:
   directory:
-#    path: /Users/hwan/image
-    path: ./src/test/resources/image
+    path: /home/Ubuntu/image
