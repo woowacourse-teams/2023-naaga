@@ -4,7 +4,7 @@ import com.now.domain.model.Place
 import java.io.File
 
 interface PlaceRepository {
-    fun fetchAllPlaces(
+    fun fetchMyPlaces(
         sortBy: String,
         order: String,
         callback: (Result<List<Place>>) -> Unit,
