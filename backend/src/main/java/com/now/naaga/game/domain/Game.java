@@ -48,12 +48,14 @@ public class Game extends BaseEntity {
     private List<Hint> hints;
 
     private LocalDateTime startTime;
+    
+    private LocalDateTime endTime;
 
     protected Game() {
     }
 
     public Game(final Player player, final Place place, final Position startPosition) {
-        this(null, GameStatus.IN_PROGRESS, player, place, startPosition, 5, new ArrayList<>(), LocalDateTime.now());
+        this(null, GameStatus.IN_PROGRESS, player, place, startPosition, 5, new ArrayList<>(), LocalDateTime.now(), null);
     }
 
     public Game(final GameStatus gameStatus,
@@ -62,8 +64,9 @@ public class Game extends BaseEntity {
                 final Position startPosition,
                 final int remainingAttempts,
                 final List<Hint> hints,
-                final LocalDateTime startTime) {
-        this(null, gameStatus, player, place, startPosition, remainingAttempts, hints, startTime);
+                final LocalDateTime startTime,
+                final LocalDateTime endTime) {
+        this(null, gameStatus, player, place, startPosition, remainingAttempts, hints, startTime,endTime);
     }
 
     public Game(final Long id,
@@ -73,7 +76,8 @@ public class Game extends BaseEntity {
                 final Position startPosition,
                 final int remainingAttempts,
                 final List<Hint> hints,
-                final LocalDateTime startTime) {
+                final LocalDateTime startTime,
+                final LocalDateTime endTime) {
         this.id = id;
         this.gameStatus = gameStatus;
         this.player = player;
@@ -82,6 +86,7 @@ public class Game extends BaseEntity {
         this.remainingAttempts = remainingAttempts;
         this.hints = hints;
         this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public void validateOwner(final Player player) {
@@ -99,7 +104,11 @@ public class Game extends BaseEntity {
     public void changeGameStatus(final GameStatus gameStatus) {
         this.gameStatus = gameStatus;
     }
-
+    
+    public ResultType endGame(EndType endType, Position position) {
+        return null;
+    }
+    
     public Long getId() {
         return id;
     }

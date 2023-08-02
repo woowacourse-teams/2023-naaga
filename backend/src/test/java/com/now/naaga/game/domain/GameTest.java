@@ -1,5 +1,7 @@
 package com.now.naaga.game.domain;
 
+import static com.now.naaga.game.domain.EndType.ARRIVED;
+import static com.now.naaga.game.domain.EndType.GIVE_UP;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 import static com.now.naaga.game.domain.ResultType.FAIL;
@@ -65,7 +67,7 @@ class GameTest {
         Place destination = 잠실_루터회관;
         Position startPosition = 던킨도너츠_올림픽공원점_좌표;
         Position currentPosition = 잠실_루터회관_정문_근처_좌표;
-        game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now());
+        game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
         
         //when
         ResultType actual = game.endGame(ARRIVED, currentPosition);
@@ -83,7 +85,7 @@ class GameTest {
         Place destination = 잠실_루터회관;
         Position startPosition = 던킨도너츠_올림픽공원점_좌표;
         Position currentPosition = GS25_방이도곡점_좌표;
-        game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now());
+        game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(),null);
         
         //when
         ResultType actual = game.endGame(ARRIVED, currentPosition);
@@ -102,7 +104,7 @@ class GameTest {
         Place destination = 잠실_루터회관;
         Position startPosition = 던킨도너츠_올림픽공원점_좌표;
         Position currentPosition = 잠실_루터회관_정문_근처_좌표;
-        game = new Game(DONE, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now());
+        game = new Game(DONE, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(),null);
         
         //then
         GameException gameException = assertThrows(GameException.class, () -> game.endGame(ARRIVED, currentPosition));
@@ -116,9 +118,8 @@ class GameTest {
         Place destination = 잠실_루터회관;
         Position startPosition = 던킨도너츠_올림픽공원점_좌표;
         Position currentPosition = GS25_방이도곡점_좌표;
-        game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(),
-                LocalDateTime.now());
-    
+        game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(),null);
+        
         //then
         GameException gameException = assertThrows(GameException.class, () -> game.endGame(ARRIVED, currentPosition));
         assertThat(gameException.exceptionType()).isEqualTo(NOT_ARRIVED);

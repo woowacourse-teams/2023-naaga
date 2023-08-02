@@ -24,8 +24,6 @@ public class GameResult extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ResultType resultType;
 
-    private LocalDateTime arrivedTime;
-
     @Embedded
     private Score score;
 
@@ -37,20 +35,17 @@ public class GameResult extends BaseEntity {
     }
 
     public GameResult(final ResultType resultType,
-                      final LocalDateTime arrivedTime,
                       final Score score,
                       final Game game) {
-        this(null, resultType, arrivedTime, score, game);
+        this(null, resultType, score, game);
     }
 
     public GameResult(final Long id,
                       final ResultType resultType,
-                      final LocalDateTime arrivedTime,
                       final Score score,
                       final Game game) {
         this.id = id;
         this.resultType = resultType;
-        this.arrivedTime = arrivedTime;
         this.score = score;
         this.game = game;
     }
@@ -61,10 +56,6 @@ public class GameResult extends BaseEntity {
 
     public ResultType getResultType() {
         return resultType;
-    }
-
-    public LocalDateTime getArrivedTime() {
-        return arrivedTime;
     }
 
     public Score getScore() {
@@ -97,7 +88,6 @@ public class GameResult extends BaseEntity {
         return "GameResult{" +
                 "id=" + id +
                 ", resultType=" + resultType +
-                ", arrivedTime=" + arrivedTime +
                 ", score=" + score +
                 ", gameId=" + game.getId() +
                 '}';

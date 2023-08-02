@@ -28,6 +28,12 @@ public enum GameExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "목적지에 도착하지 않았습니다."
     ),
+    
+    ALREADY_DONE(
+            404,
+            HttpStatus.BAD_REQUEST,
+            "이미 종료된 게임입니다."
+    ),
     ;
 
     private final int errorCode;
