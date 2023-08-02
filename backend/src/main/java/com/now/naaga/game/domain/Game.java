@@ -12,13 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.ResultType.FAIL;
+import static com.now.naaga.game.domain.ResultType.SUCCESS;
 import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
 import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
 
 @Entity
 public class Game extends BaseEntity {
 
-    public static final double MIN_RANGE = 0.05;
+    public static final int MAX_ATTEMPT_COUNT = 5;
+    public static final double MIN_RANGE = 0.02;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -48,12 +52,13 @@ public class Game extends BaseEntity {
     private List<Hint> hints;
 
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     protected Game() {
     }
 
     public Game(final Player player, final Place place, final Position startPosition) {
-        this(null, GameStatus.IN_PROGRESS, player, place, startPosition, 5, new ArrayList<>(), LocalDateTime.now());
+        this(GameStatus.IN_PROGRESS, player, place, startPosition, MAX_ATTEMPT_COUNT, new ArrayList<>(), LocalDateTime.now(), null);
     }
 
     public Game(final GameStatus gameStatus,
@@ -62,8 +67,9 @@ public class Game extends BaseEntity {
                 final Position startPosition,
                 final int remainingAttempts,
                 final List<Hint> hints,
-                final LocalDateTime startTime) {
-        this(null, gameStatus, player, place, startPosition, remainingAttempts, hints, startTime);
+                final LocalDateTime startTime,
+                final LocalDateTime endTime) {
+        this(null, gameStatus, player, place, startPosition, remainingAttempts, hints, startTime, endTime);
     }
 
     public Game(final Long id,
@@ -73,7 +79,8 @@ public class Game extends BaseEntity {
                 final Position startPosition,
                 final int remainingAttempts,
                 final List<Hint> hints,
-                final LocalDateTime startTime) {
+                final LocalDateTime startTime,
+                final LocalDateTime endTime) {
         this.id = id;
         this.gameStatus = gameStatus;
         this.player = player;
@@ -82,6 +89,7 @@ public class Game extends BaseEntity {
         this.remainingAttempts = remainingAttempts;
         this.hints = hints;
         this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public void validateOwner(final Player player) {
@@ -98,6 +106,43 @@ public class Game extends BaseEntity {
 
     public void changeGameStatus(final GameStatus gameStatus) {
         this.gameStatus = gameStatus;
+    }
+
+    private boolean isGameEnded() {
+        return gameStatus == DONE;
+    }
+
+    private ResultType giveUpGame() {
+        gameStatus = DONE;
+        endTime = LocalDateTime.now();
+        return FAIL;
+    }
+
+    private ResultType endGameByArrival(final Position position) {
+        remainingAttempts--;
+        if (isPlayerArrived(position)) {
+            return endGameWithSuccess();
+        }
+        return endGameWithFailure();
+    }
+
+    private boolean isPlayerArrived(final Position position) {
+        return place.isInValidRange(position);
+    }
+
+    private ResultType endGameWithSuccess() {
+        gameStatus = DONE;
+        endTime = LocalDateTime.now();
+        return SUCCESS;
+    }
+
+    private ResultType endGameWithFailure() {
+        if (remainingAttempts == 0) {
+            gameStatus = DONE;
+            endTime = LocalDateTime.now();
+            return FAIL;
+        }
+        throw new GameException(NOT_ARRIVED);
     }
 
     public Long getId() {
@@ -130,6 +175,10 @@ public class Game extends BaseEntity {
 
     public LocalDateTime getStartTime() {
         return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
     @Override
