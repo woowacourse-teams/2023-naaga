@@ -1,18 +1,24 @@
 package com.now.naaga.game.application;
 
 import com.now.naaga.game.application.dto.CreateGameCommand;
+import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.application.dto.FinishGameCommand;
 import com.now.naaga.game.domain.Game;
+import com.now.naaga.game.domain.GameResult;
 import com.now.naaga.game.domain.GameStatus;
+import com.now.naaga.game.domain.ResultType;
+import com.now.naaga.game.domain.ScorePolicy;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.repository.GameRepository;
+import com.now.naaga.game.repository.GameResultRepository;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
+import com.now.naaga.score.domain.Score;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,19 +32,24 @@ import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
 public class GameService {
 
     private final GameRepository gameRepository;
+    
+    private final GameResultRepository gameResultRepository;
 
     private final PlayerService playerService;
 
     private final PlaceService placeService;
-
-    public GameService(final GameRepository gameRepository,
-                       final PlayerService playerService,
-                       final PlaceService placeService) {
+    
+    private final ScorePolicy scorePolicy;
+    
+    public GameService(GameRepository gameRepository, GameResultRepository gameResultRepository,
+            PlayerService playerService, PlaceService placeService, ScorePolicy scorePolicy) {
         this.gameRepository = gameRepository;
+        this.gameResultRepository = gameResultRepository;
         this.playerService = playerService;
         this.placeService = placeService;
+        this.scorePolicy = scorePolicy;
     }
-
+    
     public Game createGame(final CreateGameCommand createGameCommand) {
         final Player player = playerService.findPlayerById(createGameCommand.playerId());
         final List<Game> gamesByStatus = gameRepository.findByPlayerIdAndGameStatus(player.getId(), GameStatus.IN_PROGRESS);
@@ -50,15 +61,19 @@ public class GameService {
         final Game game = new Game(player, place, position);
         return gameRepository.save(game);
     }
-
-    public Game finishGame(final FinishGameCommand finishGameCommand) {
-        final Game game = gameRepository.findById(finishGameCommand.gameId())
+    
+    public void endGame(final EndGameCommand endGameCommand) {
+        final Game game = gameRepository.findById(endGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
-        final Player player = playerService.findPlayerById(finishGameCommand.playerId());
+        final Player player = playerService.findPlayerById(endGameCommand.playerId());
         game.validatePlayer(player);
-        game.validateInRange(finishGameCommand.position());
-        game.changeGameStatus(GameStatus.DONE);
-        return game;
+        ResultType resultType = game.endGame(endGameCommand.endType(), endGameCommand.position());
+        gameResultRepository.save(createGameResult(resultType, game));
+    }
+    
+    private GameResult createGameResult(final ResultType resultType, final Game game) {
+        Score score = scorePolicy.calculate(game);
+        return new GameResult(resultType, score, game);
     }
 
     @Transactional(readOnly = true)
