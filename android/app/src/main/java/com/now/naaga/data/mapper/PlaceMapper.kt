@@ -1,7 +1,7 @@
 package com.now.naaga.data.mapper
 
 import com.now.domain.model.Place
-import com.now.naaga.data.remote.dto.third.PlaceDto
+import com.now.naaga.data.remote.dto.PlaceDto
 
 fun Place.toDto(): PlaceDto {
     return PlaceDto(

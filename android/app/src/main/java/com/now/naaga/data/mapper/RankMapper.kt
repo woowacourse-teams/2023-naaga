@@ -1,7 +1,7 @@
 package com.now.naaga.data.mapper
 
 import com.now.domain.model.Rank
-import com.now.naaga.data.remote.dto.third.RankDto
+import com.now.naaga.data.remote.dto.RankDto
 
 fun RankDto.toDomain(): Rank {
     return Rank(
