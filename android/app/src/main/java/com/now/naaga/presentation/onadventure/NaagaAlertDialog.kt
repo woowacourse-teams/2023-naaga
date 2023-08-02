@@ -1,6 +1,5 @@
 package com.now.naaga.presentation.onadventure
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -8,12 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.now.naaga.R
 import com.now.naaga.databinding.DialogNaagaAlertBinding
 import com.now.naaga.util.getWidthProportionalToDevice
 
 class NaagaAlertDialog private constructor() : DialogFragment() {
-    private lateinit var binding: DialogNaagaAlertBinding
+    private var _binding: DialogNaagaAlertBinding? = null
+    private val binding: DialogNaagaAlertBinding get() = requireNotNull(_binding) { BINDING_NULL_ERROR }
     private var title: String? = null
     private var description: String? = null
     private var positiveText: String? = null
@@ -22,7 +21,7 @@ class NaagaAlertDialog private constructor() : DialogFragment() {
     private lateinit var negativeAction: () -> Unit
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DialogNaagaAlertBinding.inflate(layoutInflater)
+        _binding = DialogNaagaAlertBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -34,8 +33,8 @@ class NaagaAlertDialog private constructor() : DialogFragment() {
         setDescription()
         setPositiveText()
         setNegativeText()
-        binding.tvAlertDialogPositive.setOnClickListener { positiveAction() }
-        binding.tvAlertDialogNegative.setOnClickListener { negativeAction() }
+        binding.tvAlertDialogPositive.setOnClickListener { positiveAction(); dismiss() }
+        binding.tvAlertDialogNegative.setOnClickListener { negativeAction(); dismiss() }
     }
 
     private fun setSize() {
@@ -71,41 +70,29 @@ class NaagaAlertDialog private constructor() : DialogFragment() {
         negativeAction = action
     }
 
-    class Builder(private val context: Context) {
-        fun buildGiveUpDialog(): NaagaAlertDialog {
-            return build(
-                title = context.getString(R.string.give_up_dialog_title),
-                description = context.getString(R.string.give_up_dialog_description),
-                positiveText = context.getString(R.string.give_up_dialog_continue),
-                negativeText = context.getString(R.string.give_up_dialog_give_up),
-            )
-        }
-
-        fun buildHintUseDialog(remainingHintCount: Int): NaagaAlertDialog {
-            return build(
-                title = context.getString(R.string.hint_using_dialog_title),
-                description = context.getString(R.string.hint_using_dialog_description, remainingHintCount),
-                positiveText = context.getString(R.string.hint_using_dialog_continue),
-                negativeText = context.getString(R.string.hint_using_dialog_give_up),
-            )
-        }
-    }
-
-    companion object {
-        private const val WIDTH_RATE = 0.9f
+    class Builder() {
 
         fun build(
             title: String,
             description: String,
             positiveText: String,
             negativeText: String,
+            positiveAction: () -> Unit,
+            negativeAction: () -> Unit,
         ): NaagaAlertDialog {
             return NaagaAlertDialog().apply {
                 this.title = title
                 this.description = description
                 this.positiveText = positiveText
                 this.negativeText = negativeText
+                this.positiveAction = positiveAction
+                this.negativeAction = negativeAction
             }
         }
+    }
+
+    companion object {
+        private const val WIDTH_RATE = 0.9f
+        private const val BINDING_NULL_ERROR = "NaagaAlertDialog에서 바인딩 초기화 에러가 발생했습니다."
     }
 }

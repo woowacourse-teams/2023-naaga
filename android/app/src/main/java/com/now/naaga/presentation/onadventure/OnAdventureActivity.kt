@@ -117,13 +117,14 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
     private fun showGiveUpDialog() {
         val fragment: Fragment? = supportFragmentManager.findFragmentByTag(GIVE_UP)
         if (fragment == null) {
-            NaagaAlertDialog.Builder(this).buildGiveUpDialog().apply {
-                setPositiveButton { dismiss() }
-                setNegativeButton {
-                    viewModel.giveUpAdventure()
-                    dismiss()
-                }
-            }.show(supportFragmentManager, GIVE_UP)
+            NaagaAlertDialog.Builder().build(
+                title = getString(R.string.give_up_dialog_title),
+                description = getString(R.string.give_up_dialog_description),
+                positiveText = getString(R.string.give_up_dialog_continue),
+                negativeText = getString(R.string.give_up_dialog_give_up),
+                positiveAction = {},
+                negativeAction = { viewModel.giveUpAdventure() },
+            ).show(supportFragmentManager, GIVE_UP)
         } else {
             (fragment as DialogFragment).dialog?.show()
         }
@@ -132,13 +133,14 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
     private fun showHintDialog() {
         val remainingHintCount: Int =
             OnAdventureViewModel.MAX_HINT_COUNT - (viewModel.adventure.value?.hints?.size ?: 0)
-        NaagaAlertDialog
-            .Builder(this)
-            .buildHintUseDialog(remainingHintCount)
-            .apply {
-                setPositiveButton { viewModel.openHint(); dismiss() }
-                setNegativeButton { dismiss() }
-            }.show(supportFragmentManager, HINT)
+        NaagaAlertDialog.Builder().build(
+            title = getString(R.string.hint_using_dialog_title),
+            description = getString(R.string.hint_using_dialog_description, remainingHintCount),
+            positiveText = getString(R.string.hint_using_dialog_continue),
+            negativeText = getString(R.string.hint_using_dialog_give_up),
+            positiveAction = { viewModel.openHint() },
+            negativeAction = {},
+        ).show(supportFragmentManager, HINT)
     }
 
     private fun showPolaroidDialog() {
