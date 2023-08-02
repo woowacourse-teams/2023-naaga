@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface RankService {
-    @GET("/rank")
+    @GET("/ranks")
     fun getAllRanks(
         @Query("sort-by") sortBy: String,
         @Query("order") order: String,
