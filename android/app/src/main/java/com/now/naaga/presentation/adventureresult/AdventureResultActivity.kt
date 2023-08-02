@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureResultType
 import com.now.naaga.R
@@ -48,7 +49,8 @@ class AdventureResultActivity : AppCompatActivity() {
 
     private fun subscribeObserving() {
         viewModel.adventureResult.observe(this) { adventureResult ->
-            setViewInType(adventureResult)
+            setResultType(adventureResult)
+            setPhoto(adventureResult.destination.image)
             setPlayTime(adventureResult.playTime)
         }
 
@@ -59,7 +61,7 @@ class AdventureResultActivity : AppCompatActivity() {
         }
     }
 
-    private fun setViewInType(adventureResult: AdventureResult) {
+    private fun setResultType(adventureResult: AdventureResult) {
         when (adventureResult.resultType) {
             AdventureResultType.SUCCESS -> setSuccessTypeView(adventureResult.destination.name)
             AdventureResultType.FAIL -> setFailTypeView()
@@ -77,6 +79,14 @@ class AdventureResultActivity : AppCompatActivity() {
     private fun setFailTypeView() {
         binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_fail)
         binding.tvAdventureResultDestination.text = getString(R.string.adventureResult_fail_destination_name)
+    }
+
+    private fun setPhoto(imageUrl: String) {
+        Glide.with(binding.ivAdventureResultPhoto)
+            .load(imageUrl)
+            .fallback(R.drawable.ic_none_photo)
+            .error(R.drawable.ic_none_photo)
+            .into(binding.ivAdventureResultPhoto)
     }
 
     private fun setPlayTime(playTime: LocalTime) {
