@@ -1,4 +1,4 @@
-package com.now.naaga.data.remote.dto.third
+package com.now.naaga.data.remote.dto
 
 import kotlinx.serialization.Serializable
 
