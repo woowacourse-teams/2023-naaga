@@ -4,9 +4,9 @@ import static com.now.naaga.game.fixture.GameTestFixture.MEMBER2;
 import static com.now.naaga.game.fixture.GameTestFixture.잠실_루터회관;
 import static com.now.naaga.game.fixture.GameTestFixture.잠실역_교보문고_좌표;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.now.naaga.common.CommonControllerTest;
+import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.presentation.dto.CoordinateRequest;
 import com.now.naaga.game.presentation.dto.EndGameRequest;
@@ -29,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 class GameControllerTest extends CommonControllerTest {
     
@@ -51,16 +52,15 @@ class GameControllerTest extends CommonControllerTest {
         super.setUp();
         final Member member = memberRepository.save(MEMBER2);
         final Player player = playerRepository.save(new Player("chae", new Score(1000), member));
-        System.out.println(player.getId()+"플레이어 아이디ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ");
         final Place destination = placeRepository.save(잠실_루터회관);
         final Position startPosition = 잠실역_교보문고_좌표;
         game = gameRepository.save(new Game(player, destination, startPosition));
     }
     
     @Test
-    void 게임을_도착_성공으로_종료하면_게임_결과를_업데이트_한다() {
+    void 게임을_도착_성공으로_종료하면_게임_결과를_업데이트_한다() throws InterruptedException {
         // given & when
-        
+        Thread.sleep(1000);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .auth().preemptive().basic("chae@gmail.com", "0121")
@@ -79,6 +79,36 @@ class GameControllerTest extends CommonControllerTest {
         
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                    .ignoringFieldsOfTypes(LocalDateTime.class)
+                    .isEqualTo(expected);
+        });
+    }
+    
+    @Test
+    void 잔여_횟수가_남았지만_도착_실패하면_예외가_발생_한다() throws InterruptedException {
+        // given & when
+        Thread.sleep(1000);
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .contentType(ContentType.JSON)
+                .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
+                .when()
+                .patch("/games/{gameId}", game.getId())
+                .then().log().all()
+                .extract();
+        
+        // then
+        final int statusCode = extract.statusCode();
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+        
+        final ExceptionResponse expected = new ExceptionResponse(403, "목적지에 도착하지 않았습니다.");
+        
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
             softAssertions.assertThat(actual)
                     .usingRecursiveComparison()
                     .ignoringExpectedNullFields()
