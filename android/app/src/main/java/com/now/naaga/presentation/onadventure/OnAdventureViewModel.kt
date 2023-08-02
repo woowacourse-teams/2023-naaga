@@ -4,117 +4,108 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.now.domain.model.Adventure
+import androidx.lifecycle.map
+import com.now.domain.model.AdventureEndType
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
-import com.now.domain.model.Destination
+import com.now.domain.model.Game
+import com.now.domain.model.Hint
+import com.now.domain.model.Place
 import com.now.domain.repository.AdventureRepository2
+import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.repository.ThirdDemoAdventureRepository
 
 class OnAdventureViewModel(private val adventureRepository2: AdventureRepository2) : ViewModel() {
+    private val _adventure = MutableLiveData<Game>()
+    val adventure: LiveData<Game> = _adventure
+    val destination = DisposableLiveData<Place>()
 
-    private val _destination = MutableLiveData<Destination>()
-    val destination: LiveData<Destination>
-        get() = _destination
+    val myCoordinate = MutableLiveData<Coordinate>()
+    val startCoordinate = DisposableLiveData<Coordinate>()
 
-    private val _distance = MutableLiveData(0)
-    val distance: LiveData<Int> get() = _distance
+    private val _distance = MutableLiveData<Int>()
+    val distance: LiveData<Int> = _distance
+    val isNearby: LiveData<Boolean> = _distance.map { adventure.value?.destination?.isNearBy(it) ?: false }
 
-    private val _isArrived = MutableLiveData(false)
-    val isArrived: LiveData<Boolean>
-        get() = _isArrived
+    private val _lastHint = MutableLiveData<Hint>()
+    val lastHint: LiveData<Hint> = _lastHint
 
-    private val _status = MutableLiveData<AdventureStatus>()
-    val status: LiveData<AdventureStatus>
-        get() = _status
+    private val _failure = MutableLiveData<Throwable>()
+    val failure: LiveData<Throwable> = _failure
 
-    private val _adventureId = MutableLiveData<Long>()
-    val adventureId: LiveData<Long>
-        get() = _adventureId
+    fun setAdventure(game: Game) {
+        _adventure.value = game
+        destination.setValue(game.destination)
+    }
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String>
-        get() = _errorMessage
-
-    fun fetchDestination(adventureId: Long) {
-        /*adventureRepository.getAdventure(
-            adventureId,
-            callback = { result ->
-                result
-                    .onSuccess { _destination.value = it.destination }
-                    .onFailure { _status.value = AdventureStatus.NONE }
-            },
-        )*/
+    fun beginAdventure(currentCoordinate: Coordinate) {
+        adventureRepository2.beginAdventure(currentCoordinate) { result: Result<Game> ->
+            result.onSuccess {
+                setAdventure(it)
+            }.onFailure {
+                _failure.value = AdventureThrowable.BeginAdventureFailure()
+            }
+        }
     }
 
     fun calculateDistance(coordinate: Coordinate) {
-        _distance.value = destination.value?.getDistance(coordinate)
+        _distance.value = destination.value?.getDistance(coordinate) ?: 0
     }
 
-    fun checkArrived(coordinate: Coordinate) {
-        _isArrived.value = destination.value?.isArrived(coordinate)
-    }
-
-    fun setAdventure(adventure: Adventure) {
-        _adventureId.value = adventure.id
-        _destination.value = adventure.destination
-    }
-
-    fun beginAdventure(coordinate: Coordinate) {
-        /*adventureRepository.beginAdventure(coordinate) { result ->
+    fun giveUpAdventure() {
+        adventureRepository2.endGame(
+            adventureId = adventure.value?.id ?: return,
+            endType = AdventureEndType.GIVE_UP,
+            coordinate = adventure.value?.startCoordinate ?: return, // 게임 포기이므로 아무 좌표나 넣어도 된다.
+        ) { result: Result<AdventureStatus> ->
             result
-                .onSuccess { _adventureId.value = it }
-                .onFailure { throwable ->
-                    when (throwable) {
-                        is NaagaThrowable.AuthenticationError ->
-                            _errorMessage.value =
-                                throwable.userMessage
+                .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
+                .onFailure { _failure.value = AdventureThrowable.GiveUpAdventureFailure() }
+        }
+    }
 
-                        is NaagaThrowable.UserError -> _errorMessage.value = throwable.userMessage
-                        is NaagaThrowable.PlaceError -> _errorMessage.value = throwable.userMessage
-                        is NaagaThrowable.GameError -> _errorMessage.value = throwable.userMessage
-                        is NaagaThrowable.ServerConnectFailure ->
-                            _errorMessage.value =
-                                throwable.userMessage
+    fun openHint() {
+        if (isAllHintsUsed()) {
+            _failure.value = AdventureThrowable.HintFailure()
+            return
+        }
+        adventureRepository2.makeHint(
+            adventureId = adventure.value?.id ?: return,
+            coordinate = myCoordinate.value ?: return,
+        ) { result: Result<Hint> ->
+            result
+                .onSuccess {
+                    _adventure.value = adventure.value?.copy(hints = ((adventure.value?.hints ?: listOf()) + it))
+                    _lastHint.value = it
+                }
+                .onFailure { _failure.value = AdventureThrowable.UnExpectedFailure() }
+        }
+    }
 
-                        is NaagaThrowable.NaagaUnknownError ->
-                            _errorMessage.value =
-                                throwable.userMessage
+    private fun isAllHintsUsed(): Boolean {
+        val hintsCount: Int = adventure.value?.hints?.size ?: 0
+        return hintsCount >= MAX_HINT_COUNT
+    }
+
+    fun endAdventure() {
+        adventureRepository2.endGame(
+            adventureId = adventure.value?.id ?: return,
+            endType = AdventureEndType.ARRIVED,
+            coordinate = myCoordinate.value ?: return,
+        ) { result: Result<AdventureStatus> ->
+            result
+                .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
+                .onFailure {
+                    _failure.value = when (it) {
+                        is NaagaThrowable.GameError -> AdventureThrowable.EndAdventureFailure()
+                        else -> AdventureThrowable.UnExpectedFailure()
                     }
                 }
-        }*/
-    }
-
-    fun endAdventure(adventureId: Long, coordinate: Coordinate) {
-        /*adventureRepository.endAdventure(
-            adventureId,
-            coordinate,
-            callback = { result ->
-                result
-                    .onSuccess { adventureStatus -> _status.value = adventureStatus }
-                    .onFailure { throwable ->
-                        when (throwable) {
-                            is NaagaThrowable.AuthenticationError ->
-                                _errorMessage.value =
-                                    throwable.userMessage
-
-                            is NaagaThrowable.UserError -> _errorMessage.value = throwable.userMessage
-                            is NaagaThrowable.PlaceError -> _errorMessage.value = throwable.userMessage
-                            is NaagaThrowable.GameError -> _errorMessage.value = throwable.userMessage
-                            is NaagaThrowable.ServerConnectFailure ->
-                                _errorMessage.value =
-                                    throwable.userMessage
-
-                            is NaagaThrowable.NaagaUnknownError ->
-                                _errorMessage.value =
-                                    throwable.userMessage
-                        }
-                    }
-            },
-        )*/
+        }
     }
 
     companion object {
+        const val MAX_HINT_COUNT = 5
         val Factory = ViewModelFactory(ThirdDemoAdventureRepository())
 
         class ViewModelFactory(private val adventureRepository2: AdventureRepository2) : ViewModelProvider.Factory {
