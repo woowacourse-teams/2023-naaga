@@ -1,6 +1,7 @@
 package com.now.naaga.presentation.beginadventure
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -73,6 +74,12 @@ class BeginAdventureActivity : AppCompatActivity() {
             LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
         } else {
             startActivity(Intent(this, OnAdventureActivity::class.java))
+        }
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent {
+            return Intent(context, BeginAdventureActivity::class.java)
         }
     }
 }
