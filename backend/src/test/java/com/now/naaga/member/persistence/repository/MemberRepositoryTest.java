@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,8 +21,10 @@ class MemberRepositoryTest {
 
     @Test
     void 이메일로_회원을_조회한다() {
+        final Member saveMember = memberRepository.save(new Member("1111@woowa.com", "1234"));
+
         // when
-        Member foundMember = memberRepository.findByEmail("111@woowa.com").get();
+        final Member foundMember = memberRepository.findByEmail(saveMember.getEmail()).get();
 
         // then
         assertThat(foundMember.getId()).isEqualTo(1L);
