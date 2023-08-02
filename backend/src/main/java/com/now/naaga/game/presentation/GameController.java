@@ -10,6 +10,7 @@ import com.now.naaga.game.application.dto.CreateHintCommand;
 import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
+import com.now.naaga.game.application.dto.FindHintByIdCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameRecord;
 import com.now.naaga.game.domain.Hint;
@@ -128,5 +129,16 @@ public class GameController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(gameResultResponseList);
+    }
+
+    @GetMapping("/{gameId}/hints/{hintId}")
+    public ResponseEntity<HintResponse> findHintById(@Auth final PlayerRequest playerRequest,
+                                                     @PathVariable final Long gameId,
+                                                     @PathVariable final Long hintId) {
+        final FindHintByIdCommand findHintByIdCommand = FindHintByIdCommand.of(playerRequest, gameId, hintId);
+        final Hint hint = hintService.findHintById(findHintByIdCommand);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(HintResponse.from(hint));
     }
 }

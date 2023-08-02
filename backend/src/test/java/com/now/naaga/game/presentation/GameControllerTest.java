@@ -2,12 +2,14 @@ package com.now.naaga.game.presentation;
 
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.fixture.GameFixture.*;
 import static com.now.naaga.game.fixture.MemberFixture.MEMBER_IRYE;
 import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
 import static com.now.naaga.game.fixture.PositionFixture.잠실_루터회관_정문_좌표;
 import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_좌표;
 import static com.now.naaga.member.fixture.MemberFixture.MEMBER_EMAIL;
 import static com.now.naaga.member.fixture.MemberFixture.MEMBER_PASSWORD;
+import static com.now.naaga.place.fixture.PlaceFixture.*;
 import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -33,6 +35,7 @@ import com.now.naaga.game.repository.HintRepository;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.place.domain.Place;
+import com.now.naaga.place.fixture.PlaceFixture;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import com.now.naaga.place.presentation.dto.CoordinateResponse;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
@@ -378,8 +381,8 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     public void 게임_아이디로_게임결과를_조회한다() {
         // given
-        final Place place = placeRepository.save(PlaceFixture.JEJU_PLACE());
-        final Game game1 = gameRepository.save(GameFixture.SEOUL_TO_JEJU_GAME(place));
+        final Place place = placeRepository.save(JEJU_PLACE());
+        final Game game1 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
         final GameResult gameResult1 = gameResultRepository.save(new GameResult(ResultType.SUCCESS, new Score(12), game1));
         // when
         final ExtractableResponse<Response> response = RestAssured.given()
@@ -407,9 +410,9 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     public void 모든_게임_결과를_도착시간_기준으로_내림차순하여_조회한다() {
         // given
-        Place place = placeRepository.save(PlaceFixture.JEJU_PLACE());
-        Game game1 = gameRepository.save(GameFixture.SEOUL_TO_JEJU_GAME(place));
-        Game game2 = gameRepository.save(GameFixture.SEOUL_TO_JEJU_GAME(place));
+        Place place = placeRepository.save(JEJU_PLACE());
+        Game game1 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
+        Game game2 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
         GameResult gameResult1 = gameResultRepository.save(new GameResult(ResultType.SUCCESS, new Score(12), game1));
         GameResult gameResult2 = gameResultRepository.save(new GameResult(ResultType.FAIL, new Score(0), game2));
         // when
@@ -444,8 +447,8 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     void 힌트를_생성한다() {
         // given & when
-        Place place = placeRepository.save(PlaceFixture.JEJU_PLACE());
-        Game game = gameRepository.save(GameFixture.SEOUL_TO_JEJU_GAME(place));
+        final Place place = placeRepository.save(JEJU_PLACE());
+        final Game game = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
 
         final CoordinateRequest SEOUL_COORDINATE = new CoordinateRequest(37.535978, 126.981654);
 
@@ -481,6 +484,8 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     void 힌트_id를_통해_힌트를_조회한다() {
         // given & when
+        final Place place = placeRepository.save(JEJU_PLACE());
+        final Game game = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
         final Hint hint = hintRepository.save(new Hint(SEOUL_POSITION(), Direction.SOUTH, game));
 
         final ExtractableResponse<Response> extract = RestAssured

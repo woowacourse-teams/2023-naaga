@@ -27,7 +27,7 @@ public class Hint extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Direction direction;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "game_id")
     private Game game;
 

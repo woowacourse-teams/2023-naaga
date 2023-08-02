@@ -42,7 +42,7 @@ public class HintService {
     }
 
     public Hint findHintById(final FindHintByIdCommand command) {
-        final Game game = gameService.findGame(new FindGameByIdCommand(command.gameId(), command.playerId()));
+        final Game game = gameService.findGameById(new FindGameByIdCommand(command.gameId(), command.playerId()));
         return game.getHints()
                 .stream()
                 .filter(hint -> hint.getId().equals(command.hintId()))
