@@ -1,5 +1,7 @@
 package com.now.naaga.game.presentation;
 
+import static com.now.naaga.game.exception.GameExceptionType.INVALID_QUERY_PARAMETERS;
+
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
@@ -7,11 +9,15 @@ import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.Game;
+import com.now.naaga.game.domain.GameRecord;
+import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.presentation.dto.CreateGameRequest;
 import com.now.naaga.game.presentation.dto.EndGameRequest;
 import com.now.naaga.game.presentation.dto.GameResponse;
+import com.now.naaga.game.presentation.dto.GameResultResponse;
 import com.now.naaga.game.presentation.dto.GameStatusResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

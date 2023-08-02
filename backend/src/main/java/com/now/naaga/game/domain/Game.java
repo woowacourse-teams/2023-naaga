@@ -183,7 +183,11 @@ public class Game extends BaseEntity {
     public LocalDateTime getStartTime() {
         return startTime;
     }
-
+    
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+    
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
