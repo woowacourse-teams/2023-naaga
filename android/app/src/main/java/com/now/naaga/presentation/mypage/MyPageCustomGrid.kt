@@ -4,24 +4,36 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.now.naaga.R
 import com.now.naaga.databinding.CustomMypageGridBinding
+import com.now.naaga.databinding.CustomMypageGridEmptyBinding
 
 class MyPageCustomGrid(context: Context, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
     private lateinit var layoutInflater: LayoutInflater
-    private lateinit var binding: CustomMypageGridBinding
+    private lateinit var notEmptybinding: CustomMypageGridBinding
+    private lateinit var emptyBinding: CustomMypageGridEmptyBinding
     private lateinit var adapter: MyPageAdapter
 
-    private fun initView() {
+    private fun initNotEmptyView() {
         layoutInflater = LayoutInflater.from(context)
-        binding = CustomMypageGridBinding.inflate(layoutInflater, this, true)
+        notEmptybinding = CustomMypageGridBinding.inflate(layoutInflater, this, true)
+    }
+
+    private fun initEmptyView() {
+        layoutInflater = LayoutInflater.from(context)
+        emptyBinding = CustomMypageGridEmptyBinding.inflate(layoutInflater, this, true)
     }
 
     fun initContent(data: List<MyPageItemUiModel>) {
         if (data.isNotEmpty()) {
-            initView()
+            initNotEmptyView()
             makeAdapter(data)
-            binding.tvMypageItemTitle.text = data.first().viewType.text
-            binding.rvMypageItemContent.adapter = adapter
+            notEmptybinding.tvMypageItemTitle.text = data.first().viewType.text
+            notEmptybinding.rvMypageItemContent.adapter = adapter
+        } else {
+            initEmptyView()
+            emptyBinding.tvMypageEmptyItemTitle.text = context.getString(R.string.mypage_empty_item_title)
+            emptyBinding.tvMypageEmptyDescription.text = context.getString(R.string.mypage_empty_description)
         }
     }
 
