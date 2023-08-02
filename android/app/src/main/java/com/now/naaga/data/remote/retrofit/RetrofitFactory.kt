@@ -11,7 +11,8 @@ object RetrofitFactory {
     private const val BASIC_USER_TOKEN = "Basic MTExQHdvb3dhLmNvbToxMTEx"
 
     val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("http://43.202.67.161")
+        .baseUrl("https://154c0926-f3af-42e2-8af1-bcf8115f3457.mock.pstmn.io")
+        // .baseUrl("http://43.202.67.161")
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .client(createOkHttpClient())
         .build()
