@@ -15,6 +15,7 @@ class AdventureHistoryViewHolder(private val binding: ItemHistoryBinding) : Recy
         Glide.with(binding.ivAdventureHistoryPhoto)
             .load(adventureResult.destination.image)
             .into(binding.ivAdventureHistoryPhoto)
+        binding.ivAdventureHistoryPhoto.clipToOutline = true
         setSuccessOrFailure(adventureResult.resultType)
         setName(adventureResult)
     }
