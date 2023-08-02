@@ -1,6 +1,6 @@
 package com.now.naaga.data.remote.retrofit.service
 
-import com.now.naaga.data.remote.dto.third.RankDto
+import com.now.naaga.data.remote.dto.RankDto
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
