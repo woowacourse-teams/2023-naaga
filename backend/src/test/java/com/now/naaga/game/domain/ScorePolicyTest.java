@@ -2,6 +2,7 @@ package com.now.naaga.game.domain;
 
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
 import static com.now.naaga.game.fixture.GameTestFixture.GS25_방이도곡점_좌표;
 import static com.now.naaga.game.fixture.GameTestFixture.MEMBER2;
 import static com.now.naaga.game.fixture.GameTestFixture.던킨도너츠_올림픽공원점_좌표;
@@ -112,6 +113,6 @@ class ScorePolicyTest {
         
         //then
         GameException gameException = assertThrows(GameException.class, () -> gameScorer.calculate(inProgressGame));
-        assertThat(gameException.exceptionType()).isEqualTo(GAME_IN_PROGRESS);
+        assertThat(gameException.exceptionType()).isEqualTo(ALREADY_IN_PROGRESS);
     }
 }
