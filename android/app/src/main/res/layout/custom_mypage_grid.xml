@@ -9,13 +9,13 @@
 
         <TextView
             android:id="@+id/tv_mypage_item_title"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/pretendard_bold"
-            android:textSize="30sp"
             android:textColor="@color/main_purple"
+            android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Statistics" />
@@ -24,15 +24,15 @@
             android:id="@+id/rv_mypage_item_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="8dp"
-            android:paddingHorizontal="10dp"
-            app:spanCount="3"
+            android:orientation="vertical"
             android:overScrollMode="never"
+            android:paddingHorizontal="10dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintTop_toBottomOf="@+id/tv_mypage_item_title"
-            tools:listitem="@layout/rv_mypage_item_statistics"
-            tools:itemCount="6" />
+            app:layout_constraintTop_toBottomOf="@id/tv_mypage_item_title"
+            app:spanCount="3"
+            tools:itemCount="6"
+            tools:listitem="@layout/rv_mypage_item_statistics" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
