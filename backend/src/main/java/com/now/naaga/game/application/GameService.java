@@ -4,7 +4,6 @@ import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
-import com.now.naaga.game.application.dto.FinishGameCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameResult;
 import com.now.naaga.game.domain.GameStatus;
@@ -77,7 +76,7 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
-    public Game findGame(final FindGameByIdCommand findGameByIdCommand) {
+    public Game findGameById(final FindGameByIdCommand findGameByIdCommand) {
         final Player player = playerService.findPlayerById(findGameByIdCommand.playerId());
         final Game game = gameRepository.findById(findGameByIdCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
