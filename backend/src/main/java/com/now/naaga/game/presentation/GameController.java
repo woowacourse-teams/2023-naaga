@@ -1,6 +1,7 @@
 package com.now.naaga.game.presentation;
 
 import com.now.naaga.auth.annotation.Auth;
+import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.dto.CreateGameCommand;
@@ -8,6 +9,7 @@ import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.application.dto.FinishGameCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.presentation.dto.CreateGameRequest;
+import com.now.naaga.game.presentation.dto.EndGameRequest;
 import com.now.naaga.game.presentation.dto.FinishGameRequest;
 import com.now.naaga.game.presentation.dto.GameResponse;
 import com.now.naaga.game.presentation.dto.GameStatusResponse;
@@ -40,17 +42,14 @@ public class GameController {
                 .location(URI.create("/games/" + game.getId()))
                 .body(gameResponse);
     }
-
+    
     @PatchMapping("/{gameId}")
-    public ResponseEntity<GameStatusResponse> changeGameStatus(@Auth final PlayerRequest playerRequest,
-                                                               @RequestBody final FinishGameRequest finishGameRequest,
-                                                               @PathVariable final Long gameId) {
-        // TODO: 8/1/23 FinishGameCommand에 EndType 추가해야함
-        final FinishGameCommand finishGameCommand = FinishGameCommand.of(playerRequest, finishGameRequest, gameId);
-        final Game game = gameService.finishGame(finishGameCommand);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(GameStatusResponse.from(game));
+    public ResponseEntity<GameStatusResponse> endGame(@Auth final PlayerRequest playerRequest,
+            @RequestBody final EndGameRequest endGameRequest,
+            @PathVariable final Long gameId) {
+        gameService.endGame(EndGameCommand.of(playerRequest, endGameRequest, gameId));
+        Game game = gameService.findGame(FindGameByIdCommand.of(playerRequest,gameId));
+        return ResponseEntity.ok(GameStatusResponse.from(game));
     }
 
     @GetMapping("/{gameId}")
