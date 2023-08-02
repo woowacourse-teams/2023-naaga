@@ -1,13 +1,16 @@
 package com.now.naaga.game.presentation;
 
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 import static com.now.naaga.game.fixture.GameTestFixture.MEMBER2;
 import static com.now.naaga.game.fixture.GameTestFixture.잠실_루터회관;
+import static com.now.naaga.game.fixture.GameTestFixture.잠실_루터회관_정문_좌표;
 import static com.now.naaga.game.fixture.GameTestFixture.잠실역_교보문고_좌표;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.domain.Game;
+import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.game.presentation.dto.CoordinateRequest;
 import com.now.naaga.game.presentation.dto.EndGameRequest;
 import com.now.naaga.game.presentation.dto.GameStatusResponse;
@@ -25,6 +28,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,20 +50,24 @@ class GameControllerTest extends CommonControllerTest {
     private MemberRepository memberRepository;
     
     private Game game;
+    private Member member;
+    private Player player;
+    private Place destination;
+    private Position startPosition;
     
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        final Member member = memberRepository.save(MEMBER2);
-        final Player player = playerRepository.save(new Player("chae", new Score(1000), member));
-        final Place destination = placeRepository.save(잠실_루터회관);
-        final Position startPosition = 잠실역_교보문고_좌표;
-        game = gameRepository.save(new Game(player, destination, startPosition));
+        member = memberRepository.save(MEMBER2);
+        player = playerRepository.save(new Player("chae", new Score(1000), member));
+        destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", player));
+        startPosition = 잠실역_교보문고_좌표;
     }
     
     @Test
     void 게임을_도착_성공으로_종료하면_게임_결과를_업데이트_한다() throws InterruptedException {
         // given & when
+        game = gameRepository.save(new Game(player, destination, startPosition));
         Thread.sleep(1000);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -90,6 +98,7 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     void 잔여_횟수가_남았지만_도착_실패하면_예외가_발생_한다() throws InterruptedException {
         // given & when
+        game = gameRepository.save(new Game(player, destination, startPosition));
         Thread.sleep(1000);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -116,4 +125,66 @@ class GameControllerTest extends CommonControllerTest {
                     .isEqualTo(expected);
         });
     }
-}
+    
+    @Test
+    void 마지막_시도에_도착_실패하면_게임_결과를_업데이트_한다() throws InterruptedException {
+        // given & when
+    
+        game = gameRepository.save(new Game(IN_PROGRESS, player, destination, startPosition, 1, Collections.emptyList(), LocalDateTime.now(), null));
+        Thread.sleep(1000);
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .contentType(ContentType.JSON)
+                .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
+                .when()
+                .patch("/games/{gameId}", game.getId())
+                .then().log().all()
+                .extract();
+        
+        // then
+        final int statusCode = extract.statusCode();
+        final GameStatusResponse actual = extract.as(GameStatusResponse.class);
+        
+        final GameStatusResponse expected = new GameStatusResponse(null, "DONE");
+        
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                    .ignoringFieldsOfTypes(LocalDateTime.class)
+                    .isEqualTo(expected);
+        });
+    }
+    
+    @Test
+    void 게임을_포기하면_게임_결과를_업데이트_한다() throws InterruptedException {
+        game = gameRepository.save(new Game(player, destination, startPosition));
+        Thread.sleep(1000);
+    
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .contentType(ContentType.JSON)
+                .body(new EndGameRequest("GIVE_UP", new CoordinateRequest(37.515546, 127.102902)))// 역삼역 좌표
+                .when()
+                .patch("/games/{gameId}", game.getId())
+                .then().log().all()
+                .extract();
+        
+        // then
+        final int statusCode = extract.statusCode();
+        final GameStatusResponse actual = extract.as(GameStatusResponse.class);
+        
+        final GameStatusResponse expected = new GameStatusResponse(null, "DONE");
+        
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                    .ignoringFieldsOfTypes(LocalDateTime.class)
+                    .isEqualTo(expected);
+        });
+}}
