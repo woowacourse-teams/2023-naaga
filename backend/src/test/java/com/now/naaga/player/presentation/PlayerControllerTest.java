@@ -1,6 +1,9 @@
-package com.now.naaga.acceptance.player;
+package com.now.naaga.player.presentation;
 
-import com.now.naaga.acceptance.ControllerTest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.domain.Player;
@@ -10,26 +13,19 @@ import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Base64;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.util.Base64;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class PlayerControllerTest extends ControllerTest {
-
-    @LocalServerPort
-    int port;
+@SuppressWarnings("NonAsciiCharacters")
+@DisplayNameGeneration(ReplaceUnderscores.class)
+class PlayerControllerTest extends CommonControllerTest {
 
     @Autowired
     PlayerRepository playerRepository;
@@ -38,16 +34,16 @@ class PlayerControllerTest extends ControllerTest {
     MemberRepository memberRepository;
 
     @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
+    protected void setUp() {
+        super.setUp();
 
-        final Member saveMember1 = memberRepository.save(new Member("chaechae@woo.com", "1234"));
-        final Member saveMember2 = memberRepository.save(new Member("irea@woo.com", "1234"));
-        final Member saveMember3 = memberRepository.save(new Member("cherry@woo.com", "1234"));
+        final Member member1 = new Member("chaechae@woo.com", "1234");
+        final Member member2 = new Member("irea@woo.com", "1234");
+        final Member member3 = new Member("cherry@woo.com", "1234");
 
-        playerRepository.save(new Player("채채", new Score(15), saveMember1));
-        playerRepository.save(new Player("이레", new Score(17), saveMember2));
-        playerRepository.save(new Player("채리", new Score(20), saveMember3));
+        playerRepository.save(new Player("채채", new Score(15), member1));
+        playerRepository.save(new Player("이레", new Score(17), member2));
+        playerRepository.save(new Player("채리", new Score(20), member3));
     }
 
     @Test
