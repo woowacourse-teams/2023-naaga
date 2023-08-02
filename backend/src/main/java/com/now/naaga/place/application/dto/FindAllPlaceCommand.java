@@ -9,8 +9,8 @@ public record FindAllPlaceCommand(Long playerId,
                                   OrderType orderType) {
 
     public static FindAllPlaceCommand of(final PlayerRequest playerRequest,
-                          final String sortBy,
-                          final String order) {
+                                         final String sortBy,
+                                         final String order) {
         return new FindAllPlaceCommand(
                 playerRequest.playerId(),
                 SortType.valueOf(sortBy.toUpperCase()),

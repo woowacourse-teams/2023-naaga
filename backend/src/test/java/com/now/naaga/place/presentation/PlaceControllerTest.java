@@ -1,5 +1,12 @@
 package com.now.naaga.place.presentation;
 
+import static com.now.naaga.place.fixture.PlaceFixture.SEOUL_PLACE;
+import static com.now.naaga.player.fixture.PlayerFixture.PLAYER;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +22,12 @@ import com.now.naaga.player.persistence.repository.PlayerRepository;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -22,22 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import static com.now.naaga.place.fixture.PlaceFixture.SEOUL_PLACE;
-import static com.now.naaga.player.fixture.PlayerFixture.PLAYER;
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -62,15 +60,18 @@ public class PlaceControllerTest extends CommonControllerTest {
         //given
         final Player player = playerRepository.save(PLAYER());
         final Place SEOUL = SEOUL_PLACE();
-        when(fileManager.save(any())).thenReturn(new File("/임시경로","이미지.png"));
+        when(fileManager.save(any())).thenReturn(new File("/임시경로", "이미지.png"));
         //when
         final ExtractableResponse<Response> extract = given()
                 .log().all()
                 .multiPart(new MultiPartSpecBuilder(SEOUL.getName()).controlName("name").charset(StandardCharsets.UTF_8).build())
                 .multiPart(new MultiPartSpecBuilder(SEOUL.getDescription()).controlName("description").charset(StandardCharsets.UTF_8).build())
-                .multiPart(new MultiPartSpecBuilder(SEOUL.getPosition().getLatitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("latitude").charset(StandardCharsets.UTF_8).build())
-                .multiPart(new MultiPartSpecBuilder(SEOUL.getPosition().getLongitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("longitude").charset(StandardCharsets.UTF_8).build())
-                .multiPart(new MultiPartSpecBuilder(new FileInputStream(new File("src/test/java/com/now/naaga/place/fixture/루터회관.png"))).controlName("imageFile").charset(StandardCharsets.UTF_8).fileName("src/test/java/com/now/naaga/place/fixture/루터회관.png").mimeType("image/png").build())
+                .multiPart(
+                        new MultiPartSpecBuilder(SEOUL.getPosition().getLatitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("latitude").charset(StandardCharsets.UTF_8).build())
+                .multiPart(
+                        new MultiPartSpecBuilder(SEOUL.getPosition().getLongitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("longitude").charset(StandardCharsets.UTF_8).build())
+                .multiPart(new MultiPartSpecBuilder(new FileInputStream(new File("src/test/java/com/now/naaga/place/fixture/루터회관.png"))).controlName("imageFile").charset(StandardCharsets.UTF_8)
+                        .fileName("src/test/java/com/now/naaga/place/fixture/루터회관.png").mimeType("image/png").build())
                 .auth().preemptive().basic(player.getMember().getEmail(), player.getMember().getPassword())
                 .when()
                 .post("/places")
@@ -104,9 +105,12 @@ public class PlaceControllerTest extends CommonControllerTest {
                 .log().all()
                 .multiPart(new MultiPartSpecBuilder(SEOUL.getName()).controlName("name").charset(StandardCharsets.UTF_8).build())
                 .multiPart(new MultiPartSpecBuilder(SEOUL.getDescription()).controlName("description").charset(StandardCharsets.UTF_8).build())
-                .multiPart(new MultiPartSpecBuilder(SEOUL.getPosition().getLatitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("latitude").charset(StandardCharsets.UTF_8).build())
-                .multiPart(new MultiPartSpecBuilder(SEOUL.getPosition().getLongitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("longitude").charset(StandardCharsets.UTF_8).build())
-                .multiPart(new MultiPartSpecBuilder(new FileInputStream(new File("src/test/java/com/now/naaga/place/fixture/루터회관.png"))).controlName("imageFile").charset(StandardCharsets.UTF_8).fileName("src/test/java/com/now/naaga/place/fixture/루터회관.png").mimeType("image/png").build())
+                .multiPart(
+                        new MultiPartSpecBuilder(SEOUL.getPosition().getLatitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("latitude").charset(StandardCharsets.UTF_8).build())
+                .multiPart(
+                        new MultiPartSpecBuilder(SEOUL.getPosition().getLongitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("longitude").charset(StandardCharsets.UTF_8).build())
+                .multiPart(new MultiPartSpecBuilder(new FileInputStream(new File("src/test/java/com/now/naaga/place/fixture/루터회관.png"))).controlName("imageFile").charset(StandardCharsets.UTF_8)
+                        .fileName("src/test/java/com/now/naaga/place/fixture/루터회관.png").mimeType("image/png").build())
                 .auth().preemptive().basic(player.getMember().getEmail(), player.getMember().getPassword())
                 .when()
                 .post("/places")
@@ -173,7 +177,8 @@ public class PlaceControllerTest extends CommonControllerTest {
         final int statusCode = extract.statusCode();
         final String jsonResponse = extract.body().asString();
         final ObjectMapper objectMapper = new ObjectMapper();
-        final List<PlaceResponse> actual = objectMapper.readValue(jsonResponse, new TypeReference<List<PlaceResponse>>() {});
+        final List<PlaceResponse> actual = objectMapper.readValue(jsonResponse, new TypeReference<List<PlaceResponse>>() {
+        });
         final List<PlaceResponse> expected = PlaceResponse.convertToPlaceResponses(List.of(SEOUL));
         //then
         assertSoftly(softAssertions -> {

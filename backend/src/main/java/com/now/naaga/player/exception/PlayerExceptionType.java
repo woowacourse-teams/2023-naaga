@@ -1,4 +1,5 @@
 package com.now.naaga.player.exception;
+
 import com.now.naaga.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
 
@@ -13,8 +14,7 @@ public enum PlayerExceptionType implements BaseExceptionType {
             901,
             HttpStatus.BAD_REQUEST,
             "잘못된 정렬 요청입니다."
-    )
-    ;
+    );
 
     private final int errorCode;
     private final HttpStatus httpStatus;

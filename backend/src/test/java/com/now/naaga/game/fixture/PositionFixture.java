@@ -4,7 +4,7 @@ import com.now.naaga.place.domain.Position;
 import java.math.BigDecimal;
 
 public class PositionFixture {
-    
+
     public static final Position 잠실_루터회관_정문_좌표 = new Position(BigDecimal.valueOf(37.515446),
             BigDecimal.valueOf(127.102899));
     public static final Position 잠실_루터회관_정문_근처_좌표 = new Position(BigDecimal.valueOf(37.515546),

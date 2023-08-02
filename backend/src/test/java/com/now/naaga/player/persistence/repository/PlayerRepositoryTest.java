@@ -1,5 +1,7 @@
 package com.now.naaga.player.persistence.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.domain.Player;
@@ -8,13 +10,9 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Sql("/truncate.sql")

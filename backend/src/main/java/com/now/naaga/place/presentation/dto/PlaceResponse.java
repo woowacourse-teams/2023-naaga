@@ -1,7 +1,6 @@
 package com.now.naaga.place.presentation.dto;
 
 import com.now.naaga.place.domain.Place;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

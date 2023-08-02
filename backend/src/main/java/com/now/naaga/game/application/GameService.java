@@ -1,12 +1,15 @@
 package com.now.naaga.game.application;
 
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.GAME_RESULT_NOT_EXIST;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
+
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameRecord;
-import com.now.naaga.game.domain.GameResult;
 import com.now.naaga.game.domain.GameResult;
 import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.game.domain.ResultType;
@@ -20,39 +23,36 @@ import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.score.domain.Score;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.now.naaga.score.domain.Score;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.now.naaga.game.exception.GameExceptionType.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
 public class GameService {
 
     private final GameRepository gameRepository;
-    
+
     private final GameResultRepository gameResultRepository;
-    
+
     private final PlayerService playerService;
 
     private final PlaceService placeService;
-    
+
     private final ScorePolicy scorePolicy;
-    
+
     public GameService(GameRepository gameRepository, GameResultRepository gameResultRepository,
-            PlayerService playerService, PlaceService placeService, ScorePolicy scorePolicy) {
+                       PlayerService playerService, PlaceService placeService, ScorePolicy scorePolicy) {
         this.gameRepository = gameRepository;
         this.gameResultRepository = gameResultRepository;
         this.playerService = playerService;
         this.placeService = placeService;
         this.scorePolicy = scorePolicy;
     }
-    
+
     public Game createGame(final CreateGameCommand createGameCommand) {
         final Player player = playerService.findPlayerById(createGameCommand.playerId());
         final List<Game> gamesByStatus = gameRepository.findByPlayerIdAndGameStatus(player.getId(), GameStatus.IN_PROGRESS);
@@ -65,16 +65,16 @@ public class GameService {
         final Game game = new Game(player, place, position);
         return gameRepository.save(game);
     }
-    
+
     public void endGame(final EndGameCommand endGameCommand) {
         final Game game = gameRepository.findById(endGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
         final Player player = playerService.findPlayerById(endGameCommand.playerId());
-        game.validatePlayer(player);
+        game.validateOwner(player);
         ResultType resultType = game.endGame(endGameCommand.endType(), endGameCommand.position());
         gameResultRepository.save(createGameResult(resultType, game));
     }
-    
+
     private GameResult createGameResult(final ResultType resultType, final Game game) {
         Score score = scorePolicy.calculate(game);
         return new GameResult(resultType, score, game);
@@ -85,7 +85,7 @@ public class GameService {
         final Player player = playerService.findPlayerById(findGameByIdCommand.playerId());
         final Game game = gameRepository.findById(findGameByIdCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
-        game.validatePlayer(player);
+        game.validateOwner(player);
         return game;
     }
 
@@ -118,7 +118,7 @@ public class GameService {
         List<GameResult> gameResults = gamesByPlayerId.stream()
                 .map(game -> findGameResultByGameId(game.getId()))
                 .sorted((gr1, gr2) -> gr2.getCreatedAt().compareTo(gr1.getCreatedAt()))
-                .collect(Collectors.toList());
+                .toList();
 
         return gameResults.stream()
                 .map(GameRecord::from)

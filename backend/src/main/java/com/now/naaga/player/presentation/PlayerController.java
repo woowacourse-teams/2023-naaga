@@ -1,21 +1,20 @@
 package com.now.naaga.player.presentation;
 
+import static com.now.naaga.player.exception.PlayerExceptionType.INVALID_SORTING_REQUEST;
+
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.exception.PlayerException;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.player.presentation.dto.RankResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.now.naaga.player.exception.PlayerExceptionType.INVALID_SORTING_REQUEST;
 
 @RequestMapping("/ranks")
 @RestController

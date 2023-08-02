@@ -1,7 +1,6 @@
 package com.now.naaga.place.presentation.dto;
 
 import com.now.naaga.place.domain.Position;
-
 import java.math.RoundingMode;
 
 public record CoordinateResponse(Double latitude,

@@ -1,21 +1,17 @@
 package com.now.naaga.place.fixture;
 
+import static com.now.naaga.place.fixture.PositionFixture.JEJU_POSITION;
+import static com.now.naaga.player.fixture.PlayerFixture.PLAYER;
+
 import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.presentation.dto.CoordinateResponse;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
-import com.now.naaga.player.fixture.PlayerFixture;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.math.BigDecimal;
-
-import static com.now.naaga.place.fixture.PositionFixture.JEJU_POSITION;
-import static com.now.naaga.player.fixture.PlayerFixture.PLAYER;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 public class PlaceFixture {
 

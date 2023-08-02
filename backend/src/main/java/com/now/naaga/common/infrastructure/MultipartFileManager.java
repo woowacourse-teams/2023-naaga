@@ -2,13 +2,12 @@ package com.now.naaga.common.infrastructure;
 
 import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.common.exception.CommonExceptionType;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class MultipartFileManager implements FileManager<MultipartFile> {

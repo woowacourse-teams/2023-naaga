@@ -2,19 +2,24 @@ package com.now.naaga.place.presentation;
 
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.place.application.PlaceService;
+import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.application.dto.FindAllPlaceCommand;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
-import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.presentation.dto.CreatePlaceRequest;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/places")
 @RestController

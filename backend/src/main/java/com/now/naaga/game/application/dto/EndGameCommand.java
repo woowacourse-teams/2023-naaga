@@ -6,7 +6,7 @@ import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 
 public record EndGameCommand(Long playerId, EndType endType, Position position, Long gameId) {
-    
+
     public static EndGameCommand of(final PlayerRequest playerRequest, final EndGameRequest endGameRequest, final Long gameId) {
         return new EndGameCommand(playerRequest.playerId(),
                 EndType.valueOf(endGameRequest.endType()),
@@ -14,5 +14,5 @@ public record EndGameCommand(Long playerId, EndType endType, Position position, 
                 gameId);
     }
 
-    
+
 }

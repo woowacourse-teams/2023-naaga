@@ -1,5 +1,8 @@
 package com.now.naaga.player.presentation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.domain.Player;
@@ -9,16 +12,12 @@ import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 public class PlayerControllerTest extends CommonControllerTest {
 

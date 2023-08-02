@@ -1,11 +1,10 @@
 package com.now.naaga.game.domain;
 
-import com.now.naaga.place.domain.Position;
+import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 
+import com.now.naaga.place.domain.Position;
 import java.time.Duration;
 import java.time.LocalDateTime;
-
-import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 
 public class GameRecord {
 

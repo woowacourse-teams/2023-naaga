@@ -1,13 +1,13 @@
 package com.now.naaga.config.infrastructure;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.now.naaga.auth.infrastructure.BasicAuthenticationDecoder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
