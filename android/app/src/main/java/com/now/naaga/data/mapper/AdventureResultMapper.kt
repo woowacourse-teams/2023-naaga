@@ -17,7 +17,6 @@ fun AdventureResultDto.toDomain(): AdventureResult {
         distance = distance,
         hintUses = hintUses,
         tryCount = tryCount,
-        raisedRank = raisedRank,
         beginTime = LocalDateTime.parse(startTime),
         endTime = LocalDateTime.parse(finishTime),
     )

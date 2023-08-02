@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">Naaga</string>
+
+    <!-- BeginAdventureActivity -->
     <string name="beginAdventure_begin_adventure">지금 나아가 볼까요?</string>
-    <string name="onAdventure_left_distance_description">목적지까지</string>
-    <string name="onAdventure_left_distance">%dm</string>
-    <string name="onAdventure_loading_photo">사진을 로딩 중이에요</string>
-    <string name="onAdventure_fail_load_description">목적지를 받아오는데 실패했어요!</string>
 
     <!-- LocationDialog-->
     <string name="locationDialog_setting">설정으로 이동해요</string>
@@ -12,7 +10,11 @@
     <string name="locationDialog_approximate_description">대략적인 위치 권한만 허용되었어요\n나아가 서비스를 이용하기 위해서는\n정확한 위치 권한을\n부여해주셔야 해요</string>
 
     <!--OnAdventureActivity-->
+    <string name="onAdventure_loading_photo">사진을 로딩 중이에요</string>
+    <string name="onAdventure_fail_load_description">목적지를 받아오는데 실패했어요!</string>
     <string name="OnAdventure_on_adventure">모험 중</string>
+    <string name="onAdventure_left_distance_description">목적지까지</string>
+    <string name="onAdventure_left_distance">%dm</string>
     <string name="OnAdventure_end_adventure">도착!</string>
     <string name="polaroid_description">이곳은 어디일까요?</string>
     <string name="onAdventure_retry">아직 도착하지 못했어요.. 다시 도전해봐요!</string>
@@ -25,10 +27,10 @@
     <string name="adventureResult_distance_description">DISTANCE</string>
     <string name="adventureResult_hint_description">HINT USES</string>
     <string name="adventureResult_try_description">TRY COUNT</string>
-    <string name="adventureResult_score_description">Total Score</string>
-    <string name="adventureResult_return_main">메인으로 돌아가기</string>
+    <string name="adventureResult_score_description">Score</string>
     <string name="adventureResult_value">+%d</string>
-    <string name="adventureResult_rank">%d등 (+%d)</string>
+    <string name="adventureResult_return_main">메인으로 돌아가기</string>
+    <string name="adventureResult_rank">%d등</string>
 
     <!-- UploadActivity -->
     <string name="upload_description">Description</string>
@@ -41,4 +43,23 @@
 
     <!-- AdventureHistoryActivity -->
     <string name="history_title">History</string>
+
+    <!-- RankActivity -->
+    <string name="rank_title">Leader Board</string>
+    <string name="rank_my_rank">%d등</string>
+
+    <!-- mypage -->
+    <string name="mypage_adventure_record">모험 기록</string>
+    <string name="mypage_rank">%d등</string>
+    <string name="mypage_percentage">(상위%d%%)</string>
+    <string name="mypage_count">회</string>
+    <string name="mypage_number">개</string>
+    <string name="mypage_minute">분</string>
+    <string name="mypage_meter">미터</string>
+    <string name="mypage_total_adventure">전체 모험</string>
+    <string name="mypage_adventure_success">모험 성공</string>
+    <string name="mypage_adventure_failure">모험 실패</string>
+    <string name="mypage_total_play_time">총 모험 시간</string>
+    <string name="mypage_total_adventure_distance">총 직경 거리</string>
+    <string name="mypage_total_hint_uses">사용 힌트 개수</string>
 </resources>

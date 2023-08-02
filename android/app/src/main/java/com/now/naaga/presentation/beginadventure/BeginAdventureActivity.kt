@@ -1,6 +1,7 @@
 package com.now.naaga.presentation.beginadventure
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
+import com.now.naaga.presentation.rank.RankActivity
 
 class BeginAdventureActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBeginAdventureBinding
@@ -61,6 +63,10 @@ class BeginAdventureActivity : AppCompatActivity() {
             }
         }
         checkPermissionAndBeginAdventure()
+
+        binding.ivBeginAdventureRank.setOnClickListener {
+            startActivity(RankActivity.getIntent(this))
+        }
     }
 
     private fun checkPermissionAndBeginAdventure() {
@@ -68,6 +74,12 @@ class BeginAdventureActivity : AppCompatActivity() {
             LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
         } else {
             startActivity(Intent(this, OnAdventureActivity::class.java))
+        }
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent {
+            return Intent(context, BeginAdventureActivity::class.java)
         }
     }
 }

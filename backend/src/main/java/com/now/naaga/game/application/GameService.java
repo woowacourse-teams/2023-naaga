@@ -1,82 +1,78 @@
 package com.now.naaga.game.application;
 
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
-import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
-import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
-
+import com.now.naaga.game.application.dto.CreateGameCommand;
+import com.now.naaga.game.application.dto.FindGameByIdCommand;
+import com.now.naaga.game.application.dto.FindGameByStatusCommand;
+import com.now.naaga.game.application.dto.FinishGameCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.repository.GameRepository;
-import com.now.naaga.member.application.MemberService;
-import com.now.naaga.member.application.dto.MemberCommand;
-import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
+import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
 
 @Transactional
 @Service
 public class GameService {
 
     private final GameRepository gameRepository;
+
+    private final PlayerService playerService;
+
     private final PlaceService placeService;
-    private final MemberService memberService;
 
     public GameService(final GameRepository gameRepository,
-                       final PlaceService placeService,
-                       final MemberService memberService) {
+                       final PlayerService playerService,
+                       final PlaceService placeService) {
         this.gameRepository = gameRepository;
+        this.playerService = playerService;
         this.placeService = placeService;
-        this.memberService = memberService;
     }
 
-    public Game createGame(final MemberCommand memberCommand,
-                           final Position position) {
-        final List<Game> gamesByStatus = findGamesByStatus(memberCommand, GameStatus.IN_PROGRESS.name());
+    public Game createGame(final CreateGameCommand createGameCommand) {
+        final Player player = playerService.findPlayerById(createGameCommand.playerId());
+        final List<Game> gamesByStatus = gameRepository.findByPlayerIdAndGameStatus(player.getId(), GameStatus.IN_PROGRESS);
         if (!gamesByStatus.isEmpty()) {
             throw new GameException(ALREADY_IN_PROGRESS);
         }
-        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
+        final Position position = createGameCommand.playerPosition();
         final Place place = placeService.recommendPlaceByPosition(position);
-        final Game game = new Game(new Player(null, null, member), place, position);
+        final Game game = new Game(player, place, position);
         return gameRepository.save(game);
     }
 
-    public Game finishGame(final MemberCommand memberCommand,
-                           final Position requestPosition,
-                           final Long gameId) {
-        final Game game = gameRepository.findById(gameId)
+    public Game finishGame(final FinishGameCommand finishGameCommand) {
+        final Game game = gameRepository.findById(finishGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
-        Member member = memberService.findMemberByEmail(memberCommand.getEmail());
-        game.validateOwner(member);
-        game.validateInRange(requestPosition);
+        final Player player = playerService.findPlayerById(finishGameCommand.playerId());
+        game.validateOwner(player);
+        game.validateInRange(finishGameCommand.position());
         game.changeGameStatus(GameStatus.DONE);
         return game;
     }
 
     @Transactional(readOnly = true)
-    public Game findGame(final MemberCommand memberCommand,
-                         final Long id) {
-        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
-        final Game game = gameRepository.findById(id)
+    public Game findGame(final FindGameByIdCommand findGameByIdCommand) {
+        final Player player = playerService.findPlayerById(findGameByIdCommand.playerId());
+        final Game game = gameRepository.findById(findGameByIdCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
-        if (!member.equals(game.getPlayer().getMember())) {
-            throw new GameException(INACCESSIBLE_AUTHENTICATION);
-        }
+        game.validateOwner(player);
         return game;
     }
 
     @Transactional(readOnly = true)
-    public List<Game> findGamesByStatus(final MemberCommand memberCommand,
-                                        final String gameStatus) {
-        final Member member = memberService.findMemberByEmail(memberCommand.getEmail());
-        final Long memberId = member.getId();
-
-        return gameRepository.findByPlayerIdAndGameStatus(null, GameStatus.valueOf(gameStatus));
+    public List<Game> findGamesByStatus(final FindGameByStatusCommand findGameByStatusCommand) {
+        Player player = playerService.findPlayerById(findGameByStatusCommand.playerId());
+        return gameRepository.findByPlayerIdAndGameStatus(player.getId(), findGameByStatusCommand.gameStatus());
     }
 }

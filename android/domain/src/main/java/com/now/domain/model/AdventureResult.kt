@@ -13,7 +13,6 @@ data class AdventureResult(
     val distance: Int,
     val hintUses: Int,
     val tryCount: Int,
-    val raisedRank: Int,
     val beginTime: LocalDateTime,
     val endTime: LocalDateTime,
 )

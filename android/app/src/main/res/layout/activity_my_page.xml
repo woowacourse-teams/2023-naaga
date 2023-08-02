@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="rank"
+            type="com.now.domain.model.Rank" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".presentation.mypage.MyPageActivity">
+
+            <ImageView
+                android:paddingVertical="12dp"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow"
+                android:id="@+id/iv_mypage_back" />
+
+            <TextView
+                android:text="@{rank.player.nickname}"
+                tools:text="Bixx"
+                android:fontFamily="@font/pretendard_bold"
+                android:textColor="@color/white"
+                android:textSize="52sp"
+                android:includeFontPadding="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_mypage_nickname"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@id/iv_mypage_back"
+                app:layout_constraintTop_toTopOf="@id/iv_mypage_back"
+                app:layout_constraintBottom_toBottomOf="@id/iv_mypage_back" />
+
+            <TextView
+                android:id="@+id/tv_mypage_rank"
+                android:text="@{@string/mypage_rank(rank.rank)}"
+                tools:text="28등"
+                android:layout_marginTop="36dp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_mypage_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_bold"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_mypage_percent"
+                android:text="@{@string/mypage_percentage(rank.percent)}"
+                tools:text="(상위 12%)"
+                app:layout_constraintStart_toEndOf="@id/tv_mypage_rank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_semibold"
+                android:textColor="@color/white"
+                android:layout_marginStart="4dp"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_mypage_rank"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mypage_adventure_record"
+                android:layout_marginEnd="20dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp"
+                android:fontFamily="@font/pretendard_semibold"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:id="@+id/btn_mypage_adventure_results"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_percent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/rect_radius_small"
+                android:backgroundTint="@color/light_purple" />
+
+            <com.now.naaga.presentation.mypage.MyPageCustomGrid
+                android:id="@+id/customGrid_mypage_statistics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="2dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/rect_radius_small_white"
+                android:backgroundTint="@color/purple_white"
+                app:layout_constraintTop_toBottomOf="@id/tv_mypage_rank" />
+
+            <com.now.naaga.presentation.mypage.MyPageCustomGrid
+                android:id="@+id/customGrid_places"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginHorizontal="20dp"
+                android:elevation="2dp"
+                android:background="@drawable/rect_radius_small_white"
+                android:backgroundTint="@color/purple_white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customGrid_mypage_statistics" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>
