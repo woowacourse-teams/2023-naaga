@@ -1,44 +1,34 @@
 package com.now.naaga.place.application;
 
-import com.now.naaga.member.fixture.MemberFixture;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.fixture.PlaceFixture;
-import com.now.naaga.place.persistence.repository.PlaceRepository;
-import com.now.naaga.player.application.PlayerService;
-import com.now.naaga.player.fixture.PlayerFixture;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SuppressWarnings("NonAsciiCharacters")
+@DisplayNameGeneration(ReplaceUnderscores.class)
+@Sql("/truncate.sql")
+@SpringBootTest
 class PlaceServiceTest {
 
-    @InjectMocks
+    @Autowired
     private PlaceService placeService;
-
-    @Mock
-    private PlaceRepository placeRepository;
-
-    @Mock
-    private PlayerService playerService;
 
     @Test
     void 장소를_저장한다() {
         //when
-        when(playerService.findPlayerByMemberCommand(MemberFixture.MEMBER_COMMAND)).thenReturn(PlayerFixture.PLAYER);
-        Place acutual = placeService.createPlace(MemberFixture.MEMBER_COMMAND, PlaceFixture.createDummy());
+        Place acutual = placeService.createPlace(PlaceFixture.CREATE_SEOUL_PLACE());
         //then
-        // TODO: 7/30/23 포지션 소수점 6자리 밑에 어떻게 반올림해서 테스트할지 고민해보기 -> isCloseTo? 
-        assertThat(PlaceFixture.PLACE)
+        assertThat(PlaceFixture.SEOUL_PLACE())
                 .usingRecursiveComparison()
-                .ignoringFields("id", "imageUrl", "position")
+                .ignoringFields("id", "position")
                 .isEqualTo(acutual);
     }
 }

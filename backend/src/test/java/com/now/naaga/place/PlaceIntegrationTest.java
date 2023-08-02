@@ -1,47 +1,62 @@
 package com.now.naaga.place;
 
+import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.place.fixture.PlaceFixture;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
+import com.now.naaga.player.persistence.repository.PlayerRepository;
 import io.restassured.builder.MultiPartSpecBuilder;
-import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 
+import static com.now.naaga.player.fixture.PlayerFixture.PLAYER;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PlaceIntegrationTest {
+@SuppressWarnings("NonAsciiCharacters")
+@DisplayNameGeneration(ReplaceUnderscores.class)
+class GameControllerTest extends CommonControllerTest {
 
-    @LocalServerPort
-    int port;
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    @BeforeEach
+    protected void setUp() {
+        super.setUp();
+        playerRepository.save(PLAYER());
+    }
 
     @Test
-    void 장소_추가_요청을_받으면_추가된_장소_정보를_응답한다() {
+    void 장소_추가_요청을_받으면_추가된_장소_정보를_응답한다() throws FileNotFoundException {
+        //given
+
+        //when
         PlaceResponse actual = given().
                 log().all().
-                port(port).
-                contentType(ContentType.MULTIPART).
                 multiPart(new MultiPartSpecBuilder("루터회관").controlName("name").charset(StandardCharsets.UTF_8).build()).
                 multiPart(new MultiPartSpecBuilder("이곳은 루터회관이다.").controlName("description").charset(StandardCharsets.UTF_8).build()).
                 multiPart(new MultiPartSpecBuilder("37.515411").controlName("latitude").charset(StandardCharsets.UTF_8).build()).
                 multiPart(new MultiPartSpecBuilder("127.102848").controlName("longitude").charset(StandardCharsets.UTF_8).build()).
-                multiPart("imageFile", new File("src/test/java/com/now/naaga/place/fixture/루터회관.png")).
-                auth().preemptive().basic("111@woowa.com", "1111").
+                multiPart(new MultiPartSpecBuilder(new FileInputStream(new File("src/test/java/com/now/naaga/place/fixture/루터회관.png"))).controlName("imageFile").charset(StandardCharsets.UTF_8).fileName("src/test/java/com/now/naaga/place/fixture/루터회관.png").mimeType("image/png").build()).
+                auth().preemptive().basic("kokodak@koko.dak", "1234").
                 when().
                 post("/places").
                 then().
                 log().all().
                 extract().
                 body().as(PlaceResponse.class);
-
+        //then
         assertThat(actual).
                 usingRecursiveComparison().
                 ignoringFields("id", "imageUrl").
                 isEqualTo(PlaceFixture.PLACE_RESPONSE);
     }
+
 }

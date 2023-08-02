@@ -1,6 +1,5 @@
 package com.now.naaga.place.domain;
 
-import com.now.naaga.place.application.dto.PlaceCommand;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
