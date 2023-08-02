@@ -103,7 +103,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_mypage_rank" />
 
             <com.now.naaga.presentation.mypage.MyPageCustomGrid
-                android:id="@+id/customGrid_places"
+                android:id="@+id/customGrid_mypage_places"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"

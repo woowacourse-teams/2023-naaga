@@ -58,7 +58,7 @@ class MyPageActivity : AppCompatActivity() {
         }
         viewModel.places.observe(this) { places ->
             val placesUiModel = places.map { it.toUiModel() }
-            binding.customGridPlaces.initContent(placesUiModel)
+            binding.customGridMypagePlaces.initContent(placesUiModel)
         }
 
         viewModel.errorMessage.observe(this) { errorMessage ->
