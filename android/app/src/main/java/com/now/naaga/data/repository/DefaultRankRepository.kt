@@ -16,9 +16,7 @@ class DefaultRankRepository : RankRepository {
         val call = rankService.getAllRanks(sortBy, order)
         call.fetchNaagaResponse(
             onSuccess = { rankDtos ->
-                if (rankDtos != null) {
-                    callback(Result.success(rankDtos.map { it.toDomain() }))
-                }
+                callback(Result.success(rankDtos.map { it.toDomain() }))
             },
             onFailure = { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
         )
@@ -28,9 +26,7 @@ class DefaultRankRepository : RankRepository {
         val call = rankService.getMyRank()
         call.fetchNaagaResponse(
             onSuccess = { rankDto ->
-                if (rankDto != null) {
-                    callback(Result.success(rankDto.toDomain()))
-                }
+                callback(Result.success(rankDto.toDomain()))
             },
             onFailure = { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
         )
