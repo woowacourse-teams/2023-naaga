@@ -1,29 +1,11 @@
 package com.now.naaga.presentation.uimodel.mapper
 
 import com.now.domain.model.Adventure
-import com.now.domain.model.Game
 import com.now.domain.model.RemainingTryCount
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
-import com.now.naaga.presentation.uimodel.model.GameUiModel
 
 fun Adventure.toUi(): AdventureUiModel {
     return AdventureUiModel(
-        id = id,
-        destination = destination.toUi(),
-        adventureStatus = adventureStatus,
-    )
-}
-
-fun AdventureUiModel.toDomain(): Adventure {
-    return Adventure(
-        id = id,
-        destination = destination.toDomain(),
-        adventureStatus = adventureStatus,
-    )
-}
-
-fun Game.toUi(): GameUiModel {
-    return GameUiModel(
         id = id,
         createdAt = createdAt,
         startCoordinate = startCoordinate.toUi(),
@@ -35,8 +17,8 @@ fun Game.toUi(): GameUiModel {
     )
 }
 
-fun GameUiModel.toDomain(): Game {
-    return Game(
+fun AdventureUiModel.toDomain(): Adventure {
+    return Adventure(
         id = id,
         createdAt = createdAt,
         startCoordinate = startCoordinate.toDomain(),
