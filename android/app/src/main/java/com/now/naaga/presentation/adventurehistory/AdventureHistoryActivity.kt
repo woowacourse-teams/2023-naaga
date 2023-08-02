@@ -12,13 +12,14 @@ import com.now.naaga.presentation.adventurehistory.recyclerview.AdventureHistory
 class AdventureHistoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdventureHistoryBinding
     private lateinit var viewModel: AdventureHistoryViewModel
-
     private val historyAdapter = AdventureHistoryAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdventureHistoryBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
         setContentView(binding.root)
+
         initViewModel()
         initRecyclerView()
         viewModel.fetchHistories()
@@ -27,21 +28,19 @@ class AdventureHistoryActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this)[AdventureHistoryViewModel::class.java]
-        binding.lifecycleOwner = this
+        viewModel = ViewModelProvider(this, AdventureHistoryViewModel.Factory)[AdventureHistoryViewModel::class.java]
     }
 
     private fun initRecyclerView() {
         binding.rvAdventureHistoryVisitedPlaces.apply {
             adapter = historyAdapter
-            itemAnimator = null
             setHasFixedSize(true)
         }
     }
 
     private fun subscribeObserving() {
-        viewModel.places.observe(this) { places ->
-            updateHistory(places)
+        viewModel.adventureResults.observe(this) { adventureResults ->
+            updateHistory(adventureResults)
         }
     }
 
@@ -51,8 +50,8 @@ class AdventureHistoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateHistory(places: List<AdventureResult>) {
-        historyAdapter.submitList(places)
+    private fun updateHistory(adventureResults: List<AdventureResult>) {
+        historyAdapter.submitList(adventureResults)
     }
 
     companion object {

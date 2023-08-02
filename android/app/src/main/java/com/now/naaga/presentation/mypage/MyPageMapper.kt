@@ -48,6 +48,6 @@ private fun LocalTime.getTotalMinute(): Int {
 fun Place.toUiModel(): MyPagePlaceUiModel {
     return MyPagePlaceUiModel(
         image,
-        description,
+        name,
     )
 }

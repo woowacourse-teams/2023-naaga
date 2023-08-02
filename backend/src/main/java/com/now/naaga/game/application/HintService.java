@@ -27,7 +27,7 @@ public class HintService {
     }
 
     public Hint createHint(final CreateHintCommand command) {
-        final Game game = gameService.findGame(new FindGameByIdCommand(command.gameId(), command.playerId()));
+        final Game game = gameService.findGameById(new FindGameByIdCommand(command.gameId(), command.playerId()));
         if (!game.canUseMoreHint()) {
             throw new GameException(GameExceptionType.HINTS_EXHAUSTED);
         }

@@ -1,24 +1,30 @@
 package com.now.naaga.game.presentation;
 
+import static com.now.naaga.game.exception.GameExceptionType.INVALID_QUERY_PARAMETERS;
+
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.HintService;
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.CreateHintCommand;
+import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
-import com.now.naaga.game.application.dto.FinishGameCommand;
 import com.now.naaga.game.domain.Game;
+import com.now.naaga.game.domain.GameRecord;
 import com.now.naaga.game.domain.Hint;
+import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.presentation.dto.CreateGameRequest;
 import com.now.naaga.game.presentation.dto.CreateHintRequest;
-import com.now.naaga.game.presentation.dto.FinishGameRequest;
+import com.now.naaga.game.presentation.dto.EndGameRequest;
 import com.now.naaga.game.presentation.dto.GameResponse;
+import com.now.naaga.game.presentation.dto.GameResultResponse;
 import com.now.naaga.game.presentation.dto.GameStatusResponse;
 import com.now.naaga.game.presentation.dto.HintResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,22 +74,19 @@ public class GameController {
     }
 
     @PatchMapping("/{gameId}")
-    public ResponseEntity<GameStatusResponse> changeGameStatus(@Auth final PlayerRequest playerRequest,
-                                                               @RequestBody final FinishGameRequest finishGameRequest,
-                                                               @PathVariable final Long gameId) {
-        // TODO: 8/1/23 FinishGameCommand에 EndType 추가해야함
-        final FinishGameCommand finishGameCommand = FinishGameCommand.of(playerRequest, finishGameRequest, gameId);
-        final Game game = gameService.finishGame(finishGameCommand);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(GameStatusResponse.from(game));
+    public ResponseEntity<GameStatusResponse> endGame(@Auth final PlayerRequest playerRequest,
+                                                      @RequestBody final EndGameRequest endGameRequest,
+                                                      @PathVariable final Long gameId) {
+        gameService.endGame(EndGameCommand.of(playerRequest, endGameRequest, gameId));
+        Game game = gameService.findGameById(FindGameByIdCommand.of(playerRequest, gameId));
+        return ResponseEntity.ok(GameStatusResponse.from(game));
     }
 
     @GetMapping("/{gameId}")
     public ResponseEntity<GameResponse> findGame(@Auth final PlayerRequest playerRequest,
                                                  @PathVariable final Long gameId) {
         final FindGameByIdCommand findGameByIdCommand = FindGameByIdCommand.of(playerRequest, gameId);
-        final Game game = gameService.findGame(findGameByIdCommand);
+        final Game game = gameService.findGameById(findGameByIdCommand);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(GameResponse.from(game));
@@ -98,5 +101,32 @@ public class GameController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(gameResponses);
+    }
+
+    @GetMapping("/{gameId}/result")
+    public ResponseEntity<GameResultResponse> findGameResult(@Auth final PlayerRequest playerRequest,
+                                                             @PathVariable final Long gameId) {
+        final GameRecord gameRecord = gameService.findGameResult(gameId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(GameResultResponse.from(gameRecord));
+    }
+
+    @GetMapping("/results")
+    public ResponseEntity<List<GameResultResponse>> findAllGameResult(@Auth final PlayerRequest playerRequest,
+                                                                      @RequestParam final String sortBy,
+                                                                      @RequestParam final String order) {
+        if (!sortBy.equals("time") && order.equals("descending")) {
+            throw new GameException(INVALID_QUERY_PARAMETERS);
+        }
+
+        final List<GameRecord> gameRecords = gameService.findAllGameResult(playerRequest);
+        final List<GameResultResponse> gameResultResponseList = gameRecords.stream()
+                .map(GameResultResponse::from)
+                .collect(Collectors.toList());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(gameResultResponseList);
     }
 }
