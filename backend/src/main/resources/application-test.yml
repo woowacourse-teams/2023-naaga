@@ -5,7 +5,7 @@ spring:
       enabled: true
   datasource:
     # for test
-    url: jdbc:h2:~/naaga-test;MODE=MySQL
+    url: jdbc:h2:mem:testdb;MODE=MySQL
     username: sa
     password:
 
@@ -20,5 +20,4 @@ spring:
 
 multipartFile:
   directory:
-#    path: /Users/hwan/image
     path: ./src/test/resources/image

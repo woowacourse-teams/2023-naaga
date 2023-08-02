@@ -7,6 +7,7 @@ import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,7 +28,9 @@ public class GameFixture {
                 SEOUL_POSITION(),
                 MAXIMUM_ATTEMPTS,
                 new ArrayList<>(),
-                LocalDateTime.now());
+                LocalDateTime.now().minusHours(1),
+                LocalDateTime.now()
+        );
     }
 
     public static Game SEOUL_TO_JEJU_GAME(final Place place) {
@@ -38,7 +41,9 @@ public class GameFixture {
                 SEOUL_POSITION(),
                 MAXIMUM_ATTEMPTS,
                 new ArrayList<>(),
-                LocalDateTime.now();
+                LocalDateTime.now().minusHours(1),
+                LocalDateTime.now()
+        );
     }
     
     public static Game GAME_IN_PROGRESS(Player player, Place place, Position startPosition) {
