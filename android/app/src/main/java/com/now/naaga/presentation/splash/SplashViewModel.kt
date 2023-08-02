@@ -4,27 +4,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
-import com.now.domain.model.Game
-import com.now.domain.repository.AdventureRepository2
-import com.now.naaga.data.repository.ThirdDemoAdventureRepository
+import com.now.domain.repository.AdventureRepository
+import com.now.naaga.data.repository.DefaultAdventureRepository
 
-class SplashViewModel(private val adventureRepository2: AdventureRepository2) : ViewModel() {
-    private val _adventure = MutableLiveData<Game>()
-    val adventure: LiveData<Game> get() = _adventure
+class SplashViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
+    private val _adventure = MutableLiveData<Adventure>()
+    val adventure: LiveData<Adventure> get() = _adventure
 
     private val _adventureStatus = MutableLiveData<AdventureStatus>()
     val adventureStatus: LiveData<AdventureStatus> = _adventureStatus
 
     fun fetchInProgressAdventure() {
-        adventureRepository2.fetchAdventureByStatus(AdventureStatus.IN_PROGRESS) { result: Result<List<Game>> ->
+        adventureRepository.fetchAdventureByStatus(AdventureStatus.IN_PROGRESS) { result: Result<List<Adventure>> ->
             result
                 .onSuccess { fetchAdventure(it) }
                 .onFailure { _adventureStatus.value = AdventureStatus.NONE }
         }
     }
 
-    private fun fetchAdventure(adventures: List<Game>) {
+    private fun fetchAdventure(adventures: List<Adventure>) {
         if (adventures.isNotEmpty()) {
             _adventure.value = adventures.first()
             _adventureStatus.value = adventures.first().adventureStatus
@@ -34,10 +34,11 @@ class SplashViewModel(private val adventureRepository2: AdventureRepository2) : 
     }
 
     companion object {
-        val Factory = ViewModelFactory(ThirdDemoAdventureRepository())
-        class ViewModelFactory(private val adventureRepository2: AdventureRepository2) : ViewModelProvider.Factory {
+        val Factory = ViewModelFactory(DefaultAdventureRepository())
+
+        class ViewModelFactory(private val adventureRepository: AdventureRepository) : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SplashViewModel(adventureRepository2) as T
+                return SplashViewModel(adventureRepository) as T
             }
         }
     }
