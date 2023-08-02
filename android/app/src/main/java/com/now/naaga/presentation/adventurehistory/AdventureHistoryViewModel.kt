@@ -36,7 +36,6 @@ class AdventureHistoryViewModel : ViewModel() {
                 distance = 300,
                 hintUses = 3,
                 tryCount = 2,
-                raisedRank = 2,
                 beginTime = LocalDateTime.of(2023, 8, 1, 13, 30, 0),
                 endTime = LocalDateTime.of(2023, 8, 1, 14, 0, 0),
             )
