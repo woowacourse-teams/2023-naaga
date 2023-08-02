@@ -55,7 +55,7 @@ public class GameService {
         final Game game = gameRepository.findById(finishGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
         final Player player = playerService.findPlayerById(finishGameCommand.playerId());
-        game.validateOwner(player);
+        game.validatePlayer(player);
         game.validateInRange(finishGameCommand.position());
         game.changeGameStatus(GameStatus.DONE);
         return game;
@@ -66,7 +66,7 @@ public class GameService {
         final Player player = playerService.findPlayerById(findGameByIdCommand.playerId());
         final Game game = gameRepository.findById(findGameByIdCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
-        game.validateOwner(player);
+        game.validatePlayer(player);
         return game;
     }
 

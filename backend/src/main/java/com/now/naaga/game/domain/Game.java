@@ -12,12 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.now.naaga.game.domain.EndType.GIVE_UP;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.ResultType.FAIL;
+import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_DONE;
 import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
 import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
 
 @Entity
 public class Game extends BaseEntity {
-
+    
+    // todo : 건물 내부로 좌표를 찍으면 20미터로 어림도 없다.. 30미터 괜찮을지도?
+    public static final int MAX_ATTEMPT_COUNT = 5;
+    public static final int MAX_HINT_COUNT = 3;
     public static final double MIN_RANGE = 0.05;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,7 +97,7 @@ public class Game extends BaseEntity {
         this.endTime = endTime;
     }
 
-    public void validateOwner(final Player player) {
+    public void validatePlayer(final Player player) {
         if (!player.equals(this.player)) {
             throw new GameException(INACCESSIBLE_AUTHENTICATION);
         }
@@ -106,7 +114,52 @@ public class Game extends BaseEntity {
     }
     
     public ResultType endGame(EndType endType, Position position) {
-        return null;
+        if (isDone()) {
+            throw new GameException(ALREADY_DONE);
+        }
+        if (endType == GIVE_UP) {
+            return giveUpGame();
+        }
+        return endGameByArrival(position);
+    }
+    
+    private boolean isDone() {
+        return gameStatus == DONE;
+    }
+    
+    private ResultType giveUpGame() {
+        gameStatus = DONE;
+        endTime = LocalDateTime.now();
+        return FAIL;
+    }
+    
+    private ResultType endGameByArrival(Position position) {
+        remainingAttempts--;
+        if (isPlayerArrived(position)) {
+            return endGameWithSuccess();
+        }
+        return endGameWithFailure();
+    }
+    
+    // todo : place의 변수명을 isCoordinateInsideBounds 또는 isPositionInsideBounds 또는 isPositionWithinRange로 바꾸고 싶다
+    //또, 이 메서드에 범위를 함께 넘겨주는 것이 마땅해보인다.
+    private boolean isPlayerArrived(Position position) {
+        return place.isInValidRange(position);
+    }
+    
+    private ResultType endGameWithSuccess() {
+        gameStatus = DONE;
+        endTime = LocalDateTime.now();
+        return SUCCESS;
+    }
+    
+    private ResultType endGameWithFailure() {
+        if (remainingAttempts == 0) {
+            gameStatus = DONE;
+            endTime = LocalDateTime.now();
+            return FAIL;
+        }
+        throw new GameException(NOT_ARRIVED);
     }
     
     public Long getId() {
@@ -139,6 +192,10 @@ public class Game extends BaseEntity {
 
     public LocalDateTime getStartTime() {
         return startTime;
+    }
+    
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
     @Override
