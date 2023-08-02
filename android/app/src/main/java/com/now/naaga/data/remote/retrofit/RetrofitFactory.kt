@@ -12,6 +12,7 @@ object RetrofitFactory {
 
     val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl("https://154c0926-f3af-42e2-8af1-bcf8115f3457.mock.pstmn.io")
+        // .baseUrl("http://43.202.67.161")
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .client(createOkHttpClient())
         .build()

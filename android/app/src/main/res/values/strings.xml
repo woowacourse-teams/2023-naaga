@@ -46,6 +46,7 @@
 
     <!-- RankActivity -->
     <string name="rank_title">Leader Board</string>
+    <string name="rank_my_rank">%d등</string>
 
     <!-- mypage -->
     <string name="mypage_adventure_record">모험 기록</string>
