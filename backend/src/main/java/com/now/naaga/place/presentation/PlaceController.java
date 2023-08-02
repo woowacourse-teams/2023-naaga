@@ -1,11 +1,10 @@
 package com.now.naaga.place.presentation;
 
 import com.now.naaga.auth.annotation.Auth;
-import com.now.naaga.member.application.dto.MemberCommand;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.application.dto.FindAllPlaceCommand;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
-import com.now.naaga.place.application.dto.PlaceCommand;
+import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
@@ -49,9 +48,10 @@ public class PlaceController {
     }
 
     @PostMapping
-    public ResponseEntity<PlaceResponse> createPlace(final MemberCommand memberCommand,
-                                                     final PlaceCommand placeCommand) {
-        final Place savedPlace = placeService.createPlace(memberCommand, placeCommand);
+    public ResponseEntity<PlaceResponse> createPlace(@Auth final PlayerRequest playerRequest,
+                                                     @ModelAttribute final CreatePlaceRequest createPlaceRequest) {
+        CreatePlaceCommand createPlaceCommand = CreatePlaceCommand.of(playerRequest, createPlaceRequest);
+        final Place savedPlace = placeService.createPlace(createPlaceCommand);
         final PlaceResponse response = PlaceResponse.from(savedPlace);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

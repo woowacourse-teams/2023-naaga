@@ -1,5 +1,7 @@
 package com.now.naaga.place.domain;
 
+import com.now.naaga.place.exception.PlaceException;
+import com.now.naaga.place.exception.PlaceExceptionType;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,7 @@ public class PlaceCheckService {
     public void checkOtherPlaceNearby(final Position position) {
         List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, 0.02);
         if (places.size() > 0) {
-            throw new RuntimeException("가까운 장소에 이미 등록된 장소가 있습니다.");
+            throw new PlaceException(PlaceExceptionType.ALREADY_EXIST_NEARBY);
         }
     }
 }

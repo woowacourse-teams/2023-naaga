@@ -9,6 +9,7 @@ import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.place.application.PlaceService;
+import com.now.naaga.place.application.dto.RecommendPlaceCommand;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.application.PlayerService;
@@ -46,7 +47,8 @@ public class GameService {
             throw new GameException(ALREADY_IN_PROGRESS);
         }
         final Position position = createGameCommand.playerPosition();
-        final Place place = placeService.recommendPlaceByPosition(position);
+        RecommendPlaceCommand recommendPlaceCommand = new RecommendPlaceCommand(position);
+        final Place place = placeService.recommendPlaceByPosition(recommendPlaceCommand);
         final Game game = new Game(player, place, position);
         return gameRepository.save(game);
     }
