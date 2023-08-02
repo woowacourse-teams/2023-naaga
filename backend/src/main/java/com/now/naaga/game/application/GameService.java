@@ -4,10 +4,7 @@ import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.application.dto.FinishGameCommand;
-import com.now.naaga.game.domain.Game;
-import com.now.naaga.game.domain.GameRecord;
-import com.now.naaga.game.domain.GameResult;
-import com.now.naaga.game.domain.GameStatus;
+import com.now.naaga.game.domain.*;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
@@ -107,10 +104,22 @@ public class GameService {
         List<GameResult> gameResults = gamesByPlayerId.stream()
                 .map(game -> findGameResultByGameId(game.getId()))
                 .sorted((gr1, gr2) -> gr2.getCreatedAt().compareTo(gr1.getCreatedAt()))
-                .collect(Collectors.toList());
+                .toList();
 
         return gameResults.stream()
                 .map(GameRecord::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Statistic findStatistic(final PlayerRequest playerRequest) {
+        final List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
+        final List<GameResult> gameResults = gamesByPlayerId.stream()
+                .map(game -> findGameResultByGameId(game.getId()))
+                .toList();
+        final List<GameRecord> gameRecords = gameResults.stream()
+                .map(GameRecord::from).toList();
+
+        return Statistic.of(gameRecords);
     }
 }
