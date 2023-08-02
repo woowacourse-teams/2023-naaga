@@ -21,10 +21,20 @@ class MyPageCustomGrid(context: Context, attrs: AttributeSet? = null) : Constrai
     }
 
     fun initContent(data: List<MyPageItemUiModel>) {
-        adapter = MyPageAdapter(data)
-        binding.rvMypageItemContent.adapter = adapter
         if (data.isNotEmpty()) {
             binding.tvMypageItemTitle.text = data.first().viewType.text
+
+            adapter = if (data.first().viewType == MyPageViewType.PLACES) {
+                MyPageAdapter(data.subList(START_PLACE_INDEX, END_PLACE_INDEX))
+            } else {
+                MyPageAdapter(data)
+            }
         }
+        binding.rvMypageItemContent.adapter = adapter
+    }
+
+    companion object {
+        const val START_PLACE_INDEX = 0
+        const val END_PLACE_INDEX = 3
     }
 }
