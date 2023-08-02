@@ -3,7 +3,9 @@ name: NAAGA ANDROID CI
 on:
   pull_request:
     branches: [ dev ]
-
+    paths:
+      - 'android/**'
+    
 jobs:
   ktlint:
     name: ktlint check
@@ -11,6 +13,7 @@ jobs:
     defaults:
       run:
         working-directory: ./android
+    
     steps:
       - uses: actions/checkout@v3
 
