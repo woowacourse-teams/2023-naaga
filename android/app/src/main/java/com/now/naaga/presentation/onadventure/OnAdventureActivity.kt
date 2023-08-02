@@ -90,7 +90,8 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
 
     private fun isAdventureDone(status: AdventureStatus) {
         if (status == AdventureStatus.DONE) {
-            val intent = Intent(this, AdventureResultActivity::class.java)
+            val adventureId: Long = viewModel.adventure.value?.id ?: throw IllegalStateException()
+            val intent = AdventureResultActivity.getIntentWithGameId(this, adventureId)
             startActivity(intent)
             finish()
         }
