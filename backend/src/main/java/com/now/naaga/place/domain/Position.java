@@ -23,6 +23,11 @@ public class Position {
         this.longitude = longitude;
     }
 
+    public static Position of(final Double latitude,
+                                final Double longitude) {
+        return new Position(new BigDecimal(latitude), new BigDecimal(longitude));
+    }
+
     public double calculateDistance(final Position other) {
         return Math.acos(Math.sin(Math.toRadians(other.latitude.doubleValue())) * Math.sin(Math.toRadians(this.latitude.doubleValue()))
                 + (Math.cos(Math.toRadians(other.latitude.doubleValue())) * Math.cos(Math.toRadians(this.latitude.doubleValue())) * Math.cos(Math.toRadians(other.longitude.doubleValue() - this.longitude.doubleValue())))
