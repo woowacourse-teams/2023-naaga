@@ -79,13 +79,13 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public List<Game> findGamesByStatus(final FindGameByStatusCommand findGameByStatusCommand) {
-        Player player = playerService.findPlayerById(findGameByStatusCommand.playerId());
+        final Player player = playerService.findPlayerById(findGameByStatusCommand.playerId());
         return gameRepository.findByPlayerIdAndGameStatus(player.getId(), findGameByStatusCommand.gameStatus());
     }
 
     @Transactional(readOnly = true)
     public GameResult findGameResultByGameId(final Long gameId) {
-        List<GameResult> gameResultsByGameId = gameResultRepository.findByGameId(gameId);
+        final List<GameResult> gameResultsByGameId = gameResultRepository.findByGameId(gameId);
 
         if (gameResultsByGameId.isEmpty()) {
             throw new GameException(GAME_RESULT_NOT_EXIST);
