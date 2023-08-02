@@ -1,8 +1,10 @@
 package com.now.naaga.presentation.mypage
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.repository.DefaultPlaceRepository
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.repository.DefaultStatisticsRepository
@@ -20,7 +22,7 @@ class MyPageActivity : AppCompatActivity() {
 
         initViewModel()
         setClickListeners()
-        subscribe()
+        subscribeObserving()
         fetchData()
     }
 
@@ -50,13 +52,19 @@ class MyPageActivity : AppCompatActivity() {
         viewModel.fetchPlaces()
     }
 
-    private fun subscribe() {
+    private fun subscribeObserving() {
         viewModel.statistics.observe(this) { statistics ->
             binding.customGridMypageStatistics.initContent(statistics.toUiModel(this))
         }
         viewModel.places.observe(this) { places ->
             val placesUiModel = places.map { it.toUiModel() }
             binding.customGridPlaces.initContent(placesUiModel)
+        }
+
+        viewModel.errorMessage.observe(this) { errorMessage ->
+            if (NaagaThrowable.ServerConnectFailure().userMessage == errorMessage) {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

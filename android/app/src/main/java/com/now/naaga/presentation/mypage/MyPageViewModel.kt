@@ -11,6 +11,7 @@ import com.now.domain.model.Statistics
 import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
+import com.now.naaga.data.NaagaThrowable
 
 class MyPageViewModel(
     private val rankRepository: RankRepository,
@@ -26,11 +27,14 @@ class MyPageViewModel(
     private val _places = MutableLiveData<List<Place>>()
     val places: LiveData<List<Place>> = _places
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
     fun fetchRank() {
         rankRepository.getMyRank { result: Result<Rank> ->
             result
                 .onSuccess { rank -> _rank.value = rank }
-                .onFailure { }
+                .onFailure { setErrorMessage(it) }
         }
     }
 
@@ -38,7 +42,7 @@ class MyPageViewModel(
         statisticsRepository.getMyStatistics { result: Result<Statistics> ->
             result
                 .onSuccess { statistics -> _statistics.value = statistics }
-                .onFailure { }
+                .onFailure { setErrorMessage(it) }
         }
     }
 
@@ -46,7 +50,14 @@ class MyPageViewModel(
         placeRepository.fetchMyPlaces(SortType.RANK.name, OrderType.DESCENDING.name) { result ->
             result
                 .onSuccess { _places.value = it }
-                .onFailure { }
+                .onFailure { setErrorMessage(it) }
+        }
+    }
+
+    private fun setErrorMessage(throwable: Throwable) {
+        when (throwable) {
+            is NaagaThrowable.ServerConnectFailure ->
+                _errorMessage.value = throwable.userMessage
         }
     }
 }
