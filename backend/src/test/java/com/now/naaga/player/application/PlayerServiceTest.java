@@ -75,7 +75,7 @@ class PlayerServiceTest {
         // then
         assertSoftly(softly -> {
             softly.assertThat(rank.getPlayer().getNickname()).isEqualTo("채리");
-            softly.assertThat(rank.getTopPercent()).isEqualTo(33);
+            softly.assertThat(rank.getPercentage()).isEqualTo(33);
         });
     }
 }

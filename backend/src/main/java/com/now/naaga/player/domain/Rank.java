@@ -6,17 +6,17 @@ public class Rank {
 
     private Player player;
     private int rank;
-    private int topPercent;
+    private int percentage;
 
     public Rank() {
     }
 
     public Rank(final Player player,
                 final int rank,
-                final int topPercent) {
+                final int percentage) {
         this.player = player;
         this.rank = rank;
-        this.topPercent = topPercent;
+        this.percentage = percentage;
     }
 
     public Player getPlayer() {
@@ -27,8 +27,8 @@ public class Rank {
         return rank;
     }
 
-    public int getTopPercent() {
-        return topPercent;
+    public int getPercentage() {
+        return percentage;
     }
 
     @Override
@@ -40,11 +40,11 @@ public class Rank {
             return false;
         }
         final Rank rank1 = (Rank) o;
-        return rank == rank1.rank && topPercent == rank1.topPercent && Objects.equals(player, rank1.player);
+        return rank == rank1.rank && percentage == rank1.percentage && Objects.equals(player, rank1.player);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(player, rank, topPercent);
+        return Objects.hash(player, rank, percentage);
     }
 }
