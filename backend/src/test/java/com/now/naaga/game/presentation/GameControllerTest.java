@@ -1,7 +1,9 @@
 package com.now.naaga.game.presentation;
 
+import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
 import static com.now.naaga.game.fixture.GameFixture.SEOUL_TO_JEJU_GAME;
 import static com.now.naaga.game.fixture.MemberFixture.MEMBER_IRYE;
 import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
@@ -9,6 +11,7 @@ import static com.now.naaga.game.fixture.PositionFixture.잠실_루터회관_정
 import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_좌표;
 import static com.now.naaga.member.fixture.MemberFixture.MEMBER_EMAIL;
 import static com.now.naaga.member.fixture.MemberFixture.MEMBER_PASSWORD;
+import static com.now.naaga.place.exception.PlaceExceptionType.CAN_NOT_FIND_PLACE;
 import static com.now.naaga.place.fixture.PlaceFixture.JEJU_PLACE;
 import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -21,7 +24,14 @@ import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameResult;
 import com.now.naaga.game.domain.Hint;
 import com.now.naaga.game.domain.ResultType;
-import com.now.naaga.game.presentation.dto.*;
+import com.now.naaga.game.presentation.dto.CoordinateRequest;
+import com.now.naaga.game.presentation.dto.CreateGameRequest;
+import com.now.naaga.game.presentation.dto.CreateHintRequest;
+import com.now.naaga.game.presentation.dto.EndGameRequest;
+import com.now.naaga.game.presentation.dto.GameResponse;
+import com.now.naaga.game.presentation.dto.GameResultResponse;
+import com.now.naaga.game.presentation.dto.GameStatusResponse;
+import com.now.naaga.game.presentation.dto.HintResponse;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
 import com.now.naaga.game.repository.HintRepository;
@@ -33,12 +43,14 @@ import com.now.naaga.place.presentation.dto.CoordinateResponse;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
+import com.now.naaga.player.presentation.dto.PlayerResponse;
 import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -75,6 +87,151 @@ class GameControllerTest extends CommonControllerTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
+    }
+
+    @Test
+    void 게임_생성_요청시_진행중인_게임이_없으면서_주변에_추천_장소가_있다면_게임을_정상적으로_생성한다() {
+        // given
+        final Place destination = placeRepository.save(
+                new Place(
+                        "잠실루터회관",
+                        "잠실루터회관이다.",
+                        잠실_루터회관_정문_좌표,
+                        "잠실루터회관IMAGE",
+                        new Player("kokodak",
+                                new Score(1000),
+                                new Member("koko@da.k", "1031")
+                        )));
+
+        final CreateGameRequest createGameRequest = new CreateGameRequest(
+                new CoordinateRequest(37.514258, 127.100883));
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("koko@da.k", "1031")
+                .contentType(ContentType.JSON)
+                .body(createGameRequest)
+                .when()
+                .post("/games")
+                .then().log().all()
+                .extract();
+
+        // then
+        final int statusCode = extract.statusCode();
+        final String location = extract.header("Location");
+        final Long gameId = getIdFromLocationHeader(extract);
+        final GameResponse actual = extract.as(GameResponse.class);
+        final GameResponse expected = new GameResponse(
+                gameId,
+                null,
+                IN_PROGRESS.name(),
+                MAX_ATTEMPT_COUNT,
+                com.now.naaga.game.presentation.dto.CoordinateResponse.of(잠실역_교보문고_좌표),
+                PlaceResponse.from(destination),
+                PlayerResponse.from(destination.getRegisteredPlayer()),
+                new ArrayList<>());
+
+        assertSoftly(softAssertions -> {
+                    softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.CREATED.value());
+                    softAssertions.assertThat(location).isEqualTo("/games/" + gameId);
+                    softAssertions.assertThat(actual)
+                            .usingRecursiveComparison()
+                            .ignoringExpectedNullFields()
+                            .ignoringFieldsOfTypes(LocalDateTime.class)
+                            .isEqualTo(expected);
+                }
+        );
+    }
+
+    @Test
+    void 게임_생성_요청시_진행중인_게임이_있다면_예외가_발생한다() {
+        // given
+        final Place destination = placeRepository.save(
+                new Place(
+                        "잠실루터회관",
+                        "잠실루터회관이다.",
+                        잠실_루터회관_정문_좌표,
+                        "잠실루터회관IMAGE",
+                        new Player("kokodak",
+                                new Score(1000),
+                                new Member("koko@da.k", "1031")
+                        )));
+
+        gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
+
+        final CreateGameRequest createGameRequest = new CreateGameRequest(
+                new CoordinateRequest(37.514258, 127.100883));
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("koko@da.k", "1031")
+                .contentType(ContentType.JSON)
+                .body(createGameRequest)
+                .when()
+                .post("/games")
+                .then().log().all()
+                .extract();
+
+        // then
+        final int statusCode = extract.statusCode();
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+        final ExceptionResponse expected = new ExceptionResponse(
+                ALREADY_IN_PROGRESS.errorCode(),
+                ALREADY_IN_PROGRESS.errorMessage());
+
+        assertSoftly(softAssertions -> {
+                    softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    softAssertions.assertThat(actual)
+                            .usingRecursiveComparison()
+                            .isEqualTo(expected);
+                }
+        );
+    }
+
+    @Test
+    void 게임_생성_요청시_주변에_추천_장소가_없다면_예외가_발생한다() {
+        // given
+        final Place destination = placeRepository.save(
+                new Place(
+                        "잠실루터회관",
+                        "잠실루터회관이다.",
+                        잠실_루터회관_정문_좌표,
+                        "잠실루터회관IMAGE",
+                        new Player("kokodak",
+                                new Score(1000),
+                                new Member("koko@da.k", "1031")
+                        )));
+
+        final CreateGameRequest createGameRequest = new CreateGameRequest(
+                new CoordinateRequest(37.500845, 127.036953)); // 역삼역
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("koko@da.k", "1031")
+                .contentType(ContentType.JSON)
+                .body(createGameRequest)
+                .when()
+                .post("/games")
+                .then().log().all()
+                .extract();
+
+        // then
+        final int statusCode = extract.statusCode();
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+        final ExceptionResponse expected = new ExceptionResponse(
+                CAN_NOT_FIND_PLACE.errorCode(),
+                CAN_NOT_FIND_PLACE.errorMessage());
+
+        assertSoftly(softAssertions -> {
+                    softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    softAssertions.assertThat(actual)
+                            .usingRecursiveComparison()
+                            .isEqualTo(expected);
+                }
+        );
     }
 
     @Test
@@ -323,9 +480,15 @@ class GameControllerTest extends CommonControllerTest {
         // then
         final int statusCode = extract.statusCode();
         final GameResponse actual = extract.as(GameResponse.class);
-
-        final GameResponse expected = new GameResponse(null, PlaceResponse.from(destination),
-                IN_PROGRESS.toString());
+        final GameResponse expected = new GameResponse(
+                game.getId(),
+                null,
+                IN_PROGRESS.name(),
+                MAX_ATTEMPT_COUNT,
+                com.now.naaga.game.presentation.dto.CoordinateResponse.of(잠실역_교보문고_좌표),
+                PlaceResponse.from(destination),
+                PlayerResponse.from(destination.getRegisteredPlayer()),
+                new ArrayList<>());
 
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
