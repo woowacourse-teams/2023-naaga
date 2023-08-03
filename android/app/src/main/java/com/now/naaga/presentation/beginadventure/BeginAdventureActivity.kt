@@ -53,13 +53,8 @@ class BeginAdventureActivity : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.clBeginAdventureBegin.setOnClickListener {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-                LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
-            } else {
-                startActivity(OnAdventureActivity.getIntent(this))
-            }
+            checkPermissionAndBeginAdventure()
         }
-        checkPermissionAndBeginAdventure()
 
         binding.ivBeginAdventureRank.setOnClickListener {
             startActivity(RankActivity.getIntent(this))
