@@ -15,12 +15,16 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
+import com.now.naaga.data.firebase.analytics.UPLOAD_SET_COORDINATE
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
 
-class UploadActivity : AppCompatActivity() {
+class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityUploadBinding
 
     private val cameraLauncher = registerForActivityResult(
@@ -54,10 +58,10 @@ class UploadActivity : AppCompatActivity() {
 
         binding = ActivityUploadBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        registerAnalytics(this.lifecycle)
         requestPermission()
         setCoordinate()
-        bindListener()
+        setClickListeners()
     }
 
     private fun requestPermission() {
@@ -92,15 +96,18 @@ class UploadActivity : AppCompatActivity() {
         return (number * 10_000).toLong().toDouble() / 10_000
     }
 
-    private fun bindListener() {
+    private fun setClickListeners() {
         binding.ivUploadCameraIcon.setOnClickListener {
+            logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
 
         binding.ivUploadPhoto.setOnClickListener {
+            logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
         binding.ivUploadPhotoCoordinate.setOnClickListener {
+            logClickEvent(getViewEntryName(it), UPLOAD_SET_COORDINATE)
             checkLocationPermission()
         }
         binding.ivUploadClose.setOnClickListener {
