@@ -74,7 +74,7 @@ public class Game extends BaseEntity {
     }
 
     public Game(final Player player, final Place place, final Position startPosition) {
-        this(null, IN_PROGRESS, player, place, startPosition, 5, new ArrayList<>(), LocalDateTime.now(), null);
+        this(null, IN_PROGRESS, player, place, startPosition, MAX_ATTEMPT_COUNT, new ArrayList<>(), LocalDateTime.now(), null);
     }
 
     public Game(final GameStatus gameStatus,
