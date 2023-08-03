@@ -14,6 +14,11 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.naaga.R
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_GIVE_UP
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_HINT
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
@@ -21,7 +26,10 @@ import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.getParcelable
 
-class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by DefaultNaverMapSettingDelegate() {
+class OnAdventureActivity :
+    AppCompatActivity(),
+    NaverMapSettingDelegate by DefaultNaverMapSettingDelegate(),
+    AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityOnAdventureBinding
     private lateinit var viewModel: OnAdventureViewModel
 
@@ -30,6 +38,7 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
         super.onCreate(savedInstanceState)
         binding = ActivityOnAdventureBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        registerAnalytics(this.lifecycle)
         initViewModel()
         subscribe()
         setOnMapReady { setLocationChangeListener() }
@@ -44,12 +53,15 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
 
     private fun setClickListeners() {
         binding.ivOnAdventureGiveUp.setOnClickListener {
+            logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_GIVE_UP)
             showGiveUpDialog()
         }
         binding.ivOnAdventurePhoto.setOnClickListener {
+            logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_POLAROID)
             showPolaroidDialog()
         }
         binding.ivOnAdventureHint.setOnClickListener {
+            logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_HINT)
             showHintDialog()
         }
     }
