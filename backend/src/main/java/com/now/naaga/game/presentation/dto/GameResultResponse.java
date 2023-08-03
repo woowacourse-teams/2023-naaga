@@ -2,6 +2,7 @@ package com.now.naaga.game.presentation.dto;
 
 import com.now.naaga.game.domain.GameRecord;
 import com.now.naaga.game.domain.ResultType;
+
 import java.time.LocalDateTime;
 
 public record GameResultResponse(Long id,
@@ -9,7 +10,7 @@ public record GameResultResponse(Long id,
                                  GameDestinationResponse destination,
                                  ResultType resultType,
                                  int score,
-                                 LocalDateTime totalPlayTime,
+                                 int totalPlayTime,
                                  int distance,
                                  int hintUses,
                                  int tryCount,
@@ -23,7 +24,7 @@ public record GameResultResponse(Long id,
                 GameDestinationResponse.from(gameRecord.getGameResult().getGame().getPlace()),
                 gameRecord.getGameResult().getResultType(),
                 gameRecord.getGameResult().getScore().getValue(),
-                gameRecord.getTotalPlayTime(),
+                gameRecord.durationToInteger(gameRecord.getTotalPlayTime()),
                 gameRecord.getDistance(),
                 gameRecord.getHintUses(),
                 gameRecord.getTryCount(),

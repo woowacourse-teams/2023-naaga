@@ -1,5 +1,7 @@
 package com.now.naaga.presentation.mypage
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -65,6 +67,12 @@ class MyPageActivity : AppCompatActivity() {
             if (NaagaThrowable.ServerConnectFailure().userMessage == errorMessage) {
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent {
+            return Intent(context, MyPageActivity::class.java)
         }
     }
 }

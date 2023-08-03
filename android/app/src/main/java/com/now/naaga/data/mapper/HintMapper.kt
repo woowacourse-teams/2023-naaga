@@ -2,7 +2,7 @@ package com.now.naaga.data.mapper
 
 import com.now.domain.model.Direction
 import com.now.domain.model.Hint
-import com.now.naaga.data.remote.dto.third.HintDto
+import com.now.naaga.data.remote.dto.HintDto
 
 fun HintDto.toDomain(): Hint {
     return Hint(

@@ -1,98 +1,109 @@
 package com.now.naaga.data.repository
 
 import com.now.domain.model.Adventure
+import com.now.domain.model.AdventureEndType
+import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
+import com.now.domain.model.Hint
+import com.now.domain.model.OrderType
+import com.now.domain.model.SortType
 import com.now.domain.repository.AdventureRepository
-import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
-import com.now.naaga.data.remote.retrofit.ERROR_500
-import com.now.naaga.data.remote.retrofit.ERROR_NOT_400_500
-import com.now.naaga.data.remote.retrofit.ServicePool.adventureService
-import com.now.naaga.data.remote.retrofit.fetchNaagaNullableResponse
-import com.now.naaga.data.remote.retrofit.getFailureDto
-import com.now.naaga.data.remote.retrofit.isFailure400
-import com.now.naaga.data.remote.retrofit.isFailure500
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.now.naaga.data.remote.dto.FinishGameDto
+import com.now.naaga.data.remote.retrofit.ServicePool
+import com.now.naaga.data.remote.retrofit.fetchNaagaResponse
 
 class DefaultAdventureRepository : AdventureRepository {
-    override fun fetchAdventuresByStatus(
-        status: AdventureStatus,
-        callback: (Result<List<Adventure>>) -> Unit,
-    ) {
-        val call = adventureService.getGamesByStatus(status.name)
-        call.fetchNaagaNullableResponse(
-            onSuccess = { adventures ->
-                if (adventures == null) {
-                    callback(Result.failure(NaagaThrowable.NaagaUnknownError("null 값이 넘어왔습니다")))
-                    return@fetchNaagaNullableResponse
-                }
-                callback(Result.success(adventures.map { it.toDomain() }))
+    override fun fetchMyAdventures(callback: (Result<List<Adventure>>) -> Unit) {
+        val call = ServicePool.adventureService.getMyGames()
+        call.fetchNaagaResponse(
+            onSuccess = { gameDtos ->
+                val adventures: List<Adventure> = gameDtos.map { it.toDomain() }
+                callback(Result.success(adventures))
             },
             onFailure = { callback(Result.failure(it)) },
         )
     }
 
-    override fun beginAdventure(coordinate: Coordinate, callback: (Result<Long>) -> Unit) {
-        val call = adventureService.beginGame(coordinate.toDto())
-
-        call.enqueue(object : Callback<Unit> {
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (response.isSuccessful) {
-                    val headerEmptyError = NaagaThrowable.NaagaUnknownError("Location 헤더가 비어있습니다.")
-                    val responsePath: String = response.headers()["Location"]
-                        ?: return callback(Result.failure(headerEmptyError))
-                    val adventureId: Long = responsePath.substringAfterLast("/").toLongOrNull()
-                        ?: return callback(Result.failure(headerEmptyError))
-                    callback(Result.success(adventureId))
-                } else {
-                    if (response.isFailure400()) {
-                        callback(Result.failure(response.getFailureDto().getThrowable()))
-                        return
-                    }
-                    if (response.isFailure500()) {
-                        callback(Result.failure(NaagaThrowable.NaagaUnknownError(ERROR_500)))
-                        return
-                    }
-                    callback(Result.failure(NaagaThrowable.NaagaUnknownError(ERROR_NOT_400_500)))
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                callback(Result.failure(NaagaThrowable.ServerConnectFailure()))
-            }
-        })
-    }
-
-    override fun getAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit) {
-        val call = adventureService.getGame(adventureId)
-
-        call.fetchNaagaNullableResponse(
-            { adventureDto ->
-                if (adventureDto != null) {
-                    callback(Result.success(adventureDto.toDomain()))
-                }
-            },
-            { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
+    override fun fetchAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit) {
+        val call = ServicePool.adventureService.getGame(adventureId)
+        call.fetchNaagaResponse(
+            onSuccess = { callback(Result.success(it.toDomain())) },
+            onFailure = { callback(Result.failure(it)) },
         )
     }
 
-    override fun endAdventure(
+    override fun fetchAdventureByStatus(status: AdventureStatus, callback: (Result<List<Adventure>>) -> Unit) {
+        val call = ServicePool.adventureService.getGamesByStatus(status.name)
+        call.fetchNaagaResponse(
+            onSuccess = { gameDtos ->
+                val games = gameDtos.map { it.toDomain() }
+                callback(Result.success(games))
+            },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+
+    override fun beginAdventure(coordinate: Coordinate, callback: (Result<Adventure>) -> Unit) {
+        val call = ServicePool.adventureService.beginGame(coordinate.toDto())
+        call.fetchNaagaResponse(
+            onSuccess = { callback(Result.success(it.toDomain())) },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+
+    override fun endGame(
         adventureId: Long,
+        endType: AdventureEndType,
         coordinate: Coordinate,
         callback: (Result<AdventureStatus>) -> Unit,
     ) {
-        val call = adventureService.endGame(adventureId, coordinate.toDto())
-        call.fetchNaagaNullableResponse(
-            { EndedAdventureDto ->
-                if (EndedAdventureDto != null) {
-                    callback(Result.success(EndedAdventureDto.toDomain()))
-                }
+        val finishGameDto = FinishGameDto(endType.name, coordinate.toDto())
+        val call = ServicePool.adventureService.endGame(adventureId, finishGameDto)
+        call.fetchNaagaResponse(
+            onSuccess = { callback(Result.success(AdventureStatus.getStatus(it.gameStatus))) },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+
+    override fun fetchAdventureResult(adventureId: Long, callback: (Result<AdventureResult>) -> Unit) {
+        val call = ServicePool.adventureService.getGameResult(adventureId)
+        call.fetchNaagaResponse(
+            onSuccess = { callback(Result.success(it.toDomain())) },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+
+    override fun fetchMyAdventureResults(
+        sortBy: SortType,
+        order: OrderType,
+        callback: (Result<List<AdventureResult>>) -> Unit,
+    ) {
+        val call = ServicePool.adventureService.getMyGameResults(sortBy.name, order.name)
+        call.fetchNaagaResponse(
+            onSuccess = { adventureResultDtos ->
+                val adventureResults = adventureResultDtos.map { it.toDomain() }
+                callback(Result.success(adventureResults))
             },
-            { callback(Result.failure(NaagaThrowable.ServerConnectFailure())) },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+
+    override fun fetchHint(adventureId: Long, hintId: Long, callback: (Result<Hint>) -> Unit) {
+        val call = ServicePool.adventureService.getHint(adventureId, hintId)
+        call.fetchNaagaResponse(
+            onSuccess = { callback(Result.success(it.toDomain())) },
+            onFailure = { callback(Result.failure(it)) },
+        )
+    }
+
+    override fun makeHint(adventureId: Long, coordinate: Coordinate, callback: (Result<Hint>) -> Unit) {
+        val call = ServicePool.adventureService.requestHint(adventureId, coordinate.toDto())
+        call.fetchNaagaResponse(
+            onSuccess = { callback(Result.success(it.toDomain())) },
+            onFailure = { callback(Result.failure(it)) },
         )
     }
 }

@@ -4,8 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class DestinationUiModel(
+data class PlayerUiModel(
     val id: Long,
-    val coordinate: CoordinateUiModel,
-    val image: String,
+    val nickname: String,
+    val score: Int,
 ) : Parcelable

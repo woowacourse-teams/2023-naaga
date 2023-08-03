@@ -1,7 +1,7 @@
 package com.now.naaga.data.mapper
 
 import com.now.domain.model.Statistics
-import com.now.naaga.data.remote.dto.third.StatisticsDto
+import com.now.naaga.data.remote.dto.StatisticsDto
 import java.time.LocalTime
 
 fun StatisticsDto.toDomain(): Statistics {

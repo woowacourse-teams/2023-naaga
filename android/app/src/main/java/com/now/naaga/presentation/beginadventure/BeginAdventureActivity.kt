@@ -8,10 +8,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.now.naaga.R
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
+import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.rank.RankActivity
+import com.now.naaga.presentation.upload.UploadActivity
 
 class BeginAdventureActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBeginAdventureBinding
@@ -20,18 +23,14 @@ class BeginAdventureActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             when {
                 permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                    // precise location access granted
-                    Toast.makeText(this, "위치 권한 요청이 허용되었습니다", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.beginAdventure_precise_access), Toast.LENGTH_SHORT).show()
                 }
-
                 permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                    // only approximate location access granted.
-                    Toast.makeText(this, "대략적인 위치 권한만 허용되었습니다", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.beginAdventure_approximate_access), Toast.LENGTH_SHORT)
+                        .show()
                 }
-
                 else -> {
-                    // all kind of access denied
-                    Toast.makeText(this, "위치 권한 요청이 거절되었습니다", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.beginAdventure_denied_access), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -56,16 +55,16 @@ class BeginAdventureActivity : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.clBeginAdventureBegin.setOnClickListener {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-                LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
-            } else {
-                startActivity(OnAdventureActivity.getIntent(this))
-            }
+            checkPermissionAndBeginAdventure()
         }
-        checkPermissionAndBeginAdventure()
-
         binding.ivBeginAdventureRank.setOnClickListener {
             startActivity(RankActivity.getIntent(this))
+        }
+        binding.ivBeginAdventureUpload.setOnClickListener {
+            startActivity(UploadActivity.getIntent(this))
+        }
+        binding.ivBeginAdventureMypage.setOnClickListener {
+            startActivity(MyPageActivity.getIntent(this))
         }
     }
 
@@ -73,7 +72,7 @@ class BeginAdventureActivity : AppCompatActivity() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
             LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
         } else {
-            startActivity(Intent(this, OnAdventureActivity::class.java))
+            startActivity(OnAdventureActivity.getIntent(this))
         }
     }
 
