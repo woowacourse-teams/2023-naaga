@@ -3,6 +3,7 @@ package com.now.naaga.acceptance.game;
 import com.now.naaga.acceptance.ControllerTest;
 import com.now.naaga.game.domain.*;
 import com.now.naaga.game.presentation.dto.GameResultResponse;
+import com.now.naaga.game.presentation.dto.StatisticResponse;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
 import com.now.naaga.member.domain.Member;
@@ -34,7 +35,7 @@ import java.util.List;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class GameControllerTest extends ControllerTest {
+public class StatisticControllerTest extends ControllerTest {
 
     @LocalServerPort
     int port;
@@ -76,8 +77,8 @@ class GameControllerTest extends ControllerTest {
         final Place savePlace1 = placeRepository.save(place1);
         final Place savePlace2 = placeRepository.save(place2);
         List<Hint> hints = new ArrayList<>();
-        final LocalDateTime startTime1 = LocalDateTime.of(2023, 8, 2, 13, 30, 0);
-        final LocalDateTime endTime1 = LocalDateTime.of(2023, 8, 10, 15, 45,40);
+        final LocalDateTime startTime1 = LocalDateTime.of(2023, 8, 2, 13, 30);
+        final LocalDateTime endTime1 = LocalDateTime.of(2023, 8, 2, 15, 30);
 
         final LocalDateTime startTime2 = LocalDateTime.of(2024, 8, 2, 13, 30);
         final LocalDateTime endTime2 = LocalDateTime.of(2024, 8, 2, 15, 30);
@@ -102,34 +103,7 @@ class GameControllerTest extends ControllerTest {
     }
 
     @Test
-    public void 게임_아이디로_게임결과를_조회한다() {
-        // given
-        final String encodedCredentials = calculateEncodedCredentials();
-        final Long gameId1 = gameId_1;
-
-        // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Basic " + encodedCredentials)
-                .when().get("/games/" + gameId1 + "/result")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
-
-        // then
-        final GameResultResponse gameResultResponse = response.as(GameResultResponse.class);
-
-        assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(gameResultResponse.id()).isEqualTo(gameResultId_1);
-            softly.assertThat(gameResultResponse.GameId()).isEqualTo(gameId1);
-            softly.assertThat(gameResultResponse.destination().name()).isEqualTo("어딘가");
-            softly.assertThat(gameResultResponse.resultType()).isEqualTo(ResultType.SUCCESS);
-        });
-    }
-
-    @Test
-    public void 모든_게임_결과를_도착시간_기준으로_내림차순하여_조회한다() {
+    void 맴버의_통계를_조회한다() {
         // given
         final String encodedCredentials = calculateEncodedCredentials();
 
@@ -137,23 +111,23 @@ class GameControllerTest extends ControllerTest {
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Basic " + encodedCredentials)
-                .param("sortBy", "time")
-                .param("order", "descending")
-                .when().get("/games/results")
+                .when().get("/statistics/my")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
         // then
-        final List<GameResultResponse> gameResultResponses = response.jsonPath().getList(".", GameResultResponse.class);
+        final StatisticResponse statisticResponse = response.as(StatisticResponse.class);
 
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(gameResultResponses).hasSize(2);
-            softly.assertThat(gameResultResponses.get(0).GameId()).isEqualTo(2L);
-            softly.assertThat(gameResultResponses.get(1).GameId()).isEqualTo(1L);
+            softly.assertThat(statisticResponse.gameCount()).isEqualTo(2);
+            softly.assertThat(statisticResponse.successGameCount()).isEqualTo(1);
+            softly.assertThat(statisticResponse.failGameCount()).isEqualTo(1);
+            softly.assertThat(statisticResponse.totalDistance()).isEqualTo(2);
+            softly.assertThat(statisticResponse.totalPlayTime()).isNotNull();
+            softly.assertThat(statisticResponse.totalUsedHintCount()).isEqualTo(0);
         });
-
     }
 
     private String calculateEncodedCredentials() {

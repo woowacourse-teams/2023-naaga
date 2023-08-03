@@ -100,8 +100,8 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public List<GameRecord> findAllGameResult(final PlayerRequest playerRequest) {
-        List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
-        List<GameResult> gameResults = gamesByPlayerId.stream()
+        final List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
+        final List<GameResult> gameResults = gamesByPlayerId.stream()
                 .map(game -> findGameResultByGameId(game.getId()))
                 .sorted((gr1, gr2) -> gr2.getCreatedAt().compareTo(gr1.getCreatedAt()))
                 .toList();

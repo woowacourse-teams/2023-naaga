@@ -1,7 +1,6 @@
 package com.now.naaga.game.domain;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.now.naaga.game.domain.ResultType.FAIL;
@@ -13,14 +12,14 @@ public class Statistic {
     private int successGameCount;
     private int failGameCount;
     private int totalDistance;
-    private LocalDateTime totalPlayTime;
+    private Duration totalPlayTime;
     private int totalUsedHintCount;
 
     public Statistic(final int gameCount,
                      final int successGameCount,
                      final int failGameCount,
                      final int totalDistance,
-                     final LocalDateTime totalPlayTime,
+                     final Duration totalPlayTime,
                      final int totalUsedHintCount) {
         this.gameCount = gameCount;
         this.successGameCount = successGameCount;
@@ -59,10 +58,10 @@ public class Statistic {
                 .sum();
     }
 
-    public static LocalDateTime sumTotalPlayTime(List<GameRecord> gameRecords) {
-        final LocalDateTime playTime = LocalDateTime.MIN;
+    public static Duration sumTotalPlayTime(List<GameRecord> gameRecords) {
+        Duration playTime = Duration.ZERO;
         for (GameRecord gameRecord : gameRecords) {
-            playTime.plus(Duration.between(playTime, gameRecord.getTotalPlayTime()));
+            playTime = playTime.plus(gameRecord.getTotalPlayTime());
         }
         return playTime;
     }
@@ -71,6 +70,13 @@ public class Statistic {
         return gameRecords.stream()
                 .mapToInt(GameRecord::getHintUses)
                 .sum();
+    }
+
+    public String durationToString(Duration duration){
+        final long hours = duration.toHours();
+        final long minutes = duration.toMinutesPart();
+        final long seconds = duration.toSecondsPart();
+        return String.format("%d:%02d:%02d", hours, minutes, seconds);
     }
 
     public int getGameCount() {
@@ -89,7 +95,7 @@ public class Statistic {
         return totalDistance;
     }
 
-    public LocalDateTime getTotalPlayTime() {
+    public Duration getTotalPlayTime() {
         return totalPlayTime;
     }
 
