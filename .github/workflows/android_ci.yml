@@ -75,7 +75,7 @@ jobs:
         env:
           API_KEY: ${{ secrets.BASE_URL }}
         run: |
-          echo BASE_URL=\"$API_KEY\" >> local.properties
+          echo BASE_URL=\"$API_KEY\" >> ./local.properties
 
       - name: Add Google Service Json file
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
@@ -114,7 +114,7 @@ jobs:
         env:
           API_KEY: ${{ secrets.BASE_URL }}
         run: |
-          echo BASE_URL=\"$API_KEY\" >> local.properties
+          echo BASE_URL=\"$API_KEY\" > ./local.properties
 
       - name: Add Google Service Json file
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
