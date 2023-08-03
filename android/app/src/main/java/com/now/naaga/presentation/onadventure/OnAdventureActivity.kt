@@ -16,6 +16,7 @@ import com.now.domain.model.Hint
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_END_ADVENTURE
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_GIVE_UP
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_HINT
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
@@ -63,6 +64,10 @@ class OnAdventureActivity :
         binding.ivOnAdventureHint.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_HINT)
             showHintDialog()
+        }
+        binding.btnOnAdventureArrived.setOnClickListener {
+            logClickEvent(getViewEntryName(it), ON_ADVENTURE_END_ADVENTURE)
+            viewModel.endAdventure()
         }
     }
 
