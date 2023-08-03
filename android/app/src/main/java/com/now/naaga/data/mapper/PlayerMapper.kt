@@ -1,7 +1,7 @@
 package com.now.naaga.data.mapper
 
 import com.now.domain.model.Player
-import com.now.naaga.data.remote.dto.third.PlayerDto
+import com.now.naaga.data.remote.dto.PlayerDto
 
 fun PlayerDto.toDomain(): Player {
     return Player(

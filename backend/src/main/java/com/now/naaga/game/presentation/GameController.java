@@ -1,34 +1,52 @@
 package com.now.naaga.game.presentation;
 
+import static com.now.naaga.game.exception.GameExceptionType.INVALID_QUERY_PARAMETERS;
+
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.game.application.GameService;
+import com.now.naaga.game.application.HintService;
 import com.now.naaga.game.application.dto.CreateGameCommand;
+import com.now.naaga.game.application.dto.CreateHintCommand;
+import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
-import com.now.naaga.game.application.dto.FinishGameCommand;
+import com.now.naaga.game.application.dto.FindHintByIdCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameRecord;
+import com.now.naaga.game.domain.Hint;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.presentation.dto.*;
+import com.now.naaga.game.presentation.dto.CreateGameRequest;
+import com.now.naaga.game.presentation.dto.CreateHintRequest;
+import com.now.naaga.game.presentation.dto.EndGameRequest;
+import com.now.naaga.game.presentation.dto.GameResponse;
+import com.now.naaga.game.presentation.dto.GameResultResponse;
+import com.now.naaga.game.presentation.dto.GameStatusResponse;
+import com.now.naaga.game.presentation.dto.HintResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.now.naaga.game.exception.GameExceptionType.INVALID_QUERY_PARAMETERS;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/games")
 @RestController
 public class GameController {
 
     private final GameService gameService;
+    private final HintService hintService;
 
-    public GameController(final GameService gameService) {
+    public GameController(final GameService gameService, final HintService hintService) {
         this.gameService = gameService;
+        this.hintService = hintService;
     }
 
     @PostMapping
@@ -43,22 +61,33 @@ public class GameController {
                 .body(gameResponse);
     }
 
-    @PatchMapping("/{gameId}")
-    public ResponseEntity<GameStatusResponse> changeGameStatus(@Auth final PlayerRequest playerRequest,
-                                                               @RequestBody final FinishGameRequest finishGameRequest,
-                                                               @PathVariable final Long gameId) {
-        final FinishGameCommand finishGameCommand = FinishGameCommand.of(playerRequest, finishGameRequest, gameId);
-        final Game game = gameService.finishGame(finishGameCommand);
+    @PostMapping("/{gameId}/hints")
+    public ResponseEntity<HintResponse> createHint(@Auth final PlayerRequest playerRequest,
+                                                   @RequestBody final CreateHintRequest createHintRequest,
+                                                   @PathVariable final Long gameId) {
+        final CreateHintCommand createHintCommand = CreateHintCommand.of(playerRequest, createHintRequest, gameId);
+        final Hint hint = hintService.createHint(createHintCommand);
+        final HintResponse hintResponse = HintResponse.from(hint);
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(GameStatusResponse.from(game));
+                .status(HttpStatus.CREATED)
+                .location(URI.create("/games/" + gameId + "/hints/" + hint.getId()))
+                .body(hintResponse);
+    }
+
+    @PatchMapping("/{gameId}")
+    public ResponseEntity<GameStatusResponse> endGame(@Auth final PlayerRequest playerRequest,
+                                                      @RequestBody final EndGameRequest endGameRequest,
+                                                      @PathVariable final Long gameId) {
+        gameService.endGame(EndGameCommand.of(playerRequest, endGameRequest, gameId));
+        Game game = gameService.findGameById(FindGameByIdCommand.of(playerRequest, gameId));
+        return ResponseEntity.ok(GameStatusResponse.from(game));
     }
 
     @GetMapping("/{gameId}")
     public ResponseEntity<GameResponse> findGame(@Auth final PlayerRequest playerRequest,
                                                  @PathVariable final Long gameId) {
         final FindGameByIdCommand findGameByIdCommand = FindGameByIdCommand.of(playerRequest, gameId);
-        final Game game = gameService.findGame(findGameByIdCommand);
+        final Game game = gameService.findGameById(findGameByIdCommand);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(GameResponse.from(game));
@@ -86,9 +115,9 @@ public class GameController {
 
     @GetMapping("/results")
     public ResponseEntity<List<GameResultResponse>> findAllGameResult(@Auth final PlayerRequest playerRequest,
-                                                                      @RequestParam final String sortBy,
-                                                                      @RequestParam final String order) {
-        if (!sortBy.equals("time") && order.equals("descending")) {
+                                                                      @RequestParam(name = "sort-by") final String sortBy,
+                                                                      @RequestParam(name = "order") final String order) {
+        if (!sortBy.equalsIgnoreCase("TIME") || !order.equalsIgnoreCase("DESCENDING")) {
             throw new GameException(INVALID_QUERY_PARAMETERS);
         }
 
@@ -100,5 +129,16 @@ public class GameController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(gameResultResponseList);
+    }
+
+    @GetMapping("/{gameId}/hints/{hintId}")
+    public ResponseEntity<HintResponse> findHintById(@Auth final PlayerRequest playerRequest,
+                                                     @PathVariable final Long gameId,
+                                                     @PathVariable final Long hintId) {
+        final FindHintByIdCommand findHintByIdCommand = FindHintByIdCommand.of(playerRequest, gameId, hintId);
+        final Hint hint = hintService.findHintById(findHintByIdCommand);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(HintResponse.from(hint));
     }
 }

@@ -3,7 +3,10 @@ package com.now.naaga.place.domain;
 import static com.now.naaga.game.domain.Game.MIN_RANGE;
 
 import com.now.naaga.common.domain.BaseEntity;
+import com.now.naaga.place.exception.PlaceException;
+import com.now.naaga.place.exception.PlaceExceptionType;
 import com.now.naaga.player.domain.Player;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +32,7 @@ public class Place extends BaseEntity {
 
     private String imageUrl;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "player_id")
     private Player registeredPlayer;
 
@@ -60,6 +63,12 @@ public class Place extends BaseEntity {
 
     public boolean isInValidRange(final Position other) {
         return position.calculateDistance(other) <= MIN_RANGE;
+    }
+
+    public void validateOwner(final Player player) {
+        if (!this.registeredPlayer.equals(player)) {
+            throw new PlaceException(PlaceExceptionType.INACCESSIBLE_AUTHENTICATION);
+        }
     }
 
     public Long getId() {

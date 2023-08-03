@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.now.domain.model.AdventureResult
-import com.now.domain.repository.AdventureRepository2
+import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.RankRepository
 import com.now.naaga.data.NaagaThrowable
 
 class AdventureResultViewModel(
-    private val adventureRepository: AdventureRepository2,
+    private val adventureRepository: AdventureRepository,
     private val rankRepository: RankRepository,
 ) : ViewModel() {
 

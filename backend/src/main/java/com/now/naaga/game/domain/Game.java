@@ -1,28 +1,43 @@
 package com.now.naaga.game.domain;
 
+import static com.now.naaga.game.domain.EndType.GIVE_UP;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.domain.ResultType.FAIL;
+import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_DONE;
+import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
+
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
-import jakarta.persistence.*;
-
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.ResultType.FAIL;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
-import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
-import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
-
 @Entity
 public class Game extends BaseEntity {
 
+    public static final double MIN_RANGE = 0.05;
+    public static final int MAX_HINT_COUNT = 3;
     public static final int MAX_ATTEMPT_COUNT = 5;
-    public static final double MIN_RANGE = 0.02;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -52,13 +67,14 @@ public class Game extends BaseEntity {
     private List<Hint> hints;
 
     private LocalDateTime startTime;
+
     private LocalDateTime endTime;
 
     protected Game() {
     }
 
     public Game(final Player player, final Place place, final Position startPosition) {
-        this(GameStatus.IN_PROGRESS, player, place, startPosition, MAX_ATTEMPT_COUNT, new ArrayList<>(), LocalDateTime.now(), null);
+        this(null, IN_PROGRESS, player, place, startPosition, 5, new ArrayList<>(), LocalDateTime.now(), null);
     }
 
     public Game(final GameStatus gameStatus,
@@ -93,22 +109,26 @@ public class Game extends BaseEntity {
     }
 
     public void validateOwner(final Player player) {
-        if (!player.equals(this.player)) {
+        if (!this.player.equals(player)) {
             throw new GameException(INACCESSIBLE_AUTHENTICATION);
         }
     }
 
-    public void validateInRange(final Position position) {
-        if (!place.isInValidRange(position)) {
-            throw new GameException(NOT_ARRIVED);
+    public boolean canUseMoreHint() {
+        return hints.size() < MAX_HINT_COUNT;
+    }
+
+    public ResultType endGame(final EndType endType, final Position position) {
+        if (isDone()) {
+            throw new GameException(ALREADY_DONE);
         }
+        if (endType == GIVE_UP) {
+            return giveUpGame();
+        }
+        return endGameByArrival(position);
     }
 
-    public void changeGameStatus(final GameStatus gameStatus) {
-        this.gameStatus = gameStatus;
-    }
-
-    private boolean isGameEnded() {
+    private boolean isDone() {
         return gameStatus == DONE;
     }
 
@@ -126,6 +146,8 @@ public class Game extends BaseEntity {
         return endGameWithFailure();
     }
 
+    // todo : place의 변수명을 isCoordinateInsideBounds 또는 isPositionInsideBounds 또는 isPositionWithinRange로 바꾸고 싶다
+    //또, 이 메서드에 범위를 함께 넘겨주는 것이 마땅해보인다.
     private boolean isPlayerArrived(final Position position) {
         return place.isInValidRange(position);
     }

@@ -23,4 +23,10 @@ public class MemberService {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
     }
+
+    @Transactional(readOnly = true)
+    public Member findMemberById(final Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
+    }
 }

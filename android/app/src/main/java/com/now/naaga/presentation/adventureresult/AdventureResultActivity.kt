@@ -11,8 +11,8 @@ import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureResultType
 import com.now.naaga.R
 import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.repository.DefaultRankRepository
-import com.now.naaga.data.repository.ThirdDemoAdventureRepository
 import com.now.naaga.databinding.ActivityAdventureResultBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
@@ -39,7 +39,7 @@ class AdventureResultActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        val adventureRepository = ThirdDemoAdventureRepository()
+        val adventureRepository = DefaultAdventureRepository()
         val rankRepository = DefaultRankRepository()
         val factory = AdventureResultFactory(adventureRepository, rankRepository)
         viewModel = ViewModelProvider(this, factory)[AdventureResultViewModel::class.java]

@@ -16,4 +16,6 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             ") * 6371.0 <= :distance")
     List<Place> findPlaceByPositionAndDistance(@Param(value = "user_position") final Position position,
                                                @Param(value = "distance") final double distance);
+
+    List<Place> findByRegisteredPlayerId(Long playerId);
 }

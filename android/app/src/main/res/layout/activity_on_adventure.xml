@@ -8,10 +8,6 @@
         <variable
             name="viewModel"
             type="com.now.naaga.presentation.onadventure.OnAdventureViewModel" />
-
-        <variable
-            name="CurrentMyCoordinate"
-            type="com.now.domain.model.Coordinate" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,6 +25,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.naver.maps.map.widget.LocationButtonView
+            android:id="@+id/btn_onAdventure_navermap_location"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_onAdventure_arrived"
+            android:layout_marginBottom="@dimen/space_default_medium"
+            android:layout_marginStart="@dimen/space_default_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.naver.maps.map.widget.CompassView
+            android:id="@+id/navermap_compass_onAdventure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_default_medium"
+            android:layout_marginTop="@dimen/space_default_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <Button
             android:id="@+id/btn_onAdventure_arrived"
             android:layout_width="0dp"
@@ -37,19 +51,19 @@
             android:background="@drawable/rect_white_radius_small"
             android:backgroundTint="@color/selector_main_gray_purple"
             android:elevation="4dp"
-            android:enabled="@{viewModel.isArrived}"
+            android:enabled="@{viewModel.isNearby()}"
             android:fontFamily="@font/pretendard_bold"
-            android:onClick="@{() -> viewModel.endAdventure(viewModel.adventureId, CurrentMyCoordinate)}"
-            android:text="@{viewModel.isArrived ? @string/OnAdventure_end_adventure : @string/OnAdventure_on_adventure}"
+            android:onClick="@{() -> viewModel.endAdventure()}"
+            android:text="@{viewModel.isNearby() ? @string/onAdventure_end_adventure : @string/onAdventure_on_adventure}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_onAdventure_photo"
-            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_drop"
+            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_give_up"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_onAdventure_photo"
             tools:text="모험 종료" />
 
         <ImageView
-            android:id="@+id/iv_onAdventure_drop"
+            android:id="@+id/iv_onAdventure_give_up"
             android:layout_width="54dp"
             android:layout_height="54dp"
             android:layout_marginEnd="@dimen/space_default_medium"
@@ -97,6 +111,7 @@
             android:elevation="4dp"
             android:gravity="center"
             android:textColor="@color/white"
+            android:text="@{String.valueOf(viewModel.adventure.hints.size())}"
             app:layout_constraintBottom_toTopOf="@id/iv_onAdventure_photo"
             app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_photo"
             app:layout_constraintTop_toTopOf="@id/iv_onAdventure_photo"
@@ -130,7 +145,7 @@
                 android:layout_marginStart="6dp"
                 android:background="@color/main_purple"
                 android:fontFamily="@font/pretendard_semibold"
-                android:text="@{@string/onAdventure_left_distance(viewModel.distance)}"
+                android:text="@{viewModel.isNearby() ? @string/onAdventure_nearby : @string/onAdventure_left_distance(viewModel.distance)}"
                 android:textColor="@color/main_mint"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
