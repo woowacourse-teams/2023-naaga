@@ -3,6 +3,9 @@
 
     <!-- BeginAdventureActivity -->
     <string name="beginAdventure_begin_adventure">지금 나아가 볼까요?</string>
+    <string name="beginAdventure_precise_access">위치 권한 요청이 허용되었습니다</string>
+    <string name="beginAdventure_approximate_access">대략적인 위치 권한만 허용되었습니다</string>
+    <string name="beginAdventure_denied_access">위치 권한 요청이 거절되었습니다</string>
 
     <!-- LocationDialog-->
     <string name="locationDialog_setting">설정으로 이동해요</string>
