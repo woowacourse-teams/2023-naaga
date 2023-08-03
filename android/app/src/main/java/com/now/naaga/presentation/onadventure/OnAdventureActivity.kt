@@ -28,15 +28,18 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
     override fun onCreate(savedInstanceState: Bundle?) {
         setNaverMap(this, R.id.fcv_onAdventure_map)
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
         binding = ActivityOnAdventureBinding.inflate(layoutInflater)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
         setContentView(binding.root)
-
+        initViewModel()
         subscribe()
         setOnMapReady { setLocationChangeListener() }
         setClickListeners()
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun setClickListeners() {
