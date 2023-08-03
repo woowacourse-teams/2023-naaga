@@ -53,7 +53,7 @@ public class PlayerControllerTest extends CommonControllerTest {
             softly.assertThat(rankResponse.getPlayer().getNickname()).isEqualTo("채채");
             softly.assertThat(rankResponse.getPlayer().getTotalScore()).isEqualTo(15);
             softly.assertThat(rankResponse.getRank()).isEqualTo(3);
-            softly.assertThat(rankResponse.getTopPercent()).isEqualTo(100);
+            softly.assertThat(rankResponse.getPercentage()).isEqualTo(100);
         });
     }
 

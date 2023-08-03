@@ -13,14 +13,14 @@ public class RankResponse {
 
     public RankResponse(final PlayerResponse player,
                         final int rank,
-                        final int topPercent) {
+                        final int percentage) {
         this.player = player;
         this.rank = rank;
-        this.percentage = topPercent;
+        this.percentage = percentage;
     }
 
     public static RankResponse of(final Rank rank) {
-        return new RankResponse(PlayerResponse.from(rank.getPlayer()), rank.getRank(), rank.getTopPercent());
+        return new RankResponse(PlayerResponse.from(rank.getPlayer()), rank.getRank(), rank.getPercentage());
     }
 
     public PlayerResponse getPlayer() {
@@ -31,7 +31,7 @@ public class RankResponse {
         return rank;
     }
 
-    public int getTopPercent() {
+    public int getPercentage() {
         return percentage;
     }
 }
