@@ -9,16 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
-import com.now.domain.model.Game
 import com.now.domain.model.Hint
 import com.now.naaga.R
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
-import com.now.naaga.presentation.uimodel.model.GameUiModel
+import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.getParcelable
 
 class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by DefaultNaverMapSettingDelegate() {
@@ -79,7 +79,7 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
     }
 
     private fun beginAdventure(coordinate: Coordinate) {
-        val existingAdventure = intent.getParcelable(ADVENTURE, GameUiModel::class.java)?.toDomain()
+        val existingAdventure = intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
 
         if (existingAdventure == null) {
             viewModel.beginAdventure(coordinate)
@@ -164,7 +164,7 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
             return Intent(context, OnAdventureActivity::class.java)
         }
 
-        fun getIntentWithAdventure(context: Context, adventure: Game): Intent {
+        fun getIntentWithAdventure(context: Context, adventure: Adventure): Intent {
             return Intent(context, OnAdventureActivity::class.java).apply {
                 putExtra(ADVENTURE, adventure.toUi())
             }

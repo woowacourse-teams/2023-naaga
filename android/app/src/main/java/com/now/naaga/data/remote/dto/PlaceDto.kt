@@ -1,6 +1,5 @@
-package com.now.naaga.data.remote.dto.third
+package com.now.naaga.data.remote.dto
 
-import com.now.naaga.data.remote.dto.CoordinateDto
 import kotlinx.serialization.Serializable
 
 @Serializable

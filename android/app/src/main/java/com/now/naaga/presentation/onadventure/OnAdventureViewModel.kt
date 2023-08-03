@@ -5,19 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
+import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureEndType
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
-import com.now.domain.model.Game
 import com.now.domain.model.Hint
 import com.now.domain.model.Place
-import com.now.domain.repository.AdventureRepository2
+import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.NaagaThrowable
-import com.now.naaga.data.repository.ThirdDemoAdventureRepository
+import com.now.naaga.data.repository.DefaultAdventureRepository
 
-class OnAdventureViewModel(private val adventureRepository2: AdventureRepository2) : ViewModel() {
-    private val _adventure = MutableLiveData<Game>()
-    val adventure: LiveData<Game> = _adventure
+class OnAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
+    private val _adventure = MutableLiveData<Adventure>()
+    val adventure: LiveData<Adventure> = _adventure
     val destination = DisposableLiveData<Place>()
 
     val myCoordinate = MutableLiveData<Coordinate>()
@@ -33,13 +33,13 @@ class OnAdventureViewModel(private val adventureRepository2: AdventureRepository
     private val _failure = MutableLiveData<Throwable>()
     val failure: LiveData<Throwable> = _failure
 
-    fun setAdventure(game: Game) {
-        _adventure.value = game
-        destination.setValue(game.destination)
+    fun setAdventure(adventure: Adventure) {
+        _adventure.value = adventure
+        destination.setValue(adventure.destination)
     }
 
     fun beginAdventure(currentCoordinate: Coordinate) {
-        adventureRepository2.beginAdventure(currentCoordinate) { result: Result<Game> ->
+        adventureRepository.beginAdventure(currentCoordinate) { result: Result<Adventure> ->
             result.onSuccess {
                 setAdventure(it)
             }.onFailure {
@@ -53,10 +53,10 @@ class OnAdventureViewModel(private val adventureRepository2: AdventureRepository
     }
 
     fun giveUpAdventure() {
-        adventureRepository2.endGame(
+        adventureRepository.endGame(
             adventureId = adventure.value?.id ?: return,
             endType = AdventureEndType.GIVE_UP,
-            coordinate = adventure.value?.startCoordinate ?: return, // 게임 포기이므로 아무 좌표나 넣어도 된다.
+            coordinate = myCoordinate.value ?: return,
         ) { result: Result<AdventureStatus> ->
             result
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
@@ -69,7 +69,7 @@ class OnAdventureViewModel(private val adventureRepository2: AdventureRepository
             _failure.value = AdventureThrowable.HintFailure()
             return
         }
-        adventureRepository2.makeHint(
+        adventureRepository.makeHint(
             adventureId = adventure.value?.id ?: return,
             coordinate = myCoordinate.value ?: return,
         ) { result: Result<Hint> ->
@@ -88,7 +88,7 @@ class OnAdventureViewModel(private val adventureRepository2: AdventureRepository
     }
 
     fun endAdventure() {
-        adventureRepository2.endGame(
+        adventureRepository.endGame(
             adventureId = adventure.value?.id ?: return,
             endType = AdventureEndType.ARRIVED,
             coordinate = myCoordinate.value ?: return,
@@ -106,11 +106,11 @@ class OnAdventureViewModel(private val adventureRepository2: AdventureRepository
 
     companion object {
         const val MAX_HINT_COUNT = 5
-        val Factory = ViewModelFactory(ThirdDemoAdventureRepository())
+        val Factory = ViewModelFactory(DefaultAdventureRepository())
 
-        class ViewModelFactory(private val adventureRepository2: AdventureRepository2) : ViewModelProvider.Factory {
+        class ViewModelFactory(private val adventureRepository: AdventureRepository) : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return OnAdventureViewModel(adventureRepository2) as T
+                return OnAdventureViewModel(adventureRepository) as T
             }
         }
     }
