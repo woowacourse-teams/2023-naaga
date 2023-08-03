@@ -31,7 +31,7 @@ public class PlaceRecommendService {
 
     private Place getRandomPlace(final List<Place> places) {
         final Random random = new Random();
-        final int randomIndex = random.nextInt();
+        final int randomIndex = random.nextInt(places.size());
         return places.get(randomIndex);
     }
 }
