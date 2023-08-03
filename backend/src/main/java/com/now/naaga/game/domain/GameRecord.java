@@ -5,11 +5,13 @@ import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import com.now.naaga.place.domain.Position;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 public class GameRecord {
 
     private GameResult gameResult;
-    private LocalDateTime totalPlayTime;
+    private Duration totalPlayTime;
     private int distance;
     private int hintUses;
     private int tryCount;
@@ -17,7 +19,7 @@ public class GameRecord {
     private LocalDateTime finishTime;
 
     public GameRecord(final GameResult gameResult,
-                      final LocalDateTime totalPlayTime,
+                      final Duration totalPlayTime,
                       final int distance,
                       final int hintUses,
                       final int tryCount,
@@ -33,7 +35,7 @@ public class GameRecord {
     }
 
     public static GameRecord from(final GameResult gameResult) {
-        final LocalDateTime totalPlayTime = calculateTotalPlayTime(gameResult.getGame().getStartTime(), gameResult.getGame().getEndTime());
+        final Duration totalPlayTime = calculateTotalPlayTime(gameResult.getGame().getStartTime(), gameResult.getGame().getEndTime());
         final int distance = calculateDistance(gameResult.getGame().getStartPosition(), gameResult.getGame().getPlace().getPosition());
         final int hintUses = gameResult.getGame().getHints().size();
         final int tryCount = MAX_ATTEMPT_COUNT - gameResult.getGame().getRemainingAttempts();
@@ -42,10 +44,9 @@ public class GameRecord {
         return new GameRecord(gameResult, totalPlayTime, distance, hintUses, tryCount, startTime, finishTime);
     }
 
-    private static LocalDateTime calculateTotalPlayTime(final LocalDateTime startDateTime,
-                                                        final LocalDateTime endDateTime) {
-        final Duration duration = Duration.between(startDateTime, endDateTime);
-        return startDateTime.plus(duration);
+    private static Duration calculateTotalPlayTime(final LocalDateTime startDateTime,
+                                                 final LocalDateTime endDateTime) {
+        return Duration.between(startDateTime, endDateTime);
     }
 
     private static int calculateDistance(final Position startPosition,
@@ -53,11 +54,15 @@ public class GameRecord {
         return (int) startPosition.calculateDistance(destinationPosition);
     }
 
+    public int durationToInteger(Duration duration){
+        return (int) duration.toMinutes();
+    }
+
     public GameResult getGameResult() {
         return gameResult;
     }
 
-    public LocalDateTime getTotalPlayTime() {
+    public Duration getTotalPlayTime() {
         return totalPlayTime;
     }
 

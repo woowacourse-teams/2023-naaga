@@ -1,19 +1,10 @@
 package com.now.naaga.game.application;
 
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
-import static com.now.naaga.game.exception.GameExceptionType.GAME_RESULT_NOT_EXIST;
-import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
-
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
-import com.now.naaga.game.domain.Game;
-import com.now.naaga.game.domain.GameRecord;
-import com.now.naaga.game.domain.GameResult;
-import com.now.naaga.game.domain.GameStatus;
-import com.now.naaga.game.domain.ResultType;
-import com.now.naaga.game.domain.ScorePolicy;
+import com.now.naaga.game.domain.*;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
@@ -25,10 +16,13 @@ import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.score.domain.Score;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.now.naaga.game.exception.GameExceptionType.*;
 
 @Transactional
 @Service
@@ -114,8 +108,8 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public List<GameRecord> findAllGameResult(final PlayerRequest playerRequest) {
-        List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
-        List<GameResult> gameResults = gamesByPlayerId.stream()
+        final List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
+        final List<GameResult> gameResults = gamesByPlayerId.stream()
                 .map(game -> findGameResultByGameId(game.getId()))
                 .sorted((gr1, gr2) -> gr2.getCreatedAt().compareTo(gr1.getCreatedAt()))
                 .toList();
@@ -123,5 +117,17 @@ public class GameService {
         return gameResults.stream()
                 .map(GameRecord::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Statistic findStatistic(final PlayerRequest playerRequest) {
+        final List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
+        final List<GameResult> gameResults = gamesByPlayerId.stream()
+                .map(game -> findGameResultByGameId(game.getId()))
+                .toList();
+        final List<GameRecord> gameRecords = gameResults.stream()
+                .map(GameRecord::from).toList();
+
+        return Statistic.of(gameRecords);
     }
 }
