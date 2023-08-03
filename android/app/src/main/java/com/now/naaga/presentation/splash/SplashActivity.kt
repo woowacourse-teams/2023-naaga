@@ -39,7 +39,7 @@ class SplashActivity : AppCompatActivity() {
             IN_PROGRESS -> {
                 val adventure = viewModel.adventure.value
                 if (adventure == null) {
-                   BeginAdventureActivity.getIntent(this)
+                    BeginAdventureActivity.getIntent(this)
                 } else {
                     OnAdventureActivity.getIntentWithAdventure(this, adventure)
                 }
