@@ -1,22 +1,11 @@
-spring:
-  # for test
-  h2:
-    console:
-      enabled: true
-  datasource:
-    # for test
-    url: jdbc:h2:~/naaga-test;MODE=MySQL
-    username: sa
-    password:
-
-  jpa:
+가
     hibernate:
-      ddl-auto: create-drop # for test
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL57Dialect
-        format_sql: true # for test
-    show-sql: true # for test
+        format_sql: true
+    show-sql: true
 
 multipartFile:
   directory:

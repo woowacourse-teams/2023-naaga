@@ -85,7 +85,7 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public List<Game> findGamesByStatus(final FindGameByStatusCommand findGameByStatusCommand) {
-        Player player = playerService.findPlayerById(findGameByStatusCommand.playerId());
+        final Player player = playerService.findPlayerById(findGameByStatusCommand.playerId());
         return gameRepository.findByPlayerIdAndGameStatus(player.getId(), findGameByStatusCommand.gameStatus());
     }
 

@@ -13,14 +13,13 @@ import static com.now.naaga.place.fixture.PlaceFixture.JEJU_PLACE;
 import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
-import com.now.naaga.game.domain.Direction;
-import com.now.naaga.game.domain.Game;
-import com.now.naaga.game.domain.GameResult;
-import com.now.naaga.game.domain.Hint;
-import com.now.naaga.game.domain.ResultType;
+import com.now.naaga.game.domain.*;
 import com.now.naaga.game.presentation.dto.*;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
@@ -39,6 +38,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -75,6 +75,35 @@ class GameControllerTest extends CommonControllerTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
+    }
+
+    @Test
+    void 게임_상태로_게임을_조회한다() throws JsonProcessingException {
+        final Player player = new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"));
+        final Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", player));
+        final Game inProgressingGame = gameRepository.save(new Game(IN_PROGRESS, player, destination, 잠실역_교보문고_좌표, 5, List.of(), LocalDateTime.now().minusHours(5), null));
+        final Game doneGame = gameRepository.save(new Game(GameStatus.DONE, player, destination, 잠실역_교보문고_좌표, 3, List.of(), LocalDateTime.now().minusHours(5), LocalDateTime.now().minusHours(4)));
+        final ExtractableResponse<Response> extract = RestAssured.given()
+                .log().all()
+                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .param("status", "IN_PROGRESS")
+                .when()
+                .get("/games")
+                .then()
+                .log().all()
+                .extract();
+        final int statusCode = extract.statusCode();
+        final String jsonResponse = extract.body().asString();
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final List<GameResponse> actual = objectMapper.readValue(jsonResponse, new TypeReference<List<GameResponse>>() {});
+        final List<GameResponse> expected = List.of(GameResponse.from(inProgressingGame));
+        assertSoftly(softAssertions -> {
+                softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+                softAssertions.assertThat(expected)
+                        .usingRecursiveComparison()
+                        .ignoringFields("id")
+                        .isEqualTo(actual);
+        });
     }
 
     @Test

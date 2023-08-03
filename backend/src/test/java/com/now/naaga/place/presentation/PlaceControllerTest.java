@@ -177,8 +177,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         final int statusCode = extract.statusCode();
         final String jsonResponse = extract.body().asString();
         final ObjectMapper objectMapper = new ObjectMapper();
-        final List<PlaceResponse> actual = objectMapper.readValue(jsonResponse, new TypeReference<List<PlaceResponse>>() {
-        });
+        final List<PlaceResponse> actual = objectMapper.readValue(jsonResponse, new TypeReference<List<PlaceResponse>>() {});
         final List<PlaceResponse> expected = PlaceResponse.convertToPlaceResponses(List.of(SEOUL));
         //then
         assertSoftly(softAssertions -> {
