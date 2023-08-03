@@ -22,9 +22,9 @@ class AdventureResultViewModel(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-    fun fetchGameResult(gameId: Long) {
+    fun fetchGameResult(adventureId: Long) {
         adventureRepository.fetchAdventureResult(
-            TEMP_MOCK_GAME_ID,
+            adventureId,
             callback = { result ->
                 result
                     .onSuccess { _adventureResult.value = it }
@@ -48,9 +48,5 @@ class AdventureResultViewModel(
             is NaagaThrowable.ServerConnectFailure ->
                 _errorMessage.value = throwable.userMessage
         }
-    }
-
-    companion object {
-        private const val TEMP_MOCK_GAME_ID = 1L
     }
 }
