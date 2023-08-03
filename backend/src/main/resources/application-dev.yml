@@ -1,23 +1,4 @@
 spring:
-  # for test
-  h2:
-    console:
-      enabled: true
-  datasource:
-    # for test
-    url: jdbc:h2:~/naaga-test;MODE=MySQL
-    username: sa
-    password:
-
-  jpa:
-    hibernate:
-      ddl-auto: create-drop # for test
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL57Dialect
-        format_sql: true # for test
-    show-sql: true # for test
-
-multipartFile:
-  directory:
-    path: /home/Ubuntu/image
+  config:
+    import:
+      - classpath:/security/application-dev.yml
