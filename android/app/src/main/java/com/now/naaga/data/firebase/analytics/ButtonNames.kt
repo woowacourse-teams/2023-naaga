@@ -11,3 +11,6 @@ const val LOCATION_PERMISSION_OPEN_SETTING = "OPEN_SETTING"
 
 // AdventureResultActivity
 const val RESULT_RESULT_RETURN = "RESULT_RETURN"
+
+// MyPageActivity
+const val MYPAGE_GO_RESULTS = "GO_RESULTS"
