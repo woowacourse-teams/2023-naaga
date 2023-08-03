@@ -11,8 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.R
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
+import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.rank.RankActivity
+import com.now.naaga.presentation.upload.UploadActivity
 
 class BeginAdventureActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBeginAdventureBinding
@@ -55,9 +57,14 @@ class BeginAdventureActivity : AppCompatActivity() {
         binding.clBeginAdventureBegin.setOnClickListener {
             checkPermissionAndBeginAdventure()
         }
-
         binding.ivBeginAdventureRank.setOnClickListener {
             startActivity(RankActivity.getIntent(this))
+        }
+        binding.ivBeginAdventureUpload.setOnClickListener {
+            startActivity(UploadActivity.getIntent(this))
+        }
+        binding.ivBeginAdventureMypage.setOnClickListener {
+            startActivity(MyPageActivity.getIntent(this))
         }
     }
 
