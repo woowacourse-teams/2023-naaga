@@ -25,14 +25,19 @@ class AdventureResultActivity : AppCompatActivity() {
         binding = ActivityAdventureResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViewModel()
-        viewModel.fetchGameResult(getIntentData())
+        viewModel.fetchGameResult(getIntentData() ?: return finish())
         viewModel.fetchMyRank()
         subscribeObserving()
         setClickListeners()
     }
 
-    private fun getIntentData(): Long {
-        return intent.getLongExtra(GAME_ID, -1)
+    private fun getIntentData(): Long? {
+        val id = intent.getLongExtra(GAME_ID, -1)
+        return if (id == -1L) {
+            null
+        } else {
+            id
+        }
     }
 
     private fun initViewModel() {
