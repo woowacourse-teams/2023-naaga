@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.0'
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -88,4 +89,5 @@ dependencies {
     // firebase
     implementation(platform('com.google.firebase:firebase-bom:32.2.0'))
     implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
 }
