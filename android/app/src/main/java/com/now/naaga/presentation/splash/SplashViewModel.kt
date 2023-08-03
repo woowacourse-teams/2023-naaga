@@ -3,35 +3,42 @@ package com.now.naaga.presentation.splash
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.now.domain.model.Adventure
+import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.AdventureStatus
-import com.now.domain.model.Coordinate
-import com.now.domain.model.Destination
-import com.now.domain.repository.AdventureRepository
+import com.now.domain.model.Game
+import com.now.domain.repository.AdventureRepository2
+import com.now.naaga.data.repository.ThirdDemoAdventureRepository
 
-class SplashViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
-    private val _adventure = MutableLiveData<Adventure>()
-    val adventure: LiveData<Adventure> get() = _adventure
+class SplashViewModel(private val adventureRepository2: AdventureRepository2) : ViewModel() {
+    private val _adventure = MutableLiveData<Game>()
+    val adventure: LiveData<Game> get() = _adventure
+
+    private val _adventureStatus = MutableLiveData<AdventureStatus>()
+    val adventureStatus: LiveData<AdventureStatus> = _adventureStatus
 
     fun fetchInProgressAdventure() {
-        adventureRepository.fetchAdventuresByStatus(AdventureStatus.IN_PROGRESS) { result ->
+        adventureRepository2.fetchAdventureByStatus(AdventureStatus.IN_PROGRESS) { result: Result<List<Game>> ->
             result
                 .onSuccess { fetchAdventure(it) }
-                .onFailure { }
+                .onFailure { _adventureStatus.value = AdventureStatus.NONE }
         }
     }
 
-    private fun fetchAdventure(adventures: List<Adventure>) {
-        val dummyAdventure = Adventure(
-            0,
-            Destination(0, Coordinate(0.0, 0.0), ""),
-            AdventureStatus.NONE,
-        )
-
+    private fun fetchAdventure(adventures: List<Game>) {
         if (adventures.isNotEmpty()) {
             _adventure.value = adventures.first()
+            _adventureStatus.value = adventures.first().adventureStatus
         } else {
-            _adventure.value = dummyAdventure
+            _adventureStatus.value = AdventureStatus.NONE
+        }
+    }
+
+    companion object {
+        val Factory = ViewModelFactory(ThirdDemoAdventureRepository())
+        class ViewModelFactory(private val adventureRepository2: AdventureRepository2) : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return SplashViewModel(adventureRepository2) as T
+            }
         }
     }
 }
