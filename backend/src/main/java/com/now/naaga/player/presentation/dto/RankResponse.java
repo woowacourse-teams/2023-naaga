@@ -5,8 +5,8 @@ import com.now.naaga.player.domain.Rank;
 public class RankResponse {
 
     private PlayerResponse player;
+    private int percentage;
     private int rank;
-    private int topPercent;
 
     public RankResponse() {
     }
@@ -16,7 +16,7 @@ public class RankResponse {
                         final int topPercent) {
         this.player = player;
         this.rank = rank;
-        this.topPercent = topPercent;
+        this.percentage = topPercent;
     }
 
     public static RankResponse of(final Rank rank) {
@@ -32,7 +32,7 @@ public class RankResponse {
     }
 
     public int getTopPercent() {
-        return topPercent;
+        return percentage;
     }
 }
 
