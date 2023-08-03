@@ -23,3 +23,6 @@ const val ON_ADVENTURE_SHOW_HINT = "SHOW_HINT"
 // UploadActivity
 const val UPLOAD_OPEN_CAMERA = "OPEN_CAMERA"
 const val UPLOAD_SET_COORDINATE = "SET_COORDINATE"
+
+// CameraPermissionDialog
+const val CAMERA_PERMISSION_OPEN_SETTING = "OPEN_SETTING"
