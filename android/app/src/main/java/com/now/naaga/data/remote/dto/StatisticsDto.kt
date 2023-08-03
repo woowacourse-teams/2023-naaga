@@ -8,6 +8,6 @@ data class StatisticsDto(
     val successGameCount: Int,
     val failGameCount: Int,
     val totalDistance: Int,
-    val totalPlayTime: String,
+    val totalPlayTime: Int,
     val totalUsedHintCount: Int,
 )

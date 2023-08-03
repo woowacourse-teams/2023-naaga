@@ -4,7 +4,6 @@ import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureResultType
 import com.now.naaga.data.remote.dto.AdventureResultDto
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 fun AdventureResultDto.toDomain(): AdventureResult {
     return AdventureResult(
@@ -13,7 +12,7 @@ fun AdventureResultDto.toDomain(): AdventureResult {
         destination = destination.toDomain(),
         resultType = AdventureResultType.findByName(resultType),
         score = score,
-        playTime = LocalTime.parse(totalPlayTime),
+        playTime = totalPlayTime,
         distance = distance,
         hintUses = hintUses,
         tryCount = tryCount,
