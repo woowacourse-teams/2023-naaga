@@ -6,7 +6,7 @@ public record StatisticResponse(int gameCount,
                                 int successGameCount,
                                 int failGameCount,
                                 int totalDistance,
-                                String totalPlayTime,
+                                int totalPlayTime,
                                 int totalUsedHintCount) {
     public static StatisticResponse from(final Statistic statistic) {
         return new StatisticResponse(
@@ -14,7 +14,7 @@ public record StatisticResponse(int gameCount,
                 statistic.getSuccessGameCount(),
                 statistic.getFailGameCount(),
                 statistic.getTotalDistance(),
-                statistic.durationToString(statistic.getTotalPlayTime()),
+                statistic.durationToInteger(statistic.getTotalPlayTime()),
                 statistic.getTotalUsedHintCount()
         );
     }

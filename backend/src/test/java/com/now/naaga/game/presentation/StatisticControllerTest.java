@@ -2,18 +2,14 @@ package com.now.naaga.game.presentation;
 
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.game.domain.*;
-import com.now.naaga.game.fixture.GameFixture;
 import com.now.naaga.game.presentation.dto.StatisticResponse;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
 import com.now.naaga.member.domain.Member;
-import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
-import com.now.naaga.place.fixture.PlaceFixture;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -23,7 +19,6 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 

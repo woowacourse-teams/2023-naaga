@@ -54,11 +54,8 @@ public class GameRecord {
         return (int) startPosition.calculateDistance(destinationPosition);
     }
 
-    public String durationToString(Duration duration){
-        final long hours = duration.toHours();
-        final long minutes = duration.toMinutesPart();
-        final long seconds = duration.toSecondsPart();
-        return String.format("%d:%02d:%02d", hours, minutes, seconds);
+    public int durationToInteger(Duration duration){
+        return (int) duration.toMinutes();
     }
 
     public GameResult getGameResult() {
