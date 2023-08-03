@@ -1,6 +1,7 @@
 package com.now.naaga.data.remote.retrofit
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.now.naaga.BuildConfig
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -9,10 +10,10 @@ import retrofit2.Retrofit
 
 object RetrofitFactory {
     private const val BASIC_USER_TOKEN = "Basic MTExQHdvb3dhLmNvbToxMTEx"
-    private const val MOCK_SERVER_URL = "https://154c0926-f3af-42e2-8af1-bcf8115f3457.mock.pstmn.io"
+    private const val BASE_URL = BuildConfig.BASE_URL
 
     val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(MOCK_SERVER_URL)
+        .baseUrl(BASE_URL)
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .client(createOkHttpClient())
         .build()
