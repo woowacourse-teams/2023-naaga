@@ -1,7 +1,6 @@
 package com.now.domain.model
 
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 data class AdventureResult(
     val id: Long,
@@ -9,7 +8,7 @@ data class AdventureResult(
     val destination: Place,
     val resultType: AdventureResultType,
     val score: Int,
-    val playTime: LocalTime,
+    val playTime: Int,
     val distance: Int,
     val hintUses: Int,
     val tryCount: Int,
