@@ -50,7 +50,7 @@ class RankActivity : AppCompatActivity() {
             updateRank(ranks)
         }
         viewModel.errorMessage.observe(this) { errorMessage ->
-            if (NaagaThrowable.ServerConnectFailure().userMessage == errorMessage) {
+            if (NaagaThrowable.ServerConnectFailure().message == errorMessage) {
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
                 finish()
             }
