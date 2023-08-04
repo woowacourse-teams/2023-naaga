@@ -8,6 +8,7 @@ import com.now.naaga.game.application.HintService;
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.CreateHintCommand;
 import com.now.naaga.game.application.dto.EndGameCommand;
+import com.now.naaga.game.application.dto.FindAllGamesCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.application.dto.FindHintByIdCommand;
@@ -92,12 +93,24 @@ public class GameController {
                 .status(HttpStatus.OK)
                 .body(GameResponse.from(game));
     }
-
+    
     @GetMapping
     public ResponseEntity<List<GameResponse>> findGamesByGameStatus(@Auth final PlayerRequest playerRequest,
-                                                                    @RequestParam final String status) {
+            @RequestParam final String status) {
+        if(status == null) {
+            return findAllGames(playerRequest);
+        }
         final FindGameByStatusCommand findGameByStatusCommand = FindGameByStatusCommand.of(playerRequest, status);
         final List<Game> games = gameService.findGamesByStatus(findGameByStatusCommand);
+        final List<GameResponse> gameResponses = GameResponse.convertToGameResponses(games);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(gameResponses);
+    }
+    
+    private ResponseEntity<List<GameResponse>> findAllGames(final PlayerRequest playerRequest) {
+        final FindAllGamesCommand findALlGamesCommand = FindAllGamesCommand.of(playerRequest);
+        final List<Game> games = gameService.findAllGames(findALlGamesCommand);
         final List<GameResponse> gameResponses = GameResponse.convertToGameResponses(games);
         return ResponseEntity
                 .status(HttpStatus.OK)
