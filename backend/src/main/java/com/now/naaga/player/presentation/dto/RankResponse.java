@@ -5,22 +5,22 @@ import com.now.naaga.player.domain.Rank;
 public class RankResponse {
 
     private PlayerResponse player;
+    private int percentage;
     private int rank;
-    private int topPercent;
 
     public RankResponse() {
     }
 
     public RankResponse(final PlayerResponse player,
                         final int rank,
-                        final int topPercent) {
+                        final int percentage) {
         this.player = player;
         this.rank = rank;
-        this.topPercent = topPercent;
+        this.percentage = percentage;
     }
 
     public static RankResponse of(final Rank rank) {
-        return new RankResponse(PlayerResponse.from(rank.getPlayer()), rank.getRank(), rank.getTopPercent());
+        return new RankResponse(PlayerResponse.from(rank.getPlayer()), rank.getRank(), rank.getPercentage());
     }
 
     public PlayerResponse getPlayer() {
@@ -31,8 +31,8 @@ public class RankResponse {
         return rank;
     }
 
-    public int getTopPercent() {
-        return topPercent;
+    public int getPercentage() {
+        return percentage;
     }
 }
 

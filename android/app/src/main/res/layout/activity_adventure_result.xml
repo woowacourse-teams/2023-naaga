@@ -56,25 +56,23 @@
             android:id="@+id/iv_adventureResult_stamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_adventureResult_photo"
+            app:layout_constraintBottom_toBottomOf="@id/iv_adventureResult_photo"
             tools:src="@drawable/ic_success" />
 
         <LinearLayout
             android:id="@+id/ll_adventureResult_window"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="148dp"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/rect_radius_small"
             android:backgroundTint="@color/white"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
             android:paddingVertical="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_adventureResult_destination">
@@ -93,35 +91,29 @@
                     android:text="@string/adventureResult_time_description"
                     android:textColor="@color/black"
                     android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <TextView
+                    android:id="@+id/tv_adventureResult_playTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
+                    android:text="@{@string/adventureResult_play_time_value(viewModel.adventureResult.playTime)}"
+                    android:fontFamily="@font/pretendard_bold"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:gravity="end"
                     android:background="@drawable/rect_radius_small"
                     android:backgroundTint="@color/main_navy"
+                    android:layout_marginStart="40dp"
                     android:paddingVertical="4dp"
                     android:paddingEnd="@dimen/space_default_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_adventureResult_timeTitle"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/tv_adventureResult_playTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="00:30:32" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="30분" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -152,13 +144,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_bold"
-                    android:text="@{@string/adventureResult_value(viewModel.adventureResult.distance)}"
+                    android:text="@{@string/adventureResult_distance_value(viewModel.adventureResult.distance)}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="+13" />
+                    tools:text="+200m" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -190,13 +182,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_bold"
-                    android:text="@{`` + viewModel.adventureResult.hintUses}"
+                    android:text="@{@string/adventureResult_hint_value(viewModel.adventureResult.hintUses)}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="13" />
+                    tools:text="2개" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -227,13 +219,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_bold"
-                    android:text="@{``+ viewModel.adventureResult.tryCount}"
+                    android:text="@{@string/adventureResult_try_count_value(viewModel.adventureResult.tryCount)}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="13" />
+                    tools:text="4회" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -279,22 +271,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="52dp"
             android:fontFamily="@font/pretendard_bold"
             android:text="@{@string/adventureResult_rank(viewModel.myRank)}"
             android:textColor="@color/black"
             android:textSize="28sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/space_default_medium"
             app:layout_constraintTop_toBottomOf="@+id/ll_adventureResult_window"
-            tools:text="123등" />
+            tools:text="123등"
+            app:layout_constraintEnd_toEndOf="@+id/ll_adventureResult_window"
+            app:layout_constraintBottom_toTopOf="@+id/btn_adventureResult_return"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/btn_adventureResult_return"
             android:layout_width="0dp"
-            android:layout_height="68dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="@dimen/space_default_medium"
             android:fontFamily="@font/pretendard_bold"
             android:paddingVertical="@dimen/space_default_medium"
             android:text="@string/adventureResult_return_main"
@@ -302,7 +296,6 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

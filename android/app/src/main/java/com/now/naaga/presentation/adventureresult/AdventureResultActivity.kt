@@ -15,8 +15,6 @@ import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.databinding.ActivityAdventureResultBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 class AdventureResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdventureResultBinding
@@ -27,14 +25,19 @@ class AdventureResultActivity : AppCompatActivity() {
         binding = ActivityAdventureResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViewModel()
-        viewModel.fetchGameResult(getIntentData())
+        viewModel.fetchGameResult(getIntentData() ?: return finish())
         viewModel.fetchMyRank()
         subscribeObserving()
         setClickListeners()
     }
 
-    private fun getIntentData(): Long {
-        return intent.getLongExtra(GAME_ID, -1)
+    private fun getIntentData(): Long? {
+        val id = intent.getLongExtra(GAME_ID, -1)
+        return if (id == -1L) {
+            null
+        } else {
+            id
+        }
     }
 
     private fun initViewModel() {
@@ -50,7 +53,6 @@ class AdventureResultActivity : AppCompatActivity() {
         viewModel.adventureResult.observe(this) { adventureResult ->
             setResultType(adventureResult)
             setPhoto(adventureResult.destination.image)
-            setPlayTime(adventureResult.playTime)
         }
 
         viewModel.errorMessage.observe(this) { errorMessage ->
@@ -88,11 +90,6 @@ class AdventureResultActivity : AppCompatActivity() {
             .into(binding.ivAdventureResultPhoto)
     }
 
-    private fun setPlayTime(playTime: LocalTime) {
-        val timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMATTER_PATTERN)
-        binding.tvAdventureResultPlayTime.text = playTime.format(timeFormatter)
-    }
-
     private fun setClickListeners() {
         binding.btnAdventureResultReturn.setOnClickListener {
             startActivity(BeginAdventureActivity.getIntent(this))
@@ -102,7 +99,6 @@ class AdventureResultActivity : AppCompatActivity() {
     companion object {
         private const val GAME_ID = "GAME_ID"
         private const val MESSAGE_IN_RESULT_TYPE_NONE = "네트워크에 문제가 생겼습니다."
-        private const val TIME_FORMATTER_PATTERN = "HH:mm:ss"
 
         fun getIntentWithGameId(context: Context, gameId: Long): Intent {
             return Intent(context, AdventureResultActivity::class.java).apply {

@@ -2,6 +2,7 @@ package com.now.naaga.game.application;
 
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.EndGameCommand;
+import com.now.naaga.game.application.dto.FindAllGamesCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.*;
@@ -121,7 +122,7 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public Statistic findStatistic(final PlayerRequest playerRequest) {
-        final List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
+        final List<Game> gamesByPlayerId = gameRepository.findByPlayerIdAndGameStatus(playerRequest.playerId(),GameStatus.DONE);
         final List<GameResult> gameResults = gamesByPlayerId.stream()
                 .map(game -> findGameResultByGameId(game.getId()))
                 .toList();
@@ -129,5 +130,10 @@ public class GameService {
                 .map(GameRecord::from).toList();
 
         return Statistic.of(gameRecords);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Game> findAllGames(FindAllGamesCommand findAllGamesCommand) {
+        return gameRepository.findByPlayerId(findAllGamesCommand.playerId());
     }
 }

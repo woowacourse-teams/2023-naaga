@@ -4,7 +4,11 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.0'
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     namespace 'com.now.naaga'
@@ -18,6 +22,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "BASE_URL", properties["BASE_URL"]
     }
 
     buildTypes {
@@ -87,5 +92,6 @@ dependencies {
 
     // firebase
     implementation(platform('com.google.firebase:firebase-bom:32.2.0'))
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
 }

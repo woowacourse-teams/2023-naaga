@@ -38,6 +38,10 @@
     <string name="adventureResult_hint_description">HINT USES</string>
     <string name="adventureResult_try_description">TRY COUNT</string>
     <string name="adventureResult_score_description">Score</string>
+    <string name="adventureResult_play_time_value">%d분</string>
+    <string name="adventureResult_distance_value">%dm</string>
+    <string name="adventureResult_hint_value">%d개</string>
+    <string name="adventureResult_try_count_value">%d회</string>
     <string name="adventureResult_value">+%d</string>
     <string name="adventureResult_return_main">메인으로 돌아가기</string>
     <string name="adventureResult_rank">%d등</string>

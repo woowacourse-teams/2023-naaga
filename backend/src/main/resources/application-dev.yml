@@ -1,12 +1,4 @@
-가
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL57Dialect
-        format_sql: true
-    show-sql: true
-
-multipartFile:
-  directory:
-    path: /home/Ubuntu/image
+spring:
+  config:
+    import:
+      - classpath:/security/application-dev.yml

@@ -53,7 +53,7 @@ public class PlayerControllerTest extends CommonControllerTest {
             softly.assertThat(rankResponse.getPlayer().getNickname()).isEqualTo("채채");
             softly.assertThat(rankResponse.getPlayer().getTotalScore()).isEqualTo(15);
             softly.assertThat(rankResponse.getRank()).isEqualTo(3);
-            softly.assertThat(rankResponse.getTopPercent()).isEqualTo(100);
+            softly.assertThat(rankResponse.getPercentage()).isEqualTo(100);
         });
     }
 
@@ -67,7 +67,7 @@ public class PlayerControllerTest extends CommonControllerTest {
         final ExtractableResponse<Response> response = RestAssured.given()
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/ranks?sortBy=rank&order=descending")
+                .when().get("/ranks?sort-by=rank&order=ascending")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();

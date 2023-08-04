@@ -1,7 +1,7 @@
 package com.now.domain.repository
 
+import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
-import java.io.File
 
 interface PlaceRepository {
     fun fetchMyPlaces(
@@ -15,9 +15,11 @@ interface PlaceRepository {
         callback: (Result<Place>) -> Unit,
     )
 
-    fun registerPlace(
-        place: Place,
-        image: File,
+    fun postPlace(
+        name: String,
+        description: String,
+        coordinate: Coordinate,
+        image: String,
         callback: (Result<Place>) -> Unit,
     )
 }

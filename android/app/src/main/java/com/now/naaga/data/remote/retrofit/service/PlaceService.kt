@@ -2,6 +2,7 @@ package com.now.naaga.data.remote.retrofit.service
 
 import com.now.naaga.data.remote.dto.PlaceDto
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -24,8 +25,10 @@ interface PlaceService {
 
     @Multipart
     @POST("/places")
-    fun submitPlace(
-        @Part placeDto: PlaceDto,
-        @Part file: MultipartBody.Part,
+    fun registerPlace(
+        @Part name: RequestBody,
+        @Part description: RequestBody,
+        @Part coordinate: RequestBody,
+        @Part imageFile: MultipartBody.Part,
     ): Call<PlaceDto>
 }

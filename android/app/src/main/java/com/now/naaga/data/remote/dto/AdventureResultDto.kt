@@ -9,7 +9,7 @@ data class AdventureResultDto(
     val destination: PlaceDto,
     val resultType: String,
     val score: Int,
-    val totalPlayTime: String,
+    val totalPlayTime: Int,
     val distance: Int,
     val hintUses: Int,
     val tryCount: Int,
