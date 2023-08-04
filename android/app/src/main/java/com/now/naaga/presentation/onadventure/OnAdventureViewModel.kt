@@ -12,6 +12,7 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.model.Place
 import com.now.domain.repository.AdventureRepository
+import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.repository.DefaultAdventureRepository
 
 class OnAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
@@ -102,8 +103,14 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
                 .onFailure {
                     _failure.value = when (it) {
-                        /*is NaagaThrowable.GameError -> AdventureThrowable.EndAdventureFailure()
-                        else -> AdventureThrowable.UnExpectedFailure()*/
+                        is NaagaThrowable.ClientError -> {
+                            if (it.code == 403) {
+                                AdventureThrowable.EndAdventureFailure()
+                            } else {
+                                it
+                            }
+                        }
+
                         else -> it
                     }
                 }

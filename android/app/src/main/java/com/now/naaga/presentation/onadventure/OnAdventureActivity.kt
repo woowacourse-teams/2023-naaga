@@ -101,14 +101,14 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
     }
 
     private fun controlException(throwable: Throwable) {
-        val t = throwable as NaagaThrowable
-        when (t) {
-            is NaagaThrowable.ClientError -> Log.d("asdf", "code: ${t.code}, message: ${t.message}")
-            is NaagaThrowable.BackEndError -> Log.d("asdf", "message: ${t.message}")
-            is NaagaThrowable.ServerConnectFailure -> Log.d("asdf", "message: ${t.message}")
+        fun Context.shorToast(@StringRes message: Int) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        when (throwable) {
+            is AdventureThrowable.EndAdventureFailure -> shorToast(R.string.onAdventure_retry)
+            is NaagaThrowable.ClientError -> Log.d("asdf", "code: ${throwable.code}, message: ${throwable.message}")
+            is NaagaThrowable.BackEndError -> Log.d("asdf", "message: ${throwable.message}")
+            is NaagaThrowable.ServerConnectFailure -> Log.d("asdf", "message: ${throwable.message}")
             else -> Log.d("asdf", "message: 예상치 못한 오류")
         }
-        fun Context.shorToast(@StringRes message: Int) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         /*when (throwable) {
             is AdventureThrowable.EndAdventureFailure -> shorToast(R.string.onAdventure_retry)
             is AdventureThrowable.GiveUpAdventureFailure -> shorToast(R.string.onAdventure_error_retry)
