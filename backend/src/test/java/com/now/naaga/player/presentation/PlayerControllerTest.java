@@ -67,7 +67,7 @@ public class PlayerControllerTest extends CommonControllerTest {
         final ExtractableResponse<Response> response = RestAssured.given()
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/ranks?sortBy=rank&order=descending")
+                .when().get("/ranks?sort-by=rank&order=ascending")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
