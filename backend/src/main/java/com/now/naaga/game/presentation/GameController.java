@@ -43,12 +43,12 @@ public class GameController {
                 .location(URI.create("/games/" + game.getId()))
                 .body(gameResponse);
     }
-
+    
     @PostMapping("/{gameId}/hints")
     public ResponseEntity<HintResponse> createHint(@Auth final PlayerRequest playerRequest,
-                                                   @RequestBody final CreateHintRequest createHintRequest,
-                                                   @PathVariable final Long gameId) {
-        final CreateHintCommand createHintCommand = CreateHintCommand.of(playerRequest, createHintRequest, gameId);
+            @RequestBody final CoordinateRequest coordinateRequest,
+            @PathVariable final Long gameId) {
+        final CreateHintCommand createHintCommand = CreateHintCommand.ofCoordinate(playerRequest, coordinateRequest, gameId);
         final Hint hint = hintService.createHint(createHintCommand);
         final HintResponse hintResponse = HintResponse.from(hint);
         return ResponseEntity

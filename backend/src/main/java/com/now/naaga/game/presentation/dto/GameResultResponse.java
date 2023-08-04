@@ -6,7 +6,7 @@ import com.now.naaga.game.domain.ResultType;
 import java.time.LocalDateTime;
 
 public record GameResultResponse(Long id,
-                                 Long GameId,
+                                 Long gameId,
                                  GameDestinationResponse destination,
                                  ResultType resultType,
                                  int score,
