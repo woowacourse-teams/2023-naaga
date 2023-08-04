@@ -60,19 +60,16 @@ public class GameService {
         final Game game = new Game(player, place, position);
         return gameRepository.save(game);
     }
-
+    
     public void endGame(final EndGameCommand endGameCommand) {
         final Game game = gameRepository.findById(endGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
         final Player player = playerService.findPlayerById(endGameCommand.playerId());
         game.validateOwner(player);
         ResultType resultType = game.endGame(endGameCommand.endType(), endGameCommand.position());
-        gameResultRepository.save(createGameResult(resultType, game));
-    }
-
-    private GameResult createGameResult(final ResultType resultType, final Game game) {
         Score score = scorePolicy.calculate(game);
-        return new GameResult(resultType, score, game);
+        player.addScore(score);
+        gameResultRepository.save(new GameResult(resultType, score, game));
     }
 
     @Transactional(readOnly = true)

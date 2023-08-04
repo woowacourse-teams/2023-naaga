@@ -31,4 +31,19 @@ public record GameResultResponse(Long id,
                 gameRecord.getStartTime(),
                 gameRecord.getFinishTime());
     }
+    
+    public static GameResultResponse fromToMeter(final GameRecord gameRecord) {
+        return new GameResultResponse(
+                gameRecord.getGameResult().getId(),
+                gameRecord.getGameResult().getGame().getId(),
+                GameDestinationResponse.from(gameRecord.getGameResult().getGame().getPlace()),
+                gameRecord.getGameResult().getResultType(),
+                gameRecord.getGameResult().getScore().getValue(),
+                gameRecord.durationToInteger(gameRecord.getTotalPlayTime()),
+                gameRecord.getDistance()*1000,
+                gameRecord.getHintUses(),
+                gameRecord.getTryCount(),
+                gameRecord.getStartTime(),
+                gameRecord.getFinishTime());
+    }
 }

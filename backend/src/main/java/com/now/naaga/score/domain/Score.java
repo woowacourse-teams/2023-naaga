@@ -20,6 +20,10 @@ public class Score {
     public boolean isHigherThan(Score other) {
         return this.value > other.value;
     }
+    
+    public Score plus(Score score) {
+        return new Score(this.value+ score.value);
+    }
 
     public int getValue() {
         return value;

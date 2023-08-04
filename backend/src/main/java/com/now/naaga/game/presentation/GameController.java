@@ -118,7 +118,7 @@ public class GameController {
 
         final List<GameRecord> gameRecords = gameService.findAllGameResult(playerRequest);
         final List<GameResultResponse> gameResultResponseList = gameRecords.stream()
-                .map(GameResultResponse::from)
+                .map(GameResultResponse::fromToMeter)
                 .collect(Collectors.toList());
 
         return ResponseEntity
