@@ -36,7 +36,7 @@ public class PlayerController {
     @GetMapping
     public ResponseEntity<List<RankResponse>> findAllRank(@RequestParam final String sortBy,
                                                           @RequestParam final String order) {
-        if (!sortBy.equals("rank") && order.equals("ascending")) {
+        if (!sortBy.equalsIgnoreCase("RANK") || !order.equalsIgnoreCase("ASCENDING")) {
             throw new PlayerException(INVALID_SORTING_REQUEST);
         }
 
