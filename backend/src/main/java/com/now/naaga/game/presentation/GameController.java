@@ -96,7 +96,7 @@ public class GameController {
     
     @GetMapping
     public ResponseEntity<List<GameResponse>> findGamesByGameStatus(@Auth final PlayerRequest playerRequest,
-            @RequestParam final String status) {
+            @RequestParam(required = false) final String status) {
         if(status == null) {
             return findAllGames(playerRequest);
         }
