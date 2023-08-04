@@ -20,6 +20,9 @@ INSERT INTO place(id, name, description, latitude, longitude, image_url, created
 VALUES (3, '파리바게트 방이시장점', '이곳은 파리바게트 방이시장점', 37.511737, 127.114016, '파리바게트 방이시장점', now(), 1);
 INSERT INTO place(id, name, description, latitude, longitude, image_url, created_at, player_id)
 VALUES (4, '1km', '이곳은 1km', 37.512256, 127.112584, '얘가 1km 안에 안정적으로 있어야함', now(), 1);
+INSERT INTO place(id, name, description, latitude, longitude, image_url, created_at, player_id)
+VALUES (5, '선릉 블랙랩', '이곳은 선릉캠에서 1km 이내의 장소입니다.', 37.506673, 127.049019, 'http://43.202.67.161:8080/blakc-lab.jpeg', now(), 1);
+
 
 INSERT INTO game(id, game_status, player_id, place_id, start_latitude, start_longitude, remaining_attempts, start_time, end_time, created_at)
 VALUES (1, 'DONE', 1, 1, 37.500845, 127.036953, 2, now(), now(), now());

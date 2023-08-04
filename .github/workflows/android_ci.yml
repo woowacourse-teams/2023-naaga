@@ -5,7 +5,7 @@ on:
     branches: [ dev ]
     paths:
       - 'android/**'
-    
+
 jobs:
   ktlint:
     name: ktlint check
@@ -34,6 +34,12 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Add Local Properties
+        env:
+          API_KEY: ${{ secrets.BASE_URL }}
+        run: |
+          echo BASE_URL=\"$API_KEY\" > ./local.properties
 
       - name: Run ktlint
         run: ./gradlew ktlintCheck
@@ -64,6 +70,12 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Add Local Properties
+        env:
+          API_KEY: ${{ secrets.BASE_URL }}
+        run: |
+          echo BASE_URL=\"$API_KEY\" > ./local.properties
 
       - name: Add Google Service Json file
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
@@ -97,6 +109,12 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Add Local Properties
+        env:
+          API_KEY: ${{ secrets.BASE_URL }}
+        run: |
+          echo BASE_URL=\"$API_KEY\" > ./local.properties
 
       - name: Add Google Service Json file
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
