@@ -3,6 +3,7 @@ package com.now.naaga.presentation.onadventure
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.naaga.R
+import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
@@ -67,9 +69,6 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
         viewModel.adventure.observe(this) {
             isAdventureDone(it.adventureStatus)
         }
-        viewModel.destination.observe(this) {
-            addDestinationMarker(it.coordinate)
-        }
         viewModel.lastHint.observe(this) {
             drawHintMarker(it)
         }
@@ -102,8 +101,15 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
     }
 
     private fun controlException(throwable: Throwable) {
+        val t = throwable as NaagaThrowable
+        when (t) {
+            is NaagaThrowable.ClientError -> Log.d("asdf", "code: ${t.code}, message: ${t.message}")
+            is NaagaThrowable.BackEndError -> Log.d("asdf", "message: ${t.message}")
+            is NaagaThrowable.ServerConnectFailure -> Log.d("asdf", "message: ${t.message}")
+            else -> Log.d("asdf", "message: 예상치 못한 오류")
+        }
         fun Context.shorToast(@StringRes message: Int) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        when (throwable) {
+        /*when (throwable) {
             is AdventureThrowable.EndAdventureFailure -> shorToast(R.string.onAdventure_retry)
             is AdventureThrowable.GiveUpAdventureFailure -> shorToast(R.string.onAdventure_error_retry)
             is AdventureThrowable.HintFailure -> shorToast(R.string.onAdventure_no_more_hint)
@@ -112,7 +118,7 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
                 shorToast(R.string.onAdventure_begin_error)
                 finish()
             }
-        }
+        }*/
     }
 
     private fun showGiveUpDialog() {

@@ -12,7 +12,6 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.model.Place
 import com.now.domain.repository.AdventureRepository
-import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.repository.DefaultAdventureRepository
 
 class OnAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
@@ -43,7 +42,7 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
             result.onSuccess {
                 setAdventure(it)
             }.onFailure {
-                _failure.value = AdventureThrowable.BeginAdventureFailure()
+                _failure.value = it
             }
         }
     }
@@ -60,7 +59,10 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         ) { result: Result<AdventureStatus> ->
             result
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
-                .onFailure { _failure.value = AdventureThrowable.GiveUpAdventureFailure() }
+                .onFailure {
+                    _failure.value = it
+                    // _failure.value = AdventureThrowable.GiveUpAdventureFailure()
+                }
         }
     }
 
@@ -78,7 +80,10 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
                     _adventure.value = adventure.value?.copy(hints = ((adventure.value?.hints ?: listOf()) + it))
                     _lastHint.value = it
                 }
-                .onFailure { _failure.value = AdventureThrowable.UnExpectedFailure() }
+                .onFailure {
+                    _failure.value = it
+                    // _failure.value = AdventureThrowable.UnExpectedFailure()
+                }
         }
     }
 
@@ -97,8 +102,9 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
                 .onFailure {
                     _failure.value = when (it) {
-                        is NaagaThrowable.GameError -> AdventureThrowable.EndAdventureFailure()
-                        else -> AdventureThrowable.UnExpectedFailure()
+                        /*is NaagaThrowable.GameError -> AdventureThrowable.EndAdventureFailure()
+                        else -> AdventureThrowable.UnExpectedFailure()*/
+                        else -> it
                     }
                 }
         }
