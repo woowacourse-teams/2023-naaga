@@ -544,7 +544,7 @@ class GameControllerTest extends CommonControllerTest {
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(gameResultResponse.id()).isEqualTo(gameResult1.getId());
-            softly.assertThat(gameResultResponse.GameId()).isEqualTo(game1.getId());
+            softly.assertThat(gameResultResponse.gameId()).isEqualTo(game1.getId());
             softly.assertThat(gameResultResponse.destination().name()).isEqualTo("JEJU");
             softly.assertThat(gameResultResponse.resultType()).isEqualTo(ResultType.SUCCESS);
         });
@@ -575,8 +575,8 @@ class GameControllerTest extends CommonControllerTest {
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(gameResultResponses).hasSize(2);
-            softly.assertThat(gameResultResponses.get(0).GameId()).isEqualTo(2L);
-            softly.assertThat(gameResultResponses.get(1).GameId()).isEqualTo(1L);
+            softly.assertThat(gameResultResponses.get(0).gameId()).isEqualTo(2L);
+            softly.assertThat(gameResultResponses.get(1).gameId()).isEqualTo(1L);
         });
     }
 
@@ -599,7 +599,7 @@ class GameControllerTest extends CommonControllerTest {
                 .given().log().all()
                 .auth().preemptive().basic(MEMBER_EMAIL, MEMBER_PASSWORD)
                 .contentType(ContentType.JSON)
-                .body(new CreateHintRequest(SEOUL_COORDINATE))
+                .body(SEOUL_COORDINATE)
                 .when()
                 .post("/games/{gameId}/hints", game.getId())
                 .then().log().all()
