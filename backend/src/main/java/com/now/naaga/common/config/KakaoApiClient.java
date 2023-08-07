@@ -41,7 +41,7 @@ public class KakaoApiClient {
         body.add("client_id", clientId);
 
         HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
-
+        System.out.println(params.getAuthorizationCode());
         KakaoTokens response = restTemplate.postForObject(url, request, KakaoTokens.class); // 요청을 보낸다.
 
         // TODO: 8/7/23 여기서 예외 처리
