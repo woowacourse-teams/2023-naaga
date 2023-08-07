@@ -21,7 +21,7 @@ public enum PlaceExceptionType implements BaseExceptionType {
             "해당 장소에 대한 접근권한이 없습니다."
     ),
     ALREADY_EXIST_NEARBY(
-            506,
+            505,
             HttpStatus.BAD_REQUEST,
             "이미 주변에 장소가 존재합니다.");
 

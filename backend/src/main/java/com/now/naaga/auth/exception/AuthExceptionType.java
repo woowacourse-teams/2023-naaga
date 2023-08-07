@@ -18,7 +18,7 @@ public enum AuthExceptionType implements BaseExceptionType {
     ),
 
     INVALID_HEADER(
-            102,
+            101,
             HttpStatus.UNAUTHORIZED,
             "헤더 정보가 유효하지 않습니다."
     ),
