@@ -1,4 +1,0 @@
-spring:
-  config:
-    import:
-      - classpath:/security/application-dev.yml
