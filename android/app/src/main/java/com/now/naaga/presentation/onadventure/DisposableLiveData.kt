@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
-class DisposableLiveData<T>(private val m: LiveData<T>) : LiveData<T>() {
+class DisposableLiveData<T>(private val parentLiveData: LiveData<T>) : LiveData<T>() {
     private var isFirst = AtomicBoolean(true)
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-        m.observe(owner) {
+        parentLiveData.observe(owner) {
             setValue(it)
         }
         super.observe(owner) { t: T ->
