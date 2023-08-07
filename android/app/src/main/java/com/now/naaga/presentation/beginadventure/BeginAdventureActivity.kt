@@ -9,6 +9,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.R
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.BEGIN_BEGIN_ADVENTURE
+import com.now.naaga.data.firebase.analytics.BEGIN_GO_MYPAGE
+import com.now.naaga.data.firebase.analytics.BEGIN_GO_RANK
+import com.now.naaga.data.firebase.analytics.BEGIN_GO_UPLOAD
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.mypage.MyPageActivity
@@ -16,7 +22,7 @@ import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.rank.RankActivity
 import com.now.naaga.presentation.upload.UploadActivity
 
-class BeginAdventureActivity : AppCompatActivity() {
+class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityBeginAdventureBinding
 
     private val locationPermissionLauncher =
@@ -42,6 +48,7 @@ class BeginAdventureActivity : AppCompatActivity() {
         binding = ActivityBeginAdventureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        registerAnalytics(this.lifecycle)
         requestLocationPermission()
         setClickListeners()
     }
@@ -59,15 +66,19 @@ class BeginAdventureActivity : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.clBeginAdventureBegin.setOnClickListener {
+            logClickEvent(getViewEntryName(it), BEGIN_BEGIN_ADVENTURE)
             checkPermissionAndBeginAdventure()
         }
         binding.ivBeginAdventureRank.setOnClickListener {
+            logClickEvent(getViewEntryName(it), BEGIN_GO_RANK)
             startActivity(RankActivity.getIntent(this))
         }
         binding.ivBeginAdventureUpload.setOnClickListener {
+            logClickEvent(getViewEntryName(it), BEGIN_GO_UPLOAD)
             startActivity(UploadActivity.getIntent(this))
         }
         binding.ivBeginAdventureMypage.setOnClickListener {
+            logClickEvent(getViewEntryName(it), BEGIN_GO_MYPAGE)
             startActivity(MyPageActivity.getIntent(this))
         }
     }

@@ -1,41 +1,24 @@
 package com.now.naaga.game.presentation;
 
-import static com.now.naaga.game.exception.GameExceptionType.INVALID_QUERY_PARAMETERS;
-
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.HintService;
-import com.now.naaga.game.application.dto.CreateGameCommand;
-import com.now.naaga.game.application.dto.CreateHintCommand;
-import com.now.naaga.game.application.dto.EndGameCommand;
-import com.now.naaga.game.application.dto.FindGameByIdCommand;
-import com.now.naaga.game.application.dto.FindGameByStatusCommand;
-import com.now.naaga.game.application.dto.FindHintByIdCommand;
+import com.now.naaga.game.application.dto.*;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameRecord;
 import com.now.naaga.game.domain.Hint;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.presentation.dto.CreateGameRequest;
-import com.now.naaga.game.presentation.dto.CreateHintRequest;
-import com.now.naaga.game.presentation.dto.EndGameRequest;
-import com.now.naaga.game.presentation.dto.GameResponse;
-import com.now.naaga.game.presentation.dto.GameResultResponse;
-import com.now.naaga.game.presentation.dto.GameStatusResponse;
-import com.now.naaga.game.presentation.dto.HintResponse;
+import com.now.naaga.game.presentation.dto.*;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
+import static com.now.naaga.game.exception.GameExceptionType.INVALID_QUERY_PARAMETERS;
 
 @RequestMapping("/games")
 @RestController
@@ -51,8 +34,8 @@ public class GameController {
 
     @PostMapping
     public ResponseEntity<GameResponse> createGame(@Auth final PlayerRequest playerRequest,
-                                                   @RequestBody final CreateGameRequest createGameRequest) {
-        final CreateGameCommand createGameCommand = CreateGameCommand.of(playerRequest, createGameRequest);
+                                                   @RequestBody final CoordinateRequest coordinateRequest) {
+        final CreateGameCommand createGameCommand = CreateGameCommand.ofCoordinate(playerRequest, coordinateRequest);
         final Game game = gameService.createGame(createGameCommand);
         final GameResponse gameResponse = GameResponse.from(game);
         return ResponseEntity
@@ -60,12 +43,12 @@ public class GameController {
                 .location(URI.create("/games/" + game.getId()))
                 .body(gameResponse);
     }
-
+    
     @PostMapping("/{gameId}/hints")
     public ResponseEntity<HintResponse> createHint(@Auth final PlayerRequest playerRequest,
-                                                   @RequestBody final CreateHintRequest createHintRequest,
-                                                   @PathVariable final Long gameId) {
-        final CreateHintCommand createHintCommand = CreateHintCommand.of(playerRequest, createHintRequest, gameId);
+            @RequestBody final CoordinateRequest coordinateRequest,
+            @PathVariable final Long gameId) {
+        final CreateHintCommand createHintCommand = CreateHintCommand.ofCoordinate(playerRequest, coordinateRequest, gameId);
         final Hint hint = hintService.createHint(createHintCommand);
         final HintResponse hintResponse = HintResponse.from(hint);
         return ResponseEntity
@@ -95,9 +78,21 @@ public class GameController {
 
     @GetMapping
     public ResponseEntity<List<GameResponse>> findGamesByGameStatus(@Auth final PlayerRequest playerRequest,
-                                                                    @RequestParam final String status) {
+                                                                    @RequestParam(required = false) final String status) {
+        if (status == null) {
+            return findAllGames(playerRequest);
+        }
         final FindGameByStatusCommand findGameByStatusCommand = FindGameByStatusCommand.of(playerRequest, status);
         final List<Game> games = gameService.findGamesByStatus(findGameByStatusCommand);
+        final List<GameResponse> gameResponses = GameResponse.convertToGameResponses(games);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(gameResponses);
+    }
+
+    private ResponseEntity<List<GameResponse>> findAllGames(final PlayerRequest playerRequest) {
+        final FindAllGamesCommand findALlGamesCommand = FindAllGamesCommand.of(playerRequest);
+        final List<Game> games = gameService.findAllGames(findALlGamesCommand);
         final List<GameResponse> gameResponses = GameResponse.convertToGameResponses(games);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -123,7 +118,7 @@ public class GameController {
 
         final List<GameRecord> gameRecords = gameService.findAllGameResult(playerRequest);
         final List<GameResultResponse> gameResultResponseList = gameRecords.stream()
-                .map(GameResultResponse::from)
+                .map(GameResultResponse::fromToMeter)
                 .collect(Collectors.toList());
 
         return ResponseEntity

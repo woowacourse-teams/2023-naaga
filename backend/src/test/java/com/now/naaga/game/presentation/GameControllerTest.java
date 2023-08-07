@@ -1,37 +1,10 @@
 package com.now.naaga.game.presentation;
 
-import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
-import static com.now.naaga.game.fixture.GameFixture.SEOUL_TO_JEJU_GAME;
-import static com.now.naaga.game.fixture.MemberFixture.MEMBER_IRYE;
-import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
-import static com.now.naaga.game.fixture.PositionFixture.잠실_루터회관_정문_좌표;
-import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_좌표;
-import static com.now.naaga.member.fixture.MemberFixture.MEMBER_EMAIL;
-import static com.now.naaga.member.fixture.MemberFixture.MEMBER_PASSWORD;
-import static com.now.naaga.place.exception.PlaceExceptionType.CAN_NOT_FIND_PLACE;
-import static com.now.naaga.place.fixture.PlaceFixture.JEJU_PLACE;
-import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
-import com.now.naaga.game.domain.Direction;
-import com.now.naaga.game.domain.Game;
-import com.now.naaga.game.domain.GameResult;
-import com.now.naaga.game.domain.Hint;
-import com.now.naaga.game.domain.ResultType;
-import com.now.naaga.game.presentation.dto.CoordinateRequest;
-import com.now.naaga.game.presentation.dto.CreateGameRequest;
-import com.now.naaga.game.presentation.dto.CreateHintRequest;
-import com.now.naaga.game.presentation.dto.EndGameRequest;
-import com.now.naaga.game.presentation.dto.GameResponse;
-import com.now.naaga.game.presentation.dto.GameResultResponse;
-import com.now.naaga.game.presentation.dto.GameStatusResponse;
-import com.now.naaga.game.presentation.dto.HintResponse;
+import com.now.naaga.game.domain.*;
+import com.now.naaga.game.presentation.dto.*;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
 import com.now.naaga.game.repository.HintRepository;
@@ -49,11 +22,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -61,6 +29,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+
+import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.fixture.GameFixture.SEOUL_TO_JEJU_GAME;
+import static com.now.naaga.game.fixture.MemberFixture.MEMBER_IRYE;
+import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
+import static com.now.naaga.game.fixture.PositionFixture.잠실_루터회관_정문_좌표;
+import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_좌표;
+import static com.now.naaga.member.fixture.MemberFixture.MEMBER_EMAIL;
+import static com.now.naaga.member.fixture.MemberFixture.MEMBER_PASSWORD;
+import static com.now.naaga.place.exception.PlaceExceptionType.CAN_NOT_FIND_PLACE;
+import static com.now.naaga.place.fixture.PlaceFixture.JEJU_PLACE;
+import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -103,15 +93,14 @@ class GameControllerTest extends CommonControllerTest {
                                 new Member("koko@da.k", "1031")
                         )));
 
-        final CreateGameRequest createGameRequest = new CreateGameRequest(
-                new CoordinateRequest(37.514258, 127.100883));
+        CoordinateRequest coordinateRequest = new CoordinateRequest(37.514258, 127.100883);
 
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .auth().preemptive().basic("koko@da.k", "1031")
                 .contentType(ContentType.JSON)
-                .body(createGameRequest)
+                .body(coordinateRequest)
                 .when()
                 .post("/games")
                 .then().log().all()
@@ -160,15 +149,15 @@ class GameControllerTest extends CommonControllerTest {
 
         gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
 
-        final CreateGameRequest createGameRequest = new CreateGameRequest(
-                new CoordinateRequest(37.514258, 127.100883));
+
+        CoordinateRequest coordinateRequest = new CoordinateRequest(37.514258, 127.100883);
 
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .auth().preemptive().basic("koko@da.k", "1031")
                 .contentType(ContentType.JSON)
-                .body(createGameRequest)
+                .body(coordinateRequest)
                 .when()
                 .post("/games")
                 .then().log().all()
@@ -204,15 +193,14 @@ class GameControllerTest extends CommonControllerTest {
                                 new Member("koko@da.k", "1031")
                         )));
 
-        final CreateGameRequest createGameRequest = new CreateGameRequest(
-                new CoordinateRequest(37.500845, 127.036953)); // 역삼역
+        CoordinateRequest coordinateRequest = new CoordinateRequest(37.500845, 127.036953);
 
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .auth().preemptive().basic("koko@da.k", "1031")
                 .contentType(ContentType.JSON)
-                .body(createGameRequest)
+                .body(coordinateRequest)
                 .when()
                 .post("/games")
                 .then().log().all()
@@ -556,7 +544,7 @@ class GameControllerTest extends CommonControllerTest {
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(gameResultResponse.id()).isEqualTo(gameResult1.getId());
-            softly.assertThat(gameResultResponse.GameId()).isEqualTo(game1.getId());
+            softly.assertThat(gameResultResponse.gameId()).isEqualTo(game1.getId());
             softly.assertThat(gameResultResponse.destination().name()).isEqualTo("JEJU");
             softly.assertThat(gameResultResponse.resultType()).isEqualTo(ResultType.SUCCESS);
         });
@@ -587,8 +575,8 @@ class GameControllerTest extends CommonControllerTest {
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(gameResultResponses).hasSize(2);
-            softly.assertThat(gameResultResponses.get(0).GameId()).isEqualTo(2L);
-            softly.assertThat(gameResultResponses.get(1).GameId()).isEqualTo(1L);
+            softly.assertThat(gameResultResponses.get(0).gameId()).isEqualTo(2L);
+            softly.assertThat(gameResultResponses.get(1).gameId()).isEqualTo(1L);
         });
     }
 
@@ -611,7 +599,7 @@ class GameControllerTest extends CommonControllerTest {
                 .given().log().all()
                 .auth().preemptive().basic(MEMBER_EMAIL, MEMBER_PASSWORD)
                 .contentType(ContentType.JSON)
-                .body(new CreateHintRequest(SEOUL_COORDINATE))
+                .body(SEOUL_COORDINATE)
                 .when()
                 .post("/games/{gameId}/hints", game.getId())
                 .then().log().all()

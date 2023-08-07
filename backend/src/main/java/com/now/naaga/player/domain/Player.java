@@ -51,6 +51,10 @@ public class Player extends BaseEntity {
         this.totalScore = totalScore;
         this.member = member;
     }
+    
+    public void addScore(Score score) {
+        this.totalScore = this.totalScore.plus(score);
+    }
 
     public Long getId() {
         return id;

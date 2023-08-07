@@ -2,6 +2,7 @@ package com.now.naaga.game.application;
 
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.EndGameCommand;
+import com.now.naaga.game.application.dto.FindAllGamesCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.*;
@@ -59,19 +60,16 @@ public class GameService {
         final Game game = new Game(player, place, position);
         return gameRepository.save(game);
     }
-
+    
     public void endGame(final EndGameCommand endGameCommand) {
         final Game game = gameRepository.findById(endGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
         final Player player = playerService.findPlayerById(endGameCommand.playerId());
         game.validateOwner(player);
         ResultType resultType = game.endGame(endGameCommand.endType(), endGameCommand.position());
-        gameResultRepository.save(createGameResult(resultType, game));
-    }
-
-    private GameResult createGameResult(final ResultType resultType, final Game game) {
         Score score = scorePolicy.calculate(game);
-        return new GameResult(resultType, score, game);
+        player.addScore(score);
+        gameResultRepository.save(new GameResult(resultType, score, game));
     }
 
     @Transactional(readOnly = true)
@@ -121,7 +119,7 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public Statistic findStatistic(final PlayerRequest playerRequest) {
-        final List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
+        final List<Game> gamesByPlayerId = gameRepository.findByPlayerIdAndGameStatus(playerRequest.playerId(),GameStatus.DONE);
         final List<GameResult> gameResults = gamesByPlayerId.stream()
                 .map(game -> findGameResultByGameId(game.getId()))
                 .toList();
@@ -129,5 +127,10 @@ public class GameService {
                 .map(GameRecord::from).toList();
 
         return Statistic.of(gameRecords);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Game> findAllGames(FindAllGamesCommand findAllGamesCommand) {
+        return gameRepository.findByPlayerId(findAllGamesCommand.playerId());
     }
 }

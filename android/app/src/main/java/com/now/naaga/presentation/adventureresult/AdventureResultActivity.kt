@@ -11,12 +11,15 @@ import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureResultType
 import com.now.naaga.R
 import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.RESULT_RESULT_RETURN
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.databinding.ActivityAdventureResultBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 
-class AdventureResultActivity : AppCompatActivity() {
+class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityAdventureResultBinding
     private lateinit var viewModel: AdventureResultViewModel
 
@@ -24,10 +27,11 @@ class AdventureResultActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAdventureResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        registerAnalytics(this.lifecycle)
         initViewModel()
         viewModel.fetchGameResult(getIntentData() ?: return finish())
         viewModel.fetchMyRank()
-        subscribeObserving()
+        subscribe()
         setClickListeners()
     }
 
@@ -49,7 +53,7 @@ class AdventureResultActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
     }
 
-    private fun subscribeObserving() {
+    private fun subscribe() {
         viewModel.adventureResult.observe(this) { adventureResult ->
             setResultType(adventureResult)
             setPhoto(adventureResult.destination.image)
@@ -92,6 +96,7 @@ class AdventureResultActivity : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.btnAdventureResultReturn.setOnClickListener {
+            logClickEvent(getViewEntryName(it), RESULT_RESULT_RETURN)
             startActivity(BeginAdventureActivity.getIntent(this))
         }
     }

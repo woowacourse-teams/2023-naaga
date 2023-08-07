@@ -16,4 +16,11 @@ public record CreateGameCommand(Long playerId,
                 coordinate.convertToPosition()
         );
     }
+    public static CreateGameCommand ofCoordinate(final PlayerRequest playerRequest,
+                                       final CoordinateRequest coordinate) {
+        return new CreateGameCommand(
+                playerRequest.playerId(),
+                coordinate.convertToPosition()
+        );
+    }
 }
