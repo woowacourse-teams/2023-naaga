@@ -57,7 +57,7 @@ class MyPageViewModel(
     private fun setErrorMessage(throwable: Throwable) {
         when (throwable) {
             is NaagaThrowable.ServerConnectFailure ->
-                _errorMessage.value = throwable.userMessage
+                _errorMessage.value = throwable.message
         }
     }
 }

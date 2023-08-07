@@ -10,7 +10,6 @@ import com.now.domain.model.AdventureEndType
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
-import com.now.domain.model.Place
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.repository.DefaultAdventureRepository
@@ -18,10 +17,10 @@ import com.now.naaga.data.repository.DefaultAdventureRepository
 class OnAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
     val adventure: LiveData<Adventure> = _adventure
-    val destination = DisposableLiveData<Place>()
+    val hints = DisposableLiveData<List<Hint>>(_adventure.map { it.hints })
 
     val myCoordinate = MutableLiveData<Coordinate>()
-    val startCoordinate = DisposableLiveData<Coordinate>()
+    val startCoordinate = DisposableLiveData<Coordinate>(myCoordinate)
 
     private val _distance = MutableLiveData<Int>()
     val distance: LiveData<Int> = _distance
@@ -35,7 +34,6 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
 
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
-        destination.setValue(adventure.destination)
     }
 
     fun beginAdventure(currentCoordinate: Coordinate) {
@@ -43,13 +41,13 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
             result.onSuccess {
                 setAdventure(it)
             }.onFailure {
-                _failure.value = AdventureThrowable.BeginAdventureFailure()
+                _failure.value = it
             }
         }
     }
 
     fun calculateDistance(coordinate: Coordinate) {
-        _distance.value = destination.value?.getDistance(coordinate) ?: 0
+        _distance.value = adventure.value?.destination?.getDistance(coordinate) ?: 0
     }
 
     fun giveUpAdventure() {
@@ -60,7 +58,10 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         ) { result: Result<AdventureStatus> ->
             result
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
-                .onFailure { _failure.value = AdventureThrowable.GiveUpAdventureFailure() }
+                .onFailure {
+                    _failure.value = it
+                    // _failure.value = AdventureThrowable.GiveUpAdventureFailure()
+                }
         }
     }
 
@@ -78,7 +79,10 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
                     _adventure.value = adventure.value?.copy(hints = ((adventure.value?.hints ?: listOf()) + it))
                     _lastHint.value = it
                 }
-                .onFailure { _failure.value = AdventureThrowable.UnExpectedFailure() }
+                .onFailure {
+                    _failure.value = it
+                    // _failure.value = AdventureThrowable.UnExpectedFailure()
+                }
         }
     }
 
@@ -97,8 +101,15 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
                 .onFailure {
                     _failure.value = when (it) {
-                        is NaagaThrowable.GameError -> AdventureThrowable.EndAdventureFailure()
-                        else -> AdventureThrowable.UnExpectedFailure()
+                        is NaagaThrowable.ClientError -> {
+                            if (it.code == 403) {
+                                AdventureThrowable.EndAdventureFailure()
+                            } else {
+                                it
+                            }
+                        }
+
+                        else -> it
                     }
                 }
         }
