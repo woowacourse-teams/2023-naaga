@@ -26,7 +26,7 @@ class RankActivity : AppCompatActivity() {
         initRecyclerView()
         viewModel.fetchMyRank()
         viewModel.fetchRanks()
-        subscribeObserving()
+        subscribe()
         setClickListeners()
     }
 
@@ -45,7 +45,7 @@ class RankActivity : AppCompatActivity() {
         }
     }
 
-    private fun subscribeObserving() {
+    private fun subscribe() {
         viewModel.ranks.observe(this) { ranks ->
             updateRank(ranks)
         }

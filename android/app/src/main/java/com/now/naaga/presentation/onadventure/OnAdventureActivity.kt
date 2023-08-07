@@ -14,6 +14,12 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.naaga.R
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_END_ADVENTURE
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_GIVE_UP
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_HINT
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
@@ -21,33 +27,47 @@ import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.getParcelable
 
-class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by DefaultNaverMapSettingDelegate() {
+class OnAdventureActivity :
+    AppCompatActivity(),
+    NaverMapSettingDelegate by DefaultNaverMapSettingDelegate(),
+    AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityOnAdventureBinding
     private lateinit var viewModel: OnAdventureViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setNaverMap(this, R.id.fcv_onAdventure_map)
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
         binding = ActivityOnAdventureBinding.inflate(layoutInflater)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
         setContentView(binding.root)
-
+        registerAnalytics(this.lifecycle)
+        initViewModel()
         subscribe()
         setOnMapReady { setLocationChangeListener() }
         setClickListeners()
     }
 
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+    }
+
     private fun setClickListeners() {
         binding.ivOnAdventureGiveUp.setOnClickListener {
+            logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_GIVE_UP)
             showGiveUpDialog()
         }
         binding.ivOnAdventurePhoto.setOnClickListener {
+            logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_POLAROID)
             showPolaroidDialog()
         }
         binding.ivOnAdventureHint.setOnClickListener {
+            logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_HINT)
             showHintDialog()
+        }
+        binding.btnOnAdventureArrived.setOnClickListener {
+            logClickEvent(getViewEntryName(it), ON_ADVENTURE_END_ADVENTURE)
+            viewModel.endAdventure()
         }
     }
 

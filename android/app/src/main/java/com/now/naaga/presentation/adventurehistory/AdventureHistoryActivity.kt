@@ -17,18 +17,18 @@ class AdventureHistoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdventureHistoryBinding.inflate(layoutInflater)
-        binding.lifecycleOwner = this
-        setContentView(binding.root)
 
+        setContentView(binding.root)
         initViewModel()
         initRecyclerView()
         viewModel.fetchHistories()
-        subscribeObserving()
+        subscribe()
         setClickListeners()
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, AdventureHistoryViewModel.Factory)[AdventureHistoryViewModel::class.java]
+        binding.lifecycleOwner = this
     }
 
     private fun initRecyclerView() {
@@ -38,7 +38,7 @@ class AdventureHistoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun subscribeObserving() {
+    private fun subscribe() {
         viewModel.adventureResults.observe(this) { adventureResults ->
             updateHistory(adventureResults)
         }
