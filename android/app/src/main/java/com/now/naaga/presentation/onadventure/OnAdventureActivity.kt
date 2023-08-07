@@ -58,7 +58,6 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
             val coordinate = Coordinate(location.latitude, location.longitude)
             viewModel.calculateDistance(coordinate)
             viewModel.myCoordinate.value = coordinate
-            viewModel.startCoordinate.setValue(coordinate)
         }
     }
 
@@ -69,8 +68,11 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
         viewModel.adventure.observe(this) {
             isAdventureDone(it.adventureStatus)
         }
+        viewModel.hints.observe(this) { hints ->
+            drawHintMarkers(hints)
+        }
         viewModel.lastHint.observe(this) {
-            drawHintMarker(it)
+            drawHintMarkers(listOf(it))
         }
         viewModel.failure.observe(this) {
             controlException(it)
@@ -96,8 +98,10 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
         }
     }
 
-    private fun drawHintMarker(hint: Hint) {
-        addHintMarker(hint)
+    private fun drawHintMarkers(hints: List<Hint>) {
+        hints.forEach { hint ->
+            addHintMarker(hint)
+        }
     }
 
     private fun controlException(throwable: Throwable) {
@@ -151,7 +155,7 @@ class OnAdventureActivity : AppCompatActivity(), NaverMapSettingDelegate by Defa
     }
 
     private fun showPolaroidDialog() {
-        val image = viewModel.destination.value?.image ?: return
+        val image = viewModel.adventure.value?.destination?.image ?: return
         val fragment: Fragment? = supportFragmentManager.findFragmentByTag(DESTINATION_PHOTO)
         if (fragment == null) {
             PolaroidDialog.makeDialog(image).show(supportFragmentManager, DESTINATION_PHOTO)
