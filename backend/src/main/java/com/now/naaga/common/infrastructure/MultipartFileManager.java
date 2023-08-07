@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class MultipartFileManager implements FileManager<MultipartFile> {
 
-    @Value("${multipartFile.directory.path}")
     private String saveDirectory;
 
     @Override
