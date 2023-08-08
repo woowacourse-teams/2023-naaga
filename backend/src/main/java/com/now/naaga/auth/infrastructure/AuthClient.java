@@ -1,4 +1,4 @@
-package com.now.naaga.auth.damain;
+package com.now.naaga.auth.infrastructure;
 
 import com.now.naaga.auth.application.dto.AuthInfo;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,17 +22,17 @@ public class AuthClient {
         this.restTemplate = restTemplate;
     }
 
-    public AuthInfo requestOauthInfo(String token) {
-        String url = apiUrl + "/v2/user/me";
+    public AuthInfo requestOauthInfo(final String token) {
+        final String url = apiUrl + "/v2/user/me";
 
-        HttpHeaders httpHeaders = new HttpHeaders();
+        final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         httpHeaders.set("Authorization", "Bearer " + token);
 
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("property_keys", "[\"kakao_account.email\", \"kakao_account.profile\"]");
 
-        HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
+        final HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
         return restTemplate.postForObject(url, request, AuthInfo.class);
     }

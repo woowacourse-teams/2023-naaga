@@ -22,15 +22,11 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 
     private final AuthenticationExtractor<MemberAuthRequest> authenticationExtractor;
 
-    private final MemberService memberService;
-
     private final PlayerService playerService;
 
     public AuthenticationArgumentResolver(final AuthenticationExtractor<MemberAuthRequest> authenticationExtractor,
-                                          final MemberService memberService,
                                           final PlayerService playerService) {
         this.authenticationExtractor = authenticationExtractor;
-        this.memberService = memberService;
         this.playerService = playerService;
     }
 
@@ -48,8 +44,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final MemberAuthRequest memberAuthRequest = authenticationExtractor.extract(request.getHeader(HttpHeaders.AUTHORIZATION));
-        final Member member = memberService.findMemberByEmail(memberAuthRequest.email());
-        final Player player = playerService.findPlayerByMemberId(member.getId());
+        final Player player = playerService.findPlayerByMemberId(memberAuthRequest.memberId());
         return new PlayerRequest(player.getId());
     }
 }

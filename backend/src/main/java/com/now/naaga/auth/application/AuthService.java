@@ -2,18 +2,14 @@ package com.now.naaga.auth.application;
 
 import com.now.naaga.auth.application.dto.AuthCommand;
 import com.now.naaga.auth.application.dto.AuthInfo;
-import com.now.naaga.auth.damain.AuthClient;
 import com.now.naaga.auth.damain.AuthTokens;
-import com.now.naaga.auth.exception.AuthException;
-import com.now.naaga.auth.damain.jwt.JwtGenerator;
+import com.now.naaga.auth.infrastructure.AuthClient;
+import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.member.application.CreateMemberCommand;
 import com.now.naaga.member.application.MemberService;
 import com.now.naaga.member.domain.Member;
-import com.now.naaga.member.presentation.dto.MemberAuthRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.now.naaga.auth.exception.AuthExceptionType.PASSWORD_MISMATCH;
 
 @Transactional
 @Service
@@ -33,19 +29,19 @@ public class AuthService {
         this.jwtGenerator = jwtGenerator;
     }
 
-    @Transactional(readOnly = true)
-    public void validateAuthentication(final MemberAuthRequest memberAuthRequest) {
-        final Member member = memberService.findMemberByEmail(memberAuthRequest.email());
-        if (!memberAuthRequest.password().equals(member.getPassword())) {
-            throw new AuthException(PASSWORD_MISMATCH);
-        }
-    }
-
     public AuthTokens login(final AuthCommand authCommand) {
         final AuthInfo kakaoAuthInfo = authClient.requestOauthInfo(authCommand.token());
-        System.out.println(kakaoAuthInfo);
-        final CreateMemberCommand createMemberCommand = new CreateMemberCommand(kakaoAuthInfo.getEmail(), "1111");
-        final Member member = memberService.findOrCreateMember(createMemberCommand); // 멤버 생성 혹은 찾아오기
+        final Member member = findOrCreateMember(kakaoAuthInfo);
         return jwtGenerator.generate(member.getId());
+    }
+
+    private Member findOrCreateMember(final AuthInfo kakaoAuthInfo) {
+        final String email = kakaoAuthInfo.getEmail();
+        final CreateMemberCommand createMemberCommand = new CreateMemberCommand(email, "1111");
+        try {
+            return memberService.findMemberByEmail(email);
+        } catch (Exception e) {
+            return memberService.create(createMemberCommand);
+        }
     }
 }
