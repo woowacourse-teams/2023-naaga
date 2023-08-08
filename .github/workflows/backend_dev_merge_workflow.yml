@@ -10,10 +10,7 @@ jobs:
     name: backend deploy
     runs-on: naaga
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        
       - name: Execute script
         run: |
           ./deploy.sh
-        working-directory: /home/ubuntu
+        working-directory: ~
