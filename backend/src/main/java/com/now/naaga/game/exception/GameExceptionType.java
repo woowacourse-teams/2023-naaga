@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 
 public enum GameExceptionType implements BaseExceptionType {
 
-    ALREADY_IN_PROGRESS(
-            405,
-            HttpStatus.BAD_REQUEST,
-            "게임이 진행 중 입니다."
+    INACCESSIBLE_AUTHENTICATION(
+            403,
+            HttpStatus.FORBIDDEN,
+            "게임에 접근할 수 있는 권한이 없습니다."
     ),
 
     NOT_EXIST(
@@ -17,10 +17,16 @@ public enum GameExceptionType implements BaseExceptionType {
             "게임이 존재하지 않습니다."
     ),
 
-    INACCESSIBLE_AUTHENTICATION(
-            403,
-            HttpStatus.FORBIDDEN,
-            "게임에 접근할 수 있는 권한이 없습니다."
+    ALREADY_IN_PROGRESS(
+            405,
+            HttpStatus.BAD_REQUEST,
+            "게임이 진행 중 입니다."
+    ),
+
+    CAN_NOT_FIND_PLACE(
+            406,
+            HttpStatus.BAD_REQUEST,
+            "배정 할 목적지가 존재하지 않습니다."
     ),
 
     NOT_ARRIVED(
@@ -33,12 +39,6 @@ public enum GameExceptionType implements BaseExceptionType {
             416,
             HttpStatus.BAD_REQUEST,
             "이미 종료된 게임입니다."
-    ),
-
-    INVALID_QUERY_PARAMETERS(
-            405,
-            HttpStatus.BAD_REQUEST,
-            "쿼리파라미터가 잘못 요청되었습니다."
     ),
 
     GAME_RESULT_NOT_EXIST(
