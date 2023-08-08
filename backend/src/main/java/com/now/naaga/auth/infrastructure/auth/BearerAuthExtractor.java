@@ -1,4 +1,4 @@
-package com.now.naaga.auth.infrastructure;
+package com.now.naaga.auth.infrastructure.auth;
 
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.auth.exception.AuthException;
@@ -9,13 +9,13 @@ import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_HEADER;
 import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
 
 @Component
-public class BearerAuthenticationExtractor implements AuthenticationExtractor<MemberAuthRequest> {
+public class BearerAuthExtractor implements AuthenticationExtractor<MemberAuthRequest> {
 
     private static final String BEARER_TYPE = "bearer";
 
     private final JwtProvider jwtProvider;
 
-    public BearerAuthenticationExtractor(final JwtProvider jwtProvider) {
+    public BearerAuthExtractor(final JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
     }
 

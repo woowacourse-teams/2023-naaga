@@ -1,6 +1,6 @@
 package com.now.naaga.auth.application.dto;
 
-import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.auth.AuthType;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
 
 public record AuthCommand(String token,

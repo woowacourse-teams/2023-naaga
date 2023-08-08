@@ -1,4 +1,4 @@
-package com.now.naaga.auth.infrastructure;
+package com.now.naaga.auth.infrastructure.auth;
 
 public interface AuthenticationExtractor<T> {
 

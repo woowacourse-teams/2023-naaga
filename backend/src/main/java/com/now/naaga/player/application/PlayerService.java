@@ -1,5 +1,6 @@
 package com.now.naaga.player.application;
 
+import com.now.naaga.player.application.dto.CreatePlayerCommand;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.exception.PlayerException;
@@ -8,6 +9,8 @@ import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.now.naaga.score.domain.Score;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,4 +79,8 @@ public class PlayerService {
         return (int) Math.floor((double) rank / players.size() * 100.0);
     }
 
+    public Player create(final CreatePlayerCommand createPlayerCommand) {
+        final Player player = new Player(createPlayerCommand.nickname(), new Score(0), createPlayerCommand.member());
+        return playerRepository.save(player);
+    }
 }
