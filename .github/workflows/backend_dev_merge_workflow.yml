@@ -4,8 +4,6 @@ on:
   push:
     branches: 
       - feat/#222
-    paths:
-      - 'backend/**'
 
 jobs:
   execute_deployment_script:
