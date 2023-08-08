@@ -1,4 +1,4 @@
-package com.now.naaga.auth.damain.jwt;
+package com.now.naaga.auth.infrastructure.jwt;
 
 import com.now.naaga.auth.damain.AuthTokens;
 import org.springframework.stereotype.Component;
