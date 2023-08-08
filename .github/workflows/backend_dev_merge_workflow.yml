@@ -13,6 +13,6 @@ jobs:
     steps:
       - name: Execute script
         run: |
-          ./deploy.sh > script_log.txt 2>&1
+          sudo nohup ./deploy.sh
         working-directory: /home/ubuntu
         
