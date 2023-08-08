@@ -29,4 +29,16 @@ public class MemberService {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
     }
+
+    // TODO: 8/8/23 Runtime 에러 발생으로 롤백 조건 충족 하여 이상한 서비스 메서드 만듬 수정 필요 
+    @Transactional
+    public Member findOrCreateMember(final CreateMemberCommand createMemberCommand) {
+        return memberRepository.findByEmail(createMemberCommand.email())
+                .orElse(createMember(createMemberCommand));
+    }
+    
+    private Member createMember(final CreateMemberCommand createMemberCommand) {
+        final Member member = new Member(createMemberCommand.email(), createMemberCommand.password());
+        return memberRepository.save(member);
+    }
 }
