@@ -9,8 +9,10 @@ jobs:
   execute_deployment_script:
     name: backend deploy
     runs-on: naaga
+    
     steps:
       - name: Execute script
         run: |
           ./deploy.sh
         working-directory: /home/ubuntu
+        
