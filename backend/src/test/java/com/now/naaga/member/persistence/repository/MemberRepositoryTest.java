@@ -25,7 +25,7 @@ class MemberRepositoryTest {
 
     @Test
     void 이메일로_회원을_조회한다() {
-        final Member saveMember = memberRepository.save(new Member("1111@woowa.com", "1234"));
+        final Member saveMember = memberRepository.save(new Member("1111@woowa.com"));
 
 // when
         final Member foundMember = memberRepository.findByEmail(saveMember.getEmail()).get();

@@ -1,9 +1,9 @@
-INSERT INTO member(id, email, password, created_at)
-VALUES (1, '111@woowa.com', '1111', now());
-INSERT INTO member(id, email, password, created_at)
-VALUES (2, '222@woowa.com', '2222', now());
-INSERT INTO member(id, email, password, created_at)
-VALUES (3, '333@woowa.com', '3333', now());
+INSERT INTO member(id, email, created_at)
+VALUES (1, '111@woowa.com', now());
+INSERT INTO member(id, email, created_at)
+VALUES (2, '222@woowa.com', now());
+INSERT INTO member(id, email, created_at)
+VALUES (3, '333@woowa.com', now());
 
 INSERT INTO player(id, member_id, total_score, nickname, created_at)
 VALUES (1, 1, 1000, 'krrong', now());

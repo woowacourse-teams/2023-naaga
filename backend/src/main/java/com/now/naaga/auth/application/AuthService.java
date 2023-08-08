@@ -43,7 +43,7 @@ public class AuthService {
 
     private Member findOrCreateMember(final AuthInfo kakaoAuthInfo) {
         final String email = kakaoAuthInfo.getEmail();
-        final CreateMemberCommand createMemberCommand = new CreateMemberCommand(email, "1111");
+        final CreateMemberCommand createMemberCommand = new CreateMemberCommand(email);
         try {
             return memberService.findMemberByEmail(email);
         } catch (Exception e) {

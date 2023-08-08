@@ -22,11 +22,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        //registry.addInterceptor(authInterceptor)
-//                .addPathPatterns("/**")
-//                .excludePathPatterns("/h2-console/**")
-//                .excludePathPatterns("/ranks")
-//                .excludePathPatterns("/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/**/*.gif")
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/h2-console/**")
+                .excludePathPatterns("/ranks")
+                .excludePathPatterns("/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/**/*.gif")
         ;
     }
 

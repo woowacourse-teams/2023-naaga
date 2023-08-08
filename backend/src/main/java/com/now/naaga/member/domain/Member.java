@@ -16,23 +16,17 @@ public class Member extends BaseEntity {
 
     private String email;
 
-    private String password;
-
     protected Member() {
     }
 
-    public Member(final String email,
-                  final String password) {
+    public Member(final String email) {
         this.email = email;
-        this.password = password;
     }
 
     public Member(final Long id,
-                  final String email,
-                  final String password) {
+                  final String email) {
         this.id = id;
         this.email = email;
-        this.password = password;
     }
 
     public Long getId() {
@@ -42,11 +36,6 @@ public class Member extends BaseEntity {
     public String getEmail() {
         return email;
     }
-
-    public String getPassword() {
-        return password;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -69,7 +58,6 @@ public class Member extends BaseEntity {
         return "Member{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 '}';
     }
 }

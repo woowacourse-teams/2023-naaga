@@ -32,7 +32,7 @@ public class MemberService {
     }
 
     public Member create(final CreateMemberCommand createMemberCommand) {
-        final Member member = new Member(createMemberCommand.email(), createMemberCommand.password());
+        final Member member = new Member(createMemberCommand.email());
         return memberRepository.save(member);
     }
 }

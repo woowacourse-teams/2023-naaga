@@ -1,5 +1,8 @@
 package com.now.naaga.game.presentation;
 
+import com.now.naaga.auth.damain.AuthTokens;
+import com.now.naaga.auth.exception.AuthExceptionType;
+import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
@@ -31,11 +34,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
 import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
@@ -46,7 +47,6 @@ import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
 import static com.now.naaga.game.fixture.PositionFixture.잠실_루터회관_정문_좌표;
 import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_좌표;
 import static com.now.naaga.member.fixture.MemberFixture.MEMBER_EMAIL;
-import static com.now.naaga.member.fixture.MemberFixture.MEMBER_PASSWORD;
 import static com.now.naaga.place.exception.PlaceExceptionType.CAN_NOT_FIND_PLACE;
 import static com.now.naaga.place.fixture.PlaceFixture.JEJU_PLACE;
 import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;
@@ -55,6 +55,9 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 class GameControllerTest extends CommonControllerTest {
+
+    @Autowired
+    private JwtGenerator jwtGenerator;
 
     @Autowired
     private GameRepository gameRepository;
@@ -90,15 +93,20 @@ class GameControllerTest extends CommonControllerTest {
                         "잠실루터회관IMAGE",
                         new Player("kokodak",
                                 new Score(1000),
-                                new Member("koko@da.k", "1031")
+                                new Member("koko@da.k")
                         )));
+
+
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
 
         CoordinateRequest coordinateRequest = new CoordinateRequest(37.514258, 127.100883);
 
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("koko@da.k", "1031")
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(coordinateRequest)
                 .when()
@@ -144,18 +152,19 @@ class GameControllerTest extends CommonControllerTest {
                         "잠실루터회관IMAGE",
                         new Player("kokodak",
                                 new Score(1000),
-                                new Member("koko@da.k", "1031")
+                                new Member("koko@da.k")
                         )));
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
 
         gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
-
-
         CoordinateRequest coordinateRequest = new CoordinateRequest(37.514258, 127.100883);
 
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("koko@da.k", "1031")
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(coordinateRequest)
                 .when()
@@ -190,15 +199,18 @@ class GameControllerTest extends CommonControllerTest {
                         "잠실루터회관IMAGE",
                         new Player("kokodak",
                                 new Score(1000),
-                                new Member("koko@da.k", "1031")
+                                new Member("koko@da.k")
                         )));
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
 
         CoordinateRequest coordinateRequest = new CoordinateRequest(37.500845, 127.036953);
 
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("koko@da.k", "1031")
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(coordinateRequest)
                 .when()
@@ -224,13 +236,18 @@ class GameControllerTest extends CommonControllerTest {
 
     @Test
     void 게임을_포기하면_게임_결과를_업데이트_한다() throws InterruptedException {
-        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
+        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com"))));
+
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         Game game = gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
         Thread.sleep(1000);
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("GIVE_UP", new CoordinateRequest(37.515546, 127.102902)))// 역삼역 좌표
                 .when()
@@ -258,12 +275,17 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     void 게임을_도착_성공으로_종료하면_게임_결과를_업데이트_한다() throws InterruptedException {
         // given & when
-        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
+        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com"))));
+
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         Game game = gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
         Thread.sleep(1000);
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
@@ -290,14 +312,19 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     void 마지막_시도에_도착_실패하면_게임_결과를_업데이트_한다() throws InterruptedException {
         // given & when
-        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
+        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com"))));
+
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         Game game = gameRepository.save(new Game(IN_PROGRESS, destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표, 1, Collections.emptyList(),
                 LocalDateTime.now(), null));
         Thread.sleep(1000);
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
                 .when()
@@ -324,12 +351,17 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     void 잔여_횟수가_남았지만_도착_실패하면_예외가_발생한다() throws InterruptedException {
         // given & when
-        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
+        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com"))));
+
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         Game game = gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
                 .when()
@@ -355,12 +387,16 @@ class GameControllerTest extends CommonControllerTest {
 
     @Test
     void 사용자의_인증_정보가_존재하지_않는_경우_예외가_발생한다() {
-        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
+        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com"))));
+
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         Game game = gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("gamja@gmail.com", "1234")
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("GIVE_UP", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
@@ -372,7 +408,7 @@ class GameControllerTest extends CommonControllerTest {
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
 
-        final ExceptionResponse expected = new ExceptionResponse(200, "사용자 정보가 존재하지 않습니다.");
+        final ExceptionResponse expected = new ExceptionResponse(NOT_EXIST_HEADER.errorCode(), NOT_EXIST_HEADER.errorMessage());
 
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -388,13 +424,17 @@ class GameControllerTest extends CommonControllerTest {
     void 특정_게임에_접근_권한이_없는경우_예외가_발생한다() {
         Player otherPlayer = playerRepository.save(new Player("Irye", new Score(100), MEMBER_IRYE()));
 
-        Player chae = new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"));
+        Player chae = new Player("chae", new Score(1000), new Member("chae@gmail.com"));
         Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", chae));
         Game game = gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
 
+        final Long memberId = otherPlayer.getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(otherPlayer.getMember().getEmail(), otherPlayer.getMember().getPassword())
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
@@ -420,13 +460,17 @@ class GameControllerTest extends CommonControllerTest {
 
     @Test
     void 제공된_시도횟수를_초과한_경우_또는_이미_종료된_게임인_경우_예외가_발생한다() {
-        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
+        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com"))));
         Game game = gameRepository.save(new Game(DONE, destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표, 0, Collections.emptyList(),
                 LocalDateTime.now(), null));
 
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(game.getPlayer().getMember().getEmail(), game.getPlayer().getMember().getPassword())
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
@@ -453,11 +497,16 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     void 게임_식별자로_게임을_조회한다() {
         // given & when
-        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
+        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com"))));
+
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         Game game = gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(game.getPlayer().getMember().getEmail(), game.getPlayer().getMember().getPassword())
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(new FindGameByIdCommand(game.getId(), game.getPlayer().getId()))
                 .when()
@@ -492,11 +541,16 @@ class GameControllerTest extends CommonControllerTest {
     void 게임_식별자로_조회하려는_게임이_존재하지_않는_경우_예외가_발생한다() {
         // given & when
         Player notSavedPlayer = PLAYER("irye", MEMBER_IRYE());
-        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
+        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com"))));
         Game game = new Game(Long.MAX_VALUE, IN_PROGRESS, destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표, 3, Collections.emptyList(), null, null);
+
+        final Long memberId = destination.getRegisteredPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(game.getPlayer().getMember().getEmail(), game.getPlayer().getMember().getPassword())
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(new FindGameByIdCommand(game.getId(), game.getPlayer().getId()))
                 .when()
@@ -527,11 +581,15 @@ class GameControllerTest extends CommonControllerTest {
         final Place place = placeRepository.save(JEJU_PLACE());
         final Game game1 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
         final GameResult gameResult1 = gameResultRepository.save(new GameResult(ResultType.SUCCESS, new Score(12), game1));
+
+        final Long memberId = game1.getPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
         // when
         final ExtractableResponse<Response> response = RestAssured.given()
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic("kokodak@koko.dak", "1234")
+                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .get("/games/" + game1.getId() + "/result")
                 .then().log().all()
@@ -558,10 +616,15 @@ class GameControllerTest extends CommonControllerTest {
         Game game2 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
         GameResult gameResult1 = gameResultRepository.save(new GameResult(ResultType.SUCCESS, new Score(12), game1));
         GameResult gameResult2 = gameResultRepository.save(new GameResult(ResultType.FAIL, new Score(0), game2));
+
+        final Long memberId = game1.getPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         // when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic("kokodak@koko.dak", "1234")
+                .header("Authorization", "Bearer " + accessToken)
                 .param("sort-by", "time")
                 .param("order", "descending")
                 .when().get("/games/results")
@@ -592,12 +655,15 @@ class GameControllerTest extends CommonControllerTest {
         // given & when
         final Place place = placeRepository.save(JEJU_PLACE());
         final Game game = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
+        final Long memberId = game.getPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
 
         final CoordinateRequest SEOUL_COORDINATE = new CoordinateRequest(37.535978, 126.981654);
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(MEMBER_EMAIL, MEMBER_PASSWORD)
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(SEOUL_COORDINATE)
                 .when()
@@ -631,9 +697,13 @@ class GameControllerTest extends CommonControllerTest {
         final Game game = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
         final Hint hint = hintRepository.save(new Hint(SEOUL_POSITION(), Direction.SOUTH, game));
 
+        final Long memberId = game.getPlayer().getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(MEMBER_EMAIL, MEMBER_PASSWORD)
+                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .get("/games/{gameId}/hints/{hintId}", game.getId(), hint.getId())
                 .then().log().all()

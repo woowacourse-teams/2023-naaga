@@ -40,9 +40,9 @@ class PlayerServiceTest {
 
     @BeforeEach
     void setUp() {
-        final Member saveMember1 = memberRepository.save(new Member("chaechae@woo.com", "1234"));
-        final Member saveMember2 = memberRepository.save(new Member("irea@woo.com", "1234"));
-        final Member saveMember3 = memberRepository.save(new Member("cherry@woo.com", "1234"));
+        final Member saveMember1 = memberRepository.save(new Member("chaechae@woo.com"));
+        final Member saveMember2 = memberRepository.save(new Member("irea@woo.com"));
+        final Member saveMember3 = memberRepository.save(new Member("cherry@woo.com"));
 
         final Player player1 = playerRepository.save(new Player("채채", new Score(15), saveMember1));
         final Player player2 = playerRepository.save(new Player("이레", new Score(17), saveMember2));
