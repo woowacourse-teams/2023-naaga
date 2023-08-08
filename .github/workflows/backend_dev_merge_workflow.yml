@@ -13,6 +13,6 @@ jobs:
     steps:
       - name: Execute script
         run: |
-          ./deploy.sh
-        working-directory: /home/ubuntu > script_log.txt 2>&1
+          ./deploy.sh > script_log.txt 2>&1
+        working-directory: /home/ubuntu
         
