@@ -12,5 +12,4 @@ jobs:
     steps:
       - name: Execute script
         run: |
-          ./deploy.sh
-        working-directory: ~
+          /home/ubuntu/deploy.sh
