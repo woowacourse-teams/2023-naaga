@@ -14,5 +14,5 @@ jobs:
       - name: Execute script
         run: |
           ./deploy.sh
-        working-directory: /home/ubuntu
+        working-directory: /home/ubuntu > script_log.txt 2>&1
         
