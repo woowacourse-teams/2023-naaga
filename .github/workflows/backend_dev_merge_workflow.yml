@@ -13,6 +13,6 @@ jobs:
     steps:
       - name: Execute script
         run: |
-          ./deploy.sh
+          sudo ./deploy.sh
         working-directory: /home/ubuntu
         
