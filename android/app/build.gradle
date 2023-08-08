@@ -23,6 +23,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "BASE_URL", properties["BASE_URL"]
+        buildConfigField "String", "KAKAO_NATIVE_APP_KEY", properties["KAKAO_NATIVE_APP_KEY"]
+        resValue "string", "kakao_redirection_scheme", properties["kakao_redirection_scheme"]
     }
 
     buildTypes {
