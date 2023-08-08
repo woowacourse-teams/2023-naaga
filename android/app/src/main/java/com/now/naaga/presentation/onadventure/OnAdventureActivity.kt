@@ -3,6 +3,7 @@ package com.now.naaga.presentation.onadventure
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.naaga.R
+import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_END_ADVENTURE
@@ -76,7 +78,6 @@ class OnAdventureActivity :
             val coordinate = Coordinate(location.latitude, location.longitude)
             viewModel.calculateDistance(coordinate)
             viewModel.myCoordinate.value = coordinate
-            viewModel.startCoordinate.setValue(coordinate)
         }
     }
 
@@ -87,11 +88,11 @@ class OnAdventureActivity :
         viewModel.adventure.observe(this) {
             isAdventureDone(it.adventureStatus)
         }
-        viewModel.destination.observe(this) {
-            addDestinationMarker(it.coordinate)
+        viewModel.hints.observe(this) { hints ->
+            drawHintMarkers(hints)
         }
         viewModel.lastHint.observe(this) {
-            drawHintMarker(it)
+            drawHintMarkers(listOf(it))
         }
         viewModel.failure.observe(this) {
             controlException(it)
@@ -117,13 +118,22 @@ class OnAdventureActivity :
         }
     }
 
-    private fun drawHintMarker(hint: Hint) {
-        addHintMarker(hint)
+    private fun drawHintMarkers(hints: List<Hint>) {
+        hints.forEach { hint ->
+            addHintMarker(hint)
+        }
     }
 
     private fun controlException(throwable: Throwable) {
-        fun Context.shorToast(@StringRes message: Int) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        fun Context.shorToast(@StringRes message: Int) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         when (throwable) {
+            is AdventureThrowable.EndAdventureFailure -> shorToast(R.string.onAdventure_retry)
+            is NaagaThrowable.ClientError -> Log.d("asdf", "code: ${throwable.code}, message: ${throwable.message}")
+            is NaagaThrowable.BackEndError -> Log.d("asdf", "message: ${throwable.message}")
+            is NaagaThrowable.ServerConnectFailure -> Log.d("asdf", "message: ${throwable.message}")
+            else -> Log.d("asdf", "message: 예상치 못한 오류")
+        }
+        /*when (throwable) {
             is AdventureThrowable.EndAdventureFailure -> shorToast(R.string.onAdventure_retry)
             is AdventureThrowable.GiveUpAdventureFailure -> shorToast(R.string.onAdventure_error_retry)
             is AdventureThrowable.HintFailure -> shorToast(R.string.onAdventure_no_more_hint)
@@ -132,7 +142,7 @@ class OnAdventureActivity :
                 shorToast(R.string.onAdventure_begin_error)
                 finish()
             }
-        }
+        }*/
     }
 
     private fun showGiveUpDialog() {
@@ -165,7 +175,7 @@ class OnAdventureActivity :
     }
 
     private fun showPolaroidDialog() {
-        val image = viewModel.destination.value?.image ?: return
+        val image = viewModel.adventure.value?.destination?.image ?: return
         val fragment: Fragment? = supportFragmentManager.findFragmentByTag(DESTINATION_PHOTO)
         if (fragment == null) {
             PolaroidDialog.makeDialog(image).show(supportFragmentManager, DESTINATION_PHOTO)
