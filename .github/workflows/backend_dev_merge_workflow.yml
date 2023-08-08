@@ -9,9 +9,11 @@ jobs:
   execute_deployment_script:
     name: backend deploy
     runs-on: naaga
-        
     steps:
-      - name: Change working directory and run command
-        working-directory: path/to/your/directory
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Execute script
         run: |
           ./deploy.sh
+        working-directory: /home/ubuntu
