@@ -1,3 +1,4 @@
+/*
 package com.now.naaga.common.config;
 
 import org.springframework.stereotype.Component;
@@ -29,3 +30,4 @@ public class AuthTokensGenerator {
         return AuthTokens.of(accessToken, refreshToken, BEARER_TYPE, ACCESS_TOKEN_EXPIRE_TIME / 1000L);
     }
 }
+*/
