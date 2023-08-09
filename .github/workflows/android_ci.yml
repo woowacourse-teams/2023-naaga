@@ -41,6 +41,18 @@ jobs:
         run: |
           echo BASE_URL=\"$API_KEY\" > ./local.properties
 
+      - name: Add Local Properties2
+        env:
+          API_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+        run: |
+          echo KAKAO_NATIVE_APP_KEY=\"$API_KEY\" > ./local.properties
+
+      - name: Add Local Properties3
+        env:
+          API_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
+        run: |
+          echo kakao_redirection_scheme=\"$API_KEY\" > ./local.properties
+
       - name: Run ktlint
         run: ./gradlew ktlintCheck
 
@@ -76,6 +88,18 @@ jobs:
           API_KEY: ${{ secrets.BASE_URL }}
         run: |
           echo BASE_URL=\"$API_KEY\" > ./local.properties
+
+      - name: Add Local Properties2
+        env:
+          API_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+        run: |
+          echo KAKAO_NATIVE_APP_KEY=\"$API_KEY\" > ./local.properties
+
+      - name: Add Local Properties3
+        env:
+          API_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
+        run: |
+          echo kakao_redirection_scheme=\"$API_KEY\" > ./local.properties
 
       - name: Add Google Service Json file
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
@@ -115,6 +139,18 @@ jobs:
           API_KEY: ${{ secrets.BASE_URL }}
         run: |
           echo BASE_URL=\"$API_KEY\" > ./local.properties
+
+      - name: Add Local Properties2
+        env:
+          API_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+        run: |
+          echo KAKAO_NATIVE_APP_KEY=\"$API_KEY\" > ./local.properties
+
+      - name: Add Local Properties3
+        env:
+          API_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
+        run: |
+          echo kakao_redirection_scheme=\"$API_KEY\" > ./local.properties
 
       - name: Add Google Service Json file
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
