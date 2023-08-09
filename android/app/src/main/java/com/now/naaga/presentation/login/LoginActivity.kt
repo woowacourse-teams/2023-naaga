@@ -8,7 +8,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.kakao.sdk.auth.TokenManagerProvider
 import com.now.naaga.R
-import com.now.naaga.data.local.KakaoAuthPreference
+import com.now.naaga.data.local.KakaoAuthDataSource
 import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.databinding.ActivityLoginBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         val authRepository = DefaultAuthRepository()
-        val authPreference = KakaoAuthPreference(this)
+        val authPreference = KakaoAuthDataSource(this)
         val factory = LoginViewModelFactory(authRepository, authPreference)
         viewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
     }

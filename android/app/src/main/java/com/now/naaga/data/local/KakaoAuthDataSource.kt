@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-class KakaoAuthPreference(context: Context) : AuthPreference {
+class KakaoAuthDataSource(context: Context) : AuthDataSource {
     private val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
