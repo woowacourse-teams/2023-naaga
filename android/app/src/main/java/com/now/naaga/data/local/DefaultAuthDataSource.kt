@@ -19,15 +19,24 @@ class DefaultAuthDataSource(context: Context) : AuthDataSource {
         )
 
     override fun getAccessToken(): String? {
-        return authPreference.getString(ACCESS_TOKEN_KEY, null)
+        return authPreference.getString(ACCESS_TOKEN, null)
     }
 
     override fun setAccessToken(newToken: String) {
-        authPreference.edit().putString(ACCESS_TOKEN_KEY, newToken).apply()
+        authPreference.edit().putString(ACCESS_TOKEN, newToken).apply()
+    }
+
+    override fun getRefreshToken(): String? {
+        return authPreference.getString(REFRESH_TOKEN, null)
+    }
+
+    override fun setRefreshToken(newToken: String) {
+        authPreference.edit().putString(REFRESH_TOKEN, newToken).apply()
     }
 
     companion object {
         private const val AUTH_ENCRYPTED_PREFERENCE = "AUTH_ENCRYPTED_PREFERENCE"
-        private const val ACCESS_TOKEN_KEY = "access_token_key"
+        private const val ACCESS_TOKEN = "ACCESS_TOKEN"
+        private const val REFRESH_TOKEN = "REFRESH_TOKEN"
     }
 }
