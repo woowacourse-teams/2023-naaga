@@ -55,12 +55,12 @@ public class AuthInterceptorTest extends CommonControllerTest {
         final int actualStatusCode = extract.statusCode();
         final int expectedStatusCode = NOT_EXIST_HEADER.httpStatus().value();
         final ExceptionResponse actualResponse = extract.body().as(ExceptionResponse.class);
-        final ExceptionResponse exceptedResponse = new ExceptionResponse(NOT_EXIST_HEADER.errorCode(), NOT_EXIST_HEADER.errorMessage());
+        final ExceptionResponse expectedResponse = new ExceptionResponse(NOT_EXIST_HEADER.errorCode(), NOT_EXIST_HEADER.errorMessage());
         assertSoftly(softly -> {
             softly.assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
             softly.assertThat(actualResponse)
                     .usingRecursiveComparison()
-                    .isEqualTo(exceptedResponse);
+                    .isEqualTo(expectedResponse);
         });
     }
 
@@ -83,12 +83,12 @@ public class AuthInterceptorTest extends CommonControllerTest {
         final int actualStatusCode = extract.statusCode();
         final int expectedStatusCode = INVALID_HEADER.httpStatus().value();
         final ExceptionResponse actualResponse = extract.body().as(ExceptionResponse.class);
-        final ExceptionResponse exceptedResponse = new ExceptionResponse(INVALID_HEADER.errorCode(), INVALID_HEADER.errorMessage());
+        final ExceptionResponse expectedResponse = new ExceptionResponse(INVALID_HEADER.errorCode(), INVALID_HEADER.errorMessage());
         assertSoftly(softly -> {
             softly.assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
             softly.assertThat(actualResponse)
                     .usingRecursiveComparison()
-                    .isEqualTo(exceptedResponse);
+                    .isEqualTo(expectedResponse);
         });
     }
 
@@ -113,12 +113,12 @@ public class AuthInterceptorTest extends CommonControllerTest {
         final int actualStatusCode = extract.statusCode();
         final int expectedStatusCode = INVALID_TOKEN.httpStatus().value();
         final ExceptionResponse actualResponse = extract.body().as(ExceptionResponse.class);
-        final ExceptionResponse exceptedResponse = new ExceptionResponse(INVALID_TOKEN.errorCode(), INVALID_TOKEN.errorMessage());
+        final ExceptionResponse expectedResponse = new ExceptionResponse(INVALID_TOKEN.errorCode(), INVALID_TOKEN.errorMessage());
         assertSoftly(softly -> {
             softly.assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
             softly.assertThat(actualResponse)
                     .usingRecursiveComparison()
-                    .isEqualTo(exceptedResponse);
+                    .isEqualTo(expectedResponse);
         });
     }
 
@@ -143,12 +143,12 @@ public class AuthInterceptorTest extends CommonControllerTest {
         final int actualStatusCode = extract.statusCode();
         final int expectedStatusCode = INVALID_TOKEN.httpStatus().value();
         final ExceptionResponse actualResponse = extract.body().as(ExceptionResponse.class);
-        final ExceptionResponse exceptedResponse = new ExceptionResponse(INVALID_TOKEN.errorCode(), INVALID_TOKEN.errorMessage());
+        final ExceptionResponse expectedResponse = new ExceptionResponse(INVALID_TOKEN.errorCode(), INVALID_TOKEN.errorMessage());
         assertSoftly(softly -> {
             softly.assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
             softly.assertThat(actualResponse)
                     .usingRecursiveComparison()
-                    .isEqualTo(exceptedResponse);
+                    .isEqualTo(expectedResponse);
         });
     }
 
