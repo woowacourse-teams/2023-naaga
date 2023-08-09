@@ -44,7 +44,6 @@ jobs:
       - name: Add Native Key In Local Properties
         env:
           API_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
-          KAKAO_REDIRECTION_SCHEME: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
         run: |
           echo KAKAO_NATIVE_APP_KEY=\"$API_KEY\" > ./local.properties
 
@@ -93,7 +92,6 @@ jobs:
       - name: Add Native Key In Local Properties
         env:
           API_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
-          KAKAO_REDIRECTION_SCHEME: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
         run: |
           echo KAKAO_NATIVE_APP_KEY=\"$API_KEY\" > ./local.properties
 
@@ -145,7 +143,6 @@ jobs:
       - name: Add Native Key In Local Properties
         env:
           API_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
-          KAKAO_REDIRECTION_SCHEME: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
         run: |
           echo KAKAO_NATIVE_APP_KEY=\"$API_KEY\" > ./local.properties
 
