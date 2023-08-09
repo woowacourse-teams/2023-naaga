@@ -15,4 +15,12 @@ sealed class DataThrowable(val code: Int, message: String) : Throwable(message) 
 
     // 500번대 장소 관련 에러
     class PlaceThrowable(code: Int, message: String) : DataThrowable(code, message)
+
+    // http 응답코드 500번대, body가 null일 때의 에러
+    class IllegalStateThrowable : DataThrowable(ILLEGALSTATETHROWABLE_CODE, ILLEGALSTATETHROWABLE_MESSAGE)
+
+    companion object {
+        const val ILLEGALSTATETHROWABLE_CODE = 900
+        const val ILLEGALSTATETHROWABLE_MESSAGE = "잘못된 값입니다."
+    }
 }
