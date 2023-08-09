@@ -7,13 +7,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.MYPAGE_GO_RESULTS
 import com.now.naaga.data.repository.DefaultPlaceRepository
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.repository.DefaultStatisticsRepository
 import com.now.naaga.databinding.ActivityMyPageBinding
 import com.now.naaga.presentation.adventurehistory.AdventureHistoryActivity
 
-class MyPageActivity : AppCompatActivity() {
+class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityMyPageBinding
     private lateinit var viewModel: MyPageViewModel
 
@@ -21,10 +24,10 @@ class MyPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        registerAnalytics(this.lifecycle)
         initViewModel()
         setClickListeners()
-        subscribeObserving()
+        subscribe()
         fetchData()
     }
 
@@ -43,6 +46,7 @@ class MyPageActivity : AppCompatActivity() {
             finish()
         }
         binding.btnMypageAdventureResults.setOnClickListener {
+            logClickEvent(getViewEntryName(it), MYPAGE_GO_RESULTS)
             val intent = AdventureHistoryActivity.getIntent(this)
             startActivity(intent)
         }
@@ -54,7 +58,7 @@ class MyPageActivity : AppCompatActivity() {
         viewModel.fetchPlaces()
     }
 
-    private fun subscribeObserving() {
+    private fun subscribe() {
         viewModel.statistics.observe(this) { statistics ->
             binding.customGridMypageStatistics.initContent(statistics.toUiModel(this))
         }
@@ -64,7 +68,7 @@ class MyPageActivity : AppCompatActivity() {
         }
 
         viewModel.errorMessage.observe(this) { errorMessage ->
-            if (NaagaThrowable.ServerConnectFailure().userMessage == errorMessage) {
+            if (NaagaThrowable.ServerConnectFailure().message == errorMessage) {
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }

@@ -18,13 +18,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Coordinate
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
+import com.now.naaga.data.firebase.analytics.UPLOAD_SET_COORDINATE
 import com.now.naaga.data.repository.DefaultPlaceRepository
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
 
-class UploadActivity : AppCompatActivity() {
+class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityUploadBinding
     private lateinit var viewModel: UploadViewModel
 
@@ -46,6 +50,7 @@ class UploadActivity : AppCompatActivity() {
                     Manifest.permission.CAMERA -> {
                         CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
                     }
+
                     Manifest.permission.ACCESS_FINE_LOCATION -> {
                         LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
                     }
@@ -61,6 +66,7 @@ class UploadActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initViewModel()
+        registerAnalytics(this.lifecycle)
         requestPermission()
         setCoordinate()
         setClickListeners()
@@ -72,6 +78,7 @@ class UploadActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, factory)[UploadViewModel::class.java]
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        setClickListeners()
     }
 
     private fun requestPermission() {
@@ -110,13 +117,16 @@ class UploadActivity : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.ivUploadCameraIcon.setOnClickListener {
+            logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
 
         binding.ivUploadPhoto.setOnClickListener {
+            logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
         binding.ivUploadPhotoCoordinate.setOnClickListener {
+            logClickEvent(getViewEntryName(it), UPLOAD_SET_COORDINATE)
             checkLocationPermission()
         }
         binding.ivUploadClose.setOnClickListener {

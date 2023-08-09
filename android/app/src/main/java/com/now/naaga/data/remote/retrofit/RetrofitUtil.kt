@@ -42,11 +42,12 @@ fun <T> Call<T>.fetchNaagaNullableResponse(
                     onSuccess(response.body())
                 } else {
                     if (response.isFailure400()) {
-                        onFailure(response.getFailureDto().getThrowable())
+                        val failureDto = response.getFailureDto()
+                        onFailure(NaagaThrowable.ClientError(failureDto.code, failureDto.message))
                         return
                     }
                     if (response.isFailure500()) {
-                        onFailure(NaagaUnknownError(ERROR_500))
+                        onFailure(NaagaThrowable.BackEndError())
                         return
                     }
                     onFailure(NaagaUnknownError(ERROR_NOT_400_500))
@@ -76,11 +77,12 @@ fun <T> Call<T>.fetchNaagaResponse(
                     onSuccess(body)
                 } else {
                     if (response.isFailure400()) {
-                        onFailure(response.getFailureDto().getThrowable())
+                        val failureDto = response.getFailureDto()
+                        onFailure(NaagaThrowable.ClientError(failureDto.code, failureDto.message))
                         return
                     }
                     if (response.isFailure500()) {
-                        onFailure(NaagaUnknownError(ERROR_500))
+                        onFailure(NaagaThrowable.BackEndError())
                         return
                     }
                     onFailure(NaagaUnknownError(ERROR_NOT_400_500))

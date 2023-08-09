@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AdventureStatusDto(
+    val id: Long,
     val gameStatus: String,
 )

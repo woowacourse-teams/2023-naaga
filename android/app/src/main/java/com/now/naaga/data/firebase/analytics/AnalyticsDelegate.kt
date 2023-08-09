@@ -1,5 +1,7 @@
 package com.now.naaga.data.firebase.analytics
 
+import android.content.Context
+import android.view.View
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -14,6 +16,8 @@ interface AnalyticsDelegate {
     fun registerAnalytics(lifeCycle: Lifecycle)
     fun logClickEvent(id: String, name: String)
     fun logServerError(apiName: String, httpCode: Int, errorMessage: String)
+
+    fun Context.getViewEntryName(view: View): String
 }
 
 class DefaultAnalyticsDelegate() : AnalyticsDelegate, DefaultLifecycleObserver {
@@ -42,6 +46,10 @@ class DefaultAnalyticsDelegate() : AnalyticsDelegate, DefaultLifecycleObserver {
             param(HTTP_STATUS_CODE, "$httpCode")
             param(ERROR_MESSAGE, errorMessage)
         }
+    }
+
+    override fun Context.getViewEntryName(view: View): String {
+        return resources.getResourceEntryName(view.id)
     }
 
     companion object {

@@ -26,7 +26,7 @@ class RankActivity : AppCompatActivity() {
         initRecyclerView()
         viewModel.fetchMyRank()
         viewModel.fetchRanks()
-        subscribeObserving()
+        subscribe()
         setClickListeners()
     }
 
@@ -45,12 +45,12 @@ class RankActivity : AppCompatActivity() {
         }
     }
 
-    private fun subscribeObserving() {
+    private fun subscribe() {
         viewModel.ranks.observe(this) { ranks ->
             updateRank(ranks)
         }
         viewModel.errorMessage.observe(this) { errorMessage ->
-            if (NaagaThrowable.ServerConnectFailure().userMessage == errorMessage) {
+            if (NaagaThrowable.ServerConnectFailure().message == errorMessage) {
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
                 finish()
             }

@@ -53,7 +53,6 @@
             android:elevation="4dp"
             android:enabled="@{viewModel.isNearby()}"
             android:fontFamily="@font/pretendard_bold"
-            android:onClick="@{() -> viewModel.endAdventure()}"
             android:text="@{viewModel.isNearby() ? @string/onAdventure_end_adventure : @string/onAdventure_on_adventure}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_onAdventure_photo"
