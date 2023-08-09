@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
+import com.kakao.sdk.auth.TokenManagerProvider
 import com.now.naaga.R
 import com.now.naaga.data.local.KakaoAuthPreference
 import com.now.naaga.data.repository.DefaultAuthRepository
@@ -25,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
         initViewModel()
         setClickListeners()
         setStatusBar()
-        viewModel.fetchToken()
+        getToken()?.let { viewModel.fetchToken(it) }
     }
 
     private fun initViewModel() {
@@ -33,6 +34,10 @@ class LoginActivity : AppCompatActivity() {
         val authPreference = KakaoAuthPreference(this)
         val factory = LoginViewModelFactory(authRepository, authPreference)
         viewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
+    }
+
+    private fun getToken(): String? {
+        return TokenManagerProvider.instance.manager.getToken()?.accessToken
     }
 
     private fun setClickListeners() {
