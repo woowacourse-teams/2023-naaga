@@ -2,14 +2,16 @@ name: NAAGA BACKEND MERGE CI
 
 on:
   push:
-    branches: 
-      - feat/#222
+    branches:
+      - dev
+    paths:
+      - 'backend/**'
 
 jobs:
   execute_deployment_script:
     name: backend deploy
     runs-on: naaga
-    
+
     steps:
       - name: Execute script
         run: |
