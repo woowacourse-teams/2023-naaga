@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-class KakaoAuthDataSource(context: Context) : AuthDataSource {
+class DefaultAuthDataSource(context: Context) : AuthDataSource {
     private val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
@@ -12,14 +12,14 @@ class KakaoAuthDataSource(context: Context) : AuthDataSource {
     private val pref =
         EncryptedSharedPreferences.create(
             context,
-            SECRET_SHARED_PREFS_FILE_NAME,
+            AUTH_ENCRYPTED_PREFERENCE,
             masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
         )
 
-    override fun getAccessToken(): String {
-        return pref.getString(ACCESS_TOKEN_KEY, "") ?: ""
+    override fun getAccessToken(): String? {
+        return pref.getString(ACCESS_TOKEN_KEY, null)
     }
 
     override fun setAccessToken(newToken: String) {
@@ -27,7 +27,7 @@ class KakaoAuthDataSource(context: Context) : AuthDataSource {
     }
 
     companion object {
-        private const val SECRET_SHARED_PREFS_FILE_NAME = "secret_shared_prefs"
+        private const val AUTH_ENCRYPTED_PREFERENCE = "AUTH_ENCRYPTED_PREFERENCE"
         private const val ACCESS_TOKEN_KEY = "access_token_key"
     }
 }
