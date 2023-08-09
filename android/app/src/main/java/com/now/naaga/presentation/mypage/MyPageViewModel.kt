@@ -48,7 +48,7 @@ class MyPageViewModel(
     }
 
     fun fetchPlaces() {
-        placeRepository.fetchMyPlaces(SortType.RANK.name, OrderType.DESCENDING.name) { result ->
+        placeRepository.fetchMyPlaces(SortType.TIME.name, OrderType.DESCENDING.name) { result ->
             result
                 .onSuccess { places -> _places.value = places }
                 .onFailure { setErrorMessage(it as DataThrowable) }
