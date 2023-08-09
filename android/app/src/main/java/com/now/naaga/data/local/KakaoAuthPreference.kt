@@ -1,14 +1,25 @@
 package com.now.naaga.data.local
 
 import android.content.Context
-import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 
 class KakaoAuthPreference(context: Context) : AuthPreference {
-    private val pref: SharedPreferences =
-        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+    private val masterKey = MasterKey.Builder(context)
+        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+        .build()
 
-    override fun getAccessToken(): String? {
-        return pref.getString(ACCESS_TOKEN_KEY, "")
+    private val pref =
+        EncryptedSharedPreferences.create(
+            context,
+            SECRET_SHARED_PREFS_FILE_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+        )
+
+    override fun getAccessToken(): String {
+        return pref.getString(ACCESS_TOKEN_KEY, "") ?: ""
     }
 
     override fun setAccessToken(newToken: String) {
@@ -16,7 +27,7 @@ class KakaoAuthPreference(context: Context) : AuthPreference {
     }
 
     companion object {
-        private const val PREFERENCE_NAME = "ACCESS_TOKEN_"
+        private const val SECRET_SHARED_PREFS_FILE_NAME = "secret_shared_prefs"
         private const val ACCESS_TOKEN_KEY = "access_token_key"
     }
 }
