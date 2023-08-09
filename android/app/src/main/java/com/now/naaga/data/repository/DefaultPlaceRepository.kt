@@ -7,7 +7,6 @@ import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.dto.PlaceDto
 import com.now.naaga.data.remote.retrofit.ServicePool.placeService
-import com.now.naaga.data.remote.retrofit.fetchNaagaResponse
 import com.now.naaga.data.remote.retrofit.fetchResponse
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -68,10 +67,5 @@ class DefaultPlaceRepository : PlaceRepository {
             Json.encodeToString(coordinate.toDto()).toRequestBody("application/json".toMediaTypeOrNull())
 
         val call = placeService.registerPlace(namePart, descriptionPart, coordinatePart, imagePart)
-
-        call.fetchNaagaResponse(
-            onSuccess = { placeDto -> callback(Result.success(placeDto.toDomain())) },
-            onFailure = { callback(Result.failure(it)) },
-        )
     }
 }
