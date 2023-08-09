@@ -37,13 +37,22 @@ jobs:
 
       - name: Add Local Properties
         env:
-          BASE_URL: ${{ secrets.BASE_URL }}
-          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+          API_KEY: ${{ secrets.BASE_URL }}
+        run: |
+          echo BASE_URL=\"$API_KEY\" > ./local.properties
+
+      - name: Add Native Key In Local Properties
+        env:
+          API_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
           KAKAO_REDIRECTION_SCHEME: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
         run: |
-          echo BASE_URL=\"$BASE_URL\" > ./local.properties
-          echo KAKAO_NATIVE_APP_KEY=\"$KAKAO_NATIVE_APP_KEY\" > ./local.properties
-          echo kakao_redirection_scheme=\"$KAKAO_REDIRECTION_SCHEME\" > ./local.properties
+          echo KAKAO_NATIVE_APP_KEY=\"$API_KEY\" > ./local.properties
+
+      - name: Add Redirection scheme In Local Properties
+        env:
+          API_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
+        run: |
+          echo kakao_redirection_scheme=\"$API_KEY\" > ./local.properties
 
       - name: Run ktlint
         run: ./gradlew ktlintCheck
@@ -77,13 +86,22 @@ jobs:
 
       - name: Add Local Properties
         env:
-          BASE_URL: ${{ secrets.BASE_URL }}
-          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+          API_KEY: ${{ secrets.BASE_URL }}
+        run: |
+          echo BASE_URL=\"$API_KEY\" > ./local.properties
+
+      - name: Add Native Key In Local Properties
+        env:
+          API_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
           KAKAO_REDIRECTION_SCHEME: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
         run: |
-          echo BASE_URL=\"$BASE_URL\" > ./local.properties
-          echo KAKAO_NATIVE_APP_KEY=\"$KAKAO_NATIVE_APP_KEY\" > ./local.properties
-          echo kakao_redirection_scheme=\"$KAKAO_REDIRECTION_SCHEME\" > ./local.properties
+          echo KAKAO_NATIVE_APP_KEY=\"$API_KEY\" > ./local.properties
+
+      - name: Add Redirection scheme In Local Properties
+        env:
+          API_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
+        run: |
+          echo kakao_redirection_scheme=\"$API_KEY\" > ./local.properties
 
       - name: Add Google Service Json file
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
@@ -120,13 +138,22 @@ jobs:
 
       - name: Add Local Properties
         env:
-          BASE_URL: ${{ secrets.BASE_URL }}
-          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+          API_KEY: ${{ secrets.BASE_URL }}
+        run: |
+          echo BASE_URL=\"$API_KEY\" > ./local.properties
+
+      - name: Add Native Key In Local Properties
+        env:
+          API_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
           KAKAO_REDIRECTION_SCHEME: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
         run: |
-          echo BASE_URL=\"$BASE_URL\" > ./local.properties
-          echo KAKAO_NATIVE_APP_KEY=\"$KAKAO_NATIVE_APP_KEY\" > ./local.properties
-          echo kakao_redirection_scheme=\"$KAKAO_REDIRECTION_SCHEME\" > ./local.properties
+          echo KAKAO_NATIVE_APP_KEY=\"$API_KEY\" > ./local.properties
+
+      - name: Add Redirection scheme In Local Properties
+        env:
+          API_KEY: ${{ secrets.KAKAO_REDIRECTION_SCHEME }}
+        run: |
+          echo kakao_redirection_scheme=\"$API_KEY\" > ./local.properties
 
       - name: Add Google Service Json file
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON_FILE }}' > ./app/google-services.json
