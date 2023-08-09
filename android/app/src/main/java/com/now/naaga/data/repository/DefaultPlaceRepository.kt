@@ -5,8 +5,10 @@ import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
+import com.now.naaga.data.remote.dto.PlaceDto
 import com.now.naaga.data.remote.retrofit.ServicePool.placeService
 import com.now.naaga.data.remote.retrofit.fetchNaagaResponse
+import com.now.naaga.data.remote.retrofit.fetchResponse
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -22,22 +24,29 @@ class DefaultPlaceRepository : PlaceRepository {
         callback: (Result<List<Place>>) -> Unit,
     ) {
         val call = placeService.getMyPlace(sortBy, order)
-
-        call.fetchNaagaResponse(
-            onSuccess = { places -> callback(Result.success(places.map { it.toDomain() })) },
-            onFailure = { callback(Result.failure(it)) },
+        call.fetchResponse(
+            onSuccess = { placeDtos: List<PlaceDto> ->
+                callback(Result.success(placeDtos.map { it.toDomain() }))
+            },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
     override fun fetchPlace(placeId: Long, callback: (Result<Place>) -> Unit) {
         val call = placeService.getPlace(placeId)
-
-        call.fetchNaagaResponse(
-            onSuccess = { place -> callback(Result.success(place.toDomain())) },
-            onFailure = { callback(Result.failure(it)) },
+        call.fetchResponse(
+            onSuccess = { placeDto ->
+                callback(Result.success(placeDto.toDomain()))
+            },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
+    // TODO : 업로드 기능 구현 시 fetchResponse로 변경해야 함
     override fun postPlace(
         name: String,
         description: String,

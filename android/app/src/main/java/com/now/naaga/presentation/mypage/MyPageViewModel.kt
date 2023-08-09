@@ -11,7 +11,8 @@ import com.now.domain.model.Statistics
 import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
-import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 
 class MyPageViewModel(
     private val rankRepository: RankRepository,
@@ -34,7 +35,7 @@ class MyPageViewModel(
         rankRepository.getMyRank { result: Result<Rank> ->
             result
                 .onSuccess { rank -> _rank.value = rank }
-                .onFailure { setErrorMessage(it) }
+                .onFailure { setErrorMessage(it as DataThrowable) }
         }
     }
 
@@ -42,22 +43,24 @@ class MyPageViewModel(
         statisticsRepository.getMyStatistics { result: Result<Statistics> ->
             result
                 .onSuccess { statistics -> _statistics.value = statistics }
-                .onFailure { setErrorMessage(it) }
+                .onFailure { setErrorMessage(it as DataThrowable) }
         }
     }
 
     fun fetchPlaces() {
         placeRepository.fetchMyPlaces(SortType.RANK.name, OrderType.DESCENDING.name) { result ->
             result
-                .onSuccess { _places.value = it }
-                .onFailure { setErrorMessage(it) }
+                .onSuccess { places -> _places.value = places }
+                .onFailure { setErrorMessage(it as DataThrowable) }
         }
     }
 
-    private fun setErrorMessage(throwable: Throwable) {
+    private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is NaagaThrowable.ServerConnectFailure ->
+            is PlaceThrowable -> {
                 _errorMessage.value = throwable.message
+            }
+            else -> {}
         }
     }
 }
