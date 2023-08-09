@@ -56,7 +56,6 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         viewModel.fetchRank()
         viewModel.fetchStatistics()
         viewModel.fetchPlaces()
-        viewModel.fetchNickname()
     }
 
     private fun subscribe() {
@@ -66,9 +65,6 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         viewModel.places.observe(this) { places ->
             val placesUiModel = places.map { it.toUiModel() }
             binding.customGridMypagePlaces.initContent(placesUiModel)
-        }
-        viewModel.nickname.observe(this) { nickname ->
-            binding.tvMypageNickname.text = nickname
         }
         viewModel.errorMessage.observe(this) { errorMessage ->
             if (NaagaThrowable.ServerConnectFailure().message == errorMessage) {
