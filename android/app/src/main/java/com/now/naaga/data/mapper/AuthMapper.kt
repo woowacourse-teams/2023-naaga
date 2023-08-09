@@ -1,8 +1,8 @@
 package com.now.naaga.data.mapper
 
-import com.now.domain.model.PlatformAuth
 import com.now.domain.model.AuthPlatformType
 import com.now.domain.model.NaagaAuth
+import com.now.domain.model.PlatformAuth
 import com.now.naaga.data.remote.dto.NaagaAuthDto
 import com.now.naaga.data.remote.dto.PlatformAuthDto
 
@@ -21,4 +21,3 @@ fun NaagaAuthDto.toDomain(): NaagaAuth {
 fun NaagaAuth.toDto(): NaagaAuthDto {
     return NaagaAuthDto(accessToken, refreshToken)
 }
-

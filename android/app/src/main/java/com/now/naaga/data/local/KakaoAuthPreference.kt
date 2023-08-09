@@ -3,7 +3,7 @@ package com.now.naaga.data.local
 import android.content.Context
 import android.content.SharedPreferences
 
-class KakaoAuthPreference(context: Context): AuthPreference {
+class KakaoAuthPreference(context: Context) : AuthPreference {
     private val pref: SharedPreferences =
         context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
 
