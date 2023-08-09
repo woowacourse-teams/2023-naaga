@@ -5,8 +5,7 @@ import com.kakao.sdk.common.KakaoSdk
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.local.DefaultAuthDataSource
 
-object NaagaApplication : Application() {
-    lateinit var authDataSource: AuthDataSource
+class NaagaApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -20,5 +19,9 @@ object NaagaApplication : Application() {
 
     private fun initDataSources() {
         authDataSource = DefaultAuthDataSource(applicationContext)
+    }
+
+    companion object DependencyContainer {
+        lateinit var authDataSource: AuthDataSource
     }
 }
