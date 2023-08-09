@@ -1,23 +1,24 @@
 package com.now.naaga
 
 import android.app.Application
-import android.content.Context
 import com.kakao.sdk.common.KakaoSdk
+import com.now.naaga.data.local.AuthDataSource
+import com.now.naaga.data.local.DefaultAuthDataSource
 
-class NaagaApplication : Application() {
-    init {
-        instance = this
-    }
+object NaagaApplication : Application() {
+    lateinit var authDataSource: AuthDataSource
 
     override fun onCreate() {
         super.onCreate()
+        initKakaoSdk()
+        initDataSources()
+    }
+
+    private fun initKakaoSdk() {
         KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 
-    companion object {
-        private var instance: NaagaApplication? = null
-        fun getContext(): Context {
-            return instance?.applicationContext ?: throw IllegalStateException()
-        }
+    private fun initDataSources() {
+        authDataSource = DefaultAuthDataSource(applicationContext)
     }
 }
