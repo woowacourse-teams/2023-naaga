@@ -3,7 +3,9 @@ package com.now.naaga.presentation.rank
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.now.domain.model.OrderType
 import com.now.domain.model.Rank
+import com.now.domain.model.SortType
 import com.now.domain.repository.RankRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
@@ -28,10 +30,10 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
         rankRepository.getMyRank(
             callback = { result ->
                 result
-                    .onSuccess {
-                        _myName.value = it.player.nickname
-                        _myScore.value = it.player.score
-                        _myRank.value = it.rank
+                    .onSuccess { rank ->
+                        _myName.value = rank.player.nickname
+                        _myScore.value = rank.player.score
+                        _myRank.value = rank.rank
                     }
                     .onFailure { setErrorMessage(it as DataThrowable) }
             },
@@ -40,11 +42,11 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
 
     fun fetchRanks() {
         rankRepository.getAllRanks(
-            SORT_BY_QUERY,
-            ORDER_QUERY,
+            SortType.RANK.name,
+            OrderType.ASCENDING.name,
             callback = { result ->
                 result
-                    .onSuccess { _ranks.value = it }
+                    .onSuccess { ranks -> _ranks.value = ranks }
                     .onFailure { setErrorMessage(it as DataThrowable) }
             },
         )
@@ -55,13 +57,7 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
             is UniversalThrowable -> {
                 _errorMessage.value = throwable.message
             }
-
             else -> {}
         }
-    }
-
-    companion object {
-        private const val SORT_BY_QUERY = "rank"
-        private const val ORDER_QUERY = "ascending"
     }
 }
