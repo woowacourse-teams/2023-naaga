@@ -11,20 +11,20 @@ private const val KAKAO_LOGIN_LOG_TAG = "kakao login"
 private const val KAKAO_LOGIN_FAIL_MESSAGE = "카카오계정으로 로그인 실패"
 private const val KAKAO_LOGIN_SUCCESS_MESSAGE = "카카오계정으로 로그인 성공"
 
-private fun getLoginCallback(inquiryNextAction: () -> Unit): (OAuthToken?, Throwable?) -> Unit {
+private fun getLoginCallback(doNextAction: () -> Unit): (OAuthToken?, Throwable?) -> Unit {
     val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
             Log.d(KAKAO_LOGIN_LOG_TAG, KAKAO_LOGIN_FAIL_MESSAGE + error)
         } else if (token != null) {
             Log.d(KAKAO_LOGIN_LOG_TAG, KAKAO_LOGIN_SUCCESS_MESSAGE + token.accessToken)
-            inquiryNextAction()
+            doNextAction()
         }
     }
     return callback
 }
 
-fun loginWithKakao(context: Context, inquiryNextAction: () -> Unit) {
-    val callback = getLoginCallback(inquiryNextAction)
+fun loginWithKakao(context: Context, doNextAction: () -> Unit) {
+    val callback = getLoginCallback(doNextAction)
     if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
         UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
             if (error != null) {
@@ -35,7 +35,7 @@ fun loginWithKakao(context: Context, inquiryNextAction: () -> Unit) {
                 UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
             } else if (token != null) {
                 Log.d(KAKAO_LOGIN_LOG_TAG, KAKAO_LOGIN_SUCCESS_MESSAGE + token.accessToken)
-                inquiryNextAction()
+                doNextAction()
             }
         }
     } else {
