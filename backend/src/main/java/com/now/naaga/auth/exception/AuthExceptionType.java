@@ -11,6 +11,12 @@ public enum AuthExceptionType implements BaseExceptionType {
             "헤더 정보가 존재하지 않습니다."
     ),
 
+    INVALID_KAKAO_INFO(
+            101,
+            HttpStatus.UNAUTHORIZED,
+            "카카오에서 해당 정보를 가져올 수 없습니다."
+    ),
+
     INVALID_TOKEN(
             101,
             HttpStatus.UNAUTHORIZED,

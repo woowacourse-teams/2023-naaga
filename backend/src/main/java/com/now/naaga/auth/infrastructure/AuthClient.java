@@ -1,6 +1,8 @@
 package com.now.naaga.auth.infrastructure;
 
 import com.now.naaga.auth.application.dto.AuthInfo;
+import com.now.naaga.auth.exception.AuthException;
+import com.now.naaga.auth.exception.AuthExceptionType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -34,6 +37,10 @@ public class AuthClient {
 
         final HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
-        return restTemplate.postForObject(url, request, AuthInfo.class);
+        try {
+            return restTemplate.postForObject(url, request, AuthInfo.class);
+        } catch (HttpClientErrorException e) {
+            throw new AuthException(AuthExceptionType.INVALID_KAKAO_INFO);
+        }
     }
 }
