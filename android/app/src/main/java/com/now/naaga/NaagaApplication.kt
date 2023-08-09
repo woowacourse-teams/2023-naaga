@@ -1,9 +1,8 @@
-package com.now.naaga.presentation.login
+package com.now.naaga
 
 import android.app.Application
 import android.content.Context
 import com.kakao.sdk.common.KakaoSdk
-import com.now.naaga.BuildConfig
 
 class NaagaApplication : Application() {
     init {
