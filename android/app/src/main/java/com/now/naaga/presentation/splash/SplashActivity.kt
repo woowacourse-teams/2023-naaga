@@ -11,6 +11,7 @@ import com.now.domain.model.AdventureStatus.IN_PROGRESS
 import com.now.domain.model.AdventureStatus.NONE
 import com.now.naaga.R
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
+import com.now.naaga.presentation.login.LoginActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -44,8 +45,8 @@ class SplashActivity : AppCompatActivity() {
                     OnAdventureActivity.getIntentWithAdventure(this, adventure)
                 }
             }
-            DONE -> BeginAdventureActivity.getIntent(this)
-            NONE -> BeginAdventureActivity.getIntent(this)
+            DONE -> LoginActivity.getIntent(this)
+            NONE -> LoginActivity.getIntent(this)
         }
         startActivity(intent)
         finish()

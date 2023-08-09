@@ -90,4 +90,7 @@
     <string name="hint_using_dialog_description">힌트가 %d개 남았어요</string>
     <string name="hint_using_dialog_continue">힌트 받기</string>
     <string name="hint_using_dialog_give_up">취소 하기</string>
+
+    <!-- LoginActivity -->
+    <string name="login_app_title">NAAGA</string>
 </resources>
