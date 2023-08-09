@@ -38,7 +38,6 @@
                 android:layout_marginStart="@dimen/space_default_large"
                 android:fontFamily="@font/pretendard_bold"
                 android:includeFontPadding="false"
-                android:text="@{viewModel.rank.player.nickname}"
                 android:textColor="@color/white"
                 android:textSize="52sp"
                 android:maxLines="1"
