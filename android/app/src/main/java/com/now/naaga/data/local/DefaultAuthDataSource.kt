@@ -9,7 +9,7 @@ class DefaultAuthDataSource(context: Context) : AuthDataSource {
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
-    private val pref =
+    private val authPreference =
         EncryptedSharedPreferences.create(
             context,
             AUTH_ENCRYPTED_PREFERENCE,
@@ -19,11 +19,11 @@ class DefaultAuthDataSource(context: Context) : AuthDataSource {
         )
 
     override fun getAccessToken(): String? {
-        return pref.getString(ACCESS_TOKEN_KEY, null)
+        return authPreference.getString(ACCESS_TOKEN_KEY, null)
     }
 
     override fun setAccessToken(newToken: String) {
-        pref.edit().putString(ACCESS_TOKEN_KEY, newToken).apply()
+        authPreference.edit().putString(ACCESS_TOKEN_KEY, newToken).apply()
     }
 
     companion object {
