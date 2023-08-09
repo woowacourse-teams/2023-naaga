@@ -18,7 +18,7 @@ public class JwtGenerator {
         this.jwtProvider = jwtProvider;
     }
 
-    public AuthTokens generate(Long memberId) {
+    public AuthTokens generate(final Long memberId) {
         final long now = (new Date()).getTime();
         final Date accessTokenExpiredAt = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         final Date refreshTokenExpiredAt = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);

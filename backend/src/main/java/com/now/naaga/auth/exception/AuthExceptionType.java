@@ -11,12 +11,6 @@ public enum AuthExceptionType implements BaseExceptionType {
             "헤더 정보가 존재하지 않습니다."
     ),
 
-    EXPIRED_TOKEN(
-            101,
-            HttpStatus.UNAUTHORIZED,
-            "토큰이 만료 되었습니다."
-    ),
-
     INVALID_TOKEN(
             101,
             HttpStatus.UNAUTHORIZED,
@@ -24,9 +18,15 @@ public enum AuthExceptionType implements BaseExceptionType {
     ),
 
     INVALID_HEADER(
-            102,
+            101,
             HttpStatus.UNAUTHORIZED,
             "헤더 정보가 유효하지 않습니다."
+    ),
+
+    EXPIRED_TOKEN(
+            102,
+            HttpStatus.UNAUTHORIZED,
+            "토큰이 만료 되었습니다."
     ),
     ;
 
