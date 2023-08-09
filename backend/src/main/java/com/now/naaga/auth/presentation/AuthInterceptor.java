@@ -1,6 +1,6 @@
 package com.now.naaga.auth.presentation;
 
-import com.now.naaga.auth.infrastructure.auth.AuthenticationExtractor;
+import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
 import com.now.naaga.member.presentation.dto.MemberAuthRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

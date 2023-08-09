@@ -1,4 +1,4 @@
-package com.now.naaga.auth.infrastructure.auth;
+package com.now.naaga.auth.infrastructure;
 
 import com.now.naaga.auth.application.dto.AuthInfo;
 import org.springframework.beans.factory.annotation.Value;

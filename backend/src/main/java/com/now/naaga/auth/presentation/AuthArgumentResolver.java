@@ -1,7 +1,7 @@
 package com.now.naaga.auth.presentation;
 
 import com.now.naaga.auth.annotation.Auth;
-import com.now.naaga.auth.infrastructure.auth.AuthenticationExtractor;
+import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
 import com.now.naaga.member.presentation.dto.MemberAuthRequest;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;

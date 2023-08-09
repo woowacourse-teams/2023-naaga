@@ -1,7 +1,6 @@
 package com.now.naaga.game.presentation;
 
 import com.now.naaga.auth.damain.AuthTokens;
-import com.now.naaga.auth.exception.AuthExceptionType;
 import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
@@ -46,7 +45,6 @@ import static com.now.naaga.game.fixture.MemberFixture.MEMBER_IRYE;
 import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
 import static com.now.naaga.game.fixture.PositionFixture.잠실_루터회관_정문_좌표;
 import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_좌표;
-import static com.now.naaga.member.fixture.MemberFixture.MEMBER_EMAIL;
 import static com.now.naaga.place.exception.PlaceExceptionType.CAN_NOT_FIND_PLACE;
 import static com.now.naaga.place.fixture.PlaceFixture.JEJU_PLACE;
 import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;

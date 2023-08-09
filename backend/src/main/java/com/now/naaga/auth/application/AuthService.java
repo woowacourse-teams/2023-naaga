@@ -3,7 +3,7 @@ package com.now.naaga.auth.application;
 import com.now.naaga.auth.application.dto.AuthCommand;
 import com.now.naaga.auth.application.dto.AuthInfo;
 import com.now.naaga.auth.damain.AuthTokens;
-import com.now.naaga.auth.infrastructure.auth.AuthClient;
+import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.member.application.CreateMemberCommand;
 import com.now.naaga.member.application.MemberService;

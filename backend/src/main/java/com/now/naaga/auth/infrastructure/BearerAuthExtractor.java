@@ -1,4 +1,4 @@
-package com.now.naaga.auth.infrastructure.auth;
+package com.now.naaga.auth.infrastructure;
 
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.auth.exception.AuthException;
@@ -27,7 +27,7 @@ public class BearerAuthExtractor implements AuthenticationExtractor<MemberAuthRe
             throw new AuthException(INVALID_HEADER);
         }
         final String accessToken = header.substring(BEARER_TYPE.length()).trim();
-        final Long memberId = Long.parseLong(jwtProvider.extractSubject(accessToken)); // TODO: 8/8/23 Long
+        final Long memberId = Long.parseLong(jwtProvider.extractSubject(accessToken));
 
         return new MemberAuthRequest(memberId);
     }
