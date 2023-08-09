@@ -5,7 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.now.domain.model.Rank
 import com.now.domain.repository.RankRepository
-import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
 
 class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
     private val _myName = MutableLiveData<String>()
@@ -32,7 +33,7 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
                         _myScore.value = it.player.score
                         _myRank.value = it.rank
                     }
-                    .onFailure { setErrorMessage(it) }
+                    .onFailure { setErrorMessage(it as DataThrowable) }
             },
         )
     }
@@ -44,14 +45,18 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
             callback = { result ->
                 result
                     .onSuccess { _ranks.value = it }
-                    .onFailure { setErrorMessage(it) }
+                    .onFailure { setErrorMessage(it as DataThrowable) }
             },
         )
     }
-    private fun setErrorMessage(throwable: Throwable) {
+
+    private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is NaagaThrowable.ServerConnectFailure ->
+            is UniversalThrowable -> {
                 _errorMessage.value = throwable.message
+            }
+
+            else -> {}
         }
     }
 
