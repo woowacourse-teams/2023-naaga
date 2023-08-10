@@ -20,7 +20,6 @@ import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Compan
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.rank.RankActivity
-import com.now.naaga.presentation.upload.UploadActivity
 
 class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityBeginAdventureBinding
@@ -75,7 +74,8 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         }
         binding.ivBeginAdventureUpload.setOnClickListener {
             logClickEvent(getViewEntryName(it), BEGIN_GO_UPLOAD)
-            startActivity(UploadActivity.getIntent(this))
+            Toast.makeText(this, getString(R.string.beginAdventure_features_not_ready), Toast.LENGTH_SHORT).show()
+//            startActivity(UploadActivity.getIntent(this))
         }
         binding.ivBeginAdventureMypage.setOnClickListener {
             logClickEvent(getViewEntryName(it), BEGIN_GO_MYPAGE)
