@@ -14,6 +14,7 @@ import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.application.dto.RecommendPlaceCommand;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
+import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
@@ -56,10 +57,14 @@ public class GameService {
             throw new GameException(ALREADY_IN_PROGRESS);
         }
         final Position position = createGameCommand.playerPosition();
-        RecommendPlaceCommand recommendPlaceCommand = new RecommendPlaceCommand(position);
-        final Place place = placeService.recommendPlaceByPosition(recommendPlaceCommand);
-        final Game game = new Game(player, place, position);
-        return gameRepository.save(game);
+        final RecommendPlaceCommand recommendPlaceCommand = new RecommendPlaceCommand(position);
+        try {
+            final Place place = placeService.recommendPlaceByPosition(recommendPlaceCommand);
+            final Game game = new Game(player, place, position);
+            return gameRepository.save(game);
+        } catch (PlaceException exception) {
+            throw new GameException(CAN_NOT_FIND_PLACE);
+        }
     }
     
     @Transactional(noRollbackFor = {GameNotArrivalException.class})
