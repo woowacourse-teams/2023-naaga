@@ -3,12 +3,13 @@ package com.now.naaga.presentation.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
-import com.kakao.sdk.auth.TokenManagerProvider
+import com.now.domain.model.AuthPlatformType
+import com.now.naaga.NaagaApplication
 import com.now.naaga.R
-import com.now.naaga.data.local.KakaoAuthDataSource
 import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.databinding.ActivityLoginBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
@@ -21,28 +22,34 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         binding.lifecycleOwner = this
+        setContentView(binding.root)
         initViewModel()
+        subscribe()
         setClickListeners()
         setStatusBar()
-        getToken()?.let { viewModel.fetchToken(it) }
     }
 
     private fun initViewModel() {
-        val authRepository = DefaultAuthRepository()
-        val authPreference = KakaoAuthDataSource(this)
-        val factory = LoginViewModelFactory(authRepository, authPreference)
+        val factory = LoginViewModelFactory(DefaultAuthRepository(NaagaApplication.authDataSource))
         viewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
     }
 
-    private fun getToken(): String? {
-        return TokenManagerProvider.instance.manager.getToken()?.accessToken
+    private fun subscribe() {
+        viewModel.isLoginSucceed.observe(this) { isSucceed ->
+            if (isSucceed) {
+                navigateHome()
+            }
+        }
+
+        viewModel.errorMessage.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setClickListeners() {
         binding.ivLoginKakao.setOnClickListener {
-            loginWithKakao(this) { navigateHome() }
+            loginWithKakao(this) { viewModel.signIn(it, AuthPlatformType.KAKAO) }
         }
     }
 
