@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureResultType
 import com.now.naaga.R
-import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.RESULT_RESULT_RETURN
@@ -60,9 +59,7 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
         }
 
         viewModel.errorMessage.observe(this) { errorMessage ->
-            if (NaagaThrowable.ServerConnectFailure().message == errorMessage) {
-                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
