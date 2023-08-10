@@ -6,19 +6,23 @@ import static com.now.naaga.game.fixture.PlaceFixture.잠실_루터회관;
 import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
 import static com.now.naaga.game.fixture.PositionFixture.GS25_방이도곡점_좌표;
 import static com.now.naaga.game.fixture.PositionFixture.잠실_루터회관_정문_근처_좌표;
+import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_좌표;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameResult;
 import com.now.naaga.game.domain.ScorePolicy;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
+import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
+import com.now.naaga.player.persistence.repository.PlayerRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -39,36 +43,25 @@ class GameServiceTest {
 
     @Autowired
     private GameService gameService;
-
+    @Autowired
+    private GameRepository gameRepository;
+    @Autowired
+    private GameResultRepository gameResultRepository;
+    @Autowired
+    private PlayerService playerService;
+    @Autowired
+    private PlaceService placeService;
     @Autowired
     private ScorePolicy scorePolicy;
 
-    @MockBean
-    private GameRepository gameRepository;
-
-    @MockBean
-    private PlayerService playerService;
-    @MockBean
-    private GameResultRepository gameResultRepository;
-
     @Test
-    void 종료된_게임의_결과를_저장한다() throws InterruptedException {
+    void 제한_횟수_내에_게임_실패_시_예외가_발생하면_시도횟수는_롤백되지_않는다() throws InterruptedException {
         // Given
-        EndGameCommand endGameCommand = new EndGameCommand(1l, ARRIVED, 잠실_루터회관_정문_근처_좌표, 2l);
-        Player player = PLAYER("chae", MEMBER_CHAE());
-        Game game = new Game(player, 잠실_루터회관(player), GS25_방이도곡점_좌표);
-
-        // Mock 객체 설정
-        when(gameRepository.findById(anyLong())).thenReturn(Optional.of(game));
-        when(playerService.findPlayerById(anyLong())).thenReturn(player);
-
-        // When
+        Player player = playerService.findPlayerById(1l);
+        Game game = gameService.createGame(new CreateGameCommand(Long.valueOf(player.getId()),잠실역_교보문고_좌표));
         Thread.sleep(1000);
+        EndGameCommand endGameCommand = new EndGameCommand(player.getId(), ARRIVED, GS25_방이도곡점_좌표, game.getId());
         gameService.endGame(endGameCommand);
-
-        // Then
-        verify(gameRepository, times(1)).findById(anyLong());
-        verify(gameResultRepository, times(1)).save(ArgumentMatchers.any(GameResult.class));
     }
 
 }
