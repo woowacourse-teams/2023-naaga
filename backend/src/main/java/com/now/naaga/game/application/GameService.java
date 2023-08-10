@@ -69,9 +69,6 @@ public class GameService {
         final Player player = playerService.findPlayerById(endGameCommand.playerId());
         game.validateOwner(player);
         ResultType resultType = game.endGame(endGameCommand.endType(), endGameCommand.position());
-        if(resultType ==null) {
-            throw new GameNotArrivalException(NOT_ARRIVED);
-        }
         Score score = scorePolicy.calculate(game);
         player.addScore(score);
         gameResultRepository.save(new GameResult(resultType, score, game));
