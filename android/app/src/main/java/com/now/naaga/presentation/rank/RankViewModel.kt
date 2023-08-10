@@ -3,9 +3,14 @@ package com.now.naaga.presentation.rank
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.now.domain.model.OrderType
 import com.now.domain.model.Rank
+import com.now.domain.model.SortType
 import com.now.domain.repository.RankRepository
-import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.repository.DefaultRankRepository
+import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
 
 class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
     private val _myName = MutableLiveData<String>()
@@ -27,36 +32,43 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
         rankRepository.getMyRank(
             callback = { result ->
                 result
-                    .onSuccess {
-                        _myName.value = it.player.nickname
-                        _myScore.value = it.player.score
-                        _myRank.value = it.rank
+                    .onSuccess { rank ->
+                        _myName.value = rank.player.nickname
+                        _myScore.value = rank.player.score
+                        _myRank.value = rank.rank
                     }
-                    .onFailure { setErrorMessage(it) }
+                    .onFailure { setErrorMessage(it as DataThrowable) }
             },
         )
     }
 
     fun fetchRanks() {
         rankRepository.getAllRanks(
-            SORT_BY_QUERY,
-            ORDER_QUERY,
+            SortType.RANK.name,
+            OrderType.ASCENDING.name,
             callback = { result ->
                 result
-                    .onSuccess { _ranks.value = it }
-                    .onFailure { setErrorMessage(it) }
+                    .onSuccess { ranks -> _ranks.value = ranks }
+                    .onFailure { setErrorMessage(it as DataThrowable) }
             },
         )
     }
-    private fun setErrorMessage(throwable: Throwable) {
+
+    private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is NaagaThrowable.ServerConnectFailure ->
-                _errorMessage.value = throwable.message
+            is PlayerThrowable -> { _errorMessage.value = throwable.message }
+            else -> {}
         }
     }
 
     companion object {
-        private const val SORT_BY_QUERY = "rank"
-        private const val ORDER_QUERY = "ascending"
+        val Factory = RankFactory(DefaultRankRepository())
+
+        class RankFactory(private val rankRepository: RankRepository) :
+            ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return RankViewModel(rankRepository) as T
+            }
+        }
     }
 }
