@@ -42,3 +42,4 @@ spring:
     import: classpath:security/application-test.yml
     activate:
       on-profile: test
+
