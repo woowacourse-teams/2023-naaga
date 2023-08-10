@@ -3,10 +3,14 @@ package com.now.naaga.presentation.adventureresult
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.AdventureResult
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.RankRepository
-import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.repository.DefaultAdventureRepository
+import com.now.naaga.data.repository.DefaultRankRepository
+import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.throwable.DataThrowable.GameThrowable
 
 class AdventureResultViewModel(
     private val adventureRepository: AdventureRepository,
@@ -27,8 +31,8 @@ class AdventureResultViewModel(
             adventureId,
             callback = { result ->
                 result
-                    .onSuccess { _adventureResult.value = it }
-                    .onFailure { setErrorMessage(it) }
+                    .onSuccess { adventureResult -> _adventureResult.value = adventureResult }
+                    .onFailure { setErrorMessage(it as DataThrowable) }
             },
         )
     }
@@ -37,16 +41,30 @@ class AdventureResultViewModel(
         rankRepository.getMyRank(
             callback = { result ->
                 result
-                    .onSuccess { _myRank.value = it.rank }
-                    .onFailure { setErrorMessage(it) }
+                    .onSuccess { rank -> _myRank.value = rank.rank }
+                    .onFailure { setErrorMessage(it as DataThrowable) }
             },
         )
     }
 
-    private fun setErrorMessage(throwable: Throwable) {
+    private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is NaagaThrowable.ServerConnectFailure ->
-                _errorMessage.value = throwable.message
+            is GameThrowable -> { _errorMessage.value = throwable.message }
+            else -> {}
+        }
+    }
+
+    companion object {
+        val Factory = AdventureResultFactory(DefaultAdventureRepository(), DefaultRankRepository())
+
+        class AdventureResultFactory(
+            private val adventureRepository: AdventureRepository,
+            private val rankRepository: RankRepository,
+        ) :
+            ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return AdventureResultViewModel(adventureRepository, rankRepository) as T
+            }
         }
     }
 }

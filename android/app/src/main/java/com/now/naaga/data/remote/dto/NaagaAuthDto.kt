@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NaagaAuthDto(
     val accessToken: String,
-    val refreshToken: String?,
+    val refreshToken: String = "",
 )

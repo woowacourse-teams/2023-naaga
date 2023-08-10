@@ -3,9 +3,7 @@ package com.now.naaga.presentation.onadventure
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -15,7 +13,6 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.naaga.R
-import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_END_ADVENTURE
@@ -94,8 +91,8 @@ class OnAdventureActivity :
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
         }
-        viewModel.failure.observe(this) {
-            controlException(it)
+        viewModel.errorMessage.observe(this) { errorMessage ->
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -122,27 +119,6 @@ class OnAdventureActivity :
         hints.forEach { hint ->
             addHintMarker(hint)
         }
-    }
-
-    private fun controlException(throwable: Throwable) {
-        fun Context.shorToast(@StringRes message: Int) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-        when (throwable) {
-            is AdventureThrowable.EndAdventureFailure -> shorToast(R.string.onAdventure_retry)
-            is NaagaThrowable.ClientError -> Log.d("asdf", "code: ${throwable.code}, message: ${throwable.message}")
-            is NaagaThrowable.BackEndError -> Log.d("asdf", "message: ${throwable.message}")
-            is NaagaThrowable.ServerConnectFailure -> Log.d("asdf", "message: ${throwable.message}")
-            else -> Log.d("asdf", "message: 예상치 못한 오류")
-        }
-        /*when (throwable) {
-            is AdventureThrowable.EndAdventureFailure -> shorToast(R.string.onAdventure_retry)
-            is AdventureThrowable.GiveUpAdventureFailure -> shorToast(R.string.onAdventure_error_retry)
-            is AdventureThrowable.HintFailure -> shorToast(R.string.onAdventure_no_more_hint)
-            is AdventureThrowable.UnExpectedFailure -> shorToast(R.string.onAdventure_unexpected_error)
-            is AdventureThrowable.BeginAdventureFailure -> {
-                shorToast(R.string.onAdventure_begin_error)
-                finish()
-            }
-        }*/
     }
 
     private fun showGiveUpDialog() {

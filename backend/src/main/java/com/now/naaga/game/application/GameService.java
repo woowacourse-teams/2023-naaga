@@ -7,6 +7,7 @@ import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.*;
 import com.now.naaga.game.exception.GameException;
+import com.now.naaga.game.exception.GameNotArrivalException;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
 import com.now.naaga.place.application.PlaceService;
@@ -66,6 +67,7 @@ public class GameService {
         }
     }
     
+    @Transactional(noRollbackFor = {GameNotArrivalException.class})
     public void endGame(final EndGameCommand endGameCommand) {
         final Game game = gameRepository.findById(endGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));

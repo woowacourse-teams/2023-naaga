@@ -6,13 +6,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.MYPAGE_GO_RESULTS
-import com.now.naaga.data.repository.DefaultPlaceRepository
-import com.now.naaga.data.repository.DefaultRankRepository
-import com.now.naaga.data.repository.DefaultStatisticsRepository
 import com.now.naaga.databinding.ActivityMyPageBinding
 import com.now.naaga.presentation.adventurehistory.AdventureHistoryActivity
 
@@ -32,11 +28,7 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun initViewModel() {
-        val rankRepository = DefaultRankRepository()
-        val statisticsRepository = DefaultStatisticsRepository()
-        val placeRepository = DefaultPlaceRepository()
-        val factory = MyPageFactory(rankRepository, statisticsRepository, placeRepository)
-        viewModel = ViewModelProvider(this, factory)[MyPageViewModel::class.java]
+        viewModel = ViewModelProvider(this, MyPageViewModel.Factory)[MyPageViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
@@ -56,7 +48,6 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         viewModel.fetchRank()
         viewModel.fetchStatistics()
         viewModel.fetchPlaces()
-        viewModel.fetchNickname()
     }
 
     private fun subscribe() {
@@ -67,13 +58,8 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             val placesUiModel = places.map { it.toUiModel() }
             binding.customGridMypagePlaces.initContent(placesUiModel)
         }
-        viewModel.nickname.observe(this) { nickname ->
-            binding.tvMypageNickname.text = nickname
-        }
         viewModel.errorMessage.observe(this) { errorMessage ->
-            if (NaagaThrowable.ServerConnectFailure().message == errorMessage) {
-                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 

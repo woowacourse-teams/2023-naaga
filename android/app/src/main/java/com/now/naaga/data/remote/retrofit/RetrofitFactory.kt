@@ -2,8 +2,7 @@ package com.now.naaga.data.remote.retrofit
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.now.naaga.BuildConfig
-import com.now.naaga.data.local.KakaoAuthDataSource
-import com.now.naaga.presentation.login.NaagaApplication.Companion.getContext
+import com.now.naaga.NaagaApplication
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -20,10 +19,10 @@ object RetrofitFactory {
         .build()
 
     private fun createInterceptor(): Interceptor = Interceptor { chain ->
-        val token = KakaoAuthDataSource(getContext()).getAccessToken()
+        val token: String = NaagaApplication.authDataSource.getAccessToken() ?: ""
         with(chain) {
             val newRequest = request().newBuilder()
-                .addHeader("Authorization", token)
+                .addHeader("Authorization", "Bearer $token")
                 .addHeader("Content-Type", "application/json")
                 .build()
             proceed(newRequest)

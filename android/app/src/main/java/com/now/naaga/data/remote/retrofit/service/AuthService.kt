@@ -8,7 +8,7 @@ import retrofit2.http.POST
 
 interface AuthService {
     @POST("/auth")
-    fun requestToken(
+    fun requestAuth(
         @Body platformAuthDto: PlatformAuthDto,
     ): Call<NaagaAuthDto>
 }

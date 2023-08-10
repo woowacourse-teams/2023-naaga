@@ -11,46 +11,57 @@ import com.now.domain.model.SortType
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
+import com.now.naaga.data.remote.dto.AdventureDto
 import com.now.naaga.data.remote.dto.FinishGameDto
 import com.now.naaga.data.remote.retrofit.ServicePool
-import com.now.naaga.data.remote.retrofit.fetchNaagaResponse
+import com.now.naaga.data.remote.retrofit.fetchResponse
 
 class DefaultAdventureRepository : AdventureRepository {
     override fun fetchMyAdventures(callback: (Result<List<Adventure>>) -> Unit) {
         val call = ServicePool.adventureService.getMyGames()
-        call.fetchNaagaResponse(
-            onSuccess = { gameDtos ->
-                val adventures: List<Adventure> = gameDtos.map { it.toDomain() }
-                callback(Result.success(adventures))
+        call.fetchResponse(
+            onSuccess = { adventureDtos: List<AdventureDto> ->
+                callback(Result.success(adventureDtos.map { it.toDomain() }))
             },
-            onFailure = { callback(Result.failure(it)) },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
     override fun fetchAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit) {
         val call = ServicePool.adventureService.getGame(adventureId)
-        call.fetchNaagaResponse(
-            onSuccess = { callback(Result.success(it.toDomain())) },
-            onFailure = { callback(Result.failure(it)) },
+        call.fetchResponse(
+            onSuccess = { adventureDto ->
+                callback(Result.success(adventureDto.toDomain()))
+            },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
     override fun fetchAdventureByStatus(status: AdventureStatus, callback: (Result<List<Adventure>>) -> Unit) {
         val call = ServicePool.adventureService.getGamesByStatus(status.name)
-        call.fetchNaagaResponse(
-            onSuccess = { gameDtos ->
-                val games = gameDtos.map { it.toDomain() }
-                callback(Result.success(games))
+        call.fetchResponse(
+            onSuccess = { adventureDtos: List<AdventureDto> ->
+                callback(Result.success(adventureDtos.map { it.toDomain() }))
             },
-            onFailure = { callback(Result.failure(it)) },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
     override fun beginAdventure(coordinate: Coordinate, callback: (Result<Adventure>) -> Unit) {
         val call = ServicePool.adventureService.beginGame(coordinate.toDto())
-        call.fetchNaagaResponse(
-            onSuccess = { callback(Result.success(it.toDomain())) },
-            onFailure = { callback(Result.failure(it)) },
+        call.fetchResponse(
+            onSuccess = { adventureDto ->
+                callback(Result.success(adventureDto.toDomain()))
+            },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
@@ -62,17 +73,25 @@ class DefaultAdventureRepository : AdventureRepository {
     ) {
         val finishGameDto = FinishGameDto(endType.name, coordinate.toDto())
         val call = ServicePool.adventureService.endGame(adventureId, finishGameDto)
-        call.fetchNaagaResponse(
-            onSuccess = { callback(Result.success(AdventureStatus.getStatus(it.gameStatus))) },
-            onFailure = { callback(Result.failure(it)) },
+        call.fetchResponse(
+            onSuccess = { adventureStatusDto ->
+                callback(Result.success(AdventureStatus.getStatus(adventureStatusDto.gameStatus)))
+            },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
     override fun fetchAdventureResult(adventureId: Long, callback: (Result<AdventureResult>) -> Unit) {
         val call = ServicePool.adventureService.getGameResult(adventureId)
-        call.fetchNaagaResponse(
-            onSuccess = { callback(Result.success(it.toDomain())) },
-            onFailure = { callback(Result.failure(it)) },
+        call.fetchResponse(
+            onSuccess = { adventureResultDto ->
+                callback(Result.success(adventureResultDto.toDomain()))
+            },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
@@ -82,28 +101,37 @@ class DefaultAdventureRepository : AdventureRepository {
         callback: (Result<List<AdventureResult>>) -> Unit,
     ) {
         val call = ServicePool.adventureService.getMyGameResults(sortBy.name, order.name)
-        call.fetchNaagaResponse(
+        call.fetchResponse(
             onSuccess = { adventureResultDtos ->
-                val adventureResults = adventureResultDtos.map { it.toDomain() }
-                callback(Result.success(adventureResults))
+                callback(Result.success(adventureResultDtos.map { it.toDomain() }))
             },
-            onFailure = { callback(Result.failure(it)) },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
     override fun fetchHint(adventureId: Long, hintId: Long, callback: (Result<Hint>) -> Unit) {
         val call = ServicePool.adventureService.getHint(adventureId, hintId)
-        call.fetchNaagaResponse(
-            onSuccess = { callback(Result.success(it.toDomain())) },
-            onFailure = { callback(Result.failure(it)) },
+        call.fetchResponse(
+            onSuccess = { hintDto ->
+                callback(Result.success(hintDto.toDomain()))
+            },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 
     override fun makeHint(adventureId: Long, coordinate: Coordinate, callback: (Result<Hint>) -> Unit) {
         val call = ServicePool.adventureService.requestHint(adventureId, coordinate.toDto())
-        call.fetchNaagaResponse(
-            onSuccess = { callback(Result.success(it.toDomain())) },
-            onFailure = { callback(Result.failure(it)) },
+        call.fetchResponse(
+            onSuccess = { hintDto ->
+                callback(Result.success(hintDto.toDomain()))
+            },
+            onFailure = {
+                callback(Result.failure(it))
+            },
         )
     }
 }
