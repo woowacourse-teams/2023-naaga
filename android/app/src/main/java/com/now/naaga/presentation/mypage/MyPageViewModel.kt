@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.kakao.sdk.user.UserApiClient
 import com.now.domain.model.OrderType
 import com.now.domain.model.Place
 import com.now.domain.model.Rank

@@ -47,7 +47,6 @@ fun <T> Call<T>.fetchResponse(
                         in 300..399 -> { onFailure(PlayerThrowable(code, message)) }
                         in 400..499 -> { onFailure(GameThrowable(code, message)) }
                         in 500..599 -> { onFailure(PlaceThrowable(code, message)) }
-                        in 900..999 -> { onFailure(UniversalThrowable(code, message)) }
                     }
                 }
             }
