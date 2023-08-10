@@ -1,6 +1,6 @@
 package com.now.naaga.auth.presentation.dto;
 
-import com.now.naaga.auth.damain.AuthTokens;
+import com.now.naaga.auth.domain.AuthTokens;
 
 public record AuthResponse(String accessToken,
                            String refreshToken) {

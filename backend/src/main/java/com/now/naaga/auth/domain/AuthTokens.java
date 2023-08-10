@@ -1,4 +1,4 @@
-package com.now.naaga.auth.damain;
+package com.now.naaga.auth.domain;
 
 import java.util.Objects;
 

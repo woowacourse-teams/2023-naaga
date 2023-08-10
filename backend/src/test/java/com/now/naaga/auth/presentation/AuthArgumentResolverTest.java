@@ -1,6 +1,6 @@
 package com.now.naaga.auth.presentation;
 
-import com.now.naaga.auth.damain.AuthTokens;
+import com.now.naaga.auth.domain.AuthTokens;
 import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.common.CommonControllerTest;
@@ -8,23 +8,16 @@ import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.player.exception.PlayerExceptionType;
-import com.now.naaga.player.fixture.PlayerFixture;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import java.util.Date;
-
-import static com.now.naaga.auth.exception.AuthExceptionType.EXPIRED_TOKEN;
-import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN;
 import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;

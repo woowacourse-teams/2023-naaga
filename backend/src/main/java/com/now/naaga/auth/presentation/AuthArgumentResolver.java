@@ -39,7 +39,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
                                   final ModelAndViewContainer mavContainer,
                                   final NativeWebRequest webRequest,
                                   final WebDataBinderFactory binderFactory) throws Exception {
-
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final MemberAuthRequest memberAuthRequest = authenticationExtractor.extract(request.getHeader(HttpHeaders.AUTHORIZATION));
         final Player player = playerService.findPlayerByMemberId(memberAuthRequest.memberId());

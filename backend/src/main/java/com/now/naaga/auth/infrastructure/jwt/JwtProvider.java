@@ -2,10 +2,7 @@ package com.now.naaga.auth.infrastructure.jwt;
 
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.exception.AuthExceptionType;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +21,7 @@ public class JwtProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generate(String subject, Date expiredAt) {
+    public String generate(final String subject, final Date expiredAt) {
         return Jwts.builder()
                 .setSubject(subject)
                 .setExpiration(expiredAt)
@@ -32,12 +29,12 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String extractSubject(String accessToken) {
-        Claims claims = parseClaims(accessToken);
+    public String extractSubject(final String accessToken) {
+        final Claims claims = parseClaims(accessToken);
         return claims.getSubject();
     }
 
-    private Claims parseClaims(String accessToken){
+    private Claims parseClaims(final String accessToken){
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)

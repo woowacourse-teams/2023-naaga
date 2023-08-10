@@ -3,7 +3,7 @@ package com.now.naaga.player.presentation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.auth.damain.AuthTokens;
+import com.now.naaga.auth.domain.AuthTokens;
 import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.member.domain.Member;

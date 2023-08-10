@@ -1,6 +1,6 @@
 package com.now.naaga.game.presentation;
 
-import com.now.naaga.auth.damain.AuthTokens;
+import com.now.naaga.auth.domain.AuthTokens;
 import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.game.domain.*;
