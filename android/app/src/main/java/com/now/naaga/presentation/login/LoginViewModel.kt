@@ -1,23 +1,26 @@
 package com.now.naaga.presentation.login
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.now.domain.model.AuthPlatformType.KAKAO
+import com.now.domain.model.AuthPlatformType
 import com.now.domain.model.PlatformAuth
 import com.now.domain.repository.AuthRepository
-import com.now.naaga.data.local.AuthDataSource
 
 class LoginViewModel(
     private val authRepository: AuthRepository,
-    private val authDataSource: AuthDataSource,
 ) : ViewModel() {
-    fun fetchToken(token: String) {
-        authRepository.getToken(
-            PlatformAuth(token, KAKAO),
-            callback = { result ->
-                result
-                    .onSuccess { authDataSource.setAccessToken(it.accessToken) }
-                    .onFailure { }
-            },
-        )
+    private val _isLoginSucceed = MutableLiveData<Boolean>()
+    val isLoginSucceed: LiveData<Boolean> = _isLoginSucceed
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
+    fun signIn(token: String, platformType: AuthPlatformType) {
+        authRepository.getToken(PlatformAuth(token, platformType)) { result ->
+            result
+                .onSuccess { _isLoginSucceed.value = it }
+                .onFailure { _errorMessage.value = it.message }
+        }
     }
 }

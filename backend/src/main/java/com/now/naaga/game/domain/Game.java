@@ -11,6 +11,7 @@ import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.exception.GameException;
+import com.now.naaga.game.exception.GameNotArrivalException;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
@@ -164,7 +165,7 @@ public class Game extends BaseEntity {
             endTime = LocalDateTime.now();
             return FAIL;
         }
-        throw new GameException(NOT_ARRIVED);
+        throw new GameNotArrivalException(NOT_ARRIVED);
     }
 
     public Long getId() {
