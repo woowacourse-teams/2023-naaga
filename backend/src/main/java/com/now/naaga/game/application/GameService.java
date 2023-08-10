@@ -7,12 +7,14 @@ import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.*;
 import com.now.naaga.game.exception.GameException;
+import com.now.naaga.game.exception.GameNotArrivalException;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.application.dto.RecommendPlaceCommand;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
+import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
@@ -55,12 +57,17 @@ public class GameService {
             throw new GameException(ALREADY_IN_PROGRESS);
         }
         final Position position = createGameCommand.playerPosition();
-        RecommendPlaceCommand recommendPlaceCommand = new RecommendPlaceCommand(position);
-        final Place place = placeService.recommendPlaceByPosition(recommendPlaceCommand);
-        final Game game = new Game(player, place, position);
-        return gameRepository.save(game);
+        final RecommendPlaceCommand recommendPlaceCommand = new RecommendPlaceCommand(position);
+        try {
+            final Place place = placeService.recommendPlaceByPosition(recommendPlaceCommand);
+            final Game game = new Game(player, place, position);
+            return gameRepository.save(game);
+        } catch (PlaceException exception) {
+            throw new GameException(CAN_NOT_FIND_PLACE);
+        }
     }
     
+    @Transactional(noRollbackFor = {GameNotArrivalException.class})
     public void endGame(final EndGameCommand endGameCommand) {
         final Game game = gameRepository.findById(endGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
