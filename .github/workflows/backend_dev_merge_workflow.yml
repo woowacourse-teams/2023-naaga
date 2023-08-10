@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - dev
-    paths:
-      - 'backend/**'
 jobs:
   deploy:
     runs-on: naaga
@@ -25,4 +23,3 @@ jobs:
           sudo cp -r /home/ubuntu/actions-runner/naaga/2023-naaga/2023-naaga /home/ubuntu
           cd /home/ubuntu
           sudo ./deploy.sh
-
