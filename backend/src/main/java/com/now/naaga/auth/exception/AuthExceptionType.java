@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public enum AuthExceptionType implements BaseExceptionType {
 
     PASSWORD_MISMATCH(
-            100,
+            101,
             HttpStatus.UNAUTHORIZED,
             "비밀번호가 일치하지 않습니다."
     ),
@@ -18,7 +18,7 @@ public enum AuthExceptionType implements BaseExceptionType {
     ),
 
     INVALID_HEADER(
-            102,
+            101,
             HttpStatus.UNAUTHORIZED,
             "헤더 정보가 유효하지 않습니다."
     ),

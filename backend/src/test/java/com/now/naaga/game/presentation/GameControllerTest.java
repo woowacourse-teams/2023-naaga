@@ -4,6 +4,7 @@ import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.domain.*;
+import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.game.presentation.dto.*;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.GameResultRepository;
@@ -39,15 +40,15 @@ import java.util.List;
 import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.*;
 import static com.now.naaga.game.fixture.GameFixture.SEOUL_TO_JEJU_GAME;
 import static com.now.naaga.game.fixture.MemberFixture.MEMBER_IRYE;
 import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
 import static com.now.naaga.game.fixture.PositionFixture.잠실_루터회관_정문_좌표;
 import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_좌표;
+import static com.now.naaga.member.exception.MemberExceptionType.NOT_EXIST_MEMBER;
 import static com.now.naaga.member.fixture.MemberFixture.MEMBER_EMAIL;
 import static com.now.naaga.member.fixture.MemberFixture.MEMBER_PASSWORD;
-import static com.now.naaga.place.exception.PlaceExceptionType.CAN_NOT_FIND_PLACE;
 import static com.now.naaga.place.fixture.PlaceFixture.JEJU_PLACE;
 import static com.now.naaga.place.fixture.PositionFixture.SEOUL_POSITION;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -322,7 +323,7 @@ class GameControllerTest extends CommonControllerTest {
     }
 
     @Test
-    void 잔여_횟수가_남았지만_도착_실패하면_예외가_발생한다() throws InterruptedException {
+    void 잔여_횟수가_남았지만_도착_실패하면_예외가_발생한다() {
         // given & when
         Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
         Game game = gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
@@ -341,7 +342,8 @@ class GameControllerTest extends CommonControllerTest {
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
 
-        final ExceptionResponse expected = new ExceptionResponse(403, "목적지에 도착하지 않았습니다.");
+        final GameExceptionType notArrived = GameExceptionType.NOT_ARRIVED;
+        final ExceptionResponse expected = new ExceptionResponse(notArrived.errorCode(), notArrived.errorMessage());
 
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -372,7 +374,7 @@ class GameControllerTest extends CommonControllerTest {
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
 
-        final ExceptionResponse expected = new ExceptionResponse(200, "사용자 정보가 존재하지 않습니다.");
+        final ExceptionResponse expected = new ExceptionResponse(NOT_EXIST_MEMBER.errorCode(), NOT_EXIST_MEMBER.errorMessage());
 
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -406,7 +408,7 @@ class GameControllerTest extends CommonControllerTest {
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
 
-        final ExceptionResponse expected = new ExceptionResponse(402, "게임에 접근할 수 있는 권한이 없습니다.");
+        final ExceptionResponse expected = new ExceptionResponse(INACCESSIBLE_AUTHENTICATION.errorCode(), INACCESSIBLE_AUTHENTICATION.errorMessage());
 
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.FORBIDDEN.value());
@@ -438,8 +440,7 @@ class GameControllerTest extends CommonControllerTest {
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
 
-        final ExceptionResponse expected = new ExceptionResponse(404, "이미 종료된 게임입니다.");
-
+        final ExceptionResponse expected = new ExceptionResponse(ALREADY_DONE.errorCode(), ALREADY_DONE.errorMessage());
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
             softAssertions.assertThat(actual)
@@ -508,7 +509,7 @@ class GameControllerTest extends CommonControllerTest {
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
 
-        final ExceptionResponse expected = new ExceptionResponse(401, "게임이 존재하지 않습니다.");
+        final ExceptionResponse expected = new ExceptionResponse(NOT_EXIST.errorCode(), NOT_EXIST.errorMessage());
 
         assertSoftly(softAssertions -> {
                     softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
