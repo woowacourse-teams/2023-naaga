@@ -3,9 +3,12 @@ package com.now.naaga.data.remote.retrofit
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.now.naaga.BuildConfig
+import com.now.naaga.NaagaApplication
 import com.now.naaga.data.remote.dto.FailureDto
-import okhttp3.Call
-import okhttp3.Callback
+import com.now.naaga.data.remote.dto.NaagaAuthDto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -13,67 +16,83 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONObject
-import java.io.IOException
 
 class AuthInterceptor : Interceptor {
     private val gson = Gson()
     private val client = OkHttpClient.Builder().build()
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val headerAddedRequest = chain.request().newBuilder().addHeader("Authorization", getAccessToken()).build()
+        if (isLoginRequest(chain.request())) {
+            return chain.proceed(chain.request())
+        }
+
+        val headerAddedRequest = chain.request().newBuilder().addHeader(AUTH_KEY, getAccessToken()).build()
         val response = chain.proceed(headerAddedRequest)
 
         if (response.code == 401) {
             val failureDto = response.getDto<FailureDto>()
             when (failureDto.code) {
-                101 -> throw IllegalStateException("${headerAddedRequest.url}에서 인증 정보 오류. 재로그인 필요")
-                102 -> return reRequest(chain)
-                103 -> throw IllegalStateException("리프레시 토큰 만료. 재로그인 필요")
+                101 -> throw IllegalStateException(AUTH_ERROR.format(headerAddedRequest.url.toString()))
+                102 -> {
+                    response.close()
+                    return reRequest(chain)
+                }
+
+                103 -> throw IllegalStateException(REFRESH_EXPIRED)
             }
         }
         return response
     }
 
+    private fun isLoginRequest(request: Request): Boolean {
+        val path: String = request.url.encodedPath.substringAfter(BuildConfig.BASE_URL)
+        return path == AUTH_PATH
+    }
+
     private fun reRequest(chain: Interceptor.Chain): Response {
         val token: String = getRefreshedToken()
-        val request = chain.request().newBuilder().addHeader("Authorization", token).build()
+        val request = chain.request().newBuilder().addHeader(AUTH_KEY, token).build()
         return chain.proceed(request)
     }
 
     private fun getRefreshedToken(): String {
         val body = JSONObject()
-            .put("refreshToken", getRefreshToken())
+            .put(AUTH_REFRESH_KEY, getRefreshToken())
             .toString()
             .toRequestBody(contentType = "application/json".toMediaType())
 
         val request = Request.Builder()
-            .url(BuildConfig.BASE_URL + "auth/refresh")
+            .url(BuildConfig.BASE_URL + AUTH_REFRESH_PATH)
             .post(body)
-            .addHeader("Authorization", getAccessToken())
+            .addHeader(AUTH_KEY, getAccessToken())
             .build()
 
-        return ""
+        val auth = requestRefresh(request)
+        storeToken(auth.accessToken, auth.refreshToken)
+        return auth.accessToken
     }
 
-    private fun enqueueRefreshRequest(
-        request: Request,
-        onSuccess: (token: String) -> Unit,
-        onFailure: (t: Throwable) -> Unit,
-    ) {
-        client.newCall(request).enqueue(
-            object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    if (response.isSuccessful) {
-                        // val token = response.getDto<NaagaAuthDto>()
-                        // onSuccess()
-                    }
-                }
+    private fun requestRefresh(request: Request): NaagaAuthDto {
+        val response: Response = runBlocking {
+            withContext(Dispatchers.IO) { client.newCall(request).execute() }
+        }
+        if (response.isSuccessful) {
+            return response.getDto<NaagaAuthDto>()
+        }
+        throw IllegalStateException(REFRESH_FAILURE)
+    }
 
-                override fun onFailure(call: Call, e: IOException) {
-                    TODO("Not yet implemented")
-                }
-            },
-        )
+    private fun getAccessToken(): String {
+        return NaagaApplication.authDataSource.getAccessToken() ?: throw IllegalStateException(NO_ACCESS_TOKEN)
+    }
+
+    private fun getRefreshToken(): String {
+        return NaagaApplication.authDataSource.getRefreshToken() ?: throw IllegalStateException(NO_REFRESH_TOKEN)
+    }
+
+    private fun storeToken(accessToken: String, refreshToken: String) {
+        NaagaApplication.authDataSource.setAccessToken(accessToken)
+        NaagaApplication.authDataSource.setRefreshToken(refreshToken)
     }
 
     private inline fun <reified T> Response.getDto(): T {
@@ -81,11 +100,17 @@ class AuthInterceptor : Interceptor {
         return gson.fromJson(responseObject, T::class.java)
     }
 
-    private fun getAccessToken(): String {
-        return ""
-    }
+    companion object {
+        const val AUTH_KEY = "Authorization"
+        const val AUTH_REFRESH_KEY = "refreshToken"
 
-    private fun getRefreshToken(): String {
-        return ""
+        const val AUTH_PATH = "auth"
+        const val AUTH_REFRESH_PATH = "auth/refresh"
+
+        const val AUTH_ERROR = "%s에서 인증 오류 발생"
+        const val REFRESH_EXPIRED = "리프레시 토큰 만료"
+        const val NO_ACCESS_TOKEN = "엑세스 토큰이 없습니다"
+        const val NO_REFRESH_TOKEN = "리프레시 토큰이 없습니다"
+        const val REFRESH_FAILURE = "토큰 리프레시 실패"
     }
 }
