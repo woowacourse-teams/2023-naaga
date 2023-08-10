@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public enum MemberExceptionType implements BaseExceptionType {
 
     NOT_EXIST_MEMBER(
-            200,
+            101,
             HttpStatus.UNAUTHORIZED,
             "사용자 정보가 존재하지 않습니다."
     ),

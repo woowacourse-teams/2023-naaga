@@ -1,13 +1,13 @@
 package com.now.naaga.game.presentation;
 
 import com.now.naaga.auth.annotation.Auth;
+import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.HintService;
 import com.now.naaga.game.application.dto.*;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameRecord;
 import com.now.naaga.game.domain.Hint;
-import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.presentation.dto.*;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.now.naaga.game.exception.GameExceptionType.INVALID_QUERY_PARAMETERS;
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
 
 @RequestMapping("/games")
 @RestController
@@ -43,11 +43,11 @@ public class GameController {
                 .location(URI.create("/games/" + game.getId()))
                 .body(gameResponse);
     }
-    
+
     @PostMapping("/{gameId}/hints")
     public ResponseEntity<HintResponse> createHint(@Auth final PlayerRequest playerRequest,
-            @RequestBody final CoordinateRequest coordinateRequest,
-            @PathVariable final Long gameId) {
+                                                   @RequestBody final CoordinateRequest coordinateRequest,
+                                                   @PathVariable final Long gameId) {
         final CreateHintCommand createHintCommand = CreateHintCommand.ofCoordinate(playerRequest, coordinateRequest, gameId);
         final Hint hint = hintService.createHint(createHintCommand);
         final HintResponse hintResponse = HintResponse.from(hint);
@@ -113,7 +113,7 @@ public class GameController {
                                                                       @RequestParam(name = "sort-by") final String sortBy,
                                                                       @RequestParam(name = "order") final String order) {
         if (!sortBy.equalsIgnoreCase("TIME") || !order.equalsIgnoreCase("DESCENDING")) {
-            throw new GameException(INVALID_QUERY_PARAMETERS);
+            throw new CommonException(INVALID_REQUEST_PARAMETERS);
         }
 
         final List<GameRecord> gameRecords = gameService.findAllGameResult(playerRequest);

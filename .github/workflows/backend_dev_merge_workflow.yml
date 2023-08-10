@@ -1,18 +1,25 @@
 name: NAAGA BACKEND MERGE CI
-
 on:
   push:
-    branches: 
-      - feat/#222
-
+    branches:
+      - dev
 jobs:
-  execute_deployment_script:
-    name: backend deploy
+  deploy:
     runs-on: naaga
-    
     steps:
-      - name: Execute script
+      - name: change permission
         run: |
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/naaga/2023-naaga/2023-naaga
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: remove
+        run: |
+          sudo rm -rf /home/ubuntu/2023-naaga
+      - name: deploy
+        run: |
+          sudo cp -r /home/ubuntu/actions-runner/naaga/2023-naaga/2023-naaga /home/ubuntu
+          cd /home/ubuntu
           sudo ./deploy.sh
-        working-directory: /home/ubuntu
-

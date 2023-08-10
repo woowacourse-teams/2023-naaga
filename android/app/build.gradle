@@ -23,6 +23,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "BASE_URL", properties["BASE_URL"]
+        buildConfigField "String", "KAKAO_NATIVE_APP_KEY", properties["KAKAO_NATIVE_APP_KEY"]
+        resValue "string", "kakao_redirection_scheme", properties["kakao_redirection_scheme"]
     }
 
     buildTypes {
@@ -94,4 +96,10 @@ dependencies {
     implementation(platform('com.google.firebase:firebase-bom:32.2.0'))
     implementation "com.google.firebase:firebase-analytics-ktx"
     implementation("com.google.firebase:firebase-crashlytics-ktx")
+
+    // kakao Login
+    implementation "com.kakao.sdk:v2-user:2.15.0"
+
+    // EncryptedSharedPreferences
+    implementation "androidx.security:security-crypto-ktx:1.1.0-alpha03"
 }
