@@ -8,7 +8,7 @@ import com.now.domain.model.Rank
 import com.now.domain.model.SortType
 import com.now.domain.repository.RankRepository
 import com.now.naaga.data.throwable.DataThrowable
-import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
+import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
 
 class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
     private val _myName = MutableLiveData<String>()
@@ -54,9 +54,7 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
 
     private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is UniversalThrowable -> {
-                _errorMessage.value = throwable.message
-            }
+            is PlayerThrowable -> { _errorMessage.value = throwable.message }
             else -> {}
         }
     }

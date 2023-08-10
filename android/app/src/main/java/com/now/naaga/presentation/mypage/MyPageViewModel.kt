@@ -13,6 +13,7 @@ import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
+import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
 
 class MyPageViewModel(
     private val rankRepository: RankRepository,
@@ -57,9 +58,8 @@ class MyPageViewModel(
 
     private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is PlaceThrowable -> {
-                _errorMessage.value = throwable.message
-            }
+            is PlayerThrowable -> { _errorMessage.value = throwable.message }
+            is PlaceThrowable -> { _errorMessage.value = throwable.message }
             else -> {}
         }
     }

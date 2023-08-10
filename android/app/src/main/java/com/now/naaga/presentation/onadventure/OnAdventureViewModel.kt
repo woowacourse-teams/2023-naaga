@@ -101,15 +101,9 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
 
     private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is AuthorizationThrowable -> {
-                _errorMessage.value = throwable.message
-            }
-            is UniversalThrowable -> {
-                _errorMessage.value = throwable.message
-            }
-            is GameThrowable -> {
-                _errorMessage.value = throwable.message
-            }
+            is AuthorizationThrowable -> { _errorMessage.value = throwable.message }
+            is UniversalThrowable -> { _errorMessage.value = throwable.message }
+            is GameThrowable -> { _errorMessage.value = throwable.message }
             else -> {}
         }
     }

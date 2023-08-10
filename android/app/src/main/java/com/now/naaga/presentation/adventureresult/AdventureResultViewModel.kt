@@ -6,7 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.now.domain.model.AdventureResult
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.RankRepository
-import com.now.naaga.data.NaagaThrowable
+import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.throwable.DataThrowable.GameThrowable
 
 class AdventureResultViewModel(
     private val adventureRepository: AdventureRepository,
@@ -27,8 +28,8 @@ class AdventureResultViewModel(
             adventureId,
             callback = { result ->
                 result
-                    .onSuccess { _adventureResult.value = it }
-                    .onFailure { setErrorMessage(it) }
+                    .onSuccess { adventureResult -> _adventureResult.value = adventureResult }
+                    .onFailure { setErrorMessage(it as DataThrowable) }
             },
         )
     }
@@ -37,16 +38,16 @@ class AdventureResultViewModel(
         rankRepository.getMyRank(
             callback = { result ->
                 result
-                    .onSuccess { _myRank.value = it.rank }
-                    .onFailure { setErrorMessage(it) }
+                    .onSuccess { rank -> _myRank.value = rank.rank }
+                    .onFailure { setErrorMessage(it as DataThrowable) }
             },
         )
     }
 
-    private fun setErrorMessage(throwable: Throwable) {
+    private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is NaagaThrowable.ServerConnectFailure ->
-                _errorMessage.value = throwable.message
+            is GameThrowable -> { _errorMessage.value = throwable.message }
+            else -> {}
         }
     }
 }
