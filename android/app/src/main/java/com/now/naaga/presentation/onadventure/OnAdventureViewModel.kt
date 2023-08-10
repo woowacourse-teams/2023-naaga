@@ -11,8 +11,12 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.repository.AdventureRepository
-import com.now.naaga.data.NaagaThrowable
 import com.now.naaga.data.repository.DefaultAdventureRepository
+import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.throwable.DataThrowable.AuthorizationThrowable
+import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
+import com.now.naaga.data.throwable.DataThrowable.GameThrowable
+import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
 
 class OnAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
@@ -29,8 +33,8 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
-    private val _failure = MutableLiveData<Throwable>()
-    val failure: LiveData<Throwable> = _failure
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
 
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
@@ -38,11 +42,9 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
 
     fun beginAdventure(currentCoordinate: Coordinate) {
         adventureRepository.beginAdventure(currentCoordinate) { result: Result<Adventure> ->
-            result.onSuccess {
-                setAdventure(it)
-            }.onFailure {
-                _failure.value = it
-            }
+            result
+                .onSuccess { setAdventure(it) }
+                .onFailure { setErrorMessage(it as DataThrowable) }
         }
     }
 
@@ -58,16 +60,13 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         ) { result: Result<AdventureStatus> ->
             result
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
-                .onFailure {
-                    _failure.value = it
-                    // _failure.value = AdventureThrowable.GiveUpAdventureFailure()
-                }
+                .onFailure { setErrorMessage(it as DataThrowable) }
         }
     }
 
     fun openHint() {
         if (isAllHintsUsed()) {
-            _failure.value = AdventureThrowable.HintFailure()
+            setErrorMessage(hintThrowable)
             return
         }
         adventureRepository.makeHint(
@@ -75,14 +74,11 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
             coordinate = myCoordinate.value ?: return,
         ) { result: Result<Hint> ->
             result
-                .onSuccess {
-                    _adventure.value = adventure.value?.copy(hints = ((adventure.value?.hints ?: listOf()) + it))
-                    _lastHint.value = it
+                .onSuccess { hint ->
+                    _adventure.value = adventure.value?.copy(hints = ((adventure.value?.hints ?: listOf()) + hint))
+                    _lastHint.value = hint
                 }
-                .onFailure {
-                    _failure.value = it
-                    // _failure.value = AdventureThrowable.UnExpectedFailure()
-                }
+                .onFailure { setErrorMessage(it as DataThrowable) }
         }
     }
 
@@ -99,24 +95,27 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         ) { result: Result<AdventureStatus> ->
             result
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
-                .onFailure {
-                    _failure.value = when (it) {
-                        is NaagaThrowable.ClientError -> {
-                            if (it.code == 403) {
-                                AdventureThrowable.EndAdventureFailure()
-                            } else {
-                                it
-                            }
-                        }
+                .onFailure { setErrorMessage(it as DataThrowable) }
+        }
+    }
 
-                        else -> it
-                    }
-                }
+    private fun setErrorMessage(throwable: DataThrowable) {
+        when (throwable) {
+            is AuthorizationThrowable -> {
+                _errorMessage.value = throwable.message
+            }
+            is UniversalThrowable -> {
+                _errorMessage.value = throwable.message
+            }
+            is GameThrowable -> {
+                _errorMessage.value = throwable.message
+            }
+            else -> {}
         }
     }
 
     companion object {
-        const val MAX_HINT_COUNT = 5
+        const val MAX_HINT_COUNT = 3
         val Factory = ViewModelFactory(DefaultAdventureRepository())
 
         class ViewModelFactory(private val adventureRepository: AdventureRepository) : ViewModelProvider.Factory {
