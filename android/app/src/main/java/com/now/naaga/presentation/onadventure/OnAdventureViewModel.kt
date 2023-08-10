@@ -13,7 +13,6 @@ import com.now.domain.model.Hint
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.throwable.DataThrowable
-import com.now.naaga.data.throwable.DataThrowable.AuthorizationThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
@@ -101,7 +100,6 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
 
     private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is AuthorizationThrowable -> { _errorMessage.value = throwable.message }
             is UniversalThrowable -> { _errorMessage.value = throwable.message }
             is GameThrowable -> { _errorMessage.value = throwable.message }
             else -> {}
