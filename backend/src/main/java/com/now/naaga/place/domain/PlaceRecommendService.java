@@ -1,13 +1,14 @@
 package com.now.naaga.place.domain;
 
-import static com.now.naaga.place.exception.PlaceExceptionType.CAN_NOT_FIND_PLACE;
-
 import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
-import java.util.List;
-import java.util.Random;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Random;
+
+import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
 
 @Transactional
 @Service
@@ -24,7 +25,7 @@ public class PlaceRecommendService {
     public Place recommendRandomPlaceNearBy(final Position position) {
         final List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, DISTANCE);
         if (places.isEmpty()) {
-            throw new PlaceException(CAN_NOT_FIND_PLACE);
+            throw new PlaceException(NO_EXIST);
         }
         return getRandomPlace(places);
     }

@@ -9,8 +9,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".presentation.login.NaagaApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -56,6 +58,23 @@
         <activity
             android:name=".presentation.mypage.MyPageActivity"
             android:exported="false" />
+        <activity
+            android:name=".presentation.login.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="oauth"
+                    android:scheme="@string/kakao_redirection_scheme" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
