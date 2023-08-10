@@ -42,29 +42,12 @@ fun <T> Call<T>.fetchResponse(
                     val message = jsonObject?.getString("message") ?: ""
 
                     when (code) {
-                        in 100..199 -> {
-                            onFailure(AuthorizationThrowable(code, message))
-                        }
-
-                        in 200..299 -> {
-                            onFailure(UniversalThrowable(code, message))
-                        }
-
-                        in 300..399 -> {
-                            onFailure(PlayerThrowable(code, message))
-                        }
-
-                        in 400..499 -> {
-                            onFailure(GameThrowable(code, message))
-                        }
-
-                        in 500..599 -> {
-                            onFailure(PlaceThrowable(code, message))
-                        }
-
-                        in 900..999 -> {
-                            onFailure(UniversalThrowable(code, message))
-                        }
+                        in 100..199 -> { onFailure(AuthorizationThrowable(code, message)) }
+                        in 200..299 -> { onFailure(UniversalThrowable(code, message)) }
+                        in 300..399 -> { onFailure(PlayerThrowable(code, message)) }
+                        in 400..499 -> { onFailure(GameThrowable(code, message)) }
+                        in 500..599 -> { onFailure(PlaceThrowable(code, message)) }
+                        in 900..999 -> { onFailure(UniversalThrowable(code, message)) }
                     }
                 }
             }
