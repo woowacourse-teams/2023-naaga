@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Rank
-import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.databinding.ActivityRankBinding
 import com.now.naaga.presentation.rank.recyclerview.RankAdapter
 
@@ -30,9 +29,7 @@ class RankActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        val repository = DefaultRankRepository()
-        val factory = RankFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[RankViewModel::class.java]
+        viewModel = ViewModelProvider(this, RankViewModel.Factory)[RankViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }

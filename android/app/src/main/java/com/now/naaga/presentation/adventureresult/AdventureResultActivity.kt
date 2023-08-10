@@ -13,8 +13,6 @@ import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.RESULT_RESULT_RETURN
-import com.now.naaga.data.repository.DefaultAdventureRepository
-import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.databinding.ActivityAdventureResultBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 
@@ -44,10 +42,7 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     }
 
     private fun initViewModel() {
-        val adventureRepository = DefaultAdventureRepository()
-        val rankRepository = DefaultRankRepository()
-        val factory = AdventureResultFactory(adventureRepository, rankRepository)
-        viewModel = ViewModelProvider(this, factory)[AdventureResultViewModel::class.java]
+        viewModel = ViewModelProvider(this, AdventureResultViewModel.Factory)[AdventureResultViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }

@@ -3,6 +3,7 @@ package com.now.naaga.presentation.mypage
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.OrderType
 import com.now.domain.model.Place
 import com.now.domain.model.Rank
@@ -11,6 +12,9 @@ import com.now.domain.model.Statistics
 import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
+import com.now.naaga.data.repository.DefaultPlaceRepository
+import com.now.naaga.data.repository.DefaultRankRepository
+import com.now.naaga.data.repository.DefaultStatisticsRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
@@ -61,6 +65,20 @@ class MyPageViewModel(
             is PlayerThrowable -> { _errorMessage.value = throwable.message }
             is PlaceThrowable -> { _errorMessage.value = throwable.message }
             else -> {}
+        }
+    }
+
+    companion object {
+        val Factory = MyPageFactory(DefaultRankRepository(), DefaultStatisticsRepository(), DefaultPlaceRepository())
+
+        class MyPageFactory(
+            private val rankRepository: RankRepository,
+            private val statisticsRepository: StatisticsRepository,
+            private val placeRepository: PlaceRepository,
+        ) : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return MyPageViewModel(rankRepository, statisticsRepository, placeRepository) as T
+            }
         }
     }
 }
