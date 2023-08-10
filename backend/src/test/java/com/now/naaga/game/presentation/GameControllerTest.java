@@ -323,11 +323,11 @@ class GameControllerTest extends CommonControllerTest {
     }
 
     @Test
-    void 잔여_횟수가_남았지만_도착_실패하면_예외가_발생한다() {
+    void 잔여_횟수가_남았지만_도착_실패하면_예외가_발생하고_() throws InterruptedException {
         // given & when
-        Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
-        Game game = gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
-
+        final Place destination = placeRepository.save(new Place("잠실루터회관", "잠실루터회관이다.", 잠실_루터회관_정문_좌표, "잠실루터회관IMAGE", new Player("chae", new Score(1000), new Member("chae@gmail.com", "0121"))));
+        final Game game = gameRepository.save(new Game(destination.getRegisteredPlayer(), destination, 잠실역_교보문고_좌표));
+        final int beforeRemainingAttempts = game.getRemainingAttempts();
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .auth().preemptive().basic("chae@gmail.com", "0121")
@@ -337,14 +337,20 @@ class GameControllerTest extends CommonControllerTest {
                 .patch("/games/{gameId}", game.getId())
                 .then().log().all()
                 .extract();
+        final ExtractableResponse<Response> extractAfter = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("chae@gmail.com", "0121")
+                .when()
+                .get("/games/{gameId}", game.getId())
+                .then().log().all()
+                .extract();
 
         // then
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
-
-        final GameExceptionType notArrived = GameExceptionType.NOT_ARRIVED;
-        final ExceptionResponse expected = new ExceptionResponse(notArrived.errorCode(), notArrived.errorMessage());
-
+        final ExceptionResponse expected = new ExceptionResponse(NOT_ARRIVED.errorCode(), NOT_ARRIVED.errorMessage());
+        final GameResponse endGame = extractAfter.body().as(GameResponse.class);
+        final int afterRemainingAttempts = endGame.remainingAttempts();
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
             softAssertions.assertThat(actual)
@@ -352,6 +358,7 @@ class GameControllerTest extends CommonControllerTest {
                     .ignoringExpectedNullFields()
                     .ignoringFieldsOfTypes(LocalDateTime.class)
                     .isEqualTo(expected);
+            softAssertions.assertThat(afterRemainingAttempts).isEqualTo(beforeRemainingAttempts - 1);
         });
     }
 
