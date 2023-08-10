@@ -29,7 +29,7 @@ class PlayerRepositoryTest {
     @Test
     void 맴버아이디로_플레이어를_조회한다() {
         // given
-        final Player savePlayer = playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com", "1234")));
+        final Player savePlayer = playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com")));
 
         // when
         final Player foundPlayer = playerRepository.findByMemberId(savePlayer.getMember().getId()).get(0);

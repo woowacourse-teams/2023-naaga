@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.now.naaga.auth.domain.AuthTokens;
+import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.common.infrastructure.FileManager;
@@ -42,6 +44,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class PlaceControllerTest extends CommonControllerTest {
 
     @Autowired
+    private JwtGenerator jwtGenerator;
+
+    @Autowired
     private PlayerRepository playerRepository;
 
     @Autowired
@@ -61,6 +66,11 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Player player = playerRepository.save(PLAYER());
         final Place SEOUL = SEOUL_PLACE();
         when(fileManager.save(any())).thenReturn(new File("/임시경로", "이미지.png"));
+
+
+        final Long memberId = player.getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
         //when
         final ExtractableResponse<Response> extract = given()
                 .log().all()
@@ -72,7 +82,7 @@ public class PlaceControllerTest extends CommonControllerTest {
                         new MultiPartSpecBuilder(SEOUL.getPosition().getLongitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("longitude").charset(StandardCharsets.UTF_8).build())
                 .multiPart(new MultiPartSpecBuilder(new FileInputStream(new File("src/test/java/com/now/naaga/place/fixture/루터회관.png"))).controlName("imageFile").charset(StandardCharsets.UTF_8)
                         .fileName("src/test/java/com/now/naaga/place/fixture/루터회관.png").mimeType("image/png").build())
-                .auth().preemptive().basic(player.getMember().getEmail(), player.getMember().getPassword())
+                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .post("/places")
                 .then()
@@ -100,6 +110,11 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place place = placeRepository.save(SEOUL_PLACE());
         final Player player = place.getRegisteredPlayer();
         final Place SEOUL = SEOUL_PLACE();
+
+        final Long memberId = player.getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         //when
         final ExtractableResponse<Response> extract = given()
                 .log().all()
@@ -111,7 +126,7 @@ public class PlaceControllerTest extends CommonControllerTest {
                         new MultiPartSpecBuilder(SEOUL.getPosition().getLongitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName("longitude").charset(StandardCharsets.UTF_8).build())
                 .multiPart(new MultiPartSpecBuilder(new FileInputStream(new File("src/test/java/com/now/naaga/place/fixture/루터회관.png"))).controlName("imageFile").charset(StandardCharsets.UTF_8)
                         .fileName("src/test/java/com/now/naaga/place/fixture/루터회관.png").mimeType("image/png").build())
-                .auth().preemptive().basic(player.getMember().getEmail(), player.getMember().getPassword())
+                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .post("/places")
                 .then()
@@ -136,11 +151,15 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place place = placeRepository.save(SEOUL_PLACE());
         final Player player = place.getRegisteredPlayer();
         final Place SEOUL = SEOUL_PLACE();
+
+        final Long memberId = player.getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
         //when
         final ExtractableResponse<Response> extract = given()
                 .log().all()
                 .pathParam("placeId", place.getId())
-                .auth().preemptive().basic(player.getMember().getEmail(), player.getMember().getPassword())
+                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .get("/places/{placeId}")
                 .then()
@@ -163,10 +182,15 @@ public class PlaceControllerTest extends CommonControllerTest {
         //given
         final Place SEOUL = placeRepository.save(SEOUL_PLACE());
         final Player player = SEOUL.getRegisteredPlayer();
+
+        final Long memberId = player.getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         //when
         final ExtractableResponse<Response> extract = given()
                 .log().all()
-                .auth().preemptive().basic(player.getMember().getEmail(), player.getMember().getPassword())
+                .header("Authorization", "Bearer " + accessToken)
                 .queryParam("sort-by", "time")
                 .queryParam("order", "descending")
                 .when()

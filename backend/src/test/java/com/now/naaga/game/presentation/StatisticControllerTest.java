@@ -1,5 +1,7 @@
 package com.now.naaga.game.presentation;
 
+import com.now.naaga.auth.domain.AuthTokens;
+import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.game.domain.*;
 import com.now.naaga.game.presentation.dto.StatisticResponse;
@@ -33,6 +35,9 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 public class StatisticControllerTest extends CommonControllerTest {
 
     @Autowired
+    JwtGenerator jwtGenerator;
+
+    @Autowired
     PlaceRepository placeRepository;
 
     @Autowired
@@ -50,8 +55,8 @@ public class StatisticControllerTest extends CommonControllerTest {
     @Test
     void 맴버의_통계를_조회한다() {
         //given
-        final Member member1 = new Member("chaechae@woo.com", "1234");
-        final Member member2 = new Member("chaechae2@woo.com", "1234");
+        final Member member1 = new Member("chaechae@woo.com");
+        final Member member2 = new Member("chaechae2@woo.com");
 
         final Player player1 = new Player("채채", new Score(15), member1);
         final Player player2 = new Player("채채2", new Score(12), member2);
@@ -79,10 +84,15 @@ public class StatisticControllerTest extends CommonControllerTest {
         final GameResult gameResult2 = new GameResult(ResultType.FAIL, new Score(10), saveGame2);
         gameResultRepository.save(gameResult1);
         gameResultRepository.save(gameResult2);
+
+        final Long memberId = player1.getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         // when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic("chaechae@woo.com", "1234")
+                .header("Authorization", "Bearer " + accessToken)
                 .when().get("/statistics/my")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
