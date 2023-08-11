@@ -3,6 +3,7 @@ package com.now.naaga.presentation.onadventure
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -73,7 +74,6 @@ class OnAdventureActivity :
     private fun setLocationChangeListener() {
         naverMap.addOnLocationChangeListener { location ->
             val coordinate = Coordinate(location.latitude, location.longitude)
-            viewModel.calculateDistance(coordinate)
             viewModel.myCoordinate.value = coordinate
         }
     }
@@ -87,6 +87,7 @@ class OnAdventureActivity :
         }
         viewModel.hints.observe(this) { hints ->
             drawHintMarkers(hints)
+            binding.lottieOnAdventureLoading.visibility = View.GONE
         }
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
