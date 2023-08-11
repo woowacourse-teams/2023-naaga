@@ -10,7 +10,6 @@ import com.now.domain.model.AdventureStatus.DONE
 import com.now.domain.model.AdventureStatus.IN_PROGRESS
 import com.now.domain.model.AdventureStatus.NONE
 import com.now.naaga.R
-import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.login.LoginActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -36,14 +35,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun startNextActivity(adventureStatus: AdventureStatus) {
         val intent: Intent = when (adventureStatus) {
-            IN_PROGRESS -> {
-                val adventure = viewModel.adventure.value
-                if (adventure == null) {
-                    BeginAdventureActivity.getIntent(this)
-                } else {
-                    BeginAdventureActivity.getIntentWithAdventure(this, adventure)
-                }
-            }
+            IN_PROGRESS -> LoginActivity.getIntent(this)
             DONE -> LoginActivity.getIntent(this)
             NONE -> LoginActivity.getIntent(this)
         }
