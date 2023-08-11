@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -42,6 +43,7 @@ class OnAdventureActivity :
         initViewModel()
         subscribe()
         setOnMapReady { setLocationChangeListener() }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         setClickListeners()
     }
 
@@ -49,6 +51,19 @@ class OnAdventureActivity :
         viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+    }
+
+    private var backPressedTime = 0L
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (System.currentTimeMillis() - backPressedTime <= 2000) {
+                finish()
+            } else {
+                backPressedTime = System.currentTimeMillis()
+                Toast.makeText(this@OnAdventureActivity, "뒤로가기 버튼을 한번 더 누르면 게임에서 나가져요!", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 
     private fun setClickListeners() {
