@@ -5,22 +5,34 @@ import org.springframework.http.HttpStatus;
 
 public enum AuthExceptionType implements BaseExceptionType {
 
-    PASSWORD_MISMATCH(
-            101,
-            HttpStatus.UNAUTHORIZED,
-            "비밀번호가 일치하지 않습니다."
-    ),
-
     NOT_EXIST_HEADER(
             101,
             HttpStatus.UNAUTHORIZED,
             "헤더 정보가 존재하지 않습니다."
     ),
 
+    INVALID_KAKAO_INFO(
+            101,
+            HttpStatus.UNAUTHORIZED,
+            "카카오에서 해당 정보를 가져올 수 없습니다."
+    ),
+
+    INVALID_TOKEN(
+            101,
+            HttpStatus.UNAUTHORIZED,
+            "토큰 정보가 옳지 않습니다."
+    ),
+
     INVALID_HEADER(
             101,
             HttpStatus.UNAUTHORIZED,
             "헤더 정보가 유효하지 않습니다."
+    ),
+
+    EXPIRED_TOKEN(
+            102,
+            HttpStatus.UNAUTHORIZED,
+            "토큰이 만료 되었습니다."
     ),
     ;
 

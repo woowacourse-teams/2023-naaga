@@ -43,3 +43,10 @@ spring:
     activate:
       on-profile: test
 
+---
+
+spring:
+  config:
+    import: classpath:security/application-local.yml
+    activate:
+      on-profile: local

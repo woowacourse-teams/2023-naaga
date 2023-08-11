@@ -3,6 +3,8 @@ package com.now.naaga.player.presentation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import com.now.naaga.auth.domain.AuthTokens;
+import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.domain.Player;
@@ -22,6 +24,9 @@ import org.springframework.http.MediaType;
 public class PlayerControllerTest extends CommonControllerTest {
 
     @Autowired
+    private JwtGenerator jwtGenerator;
+
+    @Autowired
     private PlayerRepository playerRepository;
 
     @BeforeEach
@@ -32,13 +37,19 @@ public class PlayerControllerTest extends CommonControllerTest {
     @Test
     void 멤버의_랭크를_조회한다() {
         // given
-        playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com", "1234")));
-        playerRepository.save(new Player("이레", new Score(17), new Member("irea@woo.com", "1234")));
-        playerRepository.save(new Player("채리", new Score(20), new Member("cherry@woo.com", "1234")));
+        Player chae = playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com")));
+        playerRepository.save(new Player("이레", new Score(17), new Member("irea@woo.com")));
+        playerRepository.save(new Player("채리", new Score(20), new Member("cherry@woo.com")));
+
+
+        final Long memberId = chae.getMember().getId();
+        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final String accessToken = generate.getAccessToken();
+
         // when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic("chaechae@woo.com", "1234")
+                .header("Authorization", "Bearer " + accessToken)
                 .when().get("/ranks/my")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -60,9 +71,9 @@ public class PlayerControllerTest extends CommonControllerTest {
     @Test
     void 모든_맴버의_랭크를_조회한다() {
         // given
-        playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com", "1234")));
-        playerRepository.save(new Player("이레", new Score(17), new Member("irea@woo.com", "1234")));
-        playerRepository.save(new Player("채리", new Score(20), new Member("cherry@woo.com", "1234")));
+        playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com")));
+        playerRepository.save(new Player("이레", new Score(17), new Member("irea@woo.com")));
+        playerRepository.save(new Player("채리", new Score(20), new Member("cherry@woo.com")));
         // when
         final ExtractableResponse<Response> response = RestAssured.given()
                 .log().all()

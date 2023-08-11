@@ -1,29 +1,60 @@
 package com.now.naaga.auth.application;
 
-import com.now.naaga.auth.exception.AuthException;
+import com.now.naaga.auth.application.dto.AuthCommand;
+import com.now.naaga.auth.application.dto.AuthInfo;
+import com.now.naaga.auth.domain.AuthTokens;
+import com.now.naaga.auth.infrastructure.AuthClient;
+import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
+import com.now.naaga.member.application.CreateMemberCommand;
 import com.now.naaga.member.application.MemberService;
 import com.now.naaga.member.domain.Member;
-import com.now.naaga.member.presentation.dto.MemberAuthRequest;
+import com.now.naaga.player.application.PlayerService;
+import com.now.naaga.player.application.dto.CreatePlayerCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.now.naaga.auth.exception.AuthExceptionType.PASSWORD_MISMATCH;
 
 @Transactional
 @Service
 public class AuthService {
 
+    private final PlayerService playerService;
+
     private final MemberService memberService;
 
-    public AuthService(final MemberService memberService) {
+    private final AuthClient authClient;
+
+    private final JwtGenerator jwtGenerator;
+
+    public AuthService(final PlayerService playerService,
+                       final MemberService memberService,
+                       final AuthClient authClient,
+                       final JwtGenerator jwtGenerator) {
+        this.playerService = playerService;
         this.memberService = memberService;
+        this.authClient = authClient;
+        this.jwtGenerator = jwtGenerator;
     }
 
-    @Transactional(readOnly = true)
-    public void validateAuthentication(final MemberAuthRequest memberAuthRequest) {
-        final Member member = memberService.findMemberByEmail(memberAuthRequest.email());
-        if (!memberAuthRequest.password().equals(member.getPassword())) {
-            throw new AuthException(PASSWORD_MISMATCH);
+    public AuthTokens login(final AuthCommand authCommand) {
+        final AuthInfo authInfo = authClient.requestOauthInfo(authCommand.token());
+        final Member member = findOrCreateMember(authInfo);
+        return jwtGenerator.generate(member.getId());
+    }
+
+    private Member findOrCreateMember(final AuthInfo kakaoAuthInfo) {
+        final String email = kakaoAuthInfo.getEmail();
+        final CreateMemberCommand createMemberCommand = new CreateMemberCommand(email);
+        try {
+            return memberService.findMemberByEmail(email);
+        } catch (Exception e) {
+            return createMemberAndPlayer(kakaoAuthInfo, createMemberCommand);
         }
+    }
+
+    private Member createMemberAndPlayer(final AuthInfo kakaoAuthInfo, final CreateMemberCommand createMemberCommand) {
+        final Member member = memberService.create(createMemberCommand);
+        final CreatePlayerCommand createPlayerCommand = new CreatePlayerCommand(kakaoAuthInfo.getNickname(), member);
+        playerService.create(createPlayerCommand);
+        return member;
     }
 }
