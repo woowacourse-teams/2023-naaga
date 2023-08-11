@@ -15,6 +15,18 @@
         android:layout_height="match_parent"
         tools:context=".presentation.onadventure.OnAdventureActivity">
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_onAdventure_loading"
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:lottie_rawRes="@raw/animation_ll5gzgdu"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true" />
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fcv_onAdventure_map"
             android:name="com.naver.maps.map.MapFragment"
