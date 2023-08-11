@@ -17,9 +17,11 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_onAdventure_loading"
-            android:layout_width="200dp"
-            android:layout_height="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="80dp"
             android:elevation="4dp"
+            android:background="@color/main_gray_opacity_medium"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
