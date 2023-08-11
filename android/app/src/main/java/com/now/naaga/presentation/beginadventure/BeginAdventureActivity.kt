@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -87,11 +89,23 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
             LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
         } else {
+            checkLocationPermissionInStatusBar()
+        }
+    }
+
+    private fun checkLocationPermissionInStatusBar() {
+        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            Toast.makeText(this, GPS_TURN_ON_MESSAGE, Toast.LENGTH_SHORT).show()
+        } else {
             startActivity(OnAdventureActivity.getIntent(this))
         }
     }
 
     companion object {
+        private const val GPS_TURN_ON_MESSAGE = "GPS 설정을 켜주세요"
+
         fun getIntent(context: Context): Intent {
             return Intent(context, BeginAdventureActivity::class.java)
         }
