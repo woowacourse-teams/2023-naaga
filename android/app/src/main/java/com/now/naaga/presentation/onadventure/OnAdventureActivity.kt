@@ -60,7 +60,11 @@ class OnAdventureActivity :
                 finish()
             } else {
                 backPressedTime = System.currentTimeMillis()
-                Toast.makeText(this@OnAdventureActivity, "뒤로가기 버튼을 한번 더 누르면 게임에서 나가져요!", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    this@OnAdventureActivity,
+                    getString(R.string.OnAdventure_warning_back_pressed),
+                    Toast.LENGTH_SHORT,
+                )
                     .show()
             }
         }
@@ -119,7 +123,7 @@ class OnAdventureActivity :
             return
         }
 
-        Toast.makeText(this, "진행중인 게임에 입장했습니다.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.OnAdventure_continue_adventure), Toast.LENGTH_SHORT).show()
         viewModel.setAdventure(existingAdventure)
     }
 

@@ -31,6 +31,8 @@
     <string name="onAdventure_begin_error">모험 시작에 실패했어요. 다시 시작해주세요</string>
     <string name="onAdventure_no_more_hint">힌트를 모두 소진하였어요</string>
     <string name="onAdventure_unexpected_error">알 수 없는 오류가 발생했어요</string>
+    <string name="OnAdventure_continue_adventure">진행중인 게임에 입장했어요!</string>
+    <string name="OnAdventure_warning_back_pressed">뒤로가기 버튼을 한번 더 누르면 게임에서 나가져요!</string>
 
     <!-- AdventureResultActivity -->
     <string name="adventureResult_destination_description">오늘의 목적지</string>
