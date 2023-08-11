@@ -37,8 +37,8 @@ import java.util.Objects;
 public class Game extends BaseEntity {
 
     public static final double MIN_RANGE = 50;
-    public static final int MAX_HINT_COUNT = 3;
-    public static final int MAX_ATTEMPT_COUNT = 5;
+    public static final int MAX_HINT_COUNT = 5;
+    public static final int MAX_ATTEMPT_COUNT = 3;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
