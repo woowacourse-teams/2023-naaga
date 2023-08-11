@@ -3,15 +3,17 @@ package com.now.naaga.game.presentation;
 import com.now.naaga.auth.domain.AuthTokens;
 import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
 import com.now.naaga.common.CommonControllerTest;
+import com.now.naaga.game.application.GameService;
+import com.now.naaga.game.application.dto.CreateGameCommand;
+import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.domain.*;
 import com.now.naaga.game.presentation.dto.StatisticResponse;
-import com.now.naaga.game.repository.GameRepository;
-import com.now.naaga.game.repository.GameResultRepository;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
 import com.now.naaga.player.domain.Player;
+import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -33,62 +35,53 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class StatisticControllerTest extends CommonControllerTest {
-
+    
+    @Autowired
+    GameService gameService;
+    
     @Autowired
     JwtGenerator jwtGenerator;
-
+    
     @Autowired
     PlaceRepository placeRepository;
-
-    @Autowired
-    GameRepository gameRepository;
-
-    @Autowired
-    GameResultRepository gameResultRepository;
-
+    
     @BeforeEach
     protected void setUp() {
         super.setUp();
     }
-
-
+    
+    
     @Test
-    void 맴버의_통계를_조회한다() {
+    void 맴버의_통계를_조회한다() throws InterruptedException {
         //given
         final Member member1 = new Member("chaechae@woo.com");
-        final Member member2 = new Member("chaechae2@woo.com");
-
         final Player player1 = new Player("채채", new Score(15), member1);
-        final Player player2 = new Player("채채2", new Score(12), member2);
-
-        final Place place1 = new Place("어딘가", "멋진곳", new Position(BigDecimal.valueOf(37.514258), BigDecimal.valueOf(127.100883)), "imageUrl", player1);
-        final Place place2 = new Place("어딘가에", "더멋진곳", new Position(BigDecimal.valueOf(37.514258), BigDecimal.valueOf(127.100883)), "imageUrl", player2);
-        final Place savePlace1 = placeRepository.save(place1);
-        final Place savePlace2 = placeRepository.save(place2);
-        List<Hint> hints = new ArrayList<>();
-        final LocalDateTime startTime1 = LocalDateTime.of(2023, 8, 2, 13, 30);
-        final LocalDateTime endTime1 = LocalDateTime.of(2023, 8, 2, 15, 30);
-
-        final LocalDateTime startTime2 = LocalDateTime.of(2024, 8, 2, 13, 30);
-        final LocalDateTime endTime2 = LocalDateTime.of(2024, 8, 2, 15, 30);
-
-        final Game game1 = new Game(GameStatus.DONE, player1, savePlace1,
-                new Position(BigDecimal.valueOf(37.512256),
-                        BigDecimal.valueOf(127.112584)), 2, hints, startTime1, endTime1);
-        final Game game2 = new Game(GameStatus.DONE, player1, savePlace2,
-                new Position(BigDecimal.valueOf(37.512256),
-                        BigDecimal.valueOf(127.112584)), 3, hints, startTime2, endTime2);
-        final Game saveGame1 = gameRepository.save(game1);
-        final Game saveGame2 = gameRepository.save(game2);
-        final GameResult gameResult1 = new GameResult(ResultType.SUCCESS, new Score(15), saveGame1);
-        final GameResult gameResult2 = new GameResult(ResultType.FAIL, new Score(10), saveGame2);
-        gameResultRepository.save(gameResult1);
-        gameResultRepository.save(gameResult2);
-
+        final Position 잠실_교보문고_좌표 = new Position(BigDecimal.valueOf(37.514258), BigDecimal.valueOf(127.100883));
+        final Place 잠실_교보문고 = new Place("잠실_교보문고", "잠실교보문고",
+                잠실_교보문고_좌표, "imageUrl", player1);
+        placeRepository.save(잠실_교보문고);
+        
+        final Position 게임_시작_위치_잠실_루터회관 = new Position(BigDecimal.valueOf(37.515302), BigDecimal.valueOf(127.102832));
+        final Position 게임_종료_위치_잠실_교보문고_근처 = new Position(BigDecimal.valueOf(37.514318), BigDecimal.valueOf(127.100907));
+    
+        final Game saveGame1 = gameService.createGame(
+                new CreateGameCommand(player1.getId(), 게임_시작_위치_잠실_루터회관));
+        Thread.sleep(1000);
+        gameService.endGame(
+                new EndGameCommand(player1.getId(), EndType.ARRIVED, 게임_종료_위치_잠실_교보문고_근처, saveGame1.getId()));
+        
+        final Game saveGame2 = gameService.createGame(
+                new CreateGameCommand(player1.getId(), 게임_시작_위치_잠실_루터회관));
+        Thread.sleep(1000);
+        gameService.endGame(
+                new EndGameCommand(player1.getId(), EndType.GIVE_UP, 게임_종료_위치_잠실_교보문고_근처, saveGame2.getId()));
+        
+        final Statistic statistic = gameService.findStatistic(new PlayerRequest(player1.getId()));
+        
         final Long memberId = player1.getMember().getId();
         final AuthTokens generate = jwtGenerator.generate(memberId);
         final String accessToken = generate.getAccessToken();
-
+        
         // when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -97,18 +90,16 @@ public class StatisticControllerTest extends CommonControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
-
+        
         // then
-        final StatisticResponse statisticResponse = response.as(StatisticResponse.class);
-
+        final StatisticResponse actual = response.as(StatisticResponse.class);
+        final StatisticResponse expected = StatisticResponse.from(statistic);
+        
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(statisticResponse.gameCount()).isEqualTo(2);
-            softly.assertThat(statisticResponse.successGameCount()).isEqualTo(1);
-            softly.assertThat(statisticResponse.failGameCount()).isEqualTo(1);
-            softly.assertThat(statisticResponse.totalDistance()).isEqualTo(2);
-            softly.assertThat(statisticResponse.totalPlayTime()).isNotNull();
-            softly.assertThat(statisticResponse.totalUsedHintCount()).isEqualTo(0);
+            softly.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .isEqualTo(expected);
         });
     }
 }
