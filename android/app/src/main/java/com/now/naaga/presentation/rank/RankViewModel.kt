@@ -25,8 +25,8 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
     private val _ranks = MutableLiveData<List<Rank>>()
     val ranks: LiveData<List<Rank>> = _ranks
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     fun fetchMyRank() {
         rankRepository.getMyRank(
@@ -56,7 +56,7 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
 
     private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is PlayerThrowable -> { _errorMessage.value = throwable.message }
+            is PlayerThrowable -> { _throwable.value = throwable }
             else -> {}
         }
     }

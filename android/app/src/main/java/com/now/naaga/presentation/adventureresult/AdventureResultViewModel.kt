@@ -23,8 +23,8 @@ class AdventureResultViewModel(
     private val _myRank = MutableLiveData<Int>()
     val myRank: LiveData<Int> = _myRank
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     fun fetchGameResult(adventureId: Long) {
         adventureRepository.fetchAdventureResult(
@@ -49,7 +49,7 @@ class AdventureResultViewModel(
 
     private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is GameThrowable -> { _errorMessage.value = throwable.message }
+            is GameThrowable -> { _throwable.value = throwable }
             else -> {}
         }
     }

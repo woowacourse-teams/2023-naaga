@@ -32,8 +32,8 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
@@ -100,8 +100,8 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
 
     private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is UniversalThrowable -> { _errorMessage.value = throwable.message }
-            is GameThrowable -> { _errorMessage.value = throwable.message }
+            is UniversalThrowable -> { _throwable.value = throwable }
+            is GameThrowable -> { _throwable.value = throwable }
             else -> {}
         }
     }

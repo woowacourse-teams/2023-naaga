@@ -7,10 +7,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Rank
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.RANK_RANK
 import com.now.naaga.databinding.ActivityRankBinding
 import com.now.naaga.presentation.rank.recyclerview.RankAdapter
 
-class RankActivity : AppCompatActivity() {
+class RankActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityRankBinding
     private lateinit var viewModel: RankViewModel
 
@@ -22,6 +25,7 @@ class RankActivity : AppCompatActivity() {
         setContentView(binding.root)
         initViewModel()
         initRecyclerView()
+        registerAnalytics(this.lifecycle)
         viewModel.fetchMyRank()
         viewModel.fetchRanks()
         subscribe()
@@ -45,8 +49,9 @@ class RankActivity : AppCompatActivity() {
         viewModel.ranks.observe(this) { ranks ->
             updateRank(ranks)
         }
-        viewModel.errorMessage.observe(this) { errorMessage ->
-            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        viewModel.throwable.observe(this) { throwable ->
+            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
+            logServerError(RANK_RANK, throwable.code, throwable.message.toString())
         }
     }
 

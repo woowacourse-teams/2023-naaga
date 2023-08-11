@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.MYPAGE_GO_RESULTS
+import com.now.naaga.data.firebase.analytics.MY_PAGE_STATISTICS
 import com.now.naaga.databinding.ActivityMyPageBinding
 import com.now.naaga.presentation.adventurehistory.AdventureHistoryActivity
 
@@ -58,8 +59,9 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             val placesUiModel = places.map { it.toUiModel() }
             binding.customGridMypagePlaces.initContent(placesUiModel)
         }
-        viewModel.errorMessage.observe(this) { errorMessage ->
-            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        viewModel.throwable.observe(this) { throwable ->
+            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
+            logServerError(MY_PAGE_STATISTICS, throwable.code, throwable.message.toString())
         }
     }
 

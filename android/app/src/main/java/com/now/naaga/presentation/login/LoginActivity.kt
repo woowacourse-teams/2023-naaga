@@ -10,12 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.AuthPlatformType
 import com.now.naaga.NaagaApplication
 import com.now.naaga.R
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.LOGIN_AUTH
 import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.databinding.ActivityLoginBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.util.loginWithKakao
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var viewModel: LoginViewModel
 
@@ -24,6 +27,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
         setContentView(binding.root)
+        registerAnalytics(this.lifecycle)
         initViewModel()
         subscribe()
         setClickListeners()
@@ -42,8 +46,9 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.errorMessage.observe(this) { message ->
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        viewModel.throwable.observe(this) { throwable ->
+            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
+            logServerError(LOGIN_AUTH, throwable.code, throwable.message.toString())
         }
     }
 
