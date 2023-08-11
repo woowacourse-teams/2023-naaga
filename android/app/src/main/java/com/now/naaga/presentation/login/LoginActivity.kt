@@ -17,7 +17,7 @@ import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
-import com.now.naaga.util.getParcelable
+import com.now.naaga.util.getParcelableCompat
 import com.now.naaga.util.loginWithKakao
 
 class LoginActivity : AppCompatActivity() {
@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateHome() {
-        val adventure = intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
+        val adventure = intent.getParcelableCompat(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
 
         val intent = if (adventure == null) {
             BeginAdventureActivity.getIntent(this)

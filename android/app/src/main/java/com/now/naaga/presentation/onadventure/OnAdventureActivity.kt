@@ -25,7 +25,7 @@ import com.now.naaga.presentation.adventureresult.AdventureResultActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
-import com.now.naaga.util.getParcelable
+import com.now.naaga.util.getParcelableCompat
 
 class OnAdventureActivity :
     AppCompatActivity(),
@@ -112,7 +112,7 @@ class OnAdventureActivity :
     }
 
     private fun beginAdventure(coordinate: Coordinate) {
-        val existingAdventure = intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
+        val existingAdventure = intent.getParcelableCompat(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
 
         if (existingAdventure == null) {
             viewModel.beginAdventure(coordinate)

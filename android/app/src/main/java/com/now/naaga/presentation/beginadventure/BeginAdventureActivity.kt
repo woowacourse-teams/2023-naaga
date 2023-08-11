@@ -26,7 +26,7 @@ import com.now.naaga.presentation.rank.RankActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
-import com.now.naaga.util.getParcelable
+import com.now.naaga.util.getParcelableCompat
 
 class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityBeginAdventureBinding
@@ -78,7 +78,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
     }
 
     private fun getParcelableAdventure(): AdventureUiModel? {
-        return intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)
+        return intent.getParcelableCompat(ADVENTURE, AdventureUiModel::class.java)
     }
 
     private fun setClickListeners() {
