@@ -19,6 +19,7 @@
             android:id="@+id/lottie_onAdventure_loading"
             android:layout_width="200dp"
             android:layout_height="300dp"
+            android:elevation="4dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -123,9 +124,10 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:text="@{String.valueOf(viewModel.adventure.hints.size())}"
-            app:layout_constraintBottom_toTopOf="@id/iv_onAdventure_photo"
-            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_photo"
-            app:layout_constraintTop_toTopOf="@id/iv_onAdventure_photo"
+            android:layout_marginBottom="-13dp"
+            android:layout_marginEnd="-13dp"
+            app:layout_constraintBottom_toTopOf="@+id/iv_onAdventure_hint"
+            app:layout_constraintEnd_toEndOf="@id/iv_onAdventure_hint"
             tools:text="1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
