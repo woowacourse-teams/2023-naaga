@@ -12,7 +12,6 @@ import com.now.domain.model.AdventureStatus.NONE
 import com.now.naaga.R
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.login.LoginActivity
-import com.now.naaga.presentation.onadventure.OnAdventureActivity
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var viewModel: SplashViewModel
@@ -42,7 +41,7 @@ class SplashActivity : AppCompatActivity() {
                 if (adventure == null) {
                     BeginAdventureActivity.getIntent(this)
                 } else {
-                    OnAdventureActivity.getIntentWithAdventure(this, adventure)
+                    BeginAdventureActivity.getIntentWithAdventure(this, adventure)
                 }
             }
             DONE -> LoginActivity.getIntent(this)

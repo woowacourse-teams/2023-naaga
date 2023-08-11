@@ -103,6 +103,8 @@ class OnAdventureActivity :
             viewModel.beginAdventure(coordinate)
             return
         }
+
+        Toast.makeText(this, "진행중인 게임에 입장했습니다.", Toast.LENGTH_SHORT).show()
         viewModel.setAdventure(existingAdventure)
     }
 

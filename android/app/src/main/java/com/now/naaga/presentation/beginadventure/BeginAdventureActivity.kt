@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.now.domain.model.Adventure
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.BEGIN_BEGIN_ADVENTURE
@@ -22,6 +23,10 @@ import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Compan
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.rank.RankActivity
+import com.now.naaga.presentation.uimodel.mapper.toDomain
+import com.now.naaga.presentation.uimodel.mapper.toUi
+import com.now.naaga.presentation.uimodel.model.AdventureUiModel
+import com.now.naaga.util.getParcelable
 
 class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityBeginAdventureBinding
@@ -99,15 +104,33 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
             startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             Toast.makeText(this, GPS_TURN_ON_MESSAGE, Toast.LENGTH_SHORT).show()
         } else {
-            startActivity(OnAdventureActivity.getIntent(this))
+            startActivity(getExistingAdventure())
+            finish()
+        }
+    }
+
+    private fun getExistingAdventure(): Intent {
+        val existingAdventure = intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
+
+        return if (existingAdventure == null) {
+            OnAdventureActivity.getIntent(this)
+        } else {
+            OnAdventureActivity.getIntentWithAdventure(this, existingAdventure)
         }
     }
 
     companion object {
         private const val GPS_TURN_ON_MESSAGE = "GPS 설정을 켜주세요"
+        private const val ADVENTURE = "ADVENTURE"
 
         fun getIntent(context: Context): Intent {
             return Intent(context, BeginAdventureActivity::class.java)
+        }
+
+        fun getIntentWithAdventure(context: Context, adventure: Adventure): Intent {
+            return Intent(context, BeginAdventureActivity::class.java).apply {
+                putExtra(ADVENTURE, adventure.toUi())
+            }
         }
     }
 }
