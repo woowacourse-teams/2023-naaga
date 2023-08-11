@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.now.domain.model.AuthPlatformType
 import com.now.domain.model.PlatformAuth
 import com.now.domain.repository.AuthRepository
+import com.now.naaga.data.throwable.DataThrowable
 
 class LoginViewModel(
     private val authRepository: AuthRepository,
@@ -13,14 +14,14 @@ class LoginViewModel(
     private val _isLoginSucceed = MutableLiveData<Boolean>()
     val isLoginSucceed: LiveData<Boolean> = _isLoginSucceed
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     fun signIn(token: String, platformType: AuthPlatformType) {
         authRepository.getToken(PlatformAuth(token, platformType)) { result ->
             result
                 .onSuccess { _isLoginSucceed.value = it }
-                .onFailure { _errorMessage.value = it.message }
+                .onFailure { _throwable.value = it as DataThrowable }
         }
     }
 }

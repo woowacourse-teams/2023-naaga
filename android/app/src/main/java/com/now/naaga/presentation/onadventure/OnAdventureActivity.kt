@@ -16,6 +16,7 @@ import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_END_ADVENTURE
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_GAME
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_GIVE_UP
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_HINT
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
@@ -91,8 +92,9 @@ class OnAdventureActivity :
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
         }
-        viewModel.errorMessage.observe(this) { errorMessage ->
-            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        viewModel.throwable.observe(this) { throwable ->
+            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
+            logServerError(ON_ADVENTURE_GAME, throwable.code, throwable.message.toString())
         }
     }
 
