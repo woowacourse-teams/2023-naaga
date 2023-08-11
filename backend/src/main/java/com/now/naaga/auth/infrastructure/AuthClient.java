@@ -39,7 +39,7 @@ public class AuthClient {
 
         try {
             return restTemplate.postForObject(url, request, AuthInfo.class);
-        } catch (HttpClientErrorException e) {
+        } catch (Exception e) {
             throw new AuthException(AuthExceptionType.INVALID_KAKAO_INFO);
         }
     }
