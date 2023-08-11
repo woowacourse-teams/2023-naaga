@@ -1,16 +1,20 @@
-package com.now.naaga.game.domain;
+package com.now.naaga.game.domain.scorestrategy;
 
 import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.Game.MAX_HINT_COUNT;
+import static com.now.naaga.game.domain.ResultType.SUCCESS;
 
+import com.now.naaga.game.domain.Game;
+import com.now.naaga.game.domain.ResultType;
 import com.now.naaga.score.domain.Score;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ScorePolicyImpl implements ScorePolicy {
+public class SuccessScorePolicy implements ScorePolicy {
     
+    private static final ResultType RESULT_TYPE = SUCCESS;
     private static final Score BASE_SCORE = new Score(50);
     private static final double HINT_SCORE_RATIO = 0.3;
     private static final double ATTEMPT_SCORE_RATIO = 0.3;
@@ -22,6 +26,11 @@ public class ScorePolicyImpl implements ScorePolicy {
                 .plus(calculateHintScore(game))
                 .plus(calculateAttemptScore(game))
                 .plus(calculateTimeScore(game));
+    }
+    
+    @Override
+    public boolean hasSameResultType(final ResultType resultType) {
+        return resultType == RESULT_TYPE;
     }
     
     private Score calculateHintScore(final Game game) {

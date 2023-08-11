@@ -1,24 +1,19 @@
 package com.now.naaga.game.domain;
 
 import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
 import static com.now.naaga.game.fixture.MemberFixture.MEMBER_CHAE;
 import static com.now.naaga.game.fixture.PlaceFixture.잠실_루터회관;
 import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
-import static com.now.naaga.game.fixture.PositionFixture.GS25_방이도곡점_좌표;
 import static com.now.naaga.game.fixture.PositionFixture.던킨도너츠_올림픽공원점_좌표;
 import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_좌표;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.now.naaga.game.exception.GameException;
-import com.now.naaga.place.domain.Place;
-import com.now.naaga.place.domain.Position;
+import com.now.naaga.game.domain.scorestrategy.ScorePolicy;
+import com.now.naaga.game.domain.scorestrategy.SuccessScorePolicy;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 class ScorePolicyTest {
 
     private final Player player = PLAYER("chae", MEMBER_CHAE());
-    private final ScorePolicy gameScorer = new ScorePolicyImpl();
+    private final ScorePolicy gameScorer = new SuccessScorePolicy();
 
     @Test
     void 다른_조건이_같고_거리가_멀수록_점수가_높다() {
