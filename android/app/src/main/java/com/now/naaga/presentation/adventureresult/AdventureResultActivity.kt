@@ -10,11 +10,11 @@ import com.bumptech.glide.Glide
 import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureResultType
 import com.now.naaga.R
+import com.now.naaga.data.firebase.analytics.ADVENTURE_RESULT
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.RESULT_RESULT_RETURN
 import com.now.naaga.databinding.ActivityAdventureResultBinding
-import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 
 class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityAdventureResultBinding
@@ -53,8 +53,9 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
             setPhoto(adventureResult.destination.image)
         }
 
-        viewModel.errorMessage.observe(this) { errorMessage ->
-            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        viewModel.throwable.observe(this) { throwable ->
+            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
+            logServerError(ADVENTURE_RESULT, throwable.code, throwable.message.toString())
         }
     }
 
@@ -89,7 +90,7 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     private fun setClickListeners() {
         binding.btnAdventureResultReturn.setOnClickListener {
             logClickEvent(getViewEntryName(it), RESULT_RESULT_RETURN)
-            startActivity(BeginAdventureActivity.getIntent(this))
+            finish()
         }
     }
 

@@ -17,6 +17,7 @@ import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_END_ADVENTURE
+import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_GAME
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_GIVE_UP
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_HINT
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
@@ -84,6 +85,7 @@ class OnAdventureActivity :
             binding.tvOnAdventureHintCount.text = it.toString()
         }
         viewModel.error.observe(this) { error: DataThrowable ->
+            logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
             when (error.code) {
                 OnAdventureViewModel.NO_DESTINATION -> {
                     shortSnackbar(error.message ?: return@observe)

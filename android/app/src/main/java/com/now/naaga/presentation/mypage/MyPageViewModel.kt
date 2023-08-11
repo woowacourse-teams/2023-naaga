@@ -33,8 +33,8 @@ class MyPageViewModel(
     private val _places = MutableLiveData<List<Place>>()
     val places: LiveData<List<Place>> = _places
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     fun fetchRank() {
         rankRepository.getMyRank { result: Result<Rank> ->
@@ -62,8 +62,8 @@ class MyPageViewModel(
 
     private fun setErrorMessage(throwable: Throwable) {
         when (throwable) {
-            is PlayerThrowable -> { _errorMessage.value = throwable.message }
-            is PlaceThrowable -> { _errorMessage.value = throwable.message }
+            is PlayerThrowable -> { _throwable.value = throwable }
+            is PlaceThrowable -> { _throwable.value = throwable }
             else -> {}
         }
     }

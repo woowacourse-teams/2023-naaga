@@ -16,6 +16,7 @@ import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
+import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
 
 class OnAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
@@ -112,6 +113,7 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
     private fun setError(throwable: DataThrowable) {
         when (throwable) {
             is GameThrowable -> _error.value = throwable
+            is UniversalThrowable -> _error.value = throwable
             else -> {}
         }
     }

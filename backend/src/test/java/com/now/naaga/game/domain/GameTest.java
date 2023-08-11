@@ -2,6 +2,7 @@ package com.now.naaga.game.domain;
 
 import static com.now.naaga.game.domain.EndType.ARRIVED;
 import static com.now.naaga.game.domain.EndType.GIVE_UP;
+import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 import static com.now.naaga.game.domain.ResultType.FAIL;
@@ -52,7 +53,7 @@ class GameTest {
 
         // then
         assertThat(game.getGameStatus()).isEqualTo(DONE);
-        assertThat(game.getRemainingAttempts()).isEqualTo(5);
+        assertThat(game.getRemainingAttempts()).isEqualTo(MAX_ATTEMPT_COUNT);
         assertThat(gameResult).isEqualTo(FAIL);
     }
 
