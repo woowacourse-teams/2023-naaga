@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
@@ -20,6 +20,7 @@ import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_END_ADVENTURE
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_GIVE_UP
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_HINT
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
@@ -46,12 +47,6 @@ class OnAdventureActivity :
         setClickListeners()
     }
 
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
-    }
-
     private fun setClickListeners() {
         binding.ivOnAdventureGiveUp.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_GIVE_UP)
@@ -71,13 +66,6 @@ class OnAdventureActivity :
         }
     }
 
-    private fun setLocationChangeListener() {
-        naverMap.addOnLocationChangeListener { location ->
-            val coordinate = Coordinate(location.latitude, location.longitude)
-            viewModel.myCoordinate.value = coordinate
-        }
-    }
-
     private fun subscribe() {
         viewModel.startCoordinate.observe(this) {
             beginAdventure(it)
@@ -92,8 +80,37 @@ class OnAdventureActivity :
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
         }
-        viewModel.errorMessage.observe(this) { errorMessage ->
-            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        viewModel.remainingHintCount.observe(this) {
+            binding.tvOnAdventureHintCount.text = it.toString()
+        }
+        viewModel.error.observe(this) { error: DataThrowable ->
+            when (error.code) {
+                OnAdventureViewModel.NO_DESTINATION -> {
+                    shortSnackbar(error.message ?: return@observe)
+                    finish()
+                }
+
+                OnAdventureViewModel.NOT_ARRIVED -> {
+                    val remainingTryCount: Int = viewModel.adventure.value?.remainingTryCount?.toInt() ?: 0
+                    shortSnackbar(getString(R.string.onAdventure_retry, remainingTryCount))
+                }
+
+                OnAdventureViewModel.TRY_COUNT_OVER -> shortSnackbar(getString(R.string.onAdventure_try_count_over))
+                else -> shortSnackbar(error.message ?: return@observe)
+            }
+        }
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+    }
+
+    private fun setLocationChangeListener() {
+        naverMap.addOnLocationChangeListener { location ->
+            val coordinate = Coordinate(location.latitude, location.longitude)
+            viewModel.myCoordinate.value = coordinate
         }
     }
 
@@ -139,11 +156,9 @@ class OnAdventureActivity :
     }
 
     private fun showHintDialog() {
-        val remainingHintCount: Int =
-            OnAdventureViewModel.MAX_HINT_COUNT - (viewModel.adventure.value?.hints?.size ?: 0)
         NaagaAlertDialog.Builder().build(
             title = getString(R.string.hint_using_dialog_title),
-            description = getString(R.string.hint_using_dialog_description, remainingHintCount),
+            description = getString(R.string.hint_using_dialog_description, viewModel.remainingHintCount.value),
             positiveText = getString(R.string.hint_using_dialog_continue),
             negativeText = getString(R.string.hint_using_dialog_give_up),
             positiveAction = { viewModel.openHint() },
@@ -159,6 +174,10 @@ class OnAdventureActivity :
         } else {
             (fragment as DialogFragment).dialog?.show()
         }
+    }
+
+    private fun shortSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     companion object {
