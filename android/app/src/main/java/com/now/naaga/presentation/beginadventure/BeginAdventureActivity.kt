@@ -104,12 +104,12 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
             startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             Toast.makeText(this, GPS_TURN_ON_MESSAGE, Toast.LENGTH_SHORT).show()
         } else {
-            startActivity(getExistingAdventure())
+            startActivity(getIntentWithAdventureOrWithout())
             finish()
         }
     }
 
-    private fun getExistingAdventure(): Intent {
+    private fun getIntentWithAdventureOrWithout(): Intent {
         val existingAdventure = intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
 
         return if (existingAdventure == null) {
