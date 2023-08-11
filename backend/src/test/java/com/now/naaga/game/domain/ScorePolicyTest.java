@@ -105,17 +105,4 @@ class ScorePolicyTest {
                 .isTrue();
     }
 
-    //예외상
-    @Test
-    void 게임이_끝나지_않은_경우_예외가_발생한다() {
-        // given
-        Place destination = 잠실_루터회관(player);
-        Position startPosition = 던킨도너츠_올림픽공원점_좌표;
-        Position currentPosition = GS25_방이도곡점_좌표;
-        Game inProgressGame = new Game(IN_PROGRESS, player, destination, startPosition, 3, new ArrayList<>(), LocalDateTime.now(), null);
-
-        //then
-        GameException gameException = assertThrows(GameException.class, () -> gameScorer.calculate(inProgressGame));
-        assertThat(gameException.exceptionType()).isEqualTo(ALREADY_IN_PROGRESS);
-    }
 }

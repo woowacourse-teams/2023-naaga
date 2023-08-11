@@ -2,71 +2,56 @@ package com.now.naaga.game.domain;
 
 import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.Game.MAX_HINT_COUNT;
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
 
-import com.now.naaga.game.exception.GameException;
-import com.now.naaga.place.domain.Position;
 import com.now.naaga.score.domain.Score;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ScorePolicyImpl implements ScorePolicy {
-
-    // 거리가 멀수록 점수가 높다/ 시간은 짧을수록 점수가 높다/ 힌트는 사용개수가 적을수록 점수가 높다 / 남은 시도횟수는 많을수록 점수가 높다.
-    // 점수에 영향을 미치는 정도 시간> 거리 > 힌트 사용횟수 >  시도횟수
-    private static final double DISTANCE_WEIGHT = 300.0;
-    private static final double TIME_WEIGHT = 4000.0;
-    private static final double HINT_WEIGHT = 50.0;
-    private static final double ATTEMPTS_WEIGHT = 50.0;
-
+    
+    private static final Score BASE_SCORE = new Score(50);
+    private static final double HINT_SCORE_RATIO = 0.3;
+    private static final double ATTEMPT_SCORE_RATIO = 0.3;
+    private static final double AVERAGE_SPEED = 10 / 9;
+    
     @Override
-    public Score calculate(Game game) {
-        validateGameIsOver(game);
-        BigDecimal distanceScore = findDistanceInMeters(game).multiply(BigDecimal.valueOf(DISTANCE_WEIGHT));
-        BigDecimal timeScore = calculateTimeScore(game).multiply(BigDecimal.valueOf(TIME_WEIGHT));
-        BigDecimal hintScore = calculateHintScore(game).multiply(BigDecimal.valueOf(HINT_WEIGHT));
-        BigDecimal attemptScore = calculateAttemptScore(game).multiply(BigDecimal.valueOf(ATTEMPTS_WEIGHT));
-        BigDecimal totalScore = distanceScore.add(timeScore).add(hintScore).add(attemptScore);
-        return new Score((int) totalScore.doubleValue());
+    public Score calculate(final Game game) {
+        return BASE_SCORE
+                .plus(calculateHintScore(game))
+                .plus(calculateAttemptScore(game))
+                .plus(calculateTimeScore(game));
     }
-
-    private void validateGameIsOver(Game game) {
-        if (game.getGameStatus() != GameStatus.DONE) {
-            throw new GameException(ALREADY_IN_PROGRESS);
-        }
+    
+    private Score calculateHintScore(final Game game) {
+        final int usedHintCount = game.getHints().size();
+        final double maxHintScore = BASE_SCORE.getValue() * HINT_SCORE_RATIO;
+        final double hintScoreValue = maxHintScore - ((maxHintScore / MAX_HINT_COUNT) * usedHintCount);
+        return new Score((int) hintScoreValue);
     }
-
-    private BigDecimal findDistanceInMeters(Game game) {
-        Position startPosition = game.getStartPosition();
-        Position destinationPosition = game.getPlace().getPosition();
-        return BigDecimal.valueOf(startPosition.calculateDistance(destinationPosition));
+    
+    private Score calculateAttemptScore(final Game game) {
+        final int remainingAttempt = game.getRemainingAttempts();
+        final int maxPossibleAttempts = MAX_ATTEMPT_COUNT - 1;
+        final double maxAttemptScore = BASE_SCORE.getValue() * ATTEMPT_SCORE_RATIO;
+        final double attemptScoreValue = maxAttemptScore / maxPossibleAttempts * remainingAttempt;
+        return new Score((int) attemptScoreValue);
     }
-
-    private BigDecimal calculateTimeScore(Game game) {
-        long durationInSecond = findDurationInSecond(game);
-        return BigDecimal.valueOf(1.0)
-                .divide(BigDecimal.valueOf(durationInSecond)
-                        .divide(BigDecimal.valueOf(60), 5, RoundingMode.HALF_UP), 5, RoundingMode.HALF_UP);
+    
+    private Score calculateTimeScore(final Game game) {
+        final double distance = game.findDistance();
+        final long playTimeInSecond = findDurationInSecond(game);
+        final double slope = AVERAGE_SPEED / (distance * BASE_SCORE.getValue());
+        final double shiftX = distance / AVERAGE_SPEED;
+        final double timeScoreValue = 1 / (slope * (playTimeInSecond + shiftX));
+        return new Score((int) timeScoreValue);
     }
-
-    private Long findDurationInSecond(Game game) {
+    
+    private long findDurationInSecond(Game game) {
         LocalDateTime startTime = game.getStartTime();
         LocalDateTime endTime = game.getEndTime();
         Duration duration = Duration.between(startTime, endTime);
         return duration.toSeconds();
-    }
-
-    private BigDecimal calculateHintScore(Game game) {
-        return BigDecimal.valueOf(MAX_HINT_COUNT - game.getHints().size())
-                .divide(BigDecimal.valueOf(MAX_HINT_COUNT), 5, RoundingMode.HALF_UP);
-    }
-
-    private BigDecimal calculateAttemptScore(Game game) {
-        return BigDecimal.valueOf(game.getRemainingAttempts())
-                .divide(BigDecimal.valueOf(MAX_ATTEMPT_COUNT), 5, RoundingMode.HALF_UP);
     }
 }

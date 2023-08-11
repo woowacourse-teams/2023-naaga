@@ -168,9 +168,9 @@ public class Game extends BaseEntity {
         throw new GameNotArrivalException(NOT_ARRIVED);
     }
     
-    public BigDecimal findDistance() {
+    public double findDistance() {
         final Position destinationPosition = place.getPosition();
-        return BigDecimal.valueOf(startPosition.calculateDistance(destinationPosition));
+        return startPosition.calculateDistance(destinationPosition);
     }
 
     public Long getId() {
