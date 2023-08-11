@@ -32,7 +32,7 @@ public class Position {
         return Math.acos(Math.sin(Math.toRadians(other.latitude.doubleValue())) * Math.sin(Math.toRadians(this.latitude.doubleValue()))
                 + (Math.cos(Math.toRadians(other.latitude.doubleValue())) * Math.cos(Math.toRadians(this.latitude.doubleValue())) * Math.cos(
                 Math.toRadians(other.longitude.doubleValue() - this.longitude.doubleValue())))
-        ) * 6371.0;
+        ) * 6371.0 * 1000;
     }
 
     public BigDecimal getLatitude() {
