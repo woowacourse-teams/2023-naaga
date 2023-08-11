@@ -24,10 +24,9 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
 
     val myCoordinate = MutableLiveData<Coordinate>()
     val startCoordinate = DisposableLiveData<Coordinate>(myCoordinate)
-
-    private val _distance = MutableLiveData<Int>()
-    val distance: LiveData<Int> = _distance
-    val isNearby: LiveData<Boolean> = _distance.map { adventure.value?.destination?.isNearBy(it) ?: false }
+    val distance: LiveData<Int> = myCoordinate.map { adventure.value?.destination?.getDistance(it) ?: return@map 0 }
+    val isNearby: LiveData<Boolean> =
+        myCoordinate.map { adventure.value?.destination?.isNearBy(it) ?: return@map false }
 
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
@@ -45,10 +44,6 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
                 .onSuccess { setAdventure(it) }
                 .onFailure { setErrorMessage(it as DataThrowable) }
         }
-    }
-
-    fun calculateDistance(coordinate: Coordinate) {
-        _distance.value = adventure.value?.destination?.getDistance(coordinate) ?: 0
     }
 
     fun giveUpAdventure() {
