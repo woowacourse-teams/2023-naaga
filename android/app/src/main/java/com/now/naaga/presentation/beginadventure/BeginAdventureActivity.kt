@@ -54,6 +54,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         binding = ActivityBeginAdventureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setBeginText()
         registerAnalytics(this.lifecycle)
         requestLocationPermission()
         setClickListeners()
@@ -68,6 +69,16 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
                 ),
             )
         }
+    }
+
+    private fun setBeginText() {
+        if (getParcelableAdventure() != null) {
+            binding.tvBeginAdventureBegin.text = getString(R.string.beginAdventure_continue_adventure)
+        }
+    }
+
+    private fun getParcelableAdventure(): AdventureUiModel? {
+        return intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)
     }
 
     private fun setClickListeners() {
@@ -110,7 +121,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
     }
 
     private fun getIntentWithAdventureOrWithout(): Intent {
-        val existingAdventure = intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
+        val existingAdventure = getParcelableAdventure()?.toDomain()
 
         return if (existingAdventure == null) {
             OnAdventureActivity.getIntent(this)
