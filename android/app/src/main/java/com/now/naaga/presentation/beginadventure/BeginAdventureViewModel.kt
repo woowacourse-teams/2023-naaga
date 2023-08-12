@@ -26,19 +26,12 @@ class BeginAdventureViewModel(private val adventureRepository: AdventureReposito
             _loading.value = false
             result
                 .onSuccess {
-                    _adventure.value = it.nullableFirst()
+                    _adventure.value = it.firstOrNull()
                 }
                 .onFailure {
                     _error.value = it as DataThrowable
                 }
         }
-    }
-
-    private fun <T> List<T>.nullableFirst(): T? {
-        if (isNotEmpty()) {
-            return first()
-        }
-        return null
     }
 
     companion object {
