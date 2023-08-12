@@ -15,6 +15,7 @@ import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.RESULT_RESULT_RETURN
 import com.now.naaga.databinding.ActivityAdventureResultBinding
+import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 
 class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityAdventureResultBinding
@@ -90,6 +91,7 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     private fun setClickListeners() {
         binding.btnAdventureResultReturn.setOnClickListener {
             logClickEvent(getViewEntryName(it), RESULT_RESULT_RETURN)
+            startActivity(BeginAdventureActivity.getIntent(this))
             finish()
         }
     }

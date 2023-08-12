@@ -11,7 +11,7 @@ import com.now.naaga.data.repository.DefaultAdventureRepository
 
 class SplashViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
-    val adventure: LiveData<Adventure> get() = _adventure
+    val adventure: LiveData<Adventure> = _adventure
 
     private val _adventureStatus = MutableLiveData<AdventureStatus>()
     val adventureStatus: LiveData<AdventureStatus> = _adventureStatus
