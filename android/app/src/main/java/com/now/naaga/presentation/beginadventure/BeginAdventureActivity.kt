@@ -7,10 +7,7 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -151,9 +148,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
             startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             Toast.makeText(this, GPS_TURN_ON_MESSAGE, Toast.LENGTH_SHORT).show()
         } else {
-            // startActivity(getIntentWithAdventureOrWithout())
             onAdventureActivityLauncher.launch(getIntentWithAdventureOrWithout())
-            finish()
         }
     }
 
