@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytics
     }
 
     private fun navigateHome() {
-        BeginAdventureActivity.getIntent(this)
+        val intent = BeginAdventureActivity.getIntent(this)
         startActivity(intent)
         finish()
     }
