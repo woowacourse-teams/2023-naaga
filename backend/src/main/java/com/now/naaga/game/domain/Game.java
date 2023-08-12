@@ -28,10 +28,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.data.geo.Distance;
 
 @Entity
 public class Game extends BaseEntity {
@@ -147,10 +149,8 @@ public class Game extends BaseEntity {
         return endGameWithFailure();
     }
 
-    // todo : place의 변수명을 isCoordinateInsideBounds 또는 isPositionInsideBounds 또는 isPositionWithinRange로 바꾸고 싶다
-    //또, 이 메서드에 범위를 함께 넘겨주는 것이 마땅해보인다.
     private boolean isPlayerArrived(final Position position) {
-        return place.isInValidRange(position);
+        return place.isCoordinateInsideBounds(position);
     }
 
     private ResultType endGameWithSuccess() {
@@ -166,6 +166,11 @@ public class Game extends BaseEntity {
             return FAIL;
         }
         throw new GameNotArrivalException(NOT_ARRIVED);
+    }
+    
+    public double findDistance() {
+        final Position destinationPosition = place.getPosition();
+        return startPosition.calculateDistance(destinationPosition);
     }
 
     public Long getId() {
