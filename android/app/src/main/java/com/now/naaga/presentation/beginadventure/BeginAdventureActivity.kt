@@ -85,8 +85,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
     private fun subscribe() {
         viewModel.loading.observe(this) { loading ->
-            Log.d("asdf", "로딩중? $loading")
-            // setLoadingView(loading)
+            setLoadingView(loading)
         }
         viewModel.error.observe(this) { error: DataThrowable ->
             Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
