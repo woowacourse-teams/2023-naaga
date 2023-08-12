@@ -1,4 +1,4 @@
-package com.now.naaga.game.domain.scorestrategy;
+package com.now.naaga.game.domain.gamescore;
 
 import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.Game.MAX_HINT_COUNT;
@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SuccessScorePolicy implements ScorePolicy {
+public class SuccessGameScorePolicy implements GameScorePolicy {
     
     private static final ResultType RESULT_TYPE = SUCCESS;
     private static final Score BASE_SCORE = new Score(50);
     private static final double HINT_SCORE_RATIO = 0.3;
     private static final double ATTEMPT_SCORE_RATIO = 0.3;
-    private static final double AVERAGE_SPEED = 10 / 9;
+    private static final double AVERAGE_SPEED = (double) 10 / 9;
     
     @Override
     public Score calculate(final Game game) {

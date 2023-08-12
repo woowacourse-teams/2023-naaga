@@ -6,8 +6,7 @@ import com.now.naaga.game.application.dto.FindAllGamesCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.*;
-import com.now.naaga.game.domain.scorestrategy.ScoreCalculator;
-import com.now.naaga.game.domain.scorestrategy.ScorePolicy;
+import com.now.naaga.game.domain.gamescore.GameScoreCalculator;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameNotArrivalException;
 import com.now.naaga.game.repository.GameRepository;
@@ -41,18 +40,18 @@ public class GameService {
 
     private final PlaceService placeService;
 
-    private final ScoreCalculator scoreCalculator;
+    private final GameScoreCalculator gameScoreCalculator;
 
     public GameService(final GameRepository gameRepository,
             final GameResultRepository gameResultRepository,
             final PlayerService playerService,
             final PlaceService placeService,
-            final ScoreCalculator scoreCalculator) {
+            final GameScoreCalculator gameScoreCalculator) {
         this.gameRepository = gameRepository;
         this.gameResultRepository = gameResultRepository;
         this.playerService = playerService;
         this.placeService = placeService;
-        this.scoreCalculator = scoreCalculator;
+        this.gameScoreCalculator = gameScoreCalculator;
     }
 
     public Game createGame(final CreateGameCommand createGameCommand) {
@@ -80,7 +79,7 @@ public class GameService {
         final Player player = playerService.findPlayerById(endGameCommand.playerId());
         game.validateOwner(player);
         final ResultType resultType = game.endGame(endGameCommand.endType(), endGameCommand.position());
-        final Score score = scoreCalculator.calculate(game, resultType);
+        final Score score = gameScoreCalculator.calculate(game, resultType);
         player.addScore(score);
         gameResultRepository.save(new GameResult(resultType, score, game));
     }

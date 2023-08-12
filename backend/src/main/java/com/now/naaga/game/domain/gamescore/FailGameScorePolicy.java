@@ -1,4 +1,4 @@
-package com.now.naaga.game.domain.scorestrategy;
+package com.now.naaga.game.domain.gamescore;
 
 import static com.now.naaga.game.domain.ResultType.FAIL;
 
@@ -8,7 +8,7 @@ import com.now.naaga.score.domain.Score;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FailScorePolicy implements ScorePolicy{
+public class FailGameScorePolicy implements GameScorePolicy {
     
     private final static ResultType RESULT_TYPE = FAIL;
     

@@ -9,8 +9,8 @@ import static com.now.naaga.game.fixture.PositionFixture.잠실역_교보문고_
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.now.naaga.game.domain.scorestrategy.ScorePolicy;
-import com.now.naaga.game.domain.scorestrategy.SuccessScorePolicy;
+import com.now.naaga.game.domain.gamescore.GameScorePolicy;
+import com.now.naaga.game.domain.gamescore.SuccessGameScorePolicy;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;
 import java.time.LocalDateTime;
@@ -19,10 +19,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
-class ScorePolicyTest {
+class GameScorePolicyTest {
 
     private final Player player = PLAYER("chae", MEMBER_CHAE());
-    private final ScorePolicy gameScorer = new SuccessScorePolicy();
+    private final GameScorePolicy gameScorer = new SuccessGameScorePolicy();
 
     @Test
     void 다른_조건이_같고_거리가_멀수록_점수가_높다() {

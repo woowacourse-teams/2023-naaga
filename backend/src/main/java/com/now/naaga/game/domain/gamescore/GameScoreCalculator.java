@@ -1,26 +1,26 @@
-package com.now.naaga.game.domain.scorestrategy;
+package com.now.naaga.game.domain.gamescore;
 
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.ResultType;
 import com.now.naaga.score.domain.Score;
-import java.time.Period;
+
 import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ScoreCalculator {
+public class GameScoreCalculator {
     
-    private final List<ScorePolicy> scorePolicies;
+    private final List<GameScorePolicy> scorePolicies;
     
-    public ScoreCalculator(final List<ScorePolicy> scorePolicies) {
+    public GameScoreCalculator(final List<GameScorePolicy> scorePolicies) {
         this.scorePolicies = scorePolicies;
     }
     
     public Score calculate(final Game game,
                            final ResultType resultType) {
         return scorePolicies.stream()
-                .filter(scorePolicy -> scorePolicy.hasSameResultType(resultType))
-                .map(scorePolicy -> scorePolicy.calculate(game))
+                .filter(gameScorePolicy -> gameScorePolicy.hasSameResultType(resultType))
+                .map(gameScorePolicy -> gameScorePolicy.calculate(game))
                 .findAny()
                 .orElseGet(() -> new Score(0));
     }
