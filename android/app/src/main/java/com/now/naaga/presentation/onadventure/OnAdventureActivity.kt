@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -88,7 +89,7 @@ class OnAdventureActivity :
             logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
             when (error.code) {
                 OnAdventureViewModel.NO_DESTINATION -> {
-                    shortSnackbar(error.message ?: return@observe)
+                    shortToast(error.message ?: return@observe)
                     finish()
                 }
 
@@ -97,7 +98,7 @@ class OnAdventureActivity :
                     shortSnackbar(getString(R.string.onAdventure_retry, remainingTryCount))
                 }
 
-                OnAdventureViewModel.TRY_COUNT_OVER -> shortSnackbar(getString(R.string.onAdventure_try_count_over))
+                OnAdventureViewModel.TRY_COUNT_OVER -> shortToast(getString(R.string.onAdventure_try_count_over))
                 else -> shortSnackbar(error.message ?: return@observe)
             }
         }
@@ -180,6 +181,10 @@ class OnAdventureActivity :
 
     private fun shortSnackbar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun shortToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
