@@ -15,6 +15,21 @@
         android:layout_height="match_parent"
         tools:context=".presentation.onadventure.OnAdventureActivity">
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_onAdventure_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="80dp"
+            android:elevation="4dp"
+            android:background="@color/main_gray_opacity_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:lottie_rawRes="@raw/animation_ll5gzgdu"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true" />
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fcv_onAdventure_map"
             android:name="com.naver.maps.map.MapFragment"
@@ -110,10 +125,10 @@
             android:elevation="4dp"
             android:gravity="center"
             android:textColor="@color/white"
-            android:text="@{String.valueOf(viewModel.adventure.hints.size())}"
-            app:layout_constraintBottom_toTopOf="@id/iv_onAdventure_photo"
-            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_photo"
-            app:layout_constraintTop_toTopOf="@id/iv_onAdventure_photo"
+            android:layout_marginBottom="-12dp"
+            android:layout_marginEnd="-12dp"
+            app:layout_constraintBottom_toTopOf="@id/iv_onAdventure_hint"
+            app:layout_constraintEnd_toEndOf="@id/iv_onAdventure_hint"
             tools:text="1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
