@@ -17,5 +17,4 @@ public class FailGameScorePolicy implements GameScorePolicy {
     public boolean hasSameResultType(final ResultType resultType) {
         return resultType == FAIL;
     }
-    
 }
