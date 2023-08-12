@@ -6,6 +6,7 @@ import com.now.naaga.game.application.dto.FindAllGamesCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.*;
+import com.now.naaga.game.domain.gamescore.GameScoreCalculator;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameNotArrivalException;
 import com.now.naaga.game.repository.GameRepository;
@@ -39,20 +40,24 @@ public class GameService {
 
     private final PlaceService placeService;
 
-    private final ScorePolicy scorePolicy;
+    private final GameScoreCalculator gameScoreCalculator;
 
-    public GameService(GameRepository gameRepository, GameResultRepository gameResultRepository,
-                       PlayerService playerService, PlaceService placeService, ScorePolicy scorePolicy) {
+    public GameService(final GameRepository gameRepository,
+            final GameResultRepository gameResultRepository,
+            final PlayerService playerService,
+            final PlaceService placeService,
+            final GameScoreCalculator gameScoreCalculator) {
         this.gameRepository = gameRepository;
         this.gameResultRepository = gameResultRepository;
         this.playerService = playerService;
         this.placeService = placeService;
-        this.scorePolicy = scorePolicy;
+        this.gameScoreCalculator = gameScoreCalculator;
     }
 
     public Game createGame(final CreateGameCommand createGameCommand) {
         final Player player = playerService.findPlayerById(createGameCommand.playerId());
-        final List<Game> gamesByStatus = gameRepository.findByPlayerIdAndGameStatus(player.getId(), GameStatus.IN_PROGRESS);
+        final List<Game> gamesByStatus = gameRepository.findByPlayerIdAndGameStatus(player.getId(),
+                GameStatus.IN_PROGRESS);
         if (!gamesByStatus.isEmpty()) {
             throw new GameException(ALREADY_IN_PROGRESS);
         }
@@ -66,15 +71,15 @@ public class GameService {
             throw new GameException(CAN_NOT_FIND_PLACE);
         }
     }
-    
+
     @Transactional(noRollbackFor = {GameNotArrivalException.class})
     public void endGame(final EndGameCommand endGameCommand) {
         final Game game = gameRepository.findById(endGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
         final Player player = playerService.findPlayerById(endGameCommand.playerId());
         game.validateOwner(player);
-        ResultType resultType = game.endGame(endGameCommand.endType(), endGameCommand.position());
-        Score score = scorePolicy.calculate(game);
+        final ResultType resultType = game.endGame(endGameCommand.endType(), endGameCommand.position());
+        final Score score = gameScoreCalculator.calculate(game, resultType);
         player.addScore(score);
         gameResultRepository.save(new GameResult(resultType, score, game));
     }
@@ -126,7 +131,8 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public Statistic findStatistic(final PlayerRequest playerRequest) {
-        final List<Game> gamesByPlayerId = gameRepository.findByPlayerIdAndGameStatus(playerRequest.playerId(),GameStatus.DONE);
+        final List<Game> gamesByPlayerId = gameRepository.findByPlayerIdAndGameStatus(playerRequest.playerId(),
+                GameStatus.DONE);
         final List<GameResult> gameResults = gamesByPlayerId.stream()
                 .map(game -> findGameResultByGameId(game.getId()))
                 .toList();
@@ -135,7 +141,7 @@ public class GameService {
 
         return Statistic.of(gameRecords);
     }
-    
+
     @Transactional(readOnly = true)
     public List<Game> findAllGames(FindAllGamesCommand findAllGamesCommand) {
         return gameRepository.findByPlayerId(findAllGamesCommand.playerId());

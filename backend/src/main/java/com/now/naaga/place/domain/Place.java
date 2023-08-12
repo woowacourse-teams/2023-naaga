@@ -61,7 +61,7 @@ public class Place extends BaseEntity {
         this.registeredPlayer = registeredPlayer;
     }
 
-    public boolean isInValidRange(final Position other) {
+    public boolean isCoordinateInsideBounds(final Position other) {
         return position.calculateDistance(other) <= MIN_RANGE;
     }
 

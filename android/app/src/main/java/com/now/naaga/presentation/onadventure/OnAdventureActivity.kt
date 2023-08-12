@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -28,7 +29,7 @@ import com.now.naaga.presentation.adventureresult.AdventureResultActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
-import com.now.naaga.util.getParcelable
+import com.now.naaga.util.getParcelableCompat
 
 class OnAdventureActivity :
     AppCompatActivity(),
@@ -46,7 +47,25 @@ class OnAdventureActivity :
         initViewModel()
         subscribe()
         setOnMapReady { setLocationChangeListener() }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         setClickListeners()
+    }
+
+    private var backPressedTime = 0L
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (System.currentTimeMillis() - backPressedTime <= 2000) {
+                finish()
+            } else {
+                backPressedTime = System.currentTimeMillis()
+                Toast.makeText(
+                    this@OnAdventureActivity,
+                    getString(R.string.OnAdventure_warning_back_pressed),
+                    Toast.LENGTH_SHORT,
+                )
+                    .show()
+            }
+        }
     }
 
     private fun setClickListeners() {
@@ -118,12 +137,14 @@ class OnAdventureActivity :
     }
 
     private fun beginAdventure(coordinate: Coordinate) {
-        val existingAdventure = intent.getParcelable(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
+        val existingAdventure = intent.getParcelableCompat(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
 
         if (existingAdventure == null) {
             viewModel.beginAdventure(coordinate)
             return
         }
+
+        Toast.makeText(this, getString(R.string.OnAdventure_continue_adventure), Toast.LENGTH_SHORT).show()
         viewModel.setAdventure(existingAdventure)
     }
 

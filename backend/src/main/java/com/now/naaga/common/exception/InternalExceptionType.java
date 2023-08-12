@@ -2,24 +2,12 @@ package com.now.naaga.common.exception;
 
 import org.springframework.http.HttpStatus;
 
-public enum CommonExceptionType implements BaseExceptionType {
+public enum InternalExceptionType implements BaseExceptionType {
 
-    INVALID_REQUEST_BODY(
-            205,
-            HttpStatus.BAD_REQUEST,
-            "요청 바디 값이 잘못 되었습니다."
-    ),
-
-    INVALID_REQUEST_PARAMETERS(
-            206,
-            HttpStatus.BAD_REQUEST,
-            "요청 파라미터 값이 잘못 되었습니다."
-    ),
-
-    FILE_SAVE_ERROR(
-            215,
-            HttpStatus.BAD_REQUEST,
-            "파일 저장하다 문제가 발생했습니다."
+    FAIL_ESTABLISH_GAME_SCORE_POLICY(
+            10001,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "점수 계산 정책을 정하지 못했습니다."
     ),
     ;
 
@@ -27,7 +15,7 @@ public enum CommonExceptionType implements BaseExceptionType {
     private final HttpStatus httpStatus;
     private final String errorMessage;
 
-    CommonExceptionType(final int errorCode,
+    InternalExceptionType(final int errorCode,
                         final HttpStatus httpStatus,
                         final String errorMessage) {
         this.errorCode = errorCode;

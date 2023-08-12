@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
+import com.now.domain.model.Adventure
 import com.now.domain.model.AuthPlatformType
 import com.now.naaga.NaagaApplication
 import com.now.naaga.R
@@ -16,6 +17,10 @@ import com.now.naaga.data.firebase.analytics.LOGIN_AUTH
 import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.databinding.ActivityLoginBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
+import com.now.naaga.presentation.uimodel.mapper.toDomain
+import com.now.naaga.presentation.uimodel.mapper.toUi
+import com.now.naaga.presentation.uimodel.model.AdventureUiModel
+import com.now.naaga.util.getParcelableCompat
 import com.now.naaga.util.loginWithKakao
 
 class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
@@ -66,13 +71,29 @@ class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytics
     }
 
     private fun navigateHome() {
-        startActivity(BeginAdventureActivity.getIntent(this))
+        val adventure = intent.getParcelableCompat(ADVENTURE, AdventureUiModel::class.java)?.toDomain()
+
+        val intent = if (adventure == null) {
+            BeginAdventureActivity.getIntent(this)
+        } else {
+            BeginAdventureActivity.getIntentWithAdventure(this, adventure)
+        }
+
+        startActivity(intent)
         finish()
     }
 
     companion object {
+        private const val ADVENTURE = "ADVENTURE"
+
         fun getIntent(context: Context): Intent {
             return Intent(context, LoginActivity::class.java)
+        }
+
+        fun getIntentWithAdventure(context: Context, adventure: Adventure): Intent {
+            return Intent(context, LoginActivity::class.java).apply {
+                putExtra(ADVENTURE, adventure.toUi())
+            }
         }
     }
 }
