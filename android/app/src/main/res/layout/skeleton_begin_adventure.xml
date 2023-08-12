@@ -14,21 +14,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/main_gray"
+        android:elevation="8dp"
         tools:context=".presentation.beginadventure.BeginAdventureActivity">
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie_beginAdventure_loading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/main_gray_opacity_medium"
-            app:lottie_rawRes="@raw/simple_loading"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            android:elevation="8dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_beginAdventure_begin"
-            style="@style/BeginActivity.Button"
+            style="@style/BeginActivity.Button.Skeleton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
@@ -66,7 +58,7 @@
 
         <ImageButton
             android:id="@+id/iv_beginAdventure_mypage"
-            style="@style/BeginActivity.Button"
+            style="@style/BeginActivity.Button.Skeleton"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/ic_mypage"
@@ -77,7 +69,7 @@
 
         <ImageButton
             android:id="@+id/iv_beginAdventure_rank"
-            style="@style/BeginActivity.Button"
+            style="@style/BeginActivity.Button.Skeleton"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/ic_rank"
@@ -89,7 +81,7 @@
 
         <ImageButton
             android:id="@+id/iv_beginAdventure_upload"
-            style="@style/BeginActivity.Button"
+            style="@style/BeginActivity.Button.Skeleton"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginHorizontal="30dp"

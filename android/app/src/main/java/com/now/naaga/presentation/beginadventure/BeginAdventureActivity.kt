@@ -7,9 +7,12 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.now.domain.model.AdventureStatus
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.BEGIN_BEGIN_ADVENTURE
@@ -17,6 +20,7 @@ import com.now.naaga.data.firebase.analytics.BEGIN_GO_MYPAGE
 import com.now.naaga.data.firebase.analytics.BEGIN_GO_RANK
 import com.now.naaga.data.firebase.analytics.BEGIN_GO_UPLOAD
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.mypage.MyPageActivity
@@ -25,6 +29,13 @@ import com.now.naaga.presentation.rank.RankActivity
 
 class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityBeginAdventureBinding
+    private lateinit var viewModel: BeginAdventureViewModel
+
+    private val onAdventureActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
+            startLoading()
+            fetchInProgressAdventure()
+        }
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -49,9 +60,47 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         binding = ActivityBeginAdventureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        startLoading()
         registerAnalytics(this.lifecycle)
+        initViewModel()
+        fetchInProgressAdventure()
         requestLocationPermission()
         setClickListeners()
+        subscribe()
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this, BeginAdventureViewModel.Factory)[BeginAdventureViewModel::class.java]
+    }
+
+    private fun fetchInProgressAdventure() {
+        viewModel.fetchAdventure(AdventureStatus.IN_PROGRESS)
+    }
+
+    private fun subscribe() {
+        viewModel.loading.observe(this) { loading ->
+            setLoadingView(loading)
+        }
+        viewModel.error.observe(this) { error: DataThrowable ->
+            Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setLoadingView(loading: Boolean) {
+        if (!loading) {
+            finishLoading()
+        }
+    }
+
+    private fun startLoading() {
+        binding.lottieBeginAdventureLoading.visibility = View.VISIBLE
+    }
+
+    private fun finishLoading() {
+        binding.lottieBeginAdventureLoading.visibility = View.GONE
     }
 
     private fun requestLocationPermission() {
@@ -99,9 +148,17 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
             startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             Toast.makeText(this, GPS_TURN_ON_MESSAGE, Toast.LENGTH_SHORT).show()
         } else {
-            val intent = OnAdventureActivity.getIntent(this)
-            startActivity(intent)
-            finish()
+            onAdventureActivityLauncher.launch(getIntentWithAdventureOrWithout())
+        }
+    }
+
+    private fun getIntentWithAdventureOrWithout(): Intent {
+        val existingAdventure = viewModel.adventure.value
+
+        return if (existingAdventure == null) {
+            OnAdventureActivity.getIntent(this)
+        } else {
+            OnAdventureActivity.getIntentWithAdventure(this, existingAdventure)
         }
     }
 
