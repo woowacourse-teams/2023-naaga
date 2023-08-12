@@ -30,7 +30,7 @@ jobs:
       - name: build
         run: |
           cd /home/ubuntu/prod/2023-naaga/backend
-          chmod +x ./gradlew
+          sudo chmod +x ./gradlew
           sudo ./gradlew clean bootJar
      
       - name: transfer & run
