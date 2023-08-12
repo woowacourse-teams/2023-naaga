@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -22,6 +23,7 @@ import com.now.naaga.data.firebase.analytics.BEGIN_GO_MYPAGE
 import com.now.naaga.data.firebase.analytics.BEGIN_GO_RANK
 import com.now.naaga.data.firebase.analytics.BEGIN_GO_UPLOAD
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.mypage.MyPageActivity
@@ -34,6 +36,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
     private val onAdventureActivityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
+            startLoading()
             fetchInProgressAdventure()
         }
 
@@ -60,6 +63,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         binding = ActivityBeginAdventureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        startLoading()
         registerAnalytics(this.lifecycle)
         initViewModel()
         fetchInProgressAdventure()
@@ -78,14 +82,16 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
     private fun subscribe() {
         viewModel.loading.observe(this) { loading ->
-            setLoadingView(loading)
+            Log.d("asdf", "로딩중? $loading")
+            // setLoadingView(loading)
+        }
+        viewModel.error.observe(this) { error: DataThrowable ->
+            Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun setLoadingView(loading: Boolean) {
-        if (loading) {
-            startLoading()
-        } else {
+        if (!loading) {
             finishLoading()
         }
     }

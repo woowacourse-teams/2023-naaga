@@ -1,5 +1,6 @@
 package com.now.naaga.presentation.beginadventure
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,8 +26,14 @@ class BeginAdventureViewModel(private val adventureRepository: AdventureReposito
         adventureRepository.fetchAdventureByStatus(adventureStatus) { result ->
             _loading.value = false
             result
-                .onSuccess { _adventure.value = it.nullableFirst() }
-                .onFailure { _error.value = it as DataThrowable }
+                .onSuccess {
+                    Log.d("asdf", "모험 받기 성공")
+                    _adventure.value = it.nullableFirst()
+                }
+                .onFailure {
+                    Log.d("asdf", "모험 받기 실패")
+                    _error.value = it as DataThrowable
+                }
         }
     }
 
