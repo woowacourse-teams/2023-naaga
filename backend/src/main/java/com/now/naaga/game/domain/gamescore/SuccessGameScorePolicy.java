@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SuccessGameScorePolicy implements GameScorePolicy {
-    
-    private static final ResultType RESULT_TYPE = SUCCESS;
+
     private static final Score BASE_SCORE = new Score(50);
     private static final double HINT_SCORE_RATIO = 0.3;
     private static final double ATTEMPT_SCORE_RATIO = 0.3;
@@ -30,7 +29,7 @@ public class SuccessGameScorePolicy implements GameScorePolicy {
     
     @Override
     public boolean hasSameResultType(final ResultType resultType) {
-        return resultType == RESULT_TYPE;
+        return resultType == SUCCESS;
     }
     
     private Score calculateHintScore(final Game game) {
@@ -57,10 +56,10 @@ public class SuccessGameScorePolicy implements GameScorePolicy {
         return new Score((int) timeScoreValue);
     }
     
-    private long findDurationInSecond(Game game) {
-        LocalDateTime startTime = game.getStartTime();
-        LocalDateTime endTime = game.getEndTime();
-        Duration duration = Duration.between(startTime, endTime);
+    private long findDurationInSecond(final Game game) {
+        final LocalDateTime startTime = game.getStartTime();
+        final LocalDateTime endTime = game.getEndTime();
+        final Duration duration = Duration.between(startTime, endTime);
         return duration.toSeconds();
     }
 }

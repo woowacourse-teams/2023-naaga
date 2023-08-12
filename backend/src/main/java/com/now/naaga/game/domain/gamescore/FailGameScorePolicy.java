@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class FailGameScorePolicy implements GameScorePolicy {
     
-    private final static ResultType RESULT_TYPE = FAIL;
-    
     @Override
     public Score calculate(final Game game) {
         return new Score(0);
@@ -19,7 +17,7 @@ public class FailGameScorePolicy implements GameScorePolicy {
     
     @Override
     public boolean hasSameResultType(final ResultType resultType) {
-        return resultType == RESULT_TYPE;
+        return resultType == FAIL;
     }
     
 }
