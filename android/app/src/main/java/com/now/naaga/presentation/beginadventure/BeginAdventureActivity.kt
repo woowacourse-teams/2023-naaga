@@ -7,10 +7,15 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Adventure
+import com.now.domain.model.AdventureStatus
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.BEGIN_BEGIN_ADVENTURE
@@ -23,13 +28,16 @@ import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Compan
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.rank.RankActivity
-import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
-import com.now.naaga.presentation.uimodel.model.AdventureUiModel
-import com.now.naaga.util.getParcelableCompat
 
 class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityBeginAdventureBinding
+    private lateinit var viewModel: BeginAdventureViewModel
+
+    private val onAdventureActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
+            fetchInProgressAdventure()
+        }
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -53,11 +61,45 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         super.onCreate(savedInstanceState)
         binding = ActivityBeginAdventureBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setBeginText()
         registerAnalytics(this.lifecycle)
+        initViewModel()
+        fetchInProgressAdventure()
         requestLocationPermission()
         setClickListeners()
+        subscribe()
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this, BeginAdventureViewModel.Factory)[BeginAdventureViewModel::class.java]
+    }
+
+    private fun fetchInProgressAdventure() {
+        viewModel.fetchAdventure(AdventureStatus.IN_PROGRESS)
+    }
+
+    private fun subscribe() {
+        viewModel.loading.observe(this) { loading ->
+            setLoadingView(loading)
+        }
+    }
+
+    private fun setLoadingView(loading: Boolean) {
+        if (loading) {
+            startLoading()
+        } else {
+            finishLoading()
+        }
+    }
+
+    private fun startLoading() {
+        binding.includeBeginAdventureSkeleton.root.visibility = View.VISIBLE
+        val skeletonAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.anim_skeleton)
+        binding.includeBeginAdventureSkeleton.root.startAnimation(skeletonAnim)
+    }
+
+    private fun finishLoading() {
+        binding.includeBeginAdventureSkeleton.root.clearAnimation()
+        binding.includeBeginAdventureSkeleton.root.visibility = View.GONE
     }
 
     private fun requestLocationPermission() {
@@ -69,16 +111,6 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
                 ),
             )
         }
-    }
-
-    private fun setBeginText() {
-        if (getParcelableAdventure() != null) {
-            binding.tvBeginAdventureBegin.text = getString(R.string.beginAdventure_continue_adventure)
-        }
-    }
-
-    private fun getParcelableAdventure(): AdventureUiModel? {
-        return intent.getParcelableCompat(ADVENTURE, AdventureUiModel::class.java)
     }
 
     private fun setClickListeners() {
@@ -115,13 +147,14 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
             startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             Toast.makeText(this, GPS_TURN_ON_MESSAGE, Toast.LENGTH_SHORT).show()
         } else {
-            startActivity(getIntentWithAdventureOrWithout())
+            // startActivity(getIntentWithAdventureOrWithout())
+            onAdventureActivityLauncher.launch(getIntentWithAdventureOrWithout())
             finish()
         }
     }
 
     private fun getIntentWithAdventureOrWithout(): Intent {
-        val existingAdventure = getParcelableAdventure()?.toDomain()
+        val existingAdventure = viewModel.adventure.value
 
         return if (existingAdventure == null) {
             OnAdventureActivity.getIntent(this)
