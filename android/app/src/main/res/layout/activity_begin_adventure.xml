@@ -16,15 +16,15 @@
         android:layout_height="match_parent"
         tools:context=".presentation.beginadventure.BeginAdventureActivity">
 
-        <include
-            android:id="@+id/include_begin_adventure_skeleton"
-            layout="@layout/skeleton_begin_adventure"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_beginAdventure_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_gray_opacity_medium"
+            app:lottie_rawRes="@raw/simple_loading"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true"
+            android:elevation="8dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_beginAdventure_begin"
