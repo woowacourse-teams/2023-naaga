@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <property name="LOGS_ABSOLUTE_PATH" value="home/ubuntu/logs"/>
+  <property name="LOGS_ABSOLUTE_PATH" value="/home/ubuntu/logs"/>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.classic.PatternLayout">
@@ -38,7 +38,7 @@
 
   <appender name="WARN_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-    <file>./logs/warn.log</file>
+    <file>${LOGS_ABSOLUTE_PATH}/warn.log</file>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>WARN</level>
       <onMatch>ACCEPT</onMatch>
@@ -58,7 +58,7 @@
 
 
   <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>./logs/error.log</file>
+    <file>${LOGS_ABSOLUTE_PATH}/error.log</file>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>ERROR</level>
       <onMatch>ACCEPT</onMatch>

@@ -16,7 +16,7 @@ private fun getLoginCallback(doNextAction: (token: String) -> Unit): (OAuthToken
         if (error != null) {
             Log.e(KAKAO_LOGIN_LOG_TAG, KAKAO_LOGIN_FAIL_MESSAGE + error)
         } else if (token != null) {
-            Log.i(KAKAO_LOGIN_LOG_TAG, KAKAO_LOGIN_SUCCESS_MESSAGE + token.accessToken)
+            Log.i(KAKAO_LOGIN_LOG_TAG, KAKAO_LOGIN_SUCCESS_MESSAGE)
             doNextAction(token.accessToken)
         }
     }
@@ -42,7 +42,7 @@ fun loginWithKakao(context: Context, doNextAction: (token: String) -> Unit) {
                 // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
                 UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
             } else if (token != null) {
-                Log.i(KAKAO_LOGIN_LOG_TAG, KAKAO_LOGIN_SUCCESS_MESSAGE + token.accessToken)
+                Log.i(KAKAO_LOGIN_LOG_TAG, KAKAO_LOGIN_SUCCESS_MESSAGE)
                 doNextAction(token.accessToken)
             }
         }
