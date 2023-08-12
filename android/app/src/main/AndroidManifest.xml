@@ -32,11 +32,6 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App.Starting">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".presentation.beginadventure.BeginAdventureActivity"
@@ -69,7 +64,13 @@
         <activity
             android:name=".presentation.login.LoginActivity"
             android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
