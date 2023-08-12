@@ -27,8 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/h2-console/**")
                 .excludePathPatterns("/auth")
                 .excludePathPatterns("/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/**/*.gif", "/**/*.ico")
-                .excludePathPatterns("/ranks")
-        ;
+                .excludePathPatterns("/ranks");
     }
 
     @Override

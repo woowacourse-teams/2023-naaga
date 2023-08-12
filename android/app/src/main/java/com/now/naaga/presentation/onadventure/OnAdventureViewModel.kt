@@ -10,6 +10,7 @@ import com.now.domain.model.AdventureEndType
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
+import com.now.domain.model.RemainingTryCount
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.throwable.DataThrowable
@@ -21,19 +22,19 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
     private val _adventure = MutableLiveData<Adventure>()
     val adventure: LiveData<Adventure> = _adventure
     val hints = DisposableLiveData<List<Hint>>(_adventure.map { it.hints })
+    val remainingHintCount = DistinctChildLiveData<Int>(adventure.map { getRemainingHintCount() })
 
     val myCoordinate = MutableLiveData<Coordinate>()
     val startCoordinate = DisposableLiveData<Coordinate>(myCoordinate)
-
-    private val _distance = MutableLiveData<Int>()
-    val distance: LiveData<Int> = _distance
-    val isNearby: LiveData<Boolean> = _distance.map { adventure.value?.destination?.isNearBy(it) ?: false }
+    val distance: LiveData<Int> = myCoordinate.map { adventure.value?.destination?.getDistance(it) ?: return@map 0 }
+    val isNearby: LiveData<Boolean> =
+        myCoordinate.map { adventure.value?.destination?.isNearBy(it) ?: return@map false }
 
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
-    private val _throwable = MutableLiveData<DataThrowable>()
-    val throwable: LiveData<DataThrowable> = _throwable
+    private val _error = MutableLiveData<DataThrowable>()
+    val error: LiveData<DataThrowable> = _error
 
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
@@ -43,12 +44,8 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         adventureRepository.beginAdventure(currentCoordinate) { result: Result<Adventure> ->
             result
                 .onSuccess { setAdventure(it) }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+                .onFailure { setError(it as DataThrowable) }
         }
-    }
-
-    fun calculateDistance(coordinate: Coordinate) {
-        _distance.value = adventure.value?.destination?.getDistance(coordinate) ?: 0
     }
 
     fun giveUpAdventure() {
@@ -59,13 +56,13 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         ) { result: Result<AdventureStatus> ->
             result
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+                .onFailure { setError(it as DataThrowable) }
         }
     }
 
     fun openHint() {
         if (isAllHintsUsed()) {
-            setErrorMessage(hintThrowable)
+            setError(hintThrowable)
             return
         }
         adventureRepository.makeHint(
@@ -77,13 +74,17 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
                     _adventure.value = adventure.value?.copy(hints = ((adventure.value?.hints ?: listOf()) + hint))
                     _lastHint.value = hint
                 }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+                .onFailure { setError(it as DataThrowable) }
         }
     }
 
     private fun isAllHintsUsed(): Boolean {
-        val hintsCount: Int = adventure.value?.hints?.size ?: 0
-        return hintsCount >= MAX_HINT_COUNT
+        return getRemainingHintCount() <= 0
+    }
+
+    private fun getRemainingHintCount(): Int {
+        val usedHintCount = adventure.value?.hints?.size ?: 0
+        return (RemainingTryCount(MAX_HINT_COUNT) - usedHintCount).toInt()
     }
 
     fun endAdventure() {
@@ -94,20 +95,34 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         ) { result: Result<AdventureStatus> ->
             result
                 .onSuccess { _adventure.value = adventure.value?.copy(adventureStatus = it) }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+                .onFailure {
+                    when ((it as DataThrowable).code) {
+                        NOT_ARRIVED -> {
+                            val currentRemainingTryCount = adventure.value?.remainingTryCount ?: return@onFailure
+                            _adventure.value = adventure.value?.copy(remainingTryCount = currentRemainingTryCount - 1)
+                        }
+
+                        TRY_COUNT_OVER ->
+                            _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
+                    }
+                    setError(it)
+                }
         }
     }
 
-    private fun setErrorMessage(throwable: DataThrowable) {
+    private fun setError(throwable: DataThrowable) {
         when (throwable) {
-            is UniversalThrowable -> { _throwable.value = throwable }
-            is GameThrowable -> { _throwable.value = throwable }
+            is GameThrowable -> _error.value = throwable
+            is UniversalThrowable -> _error.value = throwable
             else -> {}
         }
     }
 
     companion object {
-        const val MAX_HINT_COUNT = 3
+        const val MAX_HINT_COUNT = 5
+        const val NO_DESTINATION = 406
+        const val NOT_ARRIVED = 415
+        const val TRY_COUNT_OVER = 416
         val Factory = ViewModelFactory(DefaultAdventureRepository())
 
         class ViewModelFactory(private val adventureRepository: AdventureRepository) : ViewModelProvider.Factory {

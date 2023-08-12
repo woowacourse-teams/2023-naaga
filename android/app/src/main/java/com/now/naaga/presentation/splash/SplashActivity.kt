@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
-import com.now.domain.model.AdventureStatus
 import com.now.naaga.R
 import com.now.naaga.presentation.login.LoginActivity
 
@@ -25,18 +24,12 @@ class SplashActivity : AppCompatActivity() {
 
     private fun subscribe() {
         viewModel.adventureStatus.observe(this) {
-            startNextActivity(it)
+            startNextActivity()
         }
     }
 
-    private fun startNextActivity(adventureStatus: AdventureStatus) {
-        val adventure = viewModel.adventure.value
-
-        val intent = if (adventure == null) {
-            LoginActivity.getIntent(this)
-        } else {
-            LoginActivity.getIntentWithAdventure(this, adventure)
-        }
+    private fun startNextActivity() {
+        val intent = LoginActivity.getIntent(this)
         startActivity(intent)
         finish()
     }

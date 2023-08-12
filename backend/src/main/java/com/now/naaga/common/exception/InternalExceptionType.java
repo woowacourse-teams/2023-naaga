@@ -9,6 +9,12 @@ public enum InternalExceptionType implements BaseExceptionType {
             HttpStatus.INTERNAL_SERVER_ERROR,
             "점수 계산 정책을 정하지 못했습니다."
     ),
+
+    FAIL_MAKE_DIRECTORY(
+            10002,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "경로 생성 실패했습니다."
+    ),
     ;
 
     private final int errorCode;

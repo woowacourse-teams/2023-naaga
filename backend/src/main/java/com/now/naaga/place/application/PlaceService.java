@@ -19,6 +19,8 @@ import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import java.io.File;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,7 +78,12 @@ public class PlaceService {
         final File uploadPath = fileManager.save(createPlaceCommand.imageFile());
         try {
             final Player registeredPlayer = playerService.findPlayerByMemberId(1L);
-            final Place place = new Place(createPlaceCommand.name(), createPlaceCommand.description(), position, uploadPath.toString(), registeredPlayer);
+            final Place place = new Place(
+                    createPlaceCommand.name(),
+                    createPlaceCommand.description(),
+                    position,
+                    fileManager.convertToUrlPath(uploadPath),
+                    registeredPlayer);
             placeRepository.save(place);
             return place;
         } catch (final RuntimeException exception) {

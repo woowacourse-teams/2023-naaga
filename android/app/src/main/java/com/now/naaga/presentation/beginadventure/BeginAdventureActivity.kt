@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
@@ -28,7 +27,6 @@ import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Compan
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.rank.RankActivity
-import com.now.naaga.presentation.uimodel.mapper.toUi
 
 class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityBeginAdventureBinding
@@ -61,6 +59,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         super.onCreate(savedInstanceState)
         binding = ActivityBeginAdventureBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         registerAnalytics(this.lifecycle)
         initViewModel()
         fetchInProgressAdventure()
@@ -165,16 +164,9 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
     companion object {
         private const val GPS_TURN_ON_MESSAGE = "GPS 설정을 켜주세요"
-        private const val ADVENTURE = "ADVENTURE"
 
         fun getIntent(context: Context): Intent {
             return Intent(context, BeginAdventureActivity::class.java)
-        }
-
-        fun getIntentWithAdventure(context: Context, adventure: Adventure): Intent {
-            return Intent(context, BeginAdventureActivity::class.java).apply {
-                putExtra(ADVENTURE, adventure.toUi())
-            }
         }
     }
 }
