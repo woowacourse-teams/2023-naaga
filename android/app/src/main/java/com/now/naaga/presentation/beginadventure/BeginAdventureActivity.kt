@@ -70,6 +70,9 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         requestLocationPermission()
         setClickListeners()
         subscribe()
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun initViewModel() {
@@ -97,14 +100,11 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
     }
 
     private fun startLoading() {
-        binding.includeBeginAdventureSkeleton.root.visibility = View.VISIBLE
-        val skeletonAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.anim_skeleton)
-        binding.includeBeginAdventureSkeleton.root.startAnimation(skeletonAnim)
+        binding.lottieBeginAdventureLoading.visibility = View.VISIBLE
     }
 
     private fun finishLoading() {
-        binding.includeBeginAdventureSkeleton.root.clearAnimation()
-        binding.includeBeginAdventureSkeleton.root.visibility = View.GONE
+        binding.lottieBeginAdventureLoading.visibility = View.GONE
     }
 
     private fun requestLocationPermission() {
