@@ -29,8 +29,8 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String extractSubject(final String token) {
-        final Claims claims = parseClaims(token);
+    public String extractSubject(final String subject) {
+        final Claims claims = parseClaims(subject);
         return claims.getSubject();
     }
 

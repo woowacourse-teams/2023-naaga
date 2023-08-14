@@ -14,7 +14,6 @@ import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
 import com.now.naaga.auth.presentation.dto.AuthResponse;
 import com.now.naaga.auth.presentation.dto.RefreshTokenRequest;
-import com.now.naaga.auth.repository.AuthRepository;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.member.domain.Member;
@@ -149,7 +148,6 @@ class AuthControllerTest extends CommonControllerTest {
             softly.assertThat(actualResponse.accessToken()).isNotNull();
         });
     }
-
 
     @Test
     void 유효한_리프레시_토큰으로_만료되지_않은_액세스_토큰_발급_요청을_보낸_경우_리프레시_토큰을_폐기하고_예외를_발생한다() {

@@ -1,6 +1,7 @@
 package com.now.naaga.auth.presentation;
 
 import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.common.CommonControllerTest;
@@ -47,7 +48,7 @@ public class AuthArgumentResolverTest extends CommonControllerTest {
         final Player player = playerRepository.save(new Player("delete", new Score(0), new Member("another@woowa.com")));
         final Long id = player.getMember().getId();
         playerRepository.delete(player);
-        final AuthToken authToken = authTokenGenerator.generate(id);
+        final AuthToken authToken = authTokenGenerator.generate(id, 1L, AuthType.KAKAO);
         final String accessToken = authToken.getAccessToken();
 
         // when
@@ -78,7 +79,7 @@ public class AuthArgumentResolverTest extends CommonControllerTest {
         // given
         final Player player = playerRepository.save(new Player("delete", new Score(0), new Member("another@woowa.com")));
         final Long id = player.getMember().getId();
-        final AuthToken authToken = authTokenGenerator.generate(id);
+        final AuthToken authToken = authTokenGenerator.generate(id, 1L, AuthType.KAKAO);
         final String accessToken = authToken.getAccessToken();
 
         // when

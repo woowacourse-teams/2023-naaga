@@ -2,12 +2,13 @@ package com.now.naaga.auth.application;
 
 import com.now.naaga.auth.application.dto.AuthCommand;
 import com.now.naaga.auth.application.dto.AuthInfo;
+import com.now.naaga.auth.application.dto.DeleteAccountCommand;
 import com.now.naaga.auth.application.dto.RefreshTokenCommand;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.auth.repository.AuthRepository;
+import com.now.naaga.auth.presentation.AuthRepository;
 import com.now.naaga.member.application.CreateMemberCommand;
 import com.now.naaga.member.application.MemberService;
 import com.now.naaga.member.domain.Member;
@@ -47,7 +48,7 @@ public class AuthService {
     public AuthToken login(final AuthCommand authCommand) {
         final AuthInfo authInfo = authClient.requestOauthInfo(authCommand.token());
         final Member member = findOrCreateMember(authInfo);
-        final AuthToken generatedAuthToken = authTokenGenerator.generate(member.getId());
+        final AuthToken generatedAuthToken = authTokenGenerator.generate(member.getId(), authInfo.getId(), authCommand.type());
         return authRepository.save(generatedAuthToken);
     }
 
@@ -76,5 +77,18 @@ public class AuthService {
         authRepository.delete(oldAuthToken);
         final AuthToken newAuthToken = authTokenGenerator.refresh(oldAuthToken);
         return authRepository.save(newAuthToken);
+    }
+
+    public void deleteAccount(final DeleteAccountCommand deleteAccountCommand) {
+//        // 1. 언링크
+//        final Long memberId = deleteAccountCommand.memberId();
+//        memberAuthRepository.findByMemberIdAndAuthType(memberId, AuthType.KAKAO);
+//        authClient.requestUnlink();
+//
+//        // 2. 플레이어 삭제
+//        playerService.deleteByMemberId(new DeletePlayerCommand(memberId));
+//
+//        // 3. 멤버 삭제
+//        memberService.deleteByMemberId(new DeleteMemberCommand(memberId));
     }
 }

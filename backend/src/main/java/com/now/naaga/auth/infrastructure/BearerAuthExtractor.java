@@ -1,5 +1,7 @@
 package com.now.naaga.auth.infrastructure;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.member.presentation.dto.MemberAuthRequest;
@@ -27,8 +29,10 @@ public class BearerAuthExtractor implements AuthenticationExtractor<MemberAuthRe
             throw new AuthException(INVALID_HEADER);
         }
         final String accessToken = header.substring(BEARER_TYPE.length()).trim();
-        final Long memberId = Long.parseLong(jwtProvider.extractSubject(accessToken));
 
-        return new MemberAuthRequest(memberId);
+        final String subject = jwtProvider.extractSubject(accessToken);
+        final MemberAuth memberAuth = MemberAuthMapper.convertStringToMemberAuth(subject);
+
+        return new MemberAuthRequest(memberAuth.getMemberId());
     }
 }

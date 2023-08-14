@@ -1,4 +1,4 @@
-package com.now.naaga.auth.repository;
+package com.now.naaga.auth.presentation;
 
 import com.now.naaga.auth.domain.AuthToken;
 import org.springframework.data.jpa.repository.JpaRepository;

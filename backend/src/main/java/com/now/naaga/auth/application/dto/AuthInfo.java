@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public class AuthInfo {
 
+    private Long id;
+
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
 
@@ -106,6 +108,10 @@ public class AuthInfo {
                     "nickname='" + nickname + '\'' +
                     '}';
         }
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {

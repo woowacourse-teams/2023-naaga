@@ -15,6 +15,18 @@ public enum InternalExceptionType implements BaseExceptionType {
             HttpStatus.INTERNAL_SERVER_ERROR,
             "경로 생성 실패했습니다."
     ),
+
+    FAIL_OBJECT_TO_JSON(
+            10003,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "객체를 JSON으로 변환하지 못했습니다."
+    ),
+
+    FAIL_JSON_TO_OBJECT(
+            10003,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "JSON를 객체로 변환하지 못했습니다."
+    ),
     ;
 
     private final int errorCode;

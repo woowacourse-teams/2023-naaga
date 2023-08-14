@@ -1,6 +1,7 @@
 package com.now.naaga.game.presentation;
 
 import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.game.application.GameService;
@@ -76,7 +77,7 @@ public class StatisticControllerTest extends CommonControllerTest {
         final Statistic statistic = gameService.findStatistic(new PlayerRequest(player1.getId()));
         
         final Long memberId = player1.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
         
         // when

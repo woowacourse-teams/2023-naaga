@@ -1,5 +1,6 @@
 package com.now.naaga.auth.presentation;
 
+import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.auth.application.AuthService;
 import com.now.naaga.auth.application.dto.AuthCommand;
 import com.now.naaga.auth.application.dto.RefreshTokenCommand;
@@ -7,12 +8,11 @@ import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
 import com.now.naaga.auth.presentation.dto.AuthResponse;
 import com.now.naaga.auth.presentation.dto.RefreshTokenRequest;
+import com.now.naaga.member.presentation.dto.DeleteMemberCommand;
+import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/auth")
 @RestController
@@ -40,5 +40,12 @@ public class AuthController {
         final AuthResponse authResponse = AuthResponse.from(authToken);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(authResponse);
+    }
+
+    @DeleteMapping("/unlink")
+    public ResponseEntity<Void> deleteAccount(@Auth PlayerRequest playerRequest) {
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

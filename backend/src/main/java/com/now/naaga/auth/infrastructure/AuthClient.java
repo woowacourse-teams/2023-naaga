@@ -43,4 +43,8 @@ public class AuthClient {
             throw new AuthException(AuthExceptionType.INVALID_KAKAO_INFO);
         }
     }
+
+    public void requestUnlink(final Long kakaoId) {
+
+    }
 }

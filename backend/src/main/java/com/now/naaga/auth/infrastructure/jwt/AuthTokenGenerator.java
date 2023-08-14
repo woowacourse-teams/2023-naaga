@@ -1,8 +1,16 @@
 package com.now.naaga.auth.infrastructure.jwt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.exception.AuthException;
+import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.MemberAuthMapper;
+import com.now.naaga.auth.infrastructure.dto.MemberAuth;
+import com.now.naaga.common.exception.InternalException;
+import com.now.naaga.common.exception.InternalExceptionType;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.ObjectError;
 
 import java.util.Date;
 
@@ -20,12 +28,15 @@ public class AuthTokenGenerator {
         this.jwtProvider = jwtProvider;
     }
 
-    public AuthToken generate(final Long memberId) {
+    public AuthToken generate(final Long memberId,
+                              final Long authId,
+                              final AuthType authType) {
         final long now = (new Date()).getTime();
         final Date accessTokenExpiredAt = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         final Date refreshTokenExpiredAt = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
 
-        final String subject = memberId.toString(); // 1
+        final MemberAuth memberAuth = new MemberAuth(memberId, authId, authType);
+        final String subject = MemberAuthMapper.convertMemberAuthToString(memberAuth);
         final String accessToken = jwtProvider.generate(subject, accessTokenExpiredAt);
         final String refreshToken = jwtProvider.generate(subject, refreshTokenExpiredAt);
 
@@ -34,13 +45,13 @@ public class AuthTokenGenerator {
 
     public AuthToken refresh(final AuthToken authToken) {
         final String subject = jwtProvider.extractSubject(authToken.getRefreshToken());
-        final Long memberId = Long.valueOf(subject);
+        final MemberAuth memberAuth = MemberAuthMapper.convertStringToMemberAuth(subject);
 
         final String accessToken = authToken.getAccessToken();
         if(jwtProvider.isNotExpired(accessToken)) {
             throw new AuthException(INVALID_TOKEN_ACCESS);
         }
 
-        return generate(memberId);
+        return generate(memberAuth.getMemberId(), memberAuth.getAuthId(), memberAuth.getAuthType());
     }
 }

@@ -1,6 +1,8 @@
 package com.now.naaga.auth.presentation;
 
 import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.common.CommonControllerTest;
@@ -96,7 +98,7 @@ public class AuthInterceptorTest extends CommonControllerTest {
     void 인증_헤더의_토큰_정보가_유효하지_않을_때_401_응답한다() {
         // given
         final Member savedMember = memberRepository.save(new Member("chae@chae.com"));
-        final AuthToken authToken = authTokenGenerator.generate(savedMember.getId());
+        final AuthToken authToken = authTokenGenerator.generate(savedMember.getId(), 1L, AuthType.KAKAO);
         final String accessToken = "이상한문자열" + authToken.getAccessToken();
 
         // when
@@ -126,7 +128,7 @@ public class AuthInterceptorTest extends CommonControllerTest {
     void 인증_헤더의_토큰_정보가_존재하지_않는_멤버일_때_401_응답한다() {
         // given
         final Member savedMember = memberRepository.save(new Member("chae@chae.com"));
-        final AuthToken authToken = authTokenGenerator.generate(savedMember.getId());
+        final AuthToken authToken = authTokenGenerator.generate(savedMember.getId(), 1L, AuthType.KAKAO);
         final String accessToken = "이상한문자열" + authToken.getAccessToken();
 
         // when
@@ -157,7 +159,7 @@ public class AuthInterceptorTest extends CommonControllerTest {
         // given
         final Player player = PlayerFixture.PLAYER();
         final Player savedPlayer = playerRepository.save(player);
-        final AuthToken authToken = authTokenGenerator.generate(savedPlayer.getMember().getId());
+        final AuthToken authToken = authTokenGenerator.generate(savedPlayer.getMember().getId(), 1L, AuthType.KAKAO);
         final String accessToken = authToken.getAccessToken();
 
         // when

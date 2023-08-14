@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
@@ -69,7 +70,7 @@ public class PlaceControllerTest extends CommonControllerTest {
 
 
         final Long memberId = player.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
         //when
         final ExtractableResponse<Response> extract = given()
@@ -112,7 +113,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place SEOUL = SEOUL_PLACE();
 
         final Long memberId = player.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
 
         //when
@@ -153,7 +154,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place SEOUL = SEOUL_PLACE();
 
         final Long memberId = player.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
         //when
         final ExtractableResponse<Response> extract = given()
@@ -184,7 +185,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Player player = SEOUL.getRegisteredPlayer();
 
         final Long memberId = player.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
 
         //when
