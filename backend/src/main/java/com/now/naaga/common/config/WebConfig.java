@@ -25,7 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/h2-console/**")
-                .excludePathPatterns("/auth")
+                .excludePathPatterns("/auth/**")
                 .excludePathPatterns("/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/**/*.gif", "/**/*.ico")
                 .excludePathPatterns("/ranks");
     }

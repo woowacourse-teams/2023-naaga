@@ -1,13 +1,33 @@
 package com.now.naaga.auth.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import org.springframework.stereotype.Component;
+
 import java.util.Objects;
 
+@Entity
 public class AuthTokens {
 
-    private final String accessToken;
-    private final String refreshToken;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String accessToken;
+    private String refreshToken;
+
+    public AuthTokens() {
+    }
 
     public AuthTokens(final String accessToken, final String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
+
+    public AuthTokens(final Long id, final String accessToken, final String refreshToken) {
+        this.id = id;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
