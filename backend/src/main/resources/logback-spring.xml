@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <property name="LOGS_ABSOLUTE_PATH" value="/home/ubuntu/logs"/>
+  <property name="." value="/home/ubuntu/logs"/>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.classic.PatternLayout">
