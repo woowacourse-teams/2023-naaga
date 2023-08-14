@@ -23,7 +23,7 @@ import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUN
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-public class AuthArgumentResolverTest extends CommonControllerTest {
+public class PlayerArgumentResolverTest extends CommonControllerTest {
 
     @Autowired
     private MemberRepository memberRepository;

@@ -22,6 +22,6 @@ public class AuthInterceptor implements HandlerInterceptor {
                              final HttpServletResponse response,
                              final Object handler) throws Exception {
         final MemberAuthRequest memberAuthRequest = authenticationExtractor.extract(request.getHeader(HttpHeaders.AUTHORIZATION));
-        return memberAuthRequest.memberId() != null;
+        return memberAuthRequest.memberAuth().getMemberId() != null;
     }
 }

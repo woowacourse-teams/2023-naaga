@@ -33,6 +33,6 @@ public class BearerAuthExtractor implements AuthenticationExtractor<MemberAuthRe
         final String subject = jwtProvider.extractSubject(accessToken);
         final MemberAuth memberAuth = MemberAuthMapper.convertStringToMemberAuth(subject);
 
-        return new MemberAuthRequest(memberAuth.getMemberId());
+        return new MemberAuthRequest(memberAuth);
     }
 }

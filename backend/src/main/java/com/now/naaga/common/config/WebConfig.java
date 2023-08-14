@@ -1,8 +1,11 @@
 package com.now.naaga.common.config;
 
 import com.now.naaga.auth.presentation.AuthInterceptor;
-import com.now.naaga.auth.presentation.AuthArgumentResolver;
+import com.now.naaga.auth.presentation.PlayerArgumentResolver;
+
 import java.util.List;
+
+import com.now.naaga.auth.presentation.MemberAuthArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -11,12 +14,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AuthArgumentResolver authArgumentResolver;
+    private final PlayerArgumentResolver playerArgumentResolver;
+    private final MemberAuthArgumentResolver memberAuthArgumentResolver;
     private final AuthInterceptor authInterceptor;
 
-    public WebConfig(final AuthArgumentResolver authArgumentResolver,
+    public WebConfig(final PlayerArgumentResolver playerArgumentResolver,
+                     final MemberAuthArgumentResolver memberAuthArgumentResolver,
                      final AuthInterceptor authInterceptor) {
-        this.authArgumentResolver = authArgumentResolver;
+        this.playerArgumentResolver = playerArgumentResolver;
+        this.memberAuthArgumentResolver = memberAuthArgumentResolver;
         this.authInterceptor = authInterceptor;
     }
 
@@ -32,6 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(authArgumentResolver);
+        resolvers.add(playerArgumentResolver);
+        resolvers.add(memberAuthArgumentResolver);
     }
 }

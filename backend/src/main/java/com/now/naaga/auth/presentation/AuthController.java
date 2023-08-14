@@ -7,6 +7,7 @@ import com.now.naaga.auth.application.dto.RefreshTokenCommand;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
 import com.now.naaga.auth.presentation.dto.AuthResponse;
+import com.now.naaga.auth.presentation.dto.MemberRequest;
 import com.now.naaga.auth.presentation.dto.RefreshTokenRequest;
 import com.now.naaga.member.presentation.dto.DeleteMemberCommand;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
@@ -43,8 +44,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/unlink")
-    public ResponseEntity<Void> deleteAccount(@Auth PlayerRequest playerRequest) {
-
+    public ResponseEntity<Void> deleteAccount(@Auth MemberRequest memberRequest) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
