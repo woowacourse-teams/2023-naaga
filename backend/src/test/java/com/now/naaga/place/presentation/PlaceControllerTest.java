@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.now.naaga.auth.domain.AuthTokens;
-import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
+import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.common.infrastructure.FileManager;
@@ -44,7 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PlaceControllerTest extends CommonControllerTest {
 
     @Autowired
-    private JwtGenerator jwtGenerator;
+    private AuthTokenGenerator authTokenGenerator;
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -69,7 +69,7 @@ public class PlaceControllerTest extends CommonControllerTest {
 
 
         final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId);
         final String accessToken = generate.getAccessToken();
         //when
         final ExtractableResponse<Response> extract = given()
@@ -112,7 +112,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place SEOUL = SEOUL_PLACE();
 
         final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId);
         final String accessToken = generate.getAccessToken();
 
         //when
@@ -153,7 +153,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place SEOUL = SEOUL_PLACE();
 
         final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId);
         final String accessToken = generate.getAccessToken();
         //when
         final ExtractableResponse<Response> extract = given()
@@ -184,7 +184,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Player player = SEOUL.getRegisteredPlayer();
 
         final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId);
         final String accessToken = generate.getAccessToken();
 
         //when

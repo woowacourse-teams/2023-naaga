@@ -8,7 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.now.naaga.auth.application.dto.AuthInfo;
-import com.now.naaga.auth.domain.AuthTokens;
+import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
@@ -126,7 +126,7 @@ class AuthControllerTest extends CommonControllerTest {
         final String expiredAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
         final String validRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
 
-        authRepository.save(new AuthTokens(expiredAccessToken, validRefreshToken));
+        authRepository.save(new AuthToken(expiredAccessToken, validRefreshToken));
 
         //when
         final ExtractableResponse<Response> extract = RestAssured.given()
@@ -164,7 +164,7 @@ class AuthControllerTest extends CommonControllerTest {
         final String validAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
         final String validRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
 
-        authRepository.save(new AuthTokens(validAccessToken, validRefreshToken));
+        authRepository.save(new AuthToken(validAccessToken, validRefreshToken));
 
         //when
         final ExtractableResponse<Response> extract = RestAssured.given()
@@ -205,7 +205,7 @@ class AuthControllerTest extends CommonControllerTest {
         final String expiredAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
         final String expiredRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
 
-        authRepository.save(new AuthTokens(expiredAccessToken, expiredRefreshToken));
+        authRepository.save(new AuthToken(expiredAccessToken, expiredRefreshToken));
 
         //when
         final ExtractableResponse<Response> extract = RestAssured.given()

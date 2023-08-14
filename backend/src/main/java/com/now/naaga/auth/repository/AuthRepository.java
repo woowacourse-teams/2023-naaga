@@ -1,11 +1,12 @@
 package com.now.naaga.auth.repository;
 
-import com.now.naaga.auth.domain.AuthTokens;
+import com.now.naaga.auth.domain.AuthToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface AuthRepository  extends JpaRepository<AuthTokens, Long> {
+public interface AuthRepository  extends JpaRepository<AuthToken, Long> {
 
-    List<AuthTokens> findByRefreshToken(final String refreshToken);
+    Optional<AuthToken> findByRefreshToken(final String refreshToken);
 }

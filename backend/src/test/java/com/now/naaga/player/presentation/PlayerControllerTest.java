@@ -3,8 +3,8 @@ package com.now.naaga.player.presentation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.auth.domain.AuthTokens;
-import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
+import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.domain.Player;
@@ -24,7 +24,7 @@ import org.springframework.http.MediaType;
 public class PlayerControllerTest extends CommonControllerTest {
 
     @Autowired
-    private JwtGenerator jwtGenerator;
+    private AuthTokenGenerator authTokenGenerator;
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -43,7 +43,7 @@ public class PlayerControllerTest extends CommonControllerTest {
 
 
         final Long memberId = chae.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId);
         final String accessToken = generate.getAccessToken();
 
         // when

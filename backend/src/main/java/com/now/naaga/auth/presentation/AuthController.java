@@ -3,7 +3,7 @@ package com.now.naaga.auth.presentation;
 import com.now.naaga.auth.application.AuthService;
 import com.now.naaga.auth.application.dto.AuthCommand;
 import com.now.naaga.auth.application.dto.RefreshTokenCommand;
-import com.now.naaga.auth.domain.AuthTokens;
+import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
 import com.now.naaga.auth.presentation.dto.AuthResponse;
 import com.now.naaga.auth.presentation.dto.RefreshTokenRequest;
@@ -27,8 +27,8 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<AuthResponse> login(@RequestBody final AuthRequest authRequest) {
         final AuthCommand authCommand = AuthCommand.from(authRequest);
-        final AuthTokens authTokens = authService.login(authCommand);
-        final AuthResponse authResponse = AuthResponse.from(authTokens);
+        final AuthToken authToken = authService.login(authCommand);
+        final AuthResponse authResponse = AuthResponse.from(authToken);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(authResponse);
     }
@@ -36,8 +36,8 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshLogin(@RequestBody final RefreshTokenRequest refreshTokenRequest) {
         final RefreshTokenCommand refreshTokenCommand = RefreshTokenCommand.from(refreshTokenRequest);
-        final AuthTokens authTokens = authService.refreshLogin(refreshTokenCommand);
-        final AuthResponse authResponse = AuthResponse.from(authTokens);
+        final AuthToken authToken = authService.refreshLogin(refreshTokenCommand);
+        final AuthResponse authResponse = AuthResponse.from(authToken);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(authResponse);
     }

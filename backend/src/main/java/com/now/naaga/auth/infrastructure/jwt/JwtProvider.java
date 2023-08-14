@@ -3,7 +3,6 @@ package com.now.naaga.auth.infrastructure.jwt;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.exception.AuthExceptionType;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.crypto.JwtSigner;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,26 +48,19 @@ public class JwtProvider {
         }
     }
 
-    public boolean isTokenExpired(final String token) {
+    public boolean isNotExpired(final String token) {
         try {
-            Jwts.parserBuilder()
+            final Date expiration = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
-                    .getBody();
-            return false;
+                    .getBody()
+                    .getExpiration();
+            return expiration.after(new Date());
         } catch (ExpiredJwtException e) {
-            return true;
+            return false;
         } catch (Exception e) {
             throw new AuthException(AuthExceptionType.INVALID_TOKEN);
         }
     }
-
 }
-
-/*
-액세스 토큰
-클레임.
-현재 시간
-
- */

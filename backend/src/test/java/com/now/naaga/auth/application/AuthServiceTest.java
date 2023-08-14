@@ -2,7 +2,7 @@ package com.now.naaga.auth.application;
 
 import com.now.naaga.auth.application.dto.AuthCommand;
 import com.now.naaga.auth.application.dto.AuthInfo;
-import com.now.naaga.auth.domain.AuthTokens;
+import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.member.domain.Member;
@@ -55,7 +55,7 @@ class AuthServiceTest {
         when(authClient.requestOauthInfo(any())).thenReturn(AuthInfo.of(member.getEmail(), player.getNickname()));
 
         // when
-        final AuthTokens actual = authService.login(authCommand);
+        final AuthToken actual = authService.login(authCommand);
         final Optional<Member> maybeMember = memberRepository.findByEmail(member.getEmail());
 
         //given
@@ -76,7 +76,7 @@ class AuthServiceTest {
         when(authClient.requestOauthInfo(any())).thenReturn(AuthInfo.of(member.getEmail(), player.getNickname()));
 
         // when
-        final AuthTokens actual = authService.login(authCommand);
+        final AuthToken actual = authService.login(authCommand);
 
         //given
         assertThat(actual).isNotNull();

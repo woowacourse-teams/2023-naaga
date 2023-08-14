@@ -1,7 +1,7 @@
 package com.now.naaga.game.presentation;
 
-import com.now.naaga.auth.domain.AuthTokens;
-import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
+import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.dto.CreateGameCommand;
@@ -27,9 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -40,7 +37,7 @@ public class StatisticControllerTest extends CommonControllerTest {
     GameService gameService;
     
     @Autowired
-    JwtGenerator jwtGenerator;
+    AuthTokenGenerator authTokenGenerator;
     
     @Autowired
     PlaceRepository placeRepository;
@@ -79,7 +76,7 @@ public class StatisticControllerTest extends CommonControllerTest {
         final Statistic statistic = gameService.findStatistic(new PlayerRequest(player1.getId()));
         
         final Long memberId = player1.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(memberId);
         final String accessToken = generate.getAccessToken();
         
         // when
