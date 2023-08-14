@@ -1,4 +1,6 @@
 package com.now.naaga.auth.presentation.dto;
 
-public record MemberRequest(Long memberId) {
+import com.now.naaga.auth.infrastructure.dto.MemberAuth;
+
+public record MemberRequest(MemberAuth memberAuth) {
 }

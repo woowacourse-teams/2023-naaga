@@ -2,8 +2,8 @@ package com.now.naaga.auth.presentation;
 
 import com.now.naaga.auth.annotation.Auth;
 import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
+import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.presentation.dto.MemberRequest;
-import com.now.naaga.member.presentation.dto.MemberAuthRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -14,9 +14,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class MemberAuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final AuthenticationExtractor<MemberAuthRequest> authenticationExtractor;
+    private final AuthenticationExtractor<MemberAuth> authenticationExtractor;
 
-    public MemberAuthArgumentResolver(final AuthenticationExtractor<MemberAuthRequest> authenticationExtractor) {
+    public MemberAuthArgumentResolver(final AuthenticationExtractor<MemberAuth> authenticationExtractor) {
         this.authenticationExtractor = authenticationExtractor;
     }
 
@@ -32,7 +32,6 @@ public class MemberAuthArgumentResolver implements HandlerMethodArgumentResolver
                                   final NativeWebRequest webRequest,
                                   final WebDataBinderFactory binderFactory) throws Exception {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        final MemberAuthRequest memberAuthRequest = authenticationExtractor.extract(request.getHeader(HttpHeaders.AUTHORIZATION));
-        return new MemberRequest(memberAuthRequest.memberAuth().getMemberId());
+        return authenticationExtractor.extract(request.getHeader(HttpHeaders.AUTHORIZATION));
     }
 }

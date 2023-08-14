@@ -7,6 +7,7 @@ import com.now.naaga.auth.application.dto.RefreshTokenCommand;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.infrastructure.AuthClient;
+import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.auth.presentation.AuthRepository;
 import com.now.naaga.member.application.CreateMemberCommand;
@@ -79,12 +80,11 @@ public class AuthService {
         return authRepository.save(newAuthToken);
     }
 
-    public void deleteAccount(final DeleteAccountCommand deleteAccountCommand) {
-//        // 1. 언링크
-//        final Long memberId = deleteAccountCommand.memberId();
-//        memberAuthRepository.findByMemberIdAndAuthType(memberId, AuthType.KAKAO);
-//        authClient.requestUnlink();
-//
+    public void deleteAccount(final MemberAuth memberAuth) {
+        // 1. 언링크
+        final Long authId = memberAuth.getAuthId();
+        authClient.requestUnlink(authId);
+
 //        // 2. 플레이어 삭제
 //        playerService.deleteByMemberId(new DeletePlayerCommand(memberId));
 //
