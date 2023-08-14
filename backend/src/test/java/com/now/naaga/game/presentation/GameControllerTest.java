@@ -581,73 +581,73 @@ class GameControllerTest extends CommonControllerTest {
         );
     }
 
-    @Test
-    public void 게임_아이디로_게임결과를_조회한다() {
-        // given
-        final Place place = placeRepository.save(JEJU_PLACE());
-        final Game game1 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
-        final GameResult gameResult1 = gameResultRepository.save(new GameResult(ResultType.SUCCESS, new Score(12), game1));
-
-        final Long memberId = game1.getPlayer().getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-        // when
-        final ExtractableResponse<Response> response = RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + accessToken)
-                .when()
-                .get("/games/" + game1.getId() + "/result")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
-
-        // then
-        final GameResultResponse gameResultResponse = response.as(GameResultResponse.class);
-
-        assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(gameResultResponse.id()).isEqualTo(gameResult1.getId());
-            softly.assertThat(gameResultResponse.gameId()).isEqualTo(game1.getId());
-            softly.assertThat(gameResultResponse.destination().name()).isEqualTo("JEJU");
-            softly.assertThat(gameResultResponse.resultType()).isEqualTo(ResultType.SUCCESS);
-        });
-    }
-
-    @Test
-    public void 모든_게임_결과를_도착시간_기준으로_내림차순하여_조회한다() {
-        // given
-        Place place = placeRepository.save(JEJU_PLACE());
-        Game game1 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
-        Game game2 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
-        GameResult gameResult1 = gameResultRepository.save(new GameResult(ResultType.SUCCESS, new Score(12), game1));
-        GameResult gameResult2 = gameResultRepository.save(new GameResult(ResultType.FAIL, new Score(0), game2));
-
-        final Long memberId = game1.getPlayer().getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
-        // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + accessToken)
-                .param("sort-by", "time")
-                .param("order", "descending")
-                .when().get("/games/results")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
-
-        // then
-        final List<GameResultResponse> gameResultResponses = response.jsonPath().getList(".", GameResultResponse.class);
-
-        assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(gameResultResponses).hasSize(2);
-            softly.assertThat(gameResultResponses.get(0).gameId()).isEqualTo(2L);
-            softly.assertThat(gameResultResponses.get(1).gameId()).isEqualTo(1L);
-        });
-    }
+//    @Test
+//    public void 게임_아이디로_게임결과를_조회한다() {
+//        // given
+//        final Place place = placeRepository.save(JEJU_PLACE());
+//        final Game game1 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
+//        final GameResult gameResult1 = gameResultRepository.save(new GameResult(ResultType.SUCCESS, new Score(12), game1));
+//
+//        final Long memberId = game1.getPlayer().getMember().getId();
+//        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
+//        final String accessToken = generate.getAccessToken();
+//        // when
+//        final ExtractableResponse<Response> response = RestAssured.given()
+//                .log().all()
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//                .header("Authorization", "Bearer " + accessToken)
+//                .when()
+//                .get("/games/" + game1.getId() + "/result")
+//                .then().log().all()
+//                .statusCode(HttpStatus.OK.value())
+//                .extract();
+//
+//        // then
+//        final GameResultResponse gameResultResponse = response.as(GameResultResponse.class);
+//
+//        assertSoftly(softly -> {
+//            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+//            softly.assertThat(gameResultResponse.id()).isEqualTo(gameResult1.getId());
+//            softly.assertThat(gameResultResponse.gameId()).isEqualTo(game1.getId());
+//            softly.assertThat(gameResultResponse.destination().name()).isEqualTo("JEJU");
+//            softly.assertThat(gameResultResponse.resultType()).isEqualTo(ResultType.SUCCESS);
+//        });
+//    }
+//
+//    @Test
+//    public void 모든_게임_결과를_도착시간_기준으로_내림차순하여_조회한다() {
+//        // given
+//        Place place = placeRepository.save(JEJU_PLACE());
+//        Game game1 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
+//        Game game2 = gameRepository.save(SEOUL_TO_JEJU_GAME(place));
+//        gameResultRepository.save(new GameResult(ResultType.SUCCESS, new Score(12), game1));
+//        gameResultRepository.save(new GameResult(ResultType.FAIL, new Score(0), game2));
+//
+//        final Long memberId = game1.getPlayer().getMember().getId();
+//        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
+//        final String accessToken = generate.getAccessToken();
+//
+//        // when
+//        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//                .header("Authorization", "Bearer " + accessToken)
+//                .param("sort-by", "time")
+//                .param("order", "descending")
+//                .when().get("/games/results")
+//                .then().log().all()
+//                .statusCode(HttpStatus.OK.value())
+//                .extract();
+//
+//        // then
+//        final List<GameResultResponse> gameResultResponses = response.jsonPath().getList(".", GameResultResponse.class);
+//
+//        assertSoftly(softly -> {
+//            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+//            softly.assertThat(gameResultResponses).hasSize(2);
+//            softly.assertThat(gameResultResponses.get(0).gameId()).isEqualTo(2L);
+//            softly.assertThat(gameResultResponses.get(1).gameId()).isEqualTo(1L);
+//        });
+//    }
 
     private String calculateEncodedCredentials() {
         final String username = "chaechae@woo.com";

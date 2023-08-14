@@ -10,6 +10,9 @@ import static org.mockito.Mockito.when;
 import com.now.naaga.auth.application.dto.AuthInfo;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthClient;
+import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.MemberAuthMapper;
+import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
 import com.now.naaga.auth.presentation.dto.AuthResponse;
@@ -122,8 +125,10 @@ class AuthControllerTest extends CommonControllerTest {
         final long now = (new Date()).getTime();
         final Date accessTokenExpiredAt = new Date(now -1);
         final Date refreshTokenExpiredAt = new Date(now + 360000*24);
-        final String expiredAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
-        final String validRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
+        final MemberAuth memberAuth = new MemberAuth(member.getId(), 1l, AuthType.KAKAO);
+        final String convertedString = MemberAuthMapper.convertMemberAuthToString(memberAuth);
+        final String expiredAccessToken = jwtProvider.generate(convertedString, accessTokenExpiredAt);
+        final String validRefreshToken = jwtProvider.generate(convertedString, refreshTokenExpiredAt);
 
         authRepository.save(new AuthToken(expiredAccessToken, validRefreshToken));
 
@@ -159,8 +164,10 @@ class AuthControllerTest extends CommonControllerTest {
         final long now = (new Date()).getTime();
         final Date accessTokenExpiredAt = new Date(now + 360000*24);
         final Date refreshTokenExpiredAt = new Date(now + 360000*24);
-        final String validAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
-        final String validRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
+        final MemberAuth memberAuth = new MemberAuth(member.getId(), 1l, AuthType.KAKAO);
+        final String convertedString = MemberAuthMapper.convertMemberAuthToString(memberAuth);
+        final String validAccessToken = jwtProvider.generate(convertedString, accessTokenExpiredAt);
+        final String validRefreshToken = jwtProvider.generate(convertedString, refreshTokenExpiredAt);
 
         authRepository.save(new AuthToken(validAccessToken, validRefreshToken));
 
