@@ -47,7 +47,8 @@ public class AuthService {
     public AuthToken login(final AuthCommand authCommand) {
         final AuthInfo authInfo = authClient.requestOauthInfo(authCommand.token());
         final Member member = findOrCreateMember(authInfo);
-        return authTokenGenerator.generate(member.getId());
+        final AuthToken generatedAuthToken = authTokenGenerator.generate(member.getId());
+        return authRepository.save(generatedAuthToken);
     }
 
     private Member findOrCreateMember(final AuthInfo kakaoAuthInfo) {
