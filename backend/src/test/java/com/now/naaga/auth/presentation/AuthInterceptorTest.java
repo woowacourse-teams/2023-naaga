@@ -1,43 +1,44 @@
 package com.now.naaga.auth.presentation;
 
+import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_HEADER;
+import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN;
+import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import com.now.naaga.auth.domain.AuthTokens;
 import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
-import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.common.CommonControllerTest;
+import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.player.fixture.PlayerFixture;
-import com.now.naaga.player.persistence.repository.PlayerRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import static com.now.naaga.auth.exception.AuthExceptionType.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
+@SuppressWarnings("NonAsciiCharacters")
+@DisplayNameGeneration(ReplaceUnderscores.class)
 public class AuthInterceptorTest extends CommonControllerTest {
 
     @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
-    private PlayerRepository playerRepository;
-
-    @Autowired
     private JwtGenerator jwtGenerator;
 
     @Autowired
-    private JwtProvider jwtProvider;
+    private PlayerBuilder playerBuilder;
 
     @BeforeEach
-    protected void setUp(){
+    protected void setUp() {
         super.setUp();
     }
 
@@ -45,12 +46,12 @@ public class AuthInterceptorTest extends CommonControllerTest {
     void 인증_헤더_정보가_존재하지_않을_때_401_응답한다() {
         // given & when
         final ExtractableResponse<Response> extract = RestAssured.given()
-                .log().all()
-                .when()
-                .get("/statistics/my")
-                .then()
-                .log().all()
-                .extract();
+                                                                 .log().all()
+                                                                 .when()
+                                                                 .get("/statistics/my")
+                                                                 .then()
+                                                                 .log().all()
+                                                                 .extract();
         // then
         final int actualStatusCode = extract.statusCode();
         final int expectedStatusCode = NOT_EXIST_HEADER.httpStatus().value();
@@ -59,8 +60,8 @@ public class AuthInterceptorTest extends CommonControllerTest {
         assertSoftly(softly -> {
             softly.assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
             softly.assertThat(actualResponse)
-                    .usingRecursiveComparison()
-                    .isEqualTo(expectedResponse);
+                  .usingRecursiveComparison()
+                  .isEqualTo(expectedResponse);
         });
     }
 
@@ -71,13 +72,13 @@ public class AuthInterceptorTest extends CommonControllerTest {
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
-                .log().all()
-                .auth().preemptive().basic(savedMember.getEmail(), "1111")
-                .when()
-                .get("/statistics/my")
-                .then()
-                .log().all()
-                .extract();
+                                                                 .log().all()
+                                                                 .auth().preemptive().basic(savedMember.getEmail(), "1111")
+                                                                 .when()
+                                                                 .get("/statistics/my")
+                                                                 .then()
+                                                                 .log().all()
+                                                                 .extract();
 
         // then
         final int actualStatusCode = extract.statusCode();
@@ -87,8 +88,8 @@ public class AuthInterceptorTest extends CommonControllerTest {
         assertSoftly(softly -> {
             softly.assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
             softly.assertThat(actualResponse)
-                    .usingRecursiveComparison()
-                    .isEqualTo(expectedResponse);
+                  .usingRecursiveComparison()
+                  .isEqualTo(expectedResponse);
         });
     }
 
@@ -101,13 +102,13 @@ public class AuthInterceptorTest extends CommonControllerTest {
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
-                .log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .when()
-                .get("/statistics/my")
-                .then()
-                .log().all()
-                .extract();
+                                                                 .log().all()
+                                                                 .header("Authorization", "Bearer " + accessToken)
+                                                                 .when()
+                                                                 .get("/statistics/my")
+                                                                 .then()
+                                                                 .log().all()
+                                                                 .extract();
 
         // then
         final int actualStatusCode = extract.statusCode();
@@ -117,8 +118,8 @@ public class AuthInterceptorTest extends CommonControllerTest {
         assertSoftly(softly -> {
             softly.assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
             softly.assertThat(actualResponse)
-                    .usingRecursiveComparison()
-                    .isEqualTo(expectedResponse);
+                  .usingRecursiveComparison()
+                  .isEqualTo(expectedResponse);
         });
     }
 
@@ -131,13 +132,13 @@ public class AuthInterceptorTest extends CommonControllerTest {
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
-                .log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .when()
-                .get("/statistics/my")
-                .then()
-                .log().all()
-                .extract();
+                                                                 .log().all()
+                                                                 .header("Authorization", "Bearer " + accessToken)
+                                                                 .when()
+                                                                 .get("/statistics/my")
+                                                                 .then()
+                                                                 .log().all()
+                                                                 .extract();
 
         // then
         final int actualStatusCode = extract.statusCode();
@@ -147,28 +148,29 @@ public class AuthInterceptorTest extends CommonControllerTest {
         assertSoftly(softly -> {
             softly.assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
             softly.assertThat(actualResponse)
-                    .usingRecursiveComparison()
-                    .isEqualTo(expectedResponse);
+                  .usingRecursiveComparison()
+                  .isEqualTo(expectedResponse);
         });
     }
 
     @Test
     void 인증_헤더의_토큰_정보가_존재하는_멤버일_때_정상응답한다() {
         // given
-        final Player player = PlayerFixture.PLAYER();
-        final Player savedPlayer = playerRepository.save(player);
-        final AuthTokens authTokens = jwtGenerator.generate(savedPlayer.getMember().getId());
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final AuthTokens authTokens = jwtGenerator.generate(player.getMember().getId());
         final String accessToken = authTokens.getAccessToken();
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
-                .log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .when()
-                .get("/statistics/my")
-                .then()
-                .log().all()
-                .extract();
+                                                                 .log().all()
+                                                                 .header("Authorization", "Bearer " + accessToken)
+                                                                 .when()
+                                                                 .get("/statistics/my")
+                                                                 .then()
+                                                                 .log().all()
+                                                                 .extract();
 
         // then
         final int actualStatusCode = extract.statusCode();
