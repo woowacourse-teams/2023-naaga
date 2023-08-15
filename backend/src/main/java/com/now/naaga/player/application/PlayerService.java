@@ -1,6 +1,7 @@
 package com.now.naaga.player.application;
 
 import com.now.naaga.player.application.dto.CreatePlayerCommand;
+import com.now.naaga.player.application.dto.DeletePlayerCommand;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.exception.PlayerException;
@@ -32,7 +33,7 @@ public class PlayerService {
 
     @Transactional(readOnly = true)
     public Player findPlayerByMemberId(final Long memberId) {
-        List<Player> playersByMemberId = playerRepository.findByMemberIdAndDeletedFalse(memberId);
+        List<Player> playersByMemberId = playerRepository.findByMemberId(memberId);
 
         if (playersByMemberId.isEmpty()) {
             throw new PlayerException(PlayerExceptionType.PLAYER_NOT_FOUND);
@@ -82,5 +83,12 @@ public class PlayerService {
     public Player create(final CreatePlayerCommand createPlayerCommand) {
         final Player player = new Player(createPlayerCommand.nickname(), new Score(0), createPlayerCommand.member());
         return playerRepository.save(player);
+    }
+
+    public void deleteByMemberId(final DeletePlayerCommand deletePlayerCommand) {
+        final List<Player> players = playerRepository.findByMemberId(deletePlayerCommand.memberId());
+        for (Player player : players) {
+            player.delete();
+        }
     }
 }

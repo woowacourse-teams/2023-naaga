@@ -11,10 +11,12 @@ import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.auth.presentation.AuthRepository;
 import com.now.naaga.member.application.CreateMemberCommand;
+import com.now.naaga.member.application.DeleteMemberCommand;
 import com.now.naaga.member.application.MemberService;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.application.dto.CreatePlayerCommand;
+import com.now.naaga.player.application.dto.DeletePlayerCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,14 +83,10 @@ public class AuthService {
     }
 
     public void deleteAccount(final MemberAuth memberAuth) {
-        // 1. 언링크
+        final Long memberId = memberAuth.getMemberId();
         final Long authId = memberAuth.getAuthId();
         authClient.requestUnlink(authId);
-
-//        // 2. 플레이어 삭제
-//        playerService.deleteByMemberId(new DeletePlayerCommand(memberId));
-//
-//        // 3. 멤버 삭제
-//        memberService.deleteByMemberId(new DeleteMemberCommand(memberId));
+        playerService.deleteByMemberId(new DeletePlayerCommand(memberId));
+        memberService.deleteByMemberId(new DeleteMemberCommand(memberId));
     }
 }

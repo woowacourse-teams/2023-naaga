@@ -22,7 +22,7 @@ public class MemberService {
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public Member findMemberByEmail(final String email) {
-        return memberRepository.findByEmailAndDeletedFalse(email)
+        return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
     }
 
@@ -42,5 +42,11 @@ public class MemberService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
         // TODO: 8/14/23 멤버 소프트 딜리트 하는 작업 
+    }
+
+    public void deleteByMemberId(final DeleteMemberCommand deleteMemberCommand) {
+        final Member member = memberRepository.findById(deleteMemberCommand.memberId())
+                .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
+        member.delete();
     }
 }

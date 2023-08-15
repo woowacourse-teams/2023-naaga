@@ -13,8 +13,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import org.hibernate.annotations.Where;
+
 import java.util.Objects;
 
+import static java.lang.Boolean.FALSE;
+
+@Where(clause = "deleted=false")
 @Entity
 public class Player extends BaseEntity {
 
@@ -33,7 +38,7 @@ public class Player extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private boolean deleted = false;
+    private boolean deleted = FALSE;
 
     protected Player() {
     }
@@ -41,7 +46,7 @@ public class Player extends BaseEntity {
     public Player(final String nickname,
                   final Score totalScore,
                   final Member member) {
-        this(null, nickname, totalScore, member, false);
+        this(null, nickname, totalScore, member, FALSE);
     }
 
     public Player(final Long id, final String nickname, final Score totalScore, final Member member, final boolean deleted) {

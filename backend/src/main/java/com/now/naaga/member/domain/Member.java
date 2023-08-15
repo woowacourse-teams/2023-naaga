@@ -2,9 +2,11 @@ package com.now.naaga.member.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 import java.util.Objects;
 
+@Where(clause = "deleted=false")
 @Entity
 public class Member extends BaseEntity {
 
