@@ -1,5 +1,11 @@
 package com.now.naaga.game.domain;
 
+import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
+import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
+import static com.now.naaga.common.fixture.PositionFixture.GS25_방이도곡점_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.던킨도너츠_올림픽공원점_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_근처_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
 import static com.now.naaga.game.domain.EndType.ARRIVED;
 import static com.now.naaga.game.domain.EndType.GIVE_UP;
 import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
@@ -9,12 +15,6 @@ import static com.now.naaga.game.domain.ResultType.FAIL;
 import static com.now.naaga.game.domain.ResultType.SUCCESS;
 import static com.now.naaga.game.exception.GameExceptionType.ALREADY_DONE;
 import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
-import static com.now.naaga.game.fixture.MemberFixture.MEMBER_CHAE;
-import static com.now.naaga.game.fixture.PlaceFixture.잠실_루터회관;
-import static com.now.naaga.game.fixture.PlayerFixture.PLAYER;
-import static com.now.naaga.game.fixture.PositionFixture.GS25_방이도곡점_좌표;
-import static com.now.naaga.game.fixture.PositionFixture.던킨도너츠_올림픽공원점_좌표;
-import static com.now.naaga.game.fixture.PositionFixture.잠실_루터회관_정문_근처_좌표;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -36,14 +36,14 @@ import org.springframework.test.context.ActiveProfiles;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class GameTest {
 
-    private final Player player = PLAYER("chae", MEMBER_CHAE());
-    ;
+    private final Player player = PLAYER();
+
     private Game game;
 
     @Test
     void 게임을_포기한_경우_진행중인_게임은_실패로_종료한다() {
         // given
-        Place destination = 잠실_루터회관(player);
+        Place destination = PLACE(잠실_루터회관_정문_좌표, player);
         Position startPosition = 던킨도너츠_올림픽공원점_좌표;
         Position currentPosition = GS25_방이도곡점_좌표;
         game = new Game(player, destination, startPosition);
@@ -61,7 +61,7 @@ class GameTest {
     @ValueSource(ints = {1, 2, 3, 4, 5})
     void 제한_횟수_내에_목적지에_도착한_경우_진행중인_게임은_성공으로_종료한다(int remainingAttempts) {
         // given
-        Place destination = 잠실_루터회관(player);
+        Place destination = PLACE(잠실_루터회관_정문_좌표, player);
         Position startPosition = 던킨도너츠_올림픽공원점_좌표;
         Position currentPosition = 잠실_루터회관_정문_근처_좌표;
         game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
@@ -79,7 +79,7 @@ class GameTest {
     void 마지막_시도에_도착하지_못한_경우_진행중인_게임은_실패로_종료한다() {
         // given
         int remainingAttempts = 1;
-        Place destination = 잠실_루터회관(player);
+        Place destination = PLACE(잠실_루터회관_정문_좌표, player);
         Position startPosition = 던킨도너츠_올림픽공원점_좌표;
         Position currentPosition = GS25_방이도곡점_좌표;
         game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
@@ -98,7 +98,7 @@ class GameTest {
     @ValueSource(ints = {0, 1, 2, 3, 4, 5})
     void 게임이_종료된_경우_예외가_발생한다(int remainingAttempts) {
         // given
-        Place destination = 잠실_루터회관(player);
+        Place destination = PLACE(잠실_루터회관_정문_좌표, player);
         Position startPosition = 던킨도너츠_올림픽공원점_좌표;
         Position currentPosition = 잠실_루터회관_정문_근처_좌표;
         game = new Game(DONE, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
@@ -112,7 +112,7 @@ class GameTest {
     @ValueSource(ints = {2, 3, 4, 5})
     void 마지막_시도가_아닌_제한_횟수_내에_목적지에_도착하지_못한_경우_예외가_발생한다(int remainingAttempts) {
         // given
-        Place destination = 잠실_루터회관(player);
+        Place destination = PLACE(잠실_루터회관_정문_좌표, player);
         Position startPosition = 던킨도너츠_올림픽공원점_좌표;
         Position currentPosition = GS25_방이도곡점_좌표;
         game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
