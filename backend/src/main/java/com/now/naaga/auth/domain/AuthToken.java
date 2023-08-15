@@ -23,10 +23,6 @@ public class AuthToken {
     public AuthToken() {
     }
 
-    public AuthToken(final String accessToken, final String refreshToken) {
-        this(null, accessToken, refreshToken, null);
-    }
-
     public AuthToken(final String accessToken, final String refreshToken, final Member member) {
         this(null, accessToken, refreshToken, member);
     }
@@ -38,12 +34,20 @@ public class AuthToken {
         this.member = member;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getAccessToken() {
         return accessToken;
     }
 
     public String getRefreshToken() {
         return refreshToken;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     @Override

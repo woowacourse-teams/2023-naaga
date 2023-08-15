@@ -50,7 +50,7 @@ public class AuthService {
     public AuthToken login(final AuthCommand authCommand) {
         final AuthInfo authInfo = authClient.requestOauthInfo(authCommand.token());
         final Member member = findOrCreateMember(authInfo);
-        final AuthToken generatedAuthToken = authTokenGenerator.generate(member.getId(), authInfo.getId(), authCommand.type());
+        final AuthToken generatedAuthToken = authTokenGenerator.generate(member, authInfo.getId(), authCommand.type());
         return authRepository.save(generatedAuthToken);
     }
 

@@ -16,6 +16,7 @@ import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.common.infrastructure.FileManager;
+import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.exception.PlaceExceptionType;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
@@ -67,10 +68,8 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Player player = playerRepository.save(PLAYER());
         final Place SEOUL = SEOUL_PLACE();
         when(fileManager.save(any())).thenReturn(new File("/임시경로", "이미지.png"));
-
-
-        final Long memberId = player.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
+        final Member member = player.getMember();
+        final AuthToken generate = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
         //when
         final ExtractableResponse<Response> extract = given()
@@ -112,8 +111,8 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Player player = place.getRegisteredPlayer();
         final Place SEOUL = SEOUL_PLACE();
 
-        final Long memberId = player.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
+        final Member member = player.getMember();
+        final AuthToken generate = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
 
         //when
@@ -153,8 +152,8 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Player player = place.getRegisteredPlayer();
         final Place SEOUL = SEOUL_PLACE();
 
-        final Long memberId = player.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
+        final Member member = player.getMember();
+        final AuthToken generate = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
         //when
         final ExtractableResponse<Response> extract = given()
@@ -184,8 +183,8 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place SEOUL = placeRepository.save(SEOUL_PLACE());
         final Player player = SEOUL.getRegisteredPlayer();
 
-        final Long memberId = player.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
+        final Member member = player.getMember();
+        final AuthToken generate = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
 
         //when

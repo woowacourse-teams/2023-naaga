@@ -76,8 +76,8 @@ public class StatisticControllerTest extends CommonControllerTest {
         
         final Statistic statistic = gameService.findStatistic(new PlayerRequest(player1.getId()));
         
-        final Long memberId = player1.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
+        final Member member = player1.getMember();
+        final AuthToken generate = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
         
         // when

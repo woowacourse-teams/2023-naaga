@@ -131,7 +131,7 @@ class AuthControllerTest extends CommonControllerTest {
         final String expiredAccessToken = jwtProvider.generate(convertedString, accessTokenExpiredAt);
         final String validRefreshToken = jwtProvider.generate(convertedString, refreshTokenExpiredAt);
 
-        authRepository.save(new AuthToken(expiredAccessToken, validRefreshToken));
+        authRepository.save(new AuthToken(expiredAccessToken, validRefreshToken, member));
 
         //when
         final ExtractableResponse<Response> extract = RestAssured.given()
@@ -170,7 +170,7 @@ class AuthControllerTest extends CommonControllerTest {
         final String validAccessToken = jwtProvider.generate(convertedString, accessTokenExpiredAt);
         final String validRefreshToken = jwtProvider.generate(convertedString, refreshTokenExpiredAt);
 
-        authRepository.save(new AuthToken(validAccessToken, validRefreshToken));
+        authRepository.save(new AuthToken(validAccessToken, validRefreshToken, member));
 
         //when
         final ExtractableResponse<Response> extract = RestAssured.given()
@@ -211,7 +211,7 @@ class AuthControllerTest extends CommonControllerTest {
         final String expiredAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
         final String expiredRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
 
-        authRepository.save(new AuthToken(expiredAccessToken, expiredRefreshToken));
+        authRepository.save(new AuthToken(expiredAccessToken, expiredRefreshToken, member));
 
         //when
         final ExtractableResponse<Response> extract = RestAssured.given()

@@ -9,6 +9,7 @@ import com.now.naaga.auth.infrastructure.MemberAuthMapper;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.common.exception.InternalException;
 import com.now.naaga.common.exception.InternalExceptionType;
+import com.now.naaga.member.domain.Member;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.ObjectError;
 
@@ -28,19 +29,19 @@ public class AuthTokenGenerator {
         this.jwtProvider = jwtProvider;
     }
 
-    public AuthToken generate(final Long memberId,
+    public AuthToken generate(final Member member,
                               final Long authId,
                               final AuthType authType) {
         final long now = (new Date()).getTime();
         final Date accessTokenExpiredAt = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         final Date refreshTokenExpiredAt = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
 
-        final MemberAuth memberAuth = new MemberAuth(memberId, authId, authType);
+        final MemberAuth memberAuth = new MemberAuth(member.getId(), authId, authType);
         final String subject = MemberAuthMapper.convertMemberAuthToString(memberAuth);
         final String accessToken = jwtProvider.generate(subject, accessTokenExpiredAt);
         final String refreshToken = jwtProvider.generate(subject, refreshTokenExpiredAt);
 
-        return new AuthToken(accessToken, refreshToken);
+        return new AuthToken(accessToken, refreshToken, member);
     }
 
     public AuthToken refresh(final AuthToken authToken) {
@@ -52,6 +53,6 @@ public class AuthTokenGenerator {
             throw new AuthException(INVALID_TOKEN_ACCESS);
         }
 
-        return generate(memberAuth.getMemberId(), memberAuth.getAuthId(), memberAuth.getAuthType());
+        return generate(authToken.getMember(), memberAuth.getAuthId(), memberAuth.getAuthType());
     }
 }

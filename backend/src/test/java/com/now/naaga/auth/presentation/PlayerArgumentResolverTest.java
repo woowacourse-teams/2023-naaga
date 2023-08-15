@@ -46,9 +46,9 @@ public class PlayerArgumentResolverTest extends CommonControllerTest {
     void 인증_헤더의_토큰_정보가_존재하지_않는_멤버일_때_예외를_발생한다() {
         // given
         final Player player = playerRepository.save(new Player("delete", new Score(0), new Member("another@woowa.com")));
-        final Long id = player.getMember().getId();
+        final Member member = player.getMember();
         playerRepository.delete(player);
-        final AuthToken authToken = authTokenGenerator.generate(id, 1L, AuthType.KAKAO);
+        final AuthToken authToken = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
         final String accessToken = authToken.getAccessToken();
 
         // when
@@ -78,8 +78,8 @@ public class PlayerArgumentResolverTest extends CommonControllerTest {
     void 인증_헤더의_토큰_정보가_존재하는_멤버일_때_정상응답한다() {
         // given
         final Player player = playerRepository.save(new Player("delete", new Score(0), new Member("another@woowa.com")));
-        final Long id = player.getMember().getId();
-        final AuthToken authToken = authTokenGenerator.generate(id, 1L, AuthType.KAKAO);
+        final Member member = player.getMember();
+        final AuthToken authToken = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
         final String accessToken = authToken.getAccessToken();
 
         // when

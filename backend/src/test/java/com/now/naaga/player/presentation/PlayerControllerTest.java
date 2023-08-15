@@ -38,13 +38,12 @@ public class PlayerControllerTest extends CommonControllerTest {
     @Test
     void 멤버의_랭크를_조회한다() {
         // given
-        Player chae = playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com")));
+        final Player chae = playerRepository.save(new Player("채채", new Score(15), new Member("chaechae@woo.com")));
         playerRepository.save(new Player("이레", new Score(17), new Member("irea@woo.com")));
         playerRepository.save(new Player("채리", new Score(20), new Member("cherry@woo.com")));
 
-
-        final Long memberId = chae.getMember().getId();
-        final AuthToken generate = authTokenGenerator.generate(memberId, 1L, AuthType.KAKAO);
+        final Member member = chae.getMember();
+        final AuthToken generate = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
 
         // when
