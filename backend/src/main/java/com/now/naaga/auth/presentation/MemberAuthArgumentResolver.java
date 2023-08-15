@@ -7,11 +7,13 @@ import com.now.naaga.auth.presentation.dto.MemberRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Component
 public class MemberAuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AuthenticationExtractor<MemberAuth> authenticationExtractor;
