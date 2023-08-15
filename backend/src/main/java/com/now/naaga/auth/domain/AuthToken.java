@@ -1,9 +1,7 @@
 package com.now.naaga.auth.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.now.naaga.member.domain.Member;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -15,20 +13,29 @@ public class AuthToken {
     private Long id;
 
     private String accessToken;
+
     private String refreshToken;
+
+    @JoinColumn(name = "member_id")
+    @ManyToOne
+    private Member member;
 
     public AuthToken() {
     }
 
     public AuthToken(final String accessToken, final String refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+        this(null, accessToken, refreshToken, null);
     }
 
-    public AuthToken(final Long id, final String accessToken, final String refreshToken) {
+    public AuthToken(final String accessToken, final String refreshToken, final Member member) {
+        this(null, accessToken, refreshToken, member);
+    }
+
+    public AuthToken(final Long id, final String accessToken, final String refreshToken, final Member member) {
         this.id = id;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.member = member;
     }
 
     public String getAccessToken() {

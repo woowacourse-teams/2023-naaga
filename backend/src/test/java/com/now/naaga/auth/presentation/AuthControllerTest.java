@@ -14,6 +14,7 @@ import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.MemberAuthMapper;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
+import com.now.naaga.auth.persistence.AuthRepository;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
 import com.now.naaga.auth.presentation.dto.AuthResponse;
 import com.now.naaga.auth.presentation.dto.RefreshTokenRequest;

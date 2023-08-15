@@ -2,14 +2,13 @@ package com.now.naaga.auth.application;
 
 import com.now.naaga.auth.application.dto.AuthCommand;
 import com.now.naaga.auth.application.dto.AuthInfo;
-import com.now.naaga.auth.application.dto.DeleteAccountCommand;
 import com.now.naaga.auth.application.dto.RefreshTokenCommand;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.auth.presentation.AuthRepository;
+import com.now.naaga.auth.persistence.AuthRepository;
 import com.now.naaga.member.application.CreateMemberCommand;
 import com.now.naaga.member.application.DeleteMemberCommand;
 import com.now.naaga.member.application.MemberService;
@@ -85,6 +84,7 @@ public class AuthService {
     public void deleteAccount(final MemberAuth memberAuth) {
         final Long memberId = memberAuth.getMemberId();
         final Long authId = memberAuth.getAuthId();
+        authRepository.deleteByMemberId(memberId);
         authClient.requestUnlink(authId);
         playerService.deleteByMemberId(new DeletePlayerCommand(memberId));
         memberService.deleteByMemberId(new DeleteMemberCommand(memberId));
