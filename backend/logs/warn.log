@@ -1,0 +1,47 @@
+[2023-08-15 02:00:09:5868][http-nio-auto-2-exec-1] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 02:00:09:5904][http-nio-auto-2-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=102, message='토큰이 만료 되었습니다.'}
+[2023-08-15 02:00:09:6110][http-nio-auto-1-exec-3] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 02:00:09:6126][http-nio-auto-1-exec-4] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 02:00:10:6144][http-nio-auto-1-exec-5] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 유효하지 않습니다.'}
+[2023-08-15 02:00:10:6183][http-nio-auto-1-exec-7] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 존재하지 않습니다.'}
+[2023-08-15 02:12:18:4129][http-nio-auto-1-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=304, message='해당 플레이어는 존재하지 않습니다.'}
+[2023-08-15 02:12:20:5435][http-nio-auto-2-exec-1] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 02:12:20:5474][http-nio-auto-2-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=102, message='토큰이 만료 되었습니다.'}
+[2023-08-15 02:12:20:5685][http-nio-auto-1-exec-3] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 02:12:20:5704][http-nio-auto-1-exec-4] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 02:12:20:5750][http-nio-auto-1-exec-5] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 유효하지 않습니다.'}
+[2023-08-15 02:12:20:5794][http-nio-auto-1-exec-7] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 존재하지 않습니다.'}
+[2023-08-15 02:13:24:4104][http-nio-auto-1-exec-1] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 02:13:25:4562][http-nio-auto-1-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=102, message='토큰이 만료 되었습니다.'}
+[2023-08-15 02:13:26:6277][http-nio-auto-2-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=304, message='해당 플레이어는 존재하지 않습니다.'}
+[2023-08-15 02:13:26:6306][http-nio-auto-2-exec-3] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 02:13:26:6319][http-nio-auto-2-exec-4] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 02:13:27:6341][http-nio-auto-2-exec-5] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 유효하지 않습니다.'}
+[2023-08-15 02:13:27:6369][http-nio-auto-2-exec-7] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 존재하지 않습니다.'}
+[2023-08-15 02:13:27:6793][http-nio-auto-2-exec-9] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=405, message='게임이 진행 중 입니다.'}
+[2023-08-15 02:13:27:6859][http-nio-auto-2-exec-8] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=404, message='게임이 존재하지 않습니다.'}
+[2023-08-15 02:13:28:8115][http-nio-auto-2-exec-3] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=416, message='이미 종료된 게임입니다.'}
+[2023-08-15 02:13:29:9189][http-nio-auto-2-exec-8] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 존재하지 않습니다.'}
+[2023-08-15 02:13:29:9212][http-nio-auto-2-exec-9] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=403, message='게임에 접근할 수 있는 권한이 없습니다.'}
+[2023-08-15 02:13:30:9416][http-nio-auto-2-exec-4] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=406, message='배정 할 목적지가 존재하지 않습니다.'}
+[2023-08-15 02:13:31:10486][http-nio-auto-2-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=415, message='목적지에 도착하지 않았습니다.'}
+[2023-08-15 02:13:36:15999][http-nio-auto-3-exec-5] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=505, message='이미 주변에 장소가 존재합니다.'}
+[2023-08-15 09:15:20:6189][http-nio-auto-1-exec-1] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 09:15:21:6408][http-nio-auto-1-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=102, message='토큰이 만료 되었습니다.'}
+[2023-08-15 09:15:21:6529][http-nio-auto-1-exec-5] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='잘못된 토큰 접근 입니다.'}
+[2023-08-15 09:16:09:4333][http-nio-auto-1-exec-1] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 09:16:09:4654][http-nio-auto-1-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 09:16:09:4676][http-nio-auto-1-exec-3] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 유효하지 않습니다.'}
+[2023-08-15 09:16:09:4773][http-nio-auto-1-exec-5] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 존재하지 않습니다.'}
+[2023-08-15 09:16:09:4823][http-nio-auto-1-exec-7] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=304, message='해당 플레이어는 존재하지 않습니다.'}
+[2023-08-15 09:16:10:5091][http-nio-auto-1-exec-5] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=405, message='게임이 진행 중 입니다.'}
+[2023-08-15 09:16:10:5114][http-nio-auto-1-exec-6] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=404, message='게임이 존재하지 않습니다.'}
+[2023-08-15 09:16:11:6338][http-nio-auto-1-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=416, message='이미 종료된 게임입니다.'}
+[2023-08-15 09:16:12:7416][http-nio-auto-1-exec-5] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='헤더 정보가 존재하지 않습니다.'}
+[2023-08-15 09:16:12:7443][http-nio-auto-1-exec-6] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=403, message='게임에 접근할 수 있는 권한이 없습니다.'}
+[2023-08-15 09:16:12:7536][http-nio-auto-1-exec-8] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=406, message='배정 할 목적지가 존재하지 않습니다.'}
+[2023-08-15 09:16:13:8624][http-nio-auto-1-exec-1] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=415, message='목적지에 도착하지 않았습니다.'}
+[2023-08-15 09:16:18:13186][http-nio-auto-2-exec-6] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=505, message='이미 주변에 장소가 존재합니다.'}
+[2023-08-15 09:16:20:15726][http-nio-auto-3-exec-1] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='토큰 정보가 옳지 않습니다.'}
+[2023-08-15 09:16:20:15758][http-nio-auto-3-exec-2] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=102, message='토큰이 만료 되었습니다.'}
+[2023-08-15 09:16:20:15819][http-nio-auto-3-exec-4] WARN  ControllerExceptionHandler - error = ExceptionResponse{code=101, message='잘못된 토큰 접근 입니다.'}
