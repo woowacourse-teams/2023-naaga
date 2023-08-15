@@ -1,4 +1,4 @@
-package com.now.naaga.auth.presentation;
+package com.now.naaga.auth.presentation.interceptor;
 
 import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;

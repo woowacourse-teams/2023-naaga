@@ -1,7 +1,7 @@
 package com.now.naaga.auth.application;
 
 import com.now.naaga.auth.application.dto.AuthCommand;
-import com.now.naaga.auth.application.dto.AuthInfo;
+import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.application.dto.RefreshTokenCommand;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.exception.AuthException;

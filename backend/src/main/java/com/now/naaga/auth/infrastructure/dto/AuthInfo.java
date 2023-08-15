@@ -1,4 +1,4 @@
-package com.now.naaga.auth.application.dto;
+package com.now.naaga.auth.infrastructure.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

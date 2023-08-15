@@ -1,4 +1,4 @@
-package com.now.naaga.auth.annotation;
+package com.now.naaga.auth.presentation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

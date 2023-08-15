@@ -1,6 +1,6 @@
 package com.now.naaga.auth.infrastructure;
 
-import com.now.naaga.auth.application.dto.AuthInfo;
+import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.exception.AuthExceptionType;
 import com.now.naaga.auth.infrastructure.dto.LogoutInfo;
@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component

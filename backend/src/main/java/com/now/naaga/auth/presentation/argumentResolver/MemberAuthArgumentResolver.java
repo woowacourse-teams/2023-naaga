@@ -1,6 +1,6 @@
-package com.now.naaga.auth.presentation;
+package com.now.naaga.auth.presentation.argumentResolver;
 
-import com.now.naaga.auth.annotation.Auth;
+import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.presentation.dto.MemberRequest;
