@@ -29,22 +29,22 @@ public class AuthService {
 
     private final MemberService memberService;
 
+    private final AuthRepository authRepository;
+
     private final AuthClient authClient;
 
     private final AuthTokenGenerator authTokenGenerator;
 
-    private final AuthRepository authRepository;
-
     public AuthService(final PlayerService playerService,
                        final MemberService memberService,
+                       final AuthRepository authRepository,
                        final AuthClient authClient,
-                       final AuthTokenGenerator authTokenGenerator,
-                       final AuthRepository authRepository) {
+                       final AuthTokenGenerator authTokenGenerator) {
         this.playerService = playerService;
         this.memberService = memberService;
+        this.authRepository = authRepository;
         this.authClient = authClient;
         this.authTokenGenerator = authTokenGenerator;
-        this.authRepository = authRepository;
     }
 
     public AuthToken login(final AuthCommand authCommand) {

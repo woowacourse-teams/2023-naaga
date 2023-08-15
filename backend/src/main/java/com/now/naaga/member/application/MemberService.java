@@ -36,13 +36,6 @@ public class MemberService {
         final Member member = new Member(createMemberCommand.email());
         return memberRepository.save(member);
     }
-    
-    public void delete(final MemberAuth memberAuth) {
-        final Long memberId = memberAuth.getAuthId();
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
-        // TODO: 8/14/23 멤버 소프트 딜리트 하는 작업 
-    }
 
     public void deleteByMemberId(final DeleteMemberCommand deleteMemberCommand) {
         final Member member = memberRepository.findById(deleteMemberCommand.memberId())

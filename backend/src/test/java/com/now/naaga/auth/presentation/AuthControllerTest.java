@@ -3,8 +3,10 @@ package com.now.naaga.auth.presentation;
 import static com.now.naaga.auth.exception.AuthExceptionType.EXPIRED_TOKEN;
 import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN;
 import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN_ACCESS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import com.now.naaga.auth.infrastructure.dto.AuthInfo;
@@ -13,6 +15,7 @@ import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.MemberAuthMapper;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.auth.persistence.AuthRepository;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
@@ -28,6 +31,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Date;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +47,9 @@ class AuthControllerTest extends CommonControllerTest {
 
     @Autowired
     private JwtProvider jwtProvider;
+
+    @Autowired
+    private AuthTokenGenerator authTokenGenerator;
 
     @Autowired
     private AuthRepository authRepository;
@@ -265,6 +273,70 @@ class AuthControllerTest extends CommonControllerTest {
                     .usingRecursiveComparison()
                     .isEqualTo(expectedResponse);
         });
+    }
 
+    @Test
+    void 액세스_토큰을_받아_회원_탈퇴를_진행한다() {
+        // given
+        final Member member = new Member("chae@chae.com");
+        final Player player = new Player("chae", new Score(0), member);
+        playerRepository.save(player);
+
+        final long now = (new Date()).getTime();
+        final Date accessTokenExpiredAt = new Date(now + 1000 * 60 * 60 * 24);
+        final Date refreshTokenExpiredAt = new Date(now + 1000 * 60 * 60 * 24);
+
+        final String validAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
+        final String validRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
+        authRepository.save(new AuthToken(validAccessToken, validRefreshToken, member));
+        doNothing().when(authClient).requestUnlink(any());
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured.given()
+                .log().all()
+                .header("Authorization", "Bearer " + validAccessToken)
+                .when()
+                .delete("/auth/unlink")
+                .then()
+                .log().all()
+                .extract();
+
+        // then
+        final int actualStatusCode = extract.statusCode();
+        final int expectedStatusCode = HttpStatus.NO_CONTENT.value();
+
+        assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
+    }
+
+    @Test
+    void 액세스_토큰을_받아_로그아웃을_진행한다() {
+        // given
+        final Member member = new Member("chae@chae.com");
+        final Player player = new Player("chae", new Score(0), member);
+        playerRepository.save(player);
+
+        final long now = (new Date()).getTime();
+        final Date accessTokenExpiredAt = new Date(now + 1000 * 60 * 60 * 24);
+        final Date refreshTokenExpiredAt = new Date(now + 1000 * 60 * 60 * 24);
+        final String validAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
+        final String validRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
+        authRepository.save(new AuthToken(validAccessToken, validRefreshToken, member));
+        doNothing().when(authClient).requestLogout(any());
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured.given()
+                .log().all()
+                .header("Authorization", "Bearer " + validAccessToken)
+                .when()
+                .delete("/auth")
+                .then()
+                .log().all()
+                .extract();
+
+        // then
+        final int actualStatusCode = extract.statusCode();
+        final int expectedStatusCode = HttpStatus.NO_CONTENT.value();
+
+        assertThat(actualStatusCode).isEqualTo(expectedStatusCode);
     }
 }
