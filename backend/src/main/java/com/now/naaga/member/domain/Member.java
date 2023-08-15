@@ -2,11 +2,13 @@ package com.now.naaga.member.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.util.Objects;
 
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE member SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Entity
 public class Member extends BaseEntity {
 
@@ -31,11 +33,6 @@ public class Member extends BaseEntity {
         this.id = id;
         this.email = email;
         this.deleted = deleted;
-    }
-
-    public void delete() {
-        this.deleted = true;
-        this.email = DELETED_EMAIL;
     }
 
     public Long getId() {

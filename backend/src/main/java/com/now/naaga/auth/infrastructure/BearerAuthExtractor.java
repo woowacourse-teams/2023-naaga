@@ -3,10 +3,10 @@ package com.now.naaga.auth.infrastructure;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.auth.exception.AuthException;
+import com.now.naaga.common.exception.InternalException;
 import org.springframework.stereotype.Component;
 
-import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_HEADER;
-import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
+import static com.now.naaga.auth.exception.AuthExceptionType.*;
 
 @Component
 public class BearerAuthExtractor implements AuthenticationExtractor<MemberAuth> {
@@ -29,6 +29,10 @@ public class BearerAuthExtractor implements AuthenticationExtractor<MemberAuth> 
         final String accessToken = header.substring(BEARER_TYPE.length()).trim();
 
         final String subject = jwtProvider.extractSubject(accessToken);
-        return MemberAuthMapper.convertStringToMemberAuth(subject);
+        try {
+            return MemberAuthMapper.convertStringToMemberAuth(subject);
+        } catch (InternalException e) {
+            throw new AuthException(INVALID_TOKEN);
+        }
     }
 }

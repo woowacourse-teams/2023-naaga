@@ -1,11 +1,11 @@
 package com.now.naaga.common.config;
 
 import com.now.naaga.auth.presentation.interceptor.AuthInterceptor;
-import com.now.naaga.auth.presentation.argumentResolver.PlayerArgumentResolver;
+import com.now.naaga.auth.presentation.argumentresolver.PlayerArgumentResolver;
 
 import java.util.List;
 
-import com.now.naaga.auth.presentation.argumentResolver.MemberAuthArgumentResolver;
+import com.now.naaga.auth.presentation.argumentresolver.MemberAuthArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

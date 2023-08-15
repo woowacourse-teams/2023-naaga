@@ -38,8 +38,11 @@ public class MemberService {
     }
 
     public void deleteByMemberId(final DeleteMemberCommand deleteMemberCommand) {
-        final Member member = memberRepository.findById(deleteMemberCommand.memberId())
+        final Long memberId = deleteMemberCommand.memberId();
+        System.out.println("=---------------------------");
+        System.out.println(memberId);
+        final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
-        member.delete();
+        memberRepository.delete(member);
     }
 }

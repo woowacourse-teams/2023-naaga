@@ -87,8 +87,6 @@ public class PlayerService {
 
     public void deleteByMemberId(final DeletePlayerCommand deletePlayerCommand) {
         final List<Player> players = playerRepository.findByMemberId(deletePlayerCommand.memberId());
-        for (Player player : players) {
-            player.delete();
-        }
+        playerRepository.deleteAll(players);
     }
 }

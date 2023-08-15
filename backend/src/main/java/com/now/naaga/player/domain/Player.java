@@ -13,13 +13,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.util.Objects;
 
 import static java.lang.Boolean.FALSE;
 
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE player SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Entity
 public class Player extends BaseEntity {
 
@@ -34,7 +36,7 @@ public class Player extends BaseEntity {
     @Embedded
     private Score totalScore;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -59,11 +61,6 @@ public class Player extends BaseEntity {
 
     public void addScore(Score score) {
         this.totalScore = this.totalScore.plus(score);
-    }
-
-    public void delete() {
-        this.deleted = true;
-        this.totalScore = null;
     }
 
     public Long getId() {

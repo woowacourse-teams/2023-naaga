@@ -1,19 +1,10 @@
 package com.now.naaga.auth.presentation;
 
-import static com.now.naaga.auth.exception.AuthExceptionType.EXPIRED_TOKEN;
-import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN;
-import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN_ACCESS;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-
-import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.MemberAuthMapper;
+import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
@@ -30,15 +21,21 @@ import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Date;
-
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import java.util.Date;
+
+import static com.now.naaga.auth.exception.AuthExceptionType.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 class AuthControllerTest extends CommonControllerTest {
 
@@ -281,20 +278,14 @@ class AuthControllerTest extends CommonControllerTest {
         final Member member = new Member("chae@chae.com");
         final Player player = new Player("chae", new Score(0), member);
         playerRepository.save(player);
-
-        final long now = (new Date()).getTime();
-        final Date accessTokenExpiredAt = new Date(now + 1000 * 60 * 60 * 24);
-        final Date refreshTokenExpiredAt = new Date(now + 1000 * 60 * 60 * 24);
-
-        final String validAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
-        final String validRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
-        authRepository.save(new AuthToken(validAccessToken, validRefreshToken, member));
+        final AuthToken authToken = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
+        authRepository.save(authToken);
         doNothing().when(authClient).requestUnlink(any());
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
                 .log().all()
-                .header("Authorization", "Bearer " + validAccessToken)
+                .header("Authorization", "Bearer " + authToken.getAccessToken())
                 .when()
                 .delete("/auth/unlink")
                 .then()
@@ -314,19 +305,14 @@ class AuthControllerTest extends CommonControllerTest {
         final Member member = new Member("chae@chae.com");
         final Player player = new Player("chae", new Score(0), member);
         playerRepository.save(player);
-
-        final long now = (new Date()).getTime();
-        final Date accessTokenExpiredAt = new Date(now + 1000 * 60 * 60 * 24);
-        final Date refreshTokenExpiredAt = new Date(now + 1000 * 60 * 60 * 24);
-        final String validAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
-        final String validRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
-        authRepository.save(new AuthToken(validAccessToken, validRefreshToken, member));
+        final AuthToken authToken = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
+        authRepository.save(authToken);
         doNothing().when(authClient).requestLogout(any());
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
                 .log().all()
-                .header("Authorization", "Bearer " + validAccessToken)
+                .header("Authorization", "Bearer " + authToken.getAccessToken())
                 .when()
                 .delete("/auth")
                 .then()

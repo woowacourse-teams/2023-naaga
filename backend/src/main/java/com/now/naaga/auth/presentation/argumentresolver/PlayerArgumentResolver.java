@@ -1,4 +1,4 @@
-package com.now.naaga.auth.presentation.argumentResolver;
+package com.now.naaga.auth.presentation.argumentresolver;
 
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
