@@ -1,14 +1,14 @@
 package com.now.naaga.member.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Entity
 public class Member extends BaseEntity {
+
+    private static final String DELETED_EMAIL = "NONE";
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -16,17 +16,24 @@ public class Member extends BaseEntity {
 
     private String email;
 
+    private boolean deleted = false;
+
     protected Member() {
     }
 
     public Member(final String email) {
-        this.email = email;
+        this(null, email, false);
     }
 
-    public Member(final Long id,
-                  final String email) {
+    public Member(final Long id, final String email, final boolean deleted) {
         this.id = id;
         this.email = email;
+        this.deleted = deleted;
+    }
+
+    public void delete() {
+        this.deleted = true;
+        this.email = DELETED_EMAIL;
     }
 
     public Long getId() {

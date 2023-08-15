@@ -28,7 +28,7 @@ class MemberRepositoryTest {
         final Member saveMember = memberRepository.save(new Member("1111@woowa.com"));
 
 // when
-        final Member foundMember = memberRepository.findByEmail(saveMember.getEmail()).get();
+        final Member foundMember = memberRepository.findByEmailAndDeletedFalse(saveMember.getEmail()).get();
 
 // then
         assertThat(foundMember.getId()).isEqualTo(1L);

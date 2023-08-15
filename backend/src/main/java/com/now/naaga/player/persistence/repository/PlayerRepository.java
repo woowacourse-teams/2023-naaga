@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
-    List<Player> findByMemberId(final Long memberId);
+    List<Player> findByMemberIdAndDeletedFalse(final Long memberId);
 }

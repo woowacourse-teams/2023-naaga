@@ -56,7 +56,7 @@ class AuthServiceTest {
 
         // when
         final AuthToken actual = authService.login(authCommand);
-        final Optional<Member> maybeMember = memberRepository.findByEmail(member.getEmail());
+        final Optional<Member> maybeMember = memberRepository.findByEmailAndDeletedFalse(member.getEmail());
 
         //given
         assertSoftly(softly -> {

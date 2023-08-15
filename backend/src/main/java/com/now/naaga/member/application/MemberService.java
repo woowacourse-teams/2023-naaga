@@ -22,7 +22,7 @@ public class MemberService {
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public Member findMemberByEmail(final String email) {
-        return memberRepository.findByEmail(email)
+        return memberRepository.findByEmailAndDeletedFalse(email)
                 .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
     }
 

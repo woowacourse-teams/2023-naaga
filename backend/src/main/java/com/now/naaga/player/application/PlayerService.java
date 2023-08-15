@@ -32,7 +32,7 @@ public class PlayerService {
 
     @Transactional(readOnly = true)
     public Player findPlayerByMemberId(final Long memberId) {
-        List<Player> playersByMemberId = playerRepository.findByMemberId(memberId);
+        List<Player> playersByMemberId = playerRepository.findByMemberIdAndDeletedFalse(memberId);
 
         if (playersByMemberId.isEmpty()) {
             throw new PlayerException(PlayerExceptionType.PLAYER_NOT_FOUND);

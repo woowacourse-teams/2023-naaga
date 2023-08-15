@@ -33,27 +33,32 @@ public class Player extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private boolean deleted = false;
+
     protected Player() {
     }
 
     public Player(final String nickname,
                   final Score totalScore,
                   final Member member) {
-        this(null, nickname, totalScore, member);
+        this(null, nickname, totalScore, member, false);
     }
 
-    public Player(final Long id,
-                  final String nickname,
-                  final Score totalScore,
-                  final Member member) {
+    public Player(final Long id, final String nickname, final Score totalScore, final Member member, final boolean deleted) {
         this.id = id;
         this.nickname = nickname;
         this.totalScore = totalScore;
         this.member = member;
+        this.deleted = deleted;
     }
-    
+
     public void addScore(Score score) {
         this.totalScore = this.totalScore.plus(score);
+    }
+
+    public void delete() {
+        this.deleted = true;
+        this.totalScore = null;
     }
 
     public Long getId() {
