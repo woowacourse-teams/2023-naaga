@@ -40,7 +40,6 @@ class GameScorePolicyTest {
         //when
         Score furtherAreaScore = gameScorer.calculate(gameHasDestinationInFurtherArea);
         Score nearerAreaScore = gameScorer.calculate(gameHasDestinationInNearArea);
-        System.out.println(furtherAreaScore + "  " + nearerAreaScore); //todo :지우기
 
         //then
         assertThat(furtherAreaScore.isHigherThan(nearerAreaScore))
@@ -60,7 +59,6 @@ class GameScorePolicyTest {
         //when
         Score slowerGameScore = gameScorer.calculate(slowerGame);
         Score fasterGameScore = gameScorer.calculate(fasterGame);
-        System.out.println(slowerGameScore + "  " + fasterGameScore); //todo :지우기
         //then
         assertThat(fasterGameScore.isHigherThan(slowerGameScore))
                 .isTrue();
@@ -79,7 +77,6 @@ class GameScorePolicyTest {
         //when
         Score threeHintsGameScore = gameScorer.calculate(threeHintsGame);
         Score oneHintsGameScore = gameScorer.calculate(oneHintsGame);
-        System.out.println(threeHintsGameScore + "  " + oneHintsGameScore); //todo :지우기
         //then
         assertThat(oneHintsGameScore.isHigherThan(threeHintsGameScore))
                 .isTrue();
@@ -99,7 +96,6 @@ class GameScorePolicyTest {
         //when
         Score threeRemainingAttemptsGameScore = gameScorer.calculate(threeRemainingAttemptsGame);
         Score oneRemainingAttemptsGameScore = gameScorer.calculate(oneRemainingAttemptsGame);
-        System.out.println(threeRemainingAttemptsGameScore + "  " + oneRemainingAttemptsGameScore); //todo :지우기
         //then
         assertThat(threeRemainingAttemptsGameScore.isHigherThan(oneRemainingAttemptsGameScore))
                 .isTrue();
