@@ -89,4 +89,11 @@ public class AuthService {
         playerService.deleteByMemberId(new DeletePlayerCommand(memberId));
         memberService.deleteByMemberId(new DeleteMemberCommand(memberId));
     }
+
+    public void logout(final MemberAuth memberAuth) {
+        final Long memberId = memberAuth.getMemberId();
+        final Long authId = memberAuth.getAuthId();
+        authRepository.deleteByMemberId(memberId);
+        authClient.requestLogout(authId);
+    }
 }

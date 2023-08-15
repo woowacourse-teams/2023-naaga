@@ -49,4 +49,11 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> logout(@Auth final MemberAuth memberAuth) {
+        authService.logout(memberAuth);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }
