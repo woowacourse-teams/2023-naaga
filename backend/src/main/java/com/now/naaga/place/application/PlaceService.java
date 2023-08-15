@@ -77,7 +77,8 @@ public class PlaceService {
         placeCheckService.checkOtherPlaceNearby(position);
         final File uploadPath = fileManager.save(createPlaceCommand.imageFile());
         try {
-            final Player registeredPlayer = playerService.findPlayerByMemberId(1L);
+            final Long playerId = createPlaceCommand.playerId();
+            final Player registeredPlayer = playerService.findPlayerById(playerId);
             final Place place = new Place(
                     createPlaceCommand.name(),
                     createPlaceCommand.description(),
