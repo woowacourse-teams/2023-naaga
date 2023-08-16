@@ -1,11 +1,9 @@
 name: NAAGA BACKEND PULL REQUEST CI
 
 on:
-  pull_request:
+  push:
     branches: 
-      - dev
-    paths:
-      - backend/**
+      - feat/#214
       
 jobs:
   build_test:
@@ -52,3 +50,6 @@ jobs:
         
     - name: Test with Gradle
       run: ./gradlew test
+
+    - name: Run application (modify this step as needed)
+      run: ./gradlew bootRun --args='--spring.config.location=src/main/resources/application.yml'
