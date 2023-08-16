@@ -1,20 +1,15 @@
 package com.now.naaga.auth.presentation;
 
-import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_HEADER;
-import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN;
-import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-import com.now.naaga.auth.domain.AuthTokens;
-import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
+import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
+import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.player.fixture.PlayerFixture;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -25,6 +20,10 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
+import static com.now.naaga.auth.exception.AuthExceptionType.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -134,9 +133,11 @@ public class AuthInterceptorTest extends CommonControllerTest {
     @Test
     void 인증_헤더의_토큰_정보가_존재하지_않는_멤버일_때_401_응답한다() {
         // given
-        final Member savedMember = memberRepository.save(new Member("chae@chae.com"));
-        final AuthToken authToken = authTokenGenerator.generate(savedMember, 1L, AuthType.KAKAO);
-        final String accessToken = "이상한문자열" + authToken.getAccessToken();
+        final Player player = playerBuilder.init()
+                .build();
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
@@ -164,9 +165,9 @@ public class AuthInterceptorTest extends CommonControllerTest {
     @Test
     void 인증_헤더의_토큰_정보가_존재하는_멤버일_때_정상응답한다() {
         // given
-        final Player player = PlayerFixture.PLAYER();
-        final Player savedPlayer = playerRepository.save(player);
-        final AuthToken authToken = authTokenGenerator.generate(savedPlayer.getMember(), 1L, AuthType.KAKAO);
+        final Player player = playerBuilder.init()
+                .build();
+        final AuthToken authToken = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = authToken.getAccessToken();
 
         // when

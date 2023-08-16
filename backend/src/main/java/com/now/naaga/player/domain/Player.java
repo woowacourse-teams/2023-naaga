@@ -3,16 +3,7 @@ package com.now.naaga.player.domain;
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.score.domain.Score;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -36,8 +27,8 @@ public class Player extends BaseEntity {
     @Embedded
     private Score totalScore;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "member_id")
+    @OneToOne
     private Member member;
 
     private boolean deleted = FALSE;

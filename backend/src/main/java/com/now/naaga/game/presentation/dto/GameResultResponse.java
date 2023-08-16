@@ -14,8 +14,8 @@ public record GameResultResponse(Long id,
                                  int distance,
                                  int hintUses,
                                  int tryCount,
-                                 LocalDateTime startTime,
-                                 LocalDateTime finishTime) {
+                                 String startTime,
+                                 String finishTime) {
 
     public static GameResultResponse from(final GameRecord gameRecord) {
         return new GameResultResponse(
@@ -28,7 +28,7 @@ public record GameResultResponse(Long id,
                 gameRecord.getDistance(),
                 gameRecord.getHintUses(),
                 gameRecord.getTryCount(),
-                gameRecord.getStartTime(),
-                gameRecord.getFinishTime());
+                gameRecord.getStartTime().toString(),
+                gameRecord.getFinishTime().toString());
     }
 }

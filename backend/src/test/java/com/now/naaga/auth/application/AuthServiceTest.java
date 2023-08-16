@@ -6,6 +6,7 @@ import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
+import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.exception.MemberException;
 import com.now.naaga.member.persistence.repository.MemberRepository;
@@ -48,6 +49,9 @@ class AuthServiceTest {
     @Autowired
     private PlayerRepository playerRepository;
 
+    @Autowired
+    private PlayerBuilder playerBuilder;
+
     @MockBean
     private AuthClient authClient;
 
@@ -74,12 +78,11 @@ class AuthServiceTest {
     @Test
     void 존재하는_멤버는_저장_후_토큰을_발급한다() {
         // given
-        final Member member = new Member("chae@chae.com");
-        final Player player = new Player("chae", new Score(0), member);
-        playerRepository.save(player);
+        final Player player = playerBuilder.init()
+                .build();
         final AuthCommand authCommand = new AuthCommand("1234", AuthType.KAKAO);
 
-        when(authClient.requestOauthInfo(any())).thenReturn(AuthInfo.of(member.getEmail(), player.getNickname()));
+        when(authClient.requestOauthInfo(any())).thenReturn(AuthInfo.of(player.getMember().getEmail(), player.getNickname()));
 
         // when
         final AuthToken actual = authService.login(authCommand);
@@ -91,11 +94,10 @@ class AuthServiceTest {
     @Test
     void 탈퇴한다() {
         // given
-        final Member member = new Member("chae@chae.com");
-        final Player player = new Player("chae", new Score(0), member);
-        playerRepository.save(player);
+        final Player player = playerBuilder.init()
+                .build();
         final long authId = 1L;
-        final MemberAuth memberAuth = new MemberAuth(member.getId(), authId, AuthType.KAKAO);
+        final MemberAuth memberAuth = new MemberAuth(player.getMember().getId(), authId, AuthType.KAKAO);
         doNothing().when(authClient).requestUnlink(authId);
         playerRepository.flush();
 
@@ -104,7 +106,7 @@ class AuthServiceTest {
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(memberRepository.findById(member.getId())).isEmpty();
+            softly.assertThat(memberRepository.findById(player.getMember().getId())).isEmpty();
             softly.assertThat(playerRepository.findById(player.getId())).isEmpty();
         });
     }
@@ -113,11 +115,10 @@ class AuthServiceTest {
     @Test
     void 로그아웃한다() {
         // given
-        final Member member = new Member("chae@chae.com");
-        final Player player = new Player("chae", new Score(0), member);
-        playerRepository.save(player);
+        final Player player = playerBuilder.init()
+                .build();
         final long authId = 1L;
-        final MemberAuth memberAuth = new MemberAuth(member.getId(), authId, AuthType.KAKAO);
+        final MemberAuth memberAuth = new MemberAuth(player.getMember().getId(), authId, AuthType.KAKAO);
         doNothing().when(authClient).requestUnlink(authId);
         playerRepository.flush();
 
@@ -126,7 +127,7 @@ class AuthServiceTest {
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(memberRepository.findById(member.getId())).isPresent();
+            softly.assertThat(memberRepository.findById(player.getMember().getId())).isPresent();
             softly.assertThat(playerRepository.findById(player.getId())).isPresent();
         });
     }

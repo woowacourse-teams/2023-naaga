@@ -1,10 +1,6 @@
 package com.now.naaga.auth.presentation;
 
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
-import com.now.naaga.auth.application.dto.AuthInfo;
+import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.MemberAuthMapper;
@@ -18,6 +14,7 @@ import com.now.naaga.auth.presentation.dto.AuthResponse;
 import com.now.naaga.auth.presentation.dto.RefreshTokenRequest;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
@@ -34,12 +31,28 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.util.Date;
+
+import static com.now.naaga.auth.exception.AuthExceptionType.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.spliterator;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 class AuthControllerTest extends CommonControllerTest {
 
     @Autowired
-    private PlayerRepository playerRepository;
+    private JwtProvider jwtProvider;
+
+    @Autowired
+    private AuthTokenGenerator authTokenGenerator;
+
+    @Autowired
+    private AuthRepository authRepository;
 
     @MockBean
     private AuthClient authClient;
@@ -116,19 +129,18 @@ class AuthControllerTest extends CommonControllerTest {
     @Test
     void 유효한_리프레시_토큰으로_만료된_액세스_토큰_발급_요청을_보낸_경우_새로_발급한_액세스_토큰과_리프레시_토큰을_반환한다() {
         // given
-        final Member member = new Member("chae@chae.com");
-        final Player player = new Player("chae", new Score(0), member);
-        playerRepository.save(player);
+        final Player player = playerBuilder.init()
+                .build();
 
         final long now = (new Date()).getTime();
         final Date accessTokenExpiredAt = new Date(now -1);
         final Date refreshTokenExpiredAt = new Date(now + 360000*24);
-        final MemberAuth memberAuth = new MemberAuth(member.getId(), 1l, AuthType.KAKAO);
+        final MemberAuth memberAuth = new MemberAuth(player.getMember().getId(), 1L, AuthType.KAKAO);
         final String convertedString = MemberAuthMapper.convertMemberAuthToString(memberAuth);
         final String expiredAccessToken = jwtProvider.generate(convertedString, accessTokenExpiredAt);
         final String validRefreshToken = jwtProvider.generate(convertedString, refreshTokenExpiredAt);
 
-        authRepository.save(new AuthToken(expiredAccessToken, validRefreshToken, member));
+        authRepository.save(new AuthToken(expiredAccessToken, validRefreshToken, player.getMember()));
 
         //when
         final ExtractableResponse<Response> extract = RestAssured.given()
@@ -155,19 +167,18 @@ class AuthControllerTest extends CommonControllerTest {
     @Test
     void 유효한_리프레시_토큰으로_만료되지_않은_액세스_토큰_발급_요청을_보낸_경우_리프레시_토큰을_폐기하고_예외를_발생한다() {
         // given
-        final Member member = new Member("chae@chae.com");
-        final Player player = new Player("chae", new Score(0), member);
-        playerRepository.save(player);
+        final Player player = playerBuilder.init()
+                .build();
 
         final long now = (new Date()).getTime();
         final Date accessTokenExpiredAt = new Date(now + 360000*24);
         final Date refreshTokenExpiredAt = new Date(now + 360000*24);
-        final MemberAuth memberAuth = new MemberAuth(member.getId(), 1l, AuthType.KAKAO);
+        final MemberAuth memberAuth = new MemberAuth(player.getMember().getId(), 1L, AuthType.KAKAO);
         final String convertedString = MemberAuthMapper.convertMemberAuthToString(memberAuth);
         final String validAccessToken = jwtProvider.generate(convertedString, accessTokenExpiredAt);
         final String validRefreshToken = jwtProvider.generate(convertedString, refreshTokenExpiredAt);
 
-        authRepository.save(new AuthToken(validAccessToken, validRefreshToken, member));
+        authRepository.save(new AuthToken(validAccessToken, validRefreshToken, player.getMember()));
 
         //when
         final ExtractableResponse<Response> extract = RestAssured.given()
@@ -198,17 +209,16 @@ class AuthControllerTest extends CommonControllerTest {
     @Test
     void 리프레시_토큰이_만료된_경우_리프레시_토큰을_폐기하고_예외를_발생한다() {
         // given
-        final Member member = new Member("chae@chae.com");
-        final Player player = new Player("chae", new Score(0), member);
-        playerRepository.save(player);
+        final Player player = playerBuilder.init()
+                .build();
 
         final long now = (new Date()).getTime();
         final Date accessTokenExpiredAt = new Date(now -1 );
         final Date refreshTokenExpiredAt = new Date(now - 1);
-        final String expiredAccessToken = jwtProvider.generate(member.getId().toString(), accessTokenExpiredAt);
-        final String expiredRefreshToken = jwtProvider.generate(member.getId().toString(), refreshTokenExpiredAt);
+        final String expiredAccessToken = jwtProvider.generate(player.getMember().getId().toString(), accessTokenExpiredAt);
+        final String expiredRefreshToken = jwtProvider.generate(player.getMember().getId().toString(), refreshTokenExpiredAt);
 
-        authRepository.save(new AuthToken(expiredAccessToken, expiredRefreshToken, member));
+        authRepository.save(new AuthToken(expiredAccessToken, expiredRefreshToken, player.getMember()));
 
         //when
         final ExtractableResponse<Response> extract = RestAssured.given()
@@ -267,10 +277,9 @@ class AuthControllerTest extends CommonControllerTest {
     @Test
     void 액세스_토큰을_받아_회원_탈퇴를_진행한다() {
         // given
-        final Member member = new Member("chae@chae.com");
-        final Player player = new Player("chae", new Score(0), member);
-        playerRepository.save(player);
-        final AuthToken authToken = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
+        final Player player = playerBuilder.init()
+                .build();
+        final AuthToken authToken = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         authRepository.save(authToken);
         doNothing().when(authClient).requestUnlink(any());
 
@@ -294,10 +303,9 @@ class AuthControllerTest extends CommonControllerTest {
     @Test
     void 액세스_토큰을_받아_로그아웃을_진행한다() {
         // given
-        final Member member = new Member("chae@chae.com");
-        final Player player = new Player("chae", new Score(0), member);
-        playerRepository.save(player);
-        final AuthToken authToken = authTokenGenerator.generate(member, 1L, AuthType.KAKAO);
+        final Player player = playerBuilder.init()
+                .build();
+        final AuthToken authToken = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         authRepository.save(authToken);
         doNothing().when(authClient).requestLogout(any());
 

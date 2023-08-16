@@ -12,8 +12,6 @@ import java.util.Objects;
 @Entity
 public class Member extends BaseEntity {
 
-    private static final String DELETED_EMAIL = "NONE";
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -42,6 +40,7 @@ public class Member extends BaseEntity {
     public String getEmail() {
         return email;
     }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

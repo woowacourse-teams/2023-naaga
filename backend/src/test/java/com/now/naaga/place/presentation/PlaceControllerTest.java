@@ -1,17 +1,11 @@
 package com.now.naaga.place.presentation;
 
-import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
-import static com.now.naaga.common.fixture.PositionFixture.서울_좌표;
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.now.naaga.auth.domain.AuthTokens;
-import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
+import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
@@ -24,12 +18,6 @@ import com.now.naaga.player.domain.Player;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -37,15 +25,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
+import static com.now.naaga.common.fixture.PositionFixture.서울_좌표;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 public class PlaceControllerTest extends CommonControllerTest {
 
     @Autowired
-    private JwtGenerator jwtGenerator;
+    private AuthTokenGenerator authTokenGenerator;
 
     @Autowired
     private PlayerBuilder playerBuilder;
@@ -71,8 +72,7 @@ public class PlaceControllerTest extends CommonControllerTest {
 
         when(fileManager.save(any())).thenReturn(new File("/임시경로", "이미지.png"));
 
-        final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
 
         //when
@@ -129,8 +129,7 @@ public class PlaceControllerTest extends CommonControllerTest {
 
         final Place seoulPlace = PLACE();
 
-        final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
 
         //when
@@ -173,8 +172,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place place = placeBuilder.init()
                                         .build();
 
-        final Long memberId = place.getRegisteredPlayer().getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(place.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
         //when
         final ExtractableResponse<Response> extract = given()
@@ -204,8 +202,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place place = placeBuilder.init()
                                         .build();
 
-        final Long memberId = place.getRegisteredPlayer().getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(place.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
 
         //when
