@@ -29,22 +29,24 @@ jobs:
     - name: Grant execute permissions for gradlew
       run: chmod +x gradlew
 
-    - name: Prepare config files
-      working-directory: backend
+    - name: 삭제한다
       run: |
-          # Copy appropriate config for tests
-          cp src/main/resources/security/application-test.yml src/main/resources/application.yml
+        rm src/main/resources/application.yml
 
-    - name: Build and Test
-      working-directory: backend
-      run: ./gradlew --no-daemon build test
-
-    - name: Run application with application-local.yml
-      working-directory: backend
+    - name: 복사한다
       run: |
-          # Copy appropriate config for running application
-          cp src/main/resources/security/application-local.yml src/main/resources/application.yml
+        cp src/main/resources/security/application-local.yml src/main/resources/application.yml
 
-          # Run the application
-          ./gradlew --no-daemon bootRun --args='--spring.config.location=src/main/resources/application.yml'
+    - name: Build with Gradle
+      run: ./gradlew build
 
+    - name: 삭제한다
+      run: |
+        rm src/main/resources/application.yml
+
+    - name: 복사한다
+      run: |
+        cp src/main/resources/security/application-test.yml src/main/resources/application.yml
+        
+    - name: Test with Gradle
+      run: ./gradlew test
