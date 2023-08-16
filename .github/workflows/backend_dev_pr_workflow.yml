@@ -2,39 +2,46 @@ name: NAAGA BACKEND PULL REQUEST CI
 
 on:
   push:
-    branches:
+    branches: 
       - feat/#214
-
+      
 jobs:
   build_test:
-    name: Backend Build and Test
+    name: backend check
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./backend
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: true  # 모든 서브모듈도 체크아웃
+        ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'corretto'
 
-      - name: Grant execute permissions for gradlew
-        run: chmod +x backend/gradlew
+    - name: Grant execute permissions for gradlew
+      run: chmod +x gradlew
 
-      - name: Prepare config files
-        working-directory: backend
-        run: |
+    - name: Prepare config files
+      working-directory: backend
+      run: |
           # Copy appropriate config for tests
           cp src/main/resources/security/application-test.yml src/main/resources/application.yml
 
-      - name: Build and Test
-        working-directory: backend
-        run: ./gradlew --no-daemon build test
+    - name: Build and Test
+      working-directory: backend
+      run: ./gradlew --no-daemon build test
 
-      - name: Run application with application-local.yml
-        working-directory: backend
-        run: |
+    - name: Run application with application-local.yml
+      working-directory: backend
+      run: |
           # Copy appropriate config for running application
           cp src/main/resources/security/application-local.yml src/main/resources/application.yml
 
