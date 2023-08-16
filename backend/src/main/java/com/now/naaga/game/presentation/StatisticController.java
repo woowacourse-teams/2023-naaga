@@ -1,6 +1,6 @@
 package com.now.naaga.game.presentation;
 
-import com.now.naaga.auth.annotation.Auth;
+import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.domain.Statistic;
 import com.now.naaga.game.presentation.dto.StatisticResponse;

@@ -1,11 +1,8 @@
 package com.now.naaga.auth.presentation;
 
-import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-import com.now.naaga.auth.domain.AuthTokens;
-import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
+import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
@@ -20,17 +17,20 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
+
+import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-public class AuthArgumentResolverTest extends CommonControllerTest {
+public class PlayerArgumentResolverTest extends CommonControllerTest {
 
     @Autowired
     private PlayerRepository playerRepository;
 
     @Autowired
-    private JwtGenerator jwtGenerator;
+    private AuthTokenGenerator authTokenGenerator;
 
     @Autowired
     private PlayerBuilder playerBuilder;
@@ -46,10 +46,9 @@ public class AuthArgumentResolverTest extends CommonControllerTest {
         final Player player = playerBuilder.init()
                                            .build();
 
-        final Long id = player.getMember().getId();
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
         playerRepository.delete(player);
-        final AuthTokens authTokens = jwtGenerator.generate(id);
-        final String accessToken = authTokens.getAccessToken();
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
@@ -80,9 +79,8 @@ public class AuthArgumentResolverTest extends CommonControllerTest {
         final Player player = playerBuilder.init()
                                            .build();
 
-        final Long id = player.getMember().getId();
-        final AuthTokens authTokens = jwtGenerator.generate(id);
-        final String accessToken = authTokens.getAccessToken();
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()

@@ -1,11 +1,8 @@
 package com.now.naaga.game.presentation;
 
-import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
-import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-import com.now.naaga.auth.domain.AuthTokens;
-import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
+import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.GameBuilder;
 import com.now.naaga.common.builder.PlaceBuilder;
@@ -29,7 +26,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
+
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -39,7 +39,7 @@ public class StatisticControllerTest extends CommonControllerTest {
     private GameService gameService;
 
     @Autowired
-    private JwtGenerator jwtGenerator;
+    private AuthTokenGenerator authTokenGenerator;
 
     @Autowired
     private GameBuilder gameBuilder;
@@ -94,8 +94,7 @@ public class StatisticControllerTest extends CommonControllerTest {
 
         final Statistic statistic = gameService.findStatistic(new PlayerRequest(player.getId()));
 
-        final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
 
         // when

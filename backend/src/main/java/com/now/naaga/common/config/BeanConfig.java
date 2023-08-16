@@ -1,5 +1,6 @@
 package com.now.naaga.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.now.naaga.game.domain.gamescore.FailGameScorePolicy;
 import com.now.naaga.game.domain.gamescore.GameScoreCalculator;
 import com.now.naaga.game.domain.gamescore.GameScorePolicy;
@@ -16,6 +17,11 @@ public class BeanConfig {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     @Bean

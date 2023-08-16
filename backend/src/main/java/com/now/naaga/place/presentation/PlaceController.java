@@ -1,6 +1,6 @@
 package com.now.naaga.place.presentation;
 
-import com.now.naaga.auth.annotation.Auth;
+import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.application.dto.FindAllPlaceCommand;

@@ -29,20 +29,36 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String extractSubject(final String accessToken) {
-        final Claims claims = parseClaims(accessToken);
+    public String extractSubject(final String subject) {
+        final Claims claims = parseClaims(subject);
         return claims.getSubject();
     }
 
-    private Claims parseClaims(final String accessToken){
+    private Claims parseClaims(final String token){
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(accessToken)
+                    .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
             throw new AuthException(AuthExceptionType.EXPIRED_TOKEN);
+        } catch (Exception e) {
+            throw new AuthException(AuthExceptionType.INVALID_TOKEN);
+        }
+    }
+
+    public boolean isNotExpired(final String token) {
+        try {
+            final Date expiration = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration();
+            return expiration.after(new Date());
+        } catch (ExpiredJwtException e) {
+            return false;
         } catch (Exception e) {
             throw new AuthException(AuthExceptionType.INVALID_TOKEN);
         }

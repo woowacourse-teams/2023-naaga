@@ -1,14 +1,14 @@
 package com.now.naaga.auth.presentation.dto;
 
-import com.now.naaga.auth.domain.AuthTokens;
+import com.now.naaga.auth.domain.AuthToken;
 
 public record AuthResponse(String accessToken,
                            String refreshToken) {
 
-    public static AuthResponse from(final AuthTokens authTokens) {
+    public static AuthResponse from(final AuthToken authToken) {
         return new AuthResponse(
-                authTokens.getAccessToken(),
-                authTokens.getRefreshToken()
+                authToken.getAccessToken(),
+                authToken.getRefreshToken()
         );
     }
 }

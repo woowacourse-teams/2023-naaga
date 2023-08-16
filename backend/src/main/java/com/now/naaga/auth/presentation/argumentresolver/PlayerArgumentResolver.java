@@ -1,8 +1,8 @@
-package com.now.naaga.auth.presentation;
+package com.now.naaga.auth.presentation.argumentresolver;
 
-import com.now.naaga.auth.annotation.Auth;
+import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
-import com.now.naaga.member.presentation.dto.MemberAuthRequest;
+import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
@@ -16,14 +16,14 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
+public class PlayerArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final AuthenticationExtractor<MemberAuthRequest> authenticationExtractor;
+    private final AuthenticationExtractor<MemberAuth> authenticationExtractor;
 
     private final PlayerService playerService;
 
-    public AuthArgumentResolver(final AuthenticationExtractor<MemberAuthRequest> authenticationExtractor,
-                                final PlayerService playerService) {
+    public PlayerArgumentResolver(final AuthenticationExtractor<MemberAuth> authenticationExtractor,
+                                  final PlayerService playerService) {
         this.authenticationExtractor = authenticationExtractor;
         this.playerService = playerService;
     }
@@ -40,8 +40,8 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
                                   final NativeWebRequest webRequest,
                                   final WebDataBinderFactory binderFactory) throws Exception {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        final MemberAuthRequest memberAuthRequest = authenticationExtractor.extract(request.getHeader(HttpHeaders.AUTHORIZATION));
-        final Player player = playerService.findPlayerByMemberId(memberAuthRequest.memberId());
+        final MemberAuth memberAuth = authenticationExtractor.extract(request.getHeader(HttpHeaders.AUTHORIZATION));
+        final Player player = playerService.findPlayerByMemberId(memberAuth.getMemberId());
         return new PlayerRequest(player.getId());
     }
 }

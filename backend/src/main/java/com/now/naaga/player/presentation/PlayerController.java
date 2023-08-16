@@ -1,6 +1,6 @@
 package com.now.naaga.player.presentation;
 
-import com.now.naaga.auth.annotation.Auth;
+import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Rank;

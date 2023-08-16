@@ -1,8 +1,10 @@
 package com.now.naaga.auth.infrastructure;
 
-import com.now.naaga.auth.application.dto.AuthInfo;
+import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.exception.AuthExceptionType;
+import com.now.naaga.auth.infrastructure.dto.LogoutInfo;
+import com.now.naaga.auth.infrastructure.dto.UnlinkInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -20,6 +21,9 @@ public class AuthClient {
 
     @Value("${oauth.kakao.url.api}")
     private String apiUrl;
+
+    @Value("${oauth.kakao.admin-key}")
+    private String adminKey;
 
     public AuthClient(final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -41,6 +45,46 @@ public class AuthClient {
             return restTemplate.postForObject(url, request, AuthInfo.class);
         } catch (Exception e) {
             throw new AuthException(AuthExceptionType.INVALID_KAKAO_INFO);
+        }
+    }
+
+    public void requestUnlink(final Long authId) {
+        final String url = apiUrl + "/v1/user/unlink";
+
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.set("Authorization", "KakaoAK " + adminKey);
+
+        final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("target_id_type", "user_id");
+        body.add("target_id", String.valueOf(authId));
+
+        final HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
+
+        try {
+            restTemplate.postForObject(url, request, UnlinkInfo.class);
+        } catch (Exception e) {
+            throw new AuthException(AuthExceptionType.INVALID_KAKAO_DELETE);
+        }
+    }
+
+    public void requestLogout(final Long authId) {
+        final String url = apiUrl + "/v1/user/logout";
+
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.set("Authorization", "KakaoAK " + adminKey);
+
+        final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("target_id_type", "user_id");
+        body.add("target_id", String.valueOf(authId));
+
+        final HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
+
+        try {
+            restTemplate.postForObject(url, request, LogoutInfo.class);
+        } catch (Exception e) {
+            throw new AuthException(AuthExceptionType.INVALID_KAKAO_DELETE);
         }
     }
 }

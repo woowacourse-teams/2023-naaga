@@ -29,12 +29,22 @@ public enum AuthExceptionType implements BaseExceptionType {
             "헤더 정보가 유효하지 않습니다."
     ),
 
+    INVALID_TOKEN_ACCESS(
+            101,
+            HttpStatus.UNAUTHORIZED,
+            "잘못된 토큰 접근 입니다."
+    ),
+
     EXPIRED_TOKEN(
             102,
             HttpStatus.UNAUTHORIZED,
             "토큰이 만료 되었습니다."
     ),
-    ;
+
+    //todo : 고쳐줘
+    INVALID_KAKAO_DELETE(101,
+            HttpStatus.UNAUTHORIZED,
+            "카카오에서 정보를 삭제할 수 없습니다.");
 
     private final int errorCode;
     private final HttpStatus httpStatus;

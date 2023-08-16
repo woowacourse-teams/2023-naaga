@@ -2,6 +2,7 @@ package com.now.naaga.member.application;
 
 import static com.now.naaga.member.exception.MemberExceptionType.NOT_EXIST_MEMBER;
 
+import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.exception.MemberException;
 import com.now.naaga.member.persistence.repository.MemberRepository;
@@ -34,5 +35,14 @@ public class MemberService {
     public Member create(final CreateMemberCommand createMemberCommand) {
         final Member member = new Member(createMemberCommand.email());
         return memberRepository.save(member);
+    }
+
+    public void deleteByMemberId(final DeleteMemberCommand deleteMemberCommand) {
+        final Long memberId = deleteMemberCommand.memberId();
+        System.out.println("=---------------------------");
+        System.out.println(memberId);
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(NOT_EXIST_MEMBER));
+        memberRepository.delete(member);
     }
 }

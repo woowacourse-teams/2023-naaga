@@ -3,18 +3,16 @@ package com.now.naaga.player.domain;
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.score.domain.Score;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import java.util.Objects;
 
+import static java.lang.Boolean.FALSE;
+
+@SQLDelete(sql = "UPDATE player SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Entity
 public class Player extends BaseEntity {
 
@@ -29,9 +27,11 @@ public class Player extends BaseEntity {
     @Embedded
     private Score totalScore;
 
-    @OneToOne
     @JoinColumn(name = "member_id")
+    @OneToOne
     private Member member;
+
+    private boolean deleted = FALSE;
 
     protected Player() {
     }
@@ -39,19 +39,17 @@ public class Player extends BaseEntity {
     public Player(final String nickname,
                   final Score totalScore,
                   final Member member) {
-        this(null, nickname, totalScore, member);
+        this(null, nickname, totalScore, member, FALSE);
     }
 
-    public Player(final Long id,
-                  final String nickname,
-                  final Score totalScore,
-                  final Member member) {
+    public Player(final Long id, final String nickname, final Score totalScore, final Member member, final boolean deleted) {
         this.id = id;
         this.nickname = nickname;
         this.totalScore = totalScore;
         this.member = member;
+        this.deleted = deleted;
     }
-    
+
     public void addScore(Score score) {
         this.totalScore = this.totalScore.plus(score);
     }

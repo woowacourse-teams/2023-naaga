@@ -1,15 +1,41 @@
 package com.now.naaga.auth.domain;
 
+import com.now.naaga.member.domain.Member;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
-public class AuthTokens {
+@Entity
+public class AuthToken {
 
-    private final String accessToken;
-    private final String refreshToken;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public AuthTokens(final String accessToken, final String refreshToken) {
+    private String accessToken;
+
+    private String refreshToken;
+
+    @JoinColumn(name = "member_id")
+    @ManyToOne
+    private Member member;
+
+    public AuthToken() {
+    }
+
+    public AuthToken(final String accessToken, final String refreshToken, final Member member) {
+        this(null, accessToken, refreshToken, member);
+    }
+
+    public AuthToken(final Long id, final String accessToken, final String refreshToken, final Member member) {
+        this.id = id;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.member = member;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getAccessToken() {
@@ -20,11 +46,15 @@ public class AuthTokens {
         return refreshToken;
     }
 
+    public Member getMember() {
+        return member;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final AuthTokens that = (AuthTokens) o;
+        final AuthToken that = (AuthToken) o;
         return Objects.equals(accessToken, that.accessToken)
                 && Objects.equals(refreshToken, that.refreshToken);
     }

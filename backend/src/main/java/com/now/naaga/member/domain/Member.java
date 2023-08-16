@@ -1,12 +1,14 @@
 package com.now.naaga.member.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import java.util.Objects;
 
+@SQLDelete(sql = "UPDATE member SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Entity
 public class Member extends BaseEntity {
 
@@ -16,17 +18,19 @@ public class Member extends BaseEntity {
 
     private String email;
 
+    private boolean deleted = false;
+
     protected Member() {
     }
 
     public Member(final String email) {
-        this.email = email;
+        this(null, email, false);
     }
 
-    public Member(final Long id,
-                  final String email) {
+    public Member(final Long id, final String email, final boolean deleted) {
         this.id = id;
         this.email = email;
+        this.deleted = deleted;
     }
 
     public Long getId() {
@@ -36,6 +40,7 @@ public class Member extends BaseEntity {
     public String getEmail() {
         return email;
     }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

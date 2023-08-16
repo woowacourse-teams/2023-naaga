@@ -54,6 +54,7 @@ public class ControllerExceptionHandler {
         log.error("error = {}", e.toString());
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse(10000, "예기치 못한 오류입니다");
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(exceptionResponse);
     }

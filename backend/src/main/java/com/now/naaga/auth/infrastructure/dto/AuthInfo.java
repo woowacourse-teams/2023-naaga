@@ -1,4 +1,4 @@
-package com.now.naaga.auth.application.dto;
+package com.now.naaga.auth.infrastructure.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 public class AuthInfo {
+
+    private Long id;
 
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
@@ -108,6 +110,10 @@ public class AuthInfo {
         }
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return kakaoAccount.email;
     }
@@ -120,19 +126,21 @@ public class AuthInfo {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final AuthInfo that = (AuthInfo) o;
-        return Objects.equals(kakaoAccount, that.kakaoAccount);
+        final AuthInfo authInfo = (AuthInfo) o;
+        return Objects.equals(id, authInfo.id)
+                && Objects.equals(kakaoAccount, authInfo.kakaoAccount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(kakaoAccount);
+        return Objects.hash(id, kakaoAccount);
     }
 
     @Override
     public String toString() {
-        return "KakaoAuthInfo{" +
-                "kakaoAccount=" + kakaoAccount +
+        return "AuthInfo{" +
+                "id=" + id +
+                ", kakaoAccount=" + kakaoAccount +
                 '}';
     }
 }
