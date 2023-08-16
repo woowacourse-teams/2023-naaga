@@ -583,8 +583,7 @@ class GameControllerTest extends CommonControllerTest {
     }
 
     @Test
-    void 게임_식별자로_게임을_조회한다() throws InterruptedException {
-        Thread.sleep(1000);
+    void 게임_식별자로_게임을_조회한다() {
         // given & when
         final Player player = playerBuilder.init()
                 .build();
@@ -668,8 +667,7 @@ class GameControllerTest extends CommonControllerTest {
      * 게임 결과를 조회한다.
      */
     @Test
-    public void 게임_아이디로_게임결과를_조회한다() throws InterruptedException {
-        Thread.sleep(1000);
+    public void 게임_아이디로_게임결과를_조회한다() {
         // given
         final Player player = playerBuilder.init()
                 .build();
@@ -761,8 +759,7 @@ class GameControllerTest extends CommonControllerTest {
     }
 
     @Test
-    public void 모든_게임_결과를_도착시간_기준으로_내림차순하여_조회한다() throws InterruptedException {
-        Thread.sleep(1000);
+    public void 모든_게임_결과를_도착시간_기준으로_내림차순하여_조회한다() {
         // given
         final Player player = playerBuilder.init()
                 .build();
