@@ -1,9 +1,11 @@
 name: NAAGA BACKEND PULL REQUEST CI
 
 on:
-  push:
+  pull_request:
     branches: 
-      - feat/#214
+      - dev
+    paths:
+      - backend/**
       
 jobs:
   build_test:
