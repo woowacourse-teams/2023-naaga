@@ -710,7 +710,6 @@ class GameControllerTest extends CommonControllerTest {
         });
     }
 
-    // TODO: 게임결과를 조회할때 게임결과의 정보가 없을때 (o)
     @Test
     public void 게임_아이디로_게임결과를_조회할때_게임결과가_존재하지_않으면_예외가_발생한다() {
         // given
@@ -818,7 +817,6 @@ class GameControllerTest extends CommonControllerTest {
         });
     }
 
-    // TODO: 게임 전체 결과 조회 요청파라미터 예외(o)
     @Test
     public void 모든_게임_결과를_조회할때_요청_파라미터가_잘못되면_예외를_발생시킨다() {
         // given
@@ -967,7 +965,6 @@ class GameControllerTest extends CommonControllerTest {
         });
     }
 
-    // TODO: 해당 게임의 힌트의 정보가 없을때 예외를 발생한다(o)
     @Test
     public void 힌트_id를_통해_힌트를_조회할때_힌트가_존재하지_않으면_예외를_발생시킨다() {
         // given & when
