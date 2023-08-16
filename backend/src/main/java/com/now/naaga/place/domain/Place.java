@@ -32,7 +32,7 @@ public class Place extends BaseEntity {
 
     private String imageUrl;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "player_id")
     private Player registeredPlayer;
 
