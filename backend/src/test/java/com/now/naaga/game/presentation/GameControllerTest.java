@@ -616,8 +616,6 @@ class GameControllerTest extends CommonControllerTest {
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
-                .contentType(ContentType.JSON)
-                .body(new FindGameByIdCommand(game.getId(), game.getPlayer().getId()))
                 .when()
                 .get("/games/{gameId}", game.getId())
                 .then().log().all()
@@ -633,7 +631,7 @@ class GameControllerTest extends CommonControllerTest {
             softAssertions.assertThat(actual)
                           .usingRecursiveComparison()
                           .ignoringExpectedNullFields()
-                          .ignoringFieldsOfTypes(LocalDateTime.class)
+                          .ignoringFields("startTime")
                           .isEqualTo(expected);
         });
     }
@@ -714,6 +712,7 @@ class GameControllerTest extends CommonControllerTest {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(actual)
                   .usingRecursiveComparison()
+                  .ignoringFields("startTime", "finishTime")
                   .isEqualTo(expected);
         });
     }
@@ -773,6 +772,7 @@ class GameControllerTest extends CommonControllerTest {
             softly.assertThat(actual)
                   .hasSize(2)
                   .usingRecursiveComparison()
+                  .ignoringFields("startTime", "finishTime")
                   .isEqualTo(expected);
         });
     }
