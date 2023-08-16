@@ -55,6 +55,6 @@ spring:
 
 spring:
   config:
-    import: classpath:security/application-local.yml
+    import: classpath:security/application-prod.yml
     activate:
-      on-profile: local
+      on-profile: prod

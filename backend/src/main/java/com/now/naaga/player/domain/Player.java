@@ -29,7 +29,7 @@ public class Player extends BaseEntity {
     @Embedded
     private Score totalScore;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
