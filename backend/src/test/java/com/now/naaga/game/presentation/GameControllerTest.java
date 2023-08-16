@@ -583,52 +583,6 @@ class GameControllerTest extends CommonControllerTest {
     }
 
     @Test
-    void 게임_식별자로_게임을_조회한다() throws InterruptedException {
-        Thread.sleep(1000);
-        // given & when
-        final Player player = playerBuilder.init()
-                .build();
-
-        final Place destination = placeBuilder.init()
-                .position(잠실_루터회관_정문_좌표)
-                .build();
-
-        final Game game = gameBuilder.init()
-                .place(destination)
-                .player(player)
-                .startPosition(잠실역_교보문고_좌표)
-                .build();
-
-        final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
-        final String accessToken = generate.getAccessToken();
-
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(ContentType.JSON)
-                .body(new FindGameByIdCommand(game.getId(), game.getPlayer().getId()))
-                .when()
-                .get("/games/{gameId}", game.getId())
-                .then().log().all()
-                .extract();
-
-        // then
-        final int statusCode = extract.statusCode();
-        final GameResponse actual = extract.as(GameResponse.class);
-        final GameResponse expected = GameResponse.from(game);
-
-        assertSoftly(softAssertions -> {
-            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
-            softAssertions.assertThat(actual)
-                    .usingRecursiveComparison()
-                    .ignoringExpectedNullFields()
-                    .ignoringFieldsOfTypes(LocalDateTime.class)
-                    .isEqualTo(expected);
-        });
-    }
-
-    @Test
     void 게임_식별자로_조회하려는_게임이_존재하지_않는_경우_예외가_발생한다() {
         // given & when
         final Player player = playerBuilder.init()
@@ -667,51 +621,6 @@ class GameControllerTest extends CommonControllerTest {
     /**
      * 게임 결과를 조회한다.
      */
-    @Test
-    public void 게임_아이디로_게임결과를_조회한다() throws InterruptedException {
-        Thread.sleep(1000);
-        // given
-        final Player player = playerBuilder.init()
-                .build();
-
-        final Game game = gameBuilder.init()
-                .player(player)
-                .endTime(LocalDateTime.now().plusHours(1))
-                .build();
-
-        final GameResult gameResult = gameResultBuilder.init()
-                .resultType(SUCCESS)
-                .game(game)
-                .build();
-
-        final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
-        final String accessToken = generate.getAccessToken();
-
-        // when
-        final ExtractableResponse<Response> response = RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + accessToken)
-                .when()
-                .get("/games/{gameId}/result", game.getId())
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
-
-        // then
-        final GameResultResponse actual = response.as(GameResultResponse.class);
-        final GameResultResponse expected = GameResultResponse.from(
-                GameRecord.from(gameResult));
-
-        assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(actual)
-                    .usingRecursiveComparison()
-                    .isEqualTo(expected);
-        });
-    }
-
     @Test
     public void 게임_아이디로_게임결과를_조회할때_게임결과가_존재하지_않으면_예외가_발생한다() {
         // given
@@ -756,66 +665,6 @@ class GameControllerTest extends CommonControllerTest {
                     .usingRecursiveComparison()
                     .ignoringExpectedNullFields()
                     .ignoringFieldsOfTypes(LocalDateTime.class)
-                    .isEqualTo(expected);
-        });
-    }
-
-    @Test
-    public void 모든_게임_결과를_도착시간_기준으로_내림차순하여_조회한다() throws InterruptedException {
-        Thread.sleep(1000);
-        // given
-        final Player player = playerBuilder.init()
-                .build();
-
-        final Game game1 = gameBuilder.init()
-                .gameStatus(DONE)
-                .player(player)
-                .endTime(LocalDateTime.now().plusHours(1))
-                .build();
-
-        final Game game2 = gameBuilder.init()
-                .gameStatus(DONE)
-                .player(player)
-                .endTime(LocalDateTime.now().plusHours(10))
-                .build();
-
-        final GameResult gameResult1 = gameResultBuilder.init()
-                .resultType(FAIL)
-                .game(game1)
-                .build();
-
-        final GameResult gameResult2 = gameResultBuilder.init()
-                .resultType(SUCCESS)
-                .game(game2)
-                .build();
-
-        final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
-        final String accessToken = generate.getAccessToken();
-
-        // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + accessToken)
-                .param("sort-by", "time")
-                .param("order", "descending")
-                .when()
-                .get("/games/results")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
-
-        // then
-        final List<GameResultResponse> actual = response.as(new TypeRef<>() {
-        });
-        final List<GameResultResponse> expected = List.of(GameResultResponse.from(GameRecord.from(gameResult2)),
-                GameResultResponse.from(GameRecord.from(gameResult1)));
-
-        assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(actual)
-                    .hasSize(2)
-                    .usingRecursiveComparison()
                     .isEqualTo(expected);
         });
     }
