@@ -47,3 +47,4 @@ jobs:
 
           # Run the application
           ./gradlew --no-daemon bootRun --args='--spring.config.location=src/main/resources/application.yml'
+
