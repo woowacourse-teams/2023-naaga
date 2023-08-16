@@ -142,7 +142,7 @@ public class AuthInterceptorTest extends CommonControllerTest {
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
                                                                  .log().all()
-                                                                 .header("Authorization", "Bearer " + accessToken)
+                                                                 .header("Authorization", "Bearer" + "~")
                                                                  .when()
                                                                  .get("/statistics/my")
                                                                  .then()
