@@ -834,4 +834,47 @@ class GameControllerTest extends CommonControllerTest {
                           .isEqualTo(expected);
         });
     }
+
+    @Test
+    public void 힌트_id를_통해_힌트를_조회할때_힌트가_존재하지_않으면_예외를_발생시킨다() {
+        // given & when
+        final Place place = placeBuilder.init()
+                .position(제주_좌표)
+                .build();
+
+        final Game game = gameBuilder.init()
+                .place(place)
+                .startPosition(서울_좌표)
+                .build();
+
+        final Hint hint = hintRepository.save(new Hint(서울_좌표, Direction.SOUTH, game));
+
+        hintRepository.delete(hint);
+
+        final AuthToken generate = authTokenGenerator.generate(game.getPlayer().getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/games/{gameId}/hints/{hintId}", game.getId(), hint.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        final int statusCode = extract.statusCode();
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+
+        final ExceptionResponse expected = new ExceptionResponse(HINT_NOT_EXIST_IN_GAME.errorCode(), HINT_NOT_EXIST_IN_GAME.errorMessage());
+
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                    .ignoringFieldsOfTypes(LocalDateTime.class)
+                    .isEqualTo(expected);
+        });
+    }
 }

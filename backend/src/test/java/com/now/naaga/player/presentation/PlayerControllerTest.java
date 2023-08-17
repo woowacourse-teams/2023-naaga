@@ -1,7 +1,8 @@
 package com.now.naaga.player.presentation;
 
-import com.now.naaga.auth.domain.AuthTokens;
-import com.now.naaga.auth.infrastructure.jwt.JwtGenerator;
+import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
@@ -32,7 +33,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 public class PlayerControllerTest extends CommonControllerTest {
 
     @Autowired
-    private JwtGenerator jwtGenerator;
+    private AuthTokenGenerator authTokenGenerator;
 
     @Autowired
     private PlayerBuilder playerBuilder;
@@ -57,10 +58,8 @@ public class PlayerControllerTest extends CommonControllerTest {
                 .totalScore(new Score(30))
                 .build();
 
-        final Long memberId = player.getMember().getId();
-        final AuthTokens generate = jwtGenerator.generate(memberId);
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-
         // when
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
