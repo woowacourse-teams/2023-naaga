@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <property name="CONSOLE_LOG_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %clr(%5level) %cyan(%logger) - %msg%n"/>
     <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5level %logger - %msg%n"/>
+
 
 
     <include resource="console-appender.xml"/>
@@ -17,7 +17,7 @@
         <property name="LOGS_ABSOLUTE_PATH"
                   value="./logs"/>
 
-        <logger name="com.now.naaga.common.exception" additivity="false">
+        <logger name="ControllerExceptionHandler" additivity="false">
             <level value="DEBUG"/>
             <appender-ref ref="INFO_LOG"/>
             <appender-ref ref="WARN_LOG"/>
@@ -56,11 +56,5 @@
         <level value="DEBUG"/>
         <appender-ref ref="INFO_LOG"/>
     </logger>
-    <!--    <logger name="com.now.naaga" additivity="false">-->
-    <!--        <level value="DEBUG"/>-->
-    <!--        <appender-ref ref="INFO_LOG"/>-->
-    <!--        <appender-ref ref="WARN_LOG"/>-->
-    <!--        <appender-ref ref="ERROR_LOG"/>-->
-    <!--    </logger>-->
 
 </configuration>
