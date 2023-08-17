@@ -7,6 +7,7 @@
 
     <include resource="console-appender.xml"/>
     <include resource="info-file-appender.xml"/>
+    <include resource="db-file-appender.xml"/>
     <include resource="warn-file-appender.xml"/>
     <include resource="error-file-appender.xml"/>
 
@@ -40,7 +41,7 @@
 
     <logger name="org.hibernate.SQL" additivity="false">
         <level value="DEBUG"/>
-        <appender-ref ref="INFO_LOG"/>
+        <appender-ref ref="DB_LOG"/>
     </logger>
 
 <!--    <logger name="org.springframework" additivity="false">-->
