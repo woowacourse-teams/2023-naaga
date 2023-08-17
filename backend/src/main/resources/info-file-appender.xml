@@ -3,7 +3,7 @@
     <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS_ABSOLUTE_PATH}/info.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
+            <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
