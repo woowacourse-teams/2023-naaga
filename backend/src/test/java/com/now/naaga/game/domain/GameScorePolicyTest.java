@@ -1,24 +1,22 @@
 package com.now.naaga.game.domain;
 
-import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
-import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
-import static com.now.naaga.common.fixture.PositionFixture.*;
-import static com.now.naaga.common.fixture.PositionFixture.던킨도너츠_올림픽공원점_좌표;
-import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.now.naaga.common.fixture.PositionFixture;
 import com.now.naaga.game.domain.gamescore.GameScorePolicy;
 import com.now.naaga.game.domain.gamescore.SuccessGameScorePolicy;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;
-import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
+import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
+import static com.now.naaga.common.fixture.PositionFixture.*;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
@@ -40,7 +38,6 @@ class GameScorePolicyTest {
         //when
         Score furtherAreaScore = gameScorer.calculate(gameHasDestinationInFurtherArea);
         Score nearerAreaScore = gameScorer.calculate(gameHasDestinationInNearArea);
-        System.out.println(furtherAreaScore + "  " + nearerAreaScore); //todo :지우기
 
         //then
         assertThat(furtherAreaScore.isHigherThan(nearerAreaScore))
@@ -60,7 +57,6 @@ class GameScorePolicyTest {
         //when
         Score slowerGameScore = gameScorer.calculate(slowerGame);
         Score fasterGameScore = gameScorer.calculate(fasterGame);
-        System.out.println(slowerGameScore + "  " + fasterGameScore); //todo :지우기
         //then
         assertThat(fasterGameScore.isHigherThan(slowerGameScore))
                 .isTrue();
@@ -79,7 +75,6 @@ class GameScorePolicyTest {
         //when
         Score threeHintsGameScore = gameScorer.calculate(threeHintsGame);
         Score oneHintsGameScore = gameScorer.calculate(oneHintsGame);
-        System.out.println(threeHintsGameScore + "  " + oneHintsGameScore); //todo :지우기
         //then
         assertThat(oneHintsGameScore.isHigherThan(threeHintsGameScore))
                 .isTrue();
@@ -99,7 +94,6 @@ class GameScorePolicyTest {
         //when
         Score threeRemainingAttemptsGameScore = gameScorer.calculate(threeRemainingAttemptsGame);
         Score oneRemainingAttemptsGameScore = gameScorer.calculate(oneRemainingAttemptsGame);
-        System.out.println(threeRemainingAttemptsGameScore + "  " + oneRemainingAttemptsGameScore); //todo :지우기
         //then
         assertThat(threeRemainingAttemptsGameScore.isHigherThan(oneRemainingAttemptsGameScore))
                 .isTrue();
