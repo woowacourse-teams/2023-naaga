@@ -3,7 +3,7 @@
     <appender name="DB_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS_ABSOLUTE_PATH}/db.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
+            <level>INFO</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
