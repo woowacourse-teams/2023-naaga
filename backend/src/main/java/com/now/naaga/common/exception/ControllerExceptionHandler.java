@@ -20,7 +20,7 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleBaseException(final BaseException e) {
         final BaseExceptionType baseExceptionType = e.exceptionType();
         final ExceptionResponse exceptionResponse = new ExceptionResponse(baseExceptionType.errorCode(), baseExceptionType.errorMessage());
-        log.warn("error = {}", exceptionResponse);
+        log.warn("error = {}", exceptionResponse, e);
         return ResponseEntity.status(baseExceptionType.httpStatus()).body(exceptionResponse);
     }
 
@@ -32,7 +32,7 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleTypeMismatchException(final Exception e) {
         final CommonExceptionType commonExceptionType = CommonExceptionType.INVALID_REQUEST_BODY;
         final ExceptionResponse exceptionResponse = new ExceptionResponse(commonExceptionType.errorCode(), commonExceptionType.errorMessage());
-        log.warn("error = {}", exceptionResponse);
+        log.warn("error = {}", exceptionResponse, e);
         return ResponseEntity.status(commonExceptionType.httpStatus()).body(exceptionResponse);
     }
 
@@ -40,9 +40,14 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleInternalException(final InternalException e){
         final BaseExceptionType internalExceptionType = e.exceptionType();
 
-        log.error("errorCode = {} \n message = {}",
+//        log.error("errorCode = {} \n message = {}",
+//                internalExceptionType.errorCode(),
+//                internalExceptionType.errorMessage());
+
+        log.error("errorCode = {} \n message = {} \n error = {}",
                 internalExceptionType.errorCode(),
-                internalExceptionType.errorMessage());
+                internalExceptionType.errorMessage(),
+                 e.getMessage() , e);
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse(10000, "예기치 못한 오류입니다");
         return ResponseEntity.status(internalExceptionType.httpStatus())
@@ -51,7 +56,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(final Exception e){
-        log.error("error = {}", e.toString());
+        log.error("error = {}"+ e.getMessage() , e);
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse(10000, "예기치 못한 오류입니다");
         e.printStackTrace();

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %clr(%5level) %cyan(%logger) - %msg%n"/>
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5level %logger - %msg%n"/>
+
+    <include resource="console-appender.xml"/>
+    <include resource="info-file-appender.xml"/>
+    <include resource="db-file-appender.xml"/>
+    <include resource="warn-file-appender.xml"/>
+    <include resource="error-file-appender.xml"/>
+
+<!--    프로파일 별 설정-->
+    <springProfile name="local|test">
+        <property name="LOGS_ABSOLUTE_PATH"
+                  value="./logs"/>
+    </springProfile>
+
+    <springProfile name="dev">
+        <property name="LOGS_ABSOLUTE_PATH"
+                  value="/home/ubuntu/logs"/>
+    </springProfile>
+
+
+    <springProfile name="prod">
+        <property name="LOGS_ABSOLUTE_PATH"
+                  value="/home/ubuntu/logs"/>
+    </springProfile>
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <logger name="ControllerExceptionHandler" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="INFO_LOG"/>
+        <appender-ref ref="WARN_LOG"/>
+        <appender-ref ref="ERROR_LOG"/>
+    </logger>
+
+    <logger name="org.hibernate.SQL" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="DB_LOG"/>
+    </logger>
+
+<!--    <logger name="org.springframework" additivity="false">-->
+<!--        <level value="DEBUG"/>-->
+<!--        <appender-ref ref="DEBUG_LOG"/>-->
+<!--        <appender-ref ref="INFO_LOG"/>-->
+<!--        <appender-ref ref="WARN_LOG"/>-->
+<!--        <appender-ref ref="ERROR_LOG"/>-->
+<!--    </logger>-->
+
+</configuration>

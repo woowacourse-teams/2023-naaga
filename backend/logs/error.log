@@ -1,5 +1,0 @@
-[2023-08-15 11:52:43:5129][http-nio-auto-1-exec-8] ERROR ControllerExceptionHandler - error = org.springframework.dao.InvalidDataAccessApiUsageException: The given id must not be null
-[2023-08-15 11:56:40:5161][http-nio-auto-1-exec-10] ERROR ControllerExceptionHandler - error = org.springframework.dao.InvalidDataAccessApiUsageException: The given id must not be null
-[2023-08-15 13:29:16:5380][http-nio-auto-1-exec-8] ERROR ControllerExceptionHandler - error = org.springframework.dao.InvalidDataAccessApiUsageException: The given id must not be null
-[2023-08-15 14:02:27:52799][http-nio-8080-exec-1] ERROR ControllerExceptionHandler - errorCode = 10003 
- message = JSON를 객체로 변환하지 못했습니다.
