@@ -1,7 +1,7 @@
 package com.now.naaga.game.domain;
 
-import com.now.naaga.game.domain.gamescore.GameScorePolicy;
-import com.now.naaga.game.domain.gamescore.SuccessGameScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.GameScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.SuccessGameScorePolicy;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;
 import org.junit.jupiter.api.DisplayNameGeneration;

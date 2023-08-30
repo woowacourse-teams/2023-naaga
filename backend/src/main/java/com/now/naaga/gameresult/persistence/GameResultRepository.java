@@ -1,6 +1,6 @@
-package com.now.naaga.game.repository;
+package com.now.naaga.gameresult.persistence;
 
-import com.now.naaga.game.domain.GameResult;
+import com.now.naaga.gameresult.domain.GameResult;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

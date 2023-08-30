@@ -1,4 +1,4 @@
-package com.now.naaga.game.domain;
+package com.now.naaga.gameresult.domain;
 
 public enum ResultType {
 

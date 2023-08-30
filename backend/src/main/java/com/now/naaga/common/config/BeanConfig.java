@@ -1,10 +1,10 @@
 package com.now.naaga.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.now.naaga.game.domain.gamescore.FailGameScorePolicy;
-import com.now.naaga.game.domain.gamescore.GameScoreCalculator;
-import com.now.naaga.game.domain.gamescore.GameScorePolicy;
-import com.now.naaga.game.domain.gamescore.SuccessGameScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.FailGameScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.GameScoreCalculator;
+import com.now.naaga.gameresult.domain.gamescore.GameScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.SuccessGameScorePolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;

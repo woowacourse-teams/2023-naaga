@@ -1,7 +1,7 @@
-package com.now.naaga.game.domain.gamescore;
+package com.now.naaga.gameresult.domain.gamescore;
 
 import com.now.naaga.game.domain.Game;
-import com.now.naaga.game.domain.ResultType;
+import com.now.naaga.gameresult.domain.ResultType;
 import com.now.naaga.score.domain.Score;
 
 import java.time.Duration;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.Game.MAX_HINT_COUNT;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 
 public class SuccessGameScorePolicy implements GameScorePolicy {
 

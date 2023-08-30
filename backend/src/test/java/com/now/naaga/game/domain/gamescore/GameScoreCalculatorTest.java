@@ -3,13 +3,14 @@ package com.now.naaga.game.domain.gamescore;
 import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
 import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
 import static com.now.naaga.common.fixture.PositionFixture.서울_좌표;
-import static com.now.naaga.game.domain.ResultType.FAIL;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
-import com.now.naaga.game.domain.ResultType;
+import com.now.naaga.gameresult.domain.ResultType;
+import com.now.naaga.gameresult.domain.gamescore.GameScoreCalculator;
 import com.now.naaga.score.domain.Score;
 import java.time.LocalDateTime;
 import java.util.Collections;

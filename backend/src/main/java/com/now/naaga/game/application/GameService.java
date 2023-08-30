@@ -6,11 +6,14 @@ import com.now.naaga.game.application.dto.FindAllGamesCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.*;
-import com.now.naaga.game.domain.gamescore.GameScoreCalculator;
+import com.now.naaga.gameresult.domain.gamescore.GameScoreCalculator;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameNotArrivalException;
-import com.now.naaga.game.repository.GameRepository;
-import com.now.naaga.game.repository.GameResultRepository;
+import com.now.naaga.game.persistence.GameRepository;
+import com.now.naaga.gameresult.exception.GameResultException;
+import com.now.naaga.gameresult.persistence.GameResultRepository;
+import com.now.naaga.gameresult.domain.GameResult;
+import com.now.naaga.gameresult.domain.ResultType;
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.application.dto.RecommendPlaceCommand;
 import com.now.naaga.place.domain.Place;
@@ -27,6 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.now.naaga.game.exception.GameExceptionType.*;
+import static com.now.naaga.gameresult.exception.GameResultExceptionType.GAME_RESULT_NOT_EXIST;
 
 @Transactional
 @Service
@@ -104,7 +108,7 @@ public class GameService {
         final List<GameResult> gameResultsByGameId = gameResultRepository.findByGameId(gameId);
 
         if (gameResultsByGameId.isEmpty()) {
-            throw new GameException(GAME_RESULT_NOT_EXIST);
+            throw new GameResultException(GAME_RESULT_NOT_EXIST);
         }
 
         return gameResultsByGameId.get(0);

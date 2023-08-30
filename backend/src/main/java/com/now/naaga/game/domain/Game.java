@@ -3,8 +3,8 @@ package com.now.naaga.game.domain;
 import static com.now.naaga.game.domain.EndType.GIVE_UP;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.game.domain.ResultType.FAIL;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 import static com.now.naaga.game.exception.GameExceptionType.ALREADY_DONE;
 import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
 import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
@@ -12,6 +12,7 @@ import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameNotArrivalException;
+import com.now.naaga.gameresult.domain.ResultType;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
@@ -28,12 +29,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.data.geo.Distance;
 
 @Entity
 public class Game extends BaseEntity {

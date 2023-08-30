@@ -7,7 +7,7 @@ import com.now.naaga.game.domain.Direction;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.Hint;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.repository.HintRepository;
+import com.now.naaga.game.persistence.HintRepository;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import org.springframework.stereotype.Service;
