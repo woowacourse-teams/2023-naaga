@@ -41,6 +41,12 @@ public enum GameExceptionType implements BaseExceptionType {
             "이미 종료된 게임입니다."
     ),
 
+    NOT_DONE(
+            417,
+            HttpStatus.BAD_REQUEST,
+            "아직 종료되지 않은 게임입니다."
+    ),
+
     HINT_NOT_EXIST_IN_GAME(
             454,
             HttpStatus.NOT_FOUND,

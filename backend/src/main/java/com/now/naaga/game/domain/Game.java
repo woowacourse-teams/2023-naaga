@@ -102,6 +102,12 @@ public class Game extends BaseEntity {
         }
     }
 
+    public void validateDone() {
+        if (gameStatus == IN_PROGRESS) {
+            throw new GameException(NOT_DONE);
+        }
+    }
+
     public boolean canUseMoreHint() {
         return hints.size() < MAX_HINT_COUNT;
     }

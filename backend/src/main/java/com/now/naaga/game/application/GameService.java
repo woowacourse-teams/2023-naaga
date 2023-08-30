@@ -1,19 +1,16 @@
 package com.now.naaga.game.application;
 
-import com.now.naaga.game.application.dto.CreateGameCommand;
-import com.now.naaga.game.application.dto.EndGameCommand;
-import com.now.naaga.game.application.dto.FindAllGamesCommand;
-import com.now.naaga.game.application.dto.FindGameByIdCommand;
-import com.now.naaga.game.application.dto.FindGameByStatusCommand;
+import com.now.naaga.game.application.dto.*;
 import com.now.naaga.game.domain.*;
-import com.now.naaga.gameresult.domain.gamescore.GameScoreCalculator;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameNotArrivalException;
 import com.now.naaga.game.persistence.GameRepository;
+
+// TODO: 8/31/23 제거할 대상 - 이슈 범위를 벗어나서 일단은 제거하지 않음
+import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.gameresult.exception.GameResultException;
 import com.now.naaga.gameresult.persistence.GameResultRepository;
-import com.now.naaga.gameresult.domain.GameResult;
-import com.now.naaga.gameresult.domain.ResultType;
+
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.application.dto.RecommendPlaceCommand;
 import com.now.naaga.place.domain.Place;
@@ -22,7 +19,6 @@ import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
-import com.now.naaga.score.domain.Score;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.now.naaga.game.exception.GameExceptionType.*;
+
+// TODO: 8/31/23 제거할 대상 - 이슈 범위를 벗어나서 일단은 제거하지 않음
 import static com.now.naaga.gameresult.exception.GameResultExceptionType.GAME_RESULT_NOT_EXIST;
 
 @Transactional
@@ -38,24 +36,25 @@ public class GameService {
 
     private final GameRepository gameRepository;
 
+    // TODO: 8/31/23 제거할 대상 - 이슈 범위를 벗어나서 일단은 제거하지 않음
     private final GameResultRepository gameResultRepository;
 
     private final PlayerService playerService;
 
     private final PlaceService placeService;
 
-    private final GameScoreCalculator gameScoreCalculator;
+    private final GameFinishService gameFinishService;
 
     public GameService(final GameRepository gameRepository,
             final GameResultRepository gameResultRepository,
             final PlayerService playerService,
             final PlaceService placeService,
-            final GameScoreCalculator gameScoreCalculator) {
+            final GameFinishService gameFinishService) {
         this.gameRepository = gameRepository;
         this.gameResultRepository = gameResultRepository;
         this.playerService = playerService;
         this.placeService = placeService;
-        this.gameScoreCalculator = gameScoreCalculator;
+        this.gameFinishService = gameFinishService;
     }
 
     public Game createGame(final CreateGameCommand createGameCommand) {
@@ -78,7 +77,6 @@ public class GameService {
 
     @Transactional(noRollbackFor = {GameNotArrivalException.class})
     public void endGame(final EndGameCommand endGameCommand) {
-        // 1. 필요한 객체 획득
         final Game game = gameRepository.findById(endGameCommand.gameId())
                 .orElseThrow(() -> new GameException(NOT_EXIST));
         final Player player = playerService.findPlayerById(endGameCommand.playerId());
@@ -87,29 +85,10 @@ public class GameService {
         final EndType endType = endGameCommand.endType();
         final Position position = endGameCommand.position();
 
-        //2. Game 상태 변경 | 예외 발생 가능함
         game.endGame(position, endType);
 
-        // 3 GameResult 생성하는 과정 (임시)
-        // 3-1. 게임 결과 타입 정하기
-        ResultType resultType = decideResultType(game, endType, position);
-        // 3-2. 점수 계산하고
-        final Score score = gameScoreCalculator.calculate(game, resultType);
-        // 3-3. 플레이어에게 점수 더해주고,
-        player.addScore(score);
-        // 3-4. 게임 결과 저장한다.
-        gameResultRepository.save(new GameResult(resultType, score, game));
-    }
-
-    private ResultType decideResultType(final Game game,
-                                        final EndType endType,
-                                        final Position position) {
-        if (endType == EndType.ARRIVED) {
-            if (game.getPlace().isCoordinateInsideBounds(position)) {
-                return ResultType.SUCCESS;
-            }
-        }
-        return ResultType.FAIL;
+        final CreateGameResultCommand createGameResultCommand = new CreateGameResultCommand(player, game, position, endType);
+        gameFinishService.createGameResult(createGameResultCommand);
     }
 
     @Transactional(readOnly = true)
