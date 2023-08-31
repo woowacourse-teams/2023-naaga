@@ -117,6 +117,12 @@ public class Game extends BaseEntity {
         return startPosition.calculateDistance(destinationPosition);
     }
 
+    public void subtractAttempts() {
+        validateInProgressing();
+
+        this.remainingAttempts = this.remainingAttempts - 1;
+    }
+
     public void endGame(final Position position,
                         final EndType endType) {
         validateInProgressing();

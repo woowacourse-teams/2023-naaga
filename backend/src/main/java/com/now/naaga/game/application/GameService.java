@@ -20,6 +20,7 @@ import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -75,20 +76,40 @@ public class GameService {
         }
     }
 
-    @Transactional(noRollbackFor = {GameNotArrivalException.class})
     public void endGame(final EndGameCommand endGameCommand) {
-        final Game game = gameRepository.findById(endGameCommand.gameId())
-                .orElseThrow(() -> new GameException(NOT_EXIST));
-        final Player player = playerService.findPlayerById(endGameCommand.playerId());
-        game.validateOwner(player);
-
+        final Long gameId = endGameCommand.gameId();
+        final Long playerId = endGameCommand.playerId();
         final EndType endType = endGameCommand.endType();
         final Position position = endGameCommand.position();
 
-        game.endGame(position, endType);
+        final Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new GameException(NOT_EXIST));
+        final Player player = playerService.findPlayerById(playerId);
+        game.validateOwner(player);
+
+        try {
+            game.endGame(position, endType);
+        } catch (final GameNotArrivalException gameNotArrivalException) {
+            final SubtractAttemptsCommand subtractAttemptsCommand = new SubtractAttemptsCommand(gameId, playerId);
+            subtractAttempts(subtractAttemptsCommand);
+            throw new GameNotArrivalException(NOT_ARRIVED);
+        }
 
         final CreateGameResultCommand createGameResultCommand = new CreateGameResultCommand(player, game, position, endType);
         gameFinishService.createGameResult(createGameResultCommand);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void subtractAttempts(final SubtractAttemptsCommand subtractAttemptsCommand) {
+        final Long gameId = subtractAttemptsCommand.gameId();
+        final Long playerId = subtractAttemptsCommand.playerId();
+
+        final Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new GameException(NOT_EXIST));
+        final Player player = playerService.findPlayerById(playerId);
+        game.validateOwner(player);
+
+        game.subtractAttempts();
     }
 
     @Transactional(readOnly = true)
