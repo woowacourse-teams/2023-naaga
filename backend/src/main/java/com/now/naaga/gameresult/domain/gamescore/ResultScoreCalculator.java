@@ -9,20 +9,20 @@ import java.util.List;
 
 import static com.now.naaga.common.exception.InternalExceptionType.FAIL_ESTABLISH_GAME_SCORE_POLICY;
 
-public class GameScoreCalculator {
+public class ResultScoreCalculator {
     
-    private final List<GameScorePolicy> scorePolicies;
+    private final List<ResultScorePolicy> scorePolicies;
 
-    public GameScoreCalculator(final List<GameScorePolicy> scorePolicies) {
+    public ResultScoreCalculator(final List<ResultScorePolicy> scorePolicies) {
         this.scorePolicies = scorePolicies;
     }
 
     public Score calculate(final Game game,
                            final ResultType resultType) {
-        final GameScorePolicy gameScorePolicy = scorePolicies.stream()
+        final ResultScorePolicy resultScorePolicy = scorePolicies.stream()
                 .filter(policy -> policy.hasSameResultType(resultType))
                 .findAny()
                 .orElseThrow(() -> new InternalException(FAIL_ESTABLISH_GAME_SCORE_POLICY));
-        return gameScorePolicy.calculate(game);
+        return resultScorePolicy.calculate(game);
     }
 }

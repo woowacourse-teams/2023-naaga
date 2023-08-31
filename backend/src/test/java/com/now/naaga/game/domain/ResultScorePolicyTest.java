@@ -1,7 +1,7 @@
 package com.now.naaga.game.domain;
 
-import com.now.naaga.gameresult.domain.gamescore.GameScorePolicy;
-import com.now.naaga.gameresult.domain.gamescore.SuccessGameScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.ResultScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.SuccessResultScorePolicy;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -21,10 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class GameScorePolicyTest {
+class ResultScorePolicyTest {
 
     private final Player player = PLAYER();
-    private final GameScorePolicy gameScorer = new SuccessGameScorePolicy();
+    private final ResultScorePolicy gameScorer = new SuccessResultScorePolicy();
 
     @Test
     void 다른_조건이_같고_거리가_멀수록_점수가_높다() {

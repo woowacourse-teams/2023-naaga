@@ -1,5 +1,6 @@
 package com.now.naaga.player.application;
 
+import com.now.naaga.player.application.dto.AddScoreCommand;
 import com.now.naaga.player.application.dto.CreatePlayerCommand;
 import com.now.naaga.player.application.dto.DeletePlayerCommand;
 import com.now.naaga.player.domain.Player;
@@ -15,6 +16,8 @@ import com.now.naaga.score.domain.Score;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
+
 @Transactional
 @Service
 public class PlayerService {
@@ -28,7 +31,7 @@ public class PlayerService {
     @Transactional(readOnly = true)
     public Player findPlayerById(final Long id) {
         return playerRepository.findById(id)
-                .orElseThrow(() -> new PlayerException(PlayerExceptionType.PLAYER_NOT_FOUND));
+                .orElseThrow(() -> new PlayerException(PLAYER_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
@@ -36,7 +39,7 @@ public class PlayerService {
         List<Player> playersByMemberId = playerRepository.findByMemberId(memberId);
 
         if (playersByMemberId.isEmpty()) {
-            throw new PlayerException(PlayerExceptionType.PLAYER_NOT_FOUND);
+            throw new PlayerException(PLAYER_NOT_FOUND);
         }
 
         return playersByMemberId.get(0);
@@ -83,6 +86,15 @@ public class PlayerService {
     public Player create(final CreatePlayerCommand createPlayerCommand) {
         final Player player = new Player(createPlayerCommand.nickname(), new Score(0), createPlayerCommand.member());
         return playerRepository.save(player);
+    }
+
+    public void addScore(final AddScoreCommand addScoreCommand) {
+        final Long playerId = addScoreCommand.playerId();
+        final Score score = addScoreCommand.score();
+        final Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new PlayerException(PLAYER_NOT_FOUND));
+
+        player.addScore(score);
     }
 
     public void deleteByMemberId(final DeletePlayerCommand deletePlayerCommand) {

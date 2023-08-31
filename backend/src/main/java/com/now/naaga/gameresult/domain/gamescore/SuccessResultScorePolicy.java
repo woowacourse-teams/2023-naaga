@@ -11,7 +11,7 @@ import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.Game.MAX_HINT_COUNT;
 import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 
-public class SuccessGameScorePolicy implements GameScorePolicy {
+public class SuccessResultScorePolicy implements ResultScorePolicy {
 
     private static final Score BASE_SCORE = new Score(50);
     private static final double HINT_SCORE_RATIO = 0.3;

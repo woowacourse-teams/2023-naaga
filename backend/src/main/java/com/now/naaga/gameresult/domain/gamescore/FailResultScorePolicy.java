@@ -6,7 +6,7 @@ import com.now.naaga.score.domain.Score;
 
 import static com.now.naaga.gameresult.domain.ResultType.FAIL;
 
-public class FailGameScorePolicy implements GameScorePolicy {
+public class FailResultScorePolicy implements ResultScorePolicy {
     
     @Override
     public Score calculate(final Game game) {

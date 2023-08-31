@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.gameresult.domain.ResultType;
-import com.now.naaga.gameresult.domain.gamescore.GameScoreCalculator;
+import com.now.naaga.gameresult.domain.gamescore.ResultScoreCalculator;
 import com.now.naaga.score.domain.Score;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -23,10 +23,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest
-class GameScoreCalculatorTest {
+class ResultScoreCalculatorTest {
 
     @Autowired
-    GameScoreCalculator gameScoreCalculator;
+    ResultScoreCalculator resultScoreCalculator;
 
     @Test
     void 게임결과가_성공일_때_점수를_얻는다() {
@@ -37,7 +37,7 @@ class GameScoreCalculatorTest {
                              LocalDateTime.now().minusHours(1), LocalDateTime.now());
 
         //when
-        final Score actual = gameScoreCalculator.calculate(game, resultType);
+        final Score actual = resultScoreCalculator.calculate(game, resultType);
 
         //then
         assertThat(actual.getValue()).isGreaterThan(0);
@@ -52,7 +52,7 @@ class GameScoreCalculatorTest {
                              LocalDateTime.now().minusHours(1), LocalDateTime.now());
 
         //when
-        final Score actual = gameScoreCalculator.calculate(game, resultType);
+        final Score actual = resultScoreCalculator.calculate(game, resultType);
 
         //then
         assertThat(actual.getValue()).isZero();
