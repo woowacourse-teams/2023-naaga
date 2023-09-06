@@ -12,6 +12,8 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
+import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
 
 class UploadViewModel(
     private val application: Application,
@@ -65,9 +67,17 @@ class UploadViewModel(
             callback = { result: Result<Place> ->
                 result
                     .onSuccess { _successUpload.value = true }
-                    .onFailure { _throwable.value = it as DataThrowable }
+                    .onFailure { setError(it as DataThrowable) }
             },
         )
+    }
+
+    private fun setError(throwable: DataThrowable) {
+        when (throwable) {
+            is UniversalThrowable -> _throwable.value = throwable
+            is PlaceThrowable -> _throwable.value = throwable
+            else -> {}
+        }
     }
 
     private fun getAbsolutePathFromUri(context: Context, uri: Uri): String? {
@@ -84,5 +94,9 @@ class UploadViewModel(
 
     companion object {
         val DEFAULT_COORDINATE = Coordinate(-1.0, -1.0)
+
+        const val ALREADY_EXISTS_NEARBY = 505
+        const val ERROR_STORE_PHOTO = 215
+        const val ERROR_POST_BODY = 205
     }
 }
