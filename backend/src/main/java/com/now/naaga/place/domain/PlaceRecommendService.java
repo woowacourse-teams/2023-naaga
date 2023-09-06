@@ -14,7 +14,7 @@ import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
 @Service
 public class PlaceRecommendService {
 
-    private static final int DISTANCE = 1;
+    private static final int DISTANCE = 500;
 
     private final PlaceRepository placeRepository;
 
