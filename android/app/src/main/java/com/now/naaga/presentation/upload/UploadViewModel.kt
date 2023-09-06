@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
+import com.now.naaga.data.throwable.DataThrowable
 
 class UploadViewModel(
     private val application: Application,
@@ -24,6 +25,12 @@ class UploadViewModel(
 
     private val _description = MutableLiveData<String>()
     val description: LiveData<String> = _description
+
+    private val _successUpload = MutableLiveData<Boolean>()
+    val successUpload: LiveData<Boolean> = _successUpload
+
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     fun setTitle(editTitle: Editable) {
         _name.value = editTitle.toString()
@@ -57,8 +64,8 @@ class UploadViewModel(
             image = getAbsolutePathFromUri(application.applicationContext, imageUri) ?: "",
             callback = { result: Result<Place> ->
                 result
-                    .onSuccess { }
-                    .onFailure { }
+                    .onSuccess { _successUpload.value = true }
+                    .onFailure { _throwable.value = it as DataThrowable }
             },
         )
     }
