@@ -1,0 +1,60 @@
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+spring:
+  h2:
+    console:
+      enabled: 'true'
+  datasource:
+    username: sa
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        format_sql: 'true'
+    defer-datasource-initialization: 'true'
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: create-drop
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+---
+
+spring:
+  config:
+    import: classpath:security/application-prod.yml
+    activate:
+      on-profile: prod
+
+---
+
+spring:
+  config:
+    import: classpath:security/application-dev.yml
+    activate:
+      on-profile: dev
+
+---
+
+spring:
+  config:
+    import: classpath:security/application-test.yml
+    activate:
+      on-profile: test
+
+---
+
+spring:
+  config:
+    import: classpath:security/application-prod.yml
+    activate:
+      on-profile: prod

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_mypage_empty_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/pretendard_bold"
+            android:textColor="@color/main_purple"
+            android:textSize="30sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Statistics" />
+
+        <TextView
+            android:id="@+id/tv_mypage_empty_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_bold"
+            android:gravity="center"
+            android:paddingTop="@dimen/space_default_medium"
+            android:paddingBottom="@dimen/space_default_large"
+            android:textColor="@color/main_gray"
+            android:textSize="24sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_mypage_empty_item_title"
+            tools:text="추가한 장소가 없어요.\n장소를 추가해주세요!" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

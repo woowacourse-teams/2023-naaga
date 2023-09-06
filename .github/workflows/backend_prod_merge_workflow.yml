@@ -1,0 +1,40 @@
+name: NAAGA BACKEND PRODUCT SERVER MERGE CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  deploy:
+    runs-on: naaga
+    steps:
+      - name: change permission
+        run: |
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/naaga/2023-naaga/2023-naaga
+      
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: project remove
+        run: |
+          sudo rm -rf /home/ubuntu/prod/2023-naaga
+      
+      - name: project copy
+        run: |
+          sudo cp -r /home/ubuntu/actions-runner/naaga/2023-naaga/2023-naaga /home/ubuntu/prod
+
+      - name: build
+        run: |
+          cd /home/ubuntu/prod/2023-naaga/backend
+          sudo chmod +x ./gradlew
+          sudo ./gradlew clean bootJar
+     
+      - name: transfer & run
+        run: |
+          cd /home/ubuntu/prod
+          chmod +x ./deploy_prod.sh
+          sudo ./deploy_prod.sh
