@@ -27,7 +27,7 @@ interface PlaceService {
     @Multipart
     @POST("/places")
     fun registerPlace(
-        @PartMap postData: Map<String, RequestBody>,
+        @PartMap postData: HashMap<String, RequestBody>,
         @Part imageFile: MultipartBody.Part,
     ): Call<PlaceDto>
 }
