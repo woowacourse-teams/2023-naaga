@@ -4,14 +4,12 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.mapper.toDomain
-import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.dto.PlaceDto
 import com.now.naaga.data.remote.retrofit.ServicePool.placeService
 import com.now.naaga.data.remote.retrofit.fetchResponse
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -45,7 +43,6 @@ class DefaultPlaceRepository : PlaceRepository {
         )
     }
 
-    // TODO : 업로드 기능 구현 시 fetchResponse로 변경해야 함
     override fun postPlace(
         name: String,
         description: String,
@@ -61,11 +58,26 @@ class DefaultPlaceRepository : PlaceRepository {
             requestFile,
         )
 
-        val namePart = name.toRequestBody("text/plain".toMediaTypeOrNull())
-        val descriptionPart = description.toRequestBody("text/plain".toMediaTypeOrNull())
-        val coordinatePart =
-            Json.encodeToString(coordinate.toDto()).toRequestBody("application/json".toMediaTypeOrNull())
+        val postData = HashMap<String, RequestBody>()
+        val nameRequestBody = name.toRequestBody("text/plain".toMediaTypeOrNull())
+        val descriptionRequestBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
+        val latitudeRequestBody = coordinate.latitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val longitudeRequestBody = coordinate.longitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val call = placeService.registerPlace(namePart, descriptionPart, coordinatePart, imagePart)
+        postData["name"] = nameRequestBody
+        postData["description"] = descriptionRequestBody
+        postData["latitude"] = latitudeRequestBody
+        postData["longitude"] = longitudeRequestBody
+
+        val call = placeService.registerPlace(postData, imagePart)
+
+        call.fetchResponse(
+            onSuccess = { placeDto ->
+                callback(Result.success(placeDto.toDomain()))
+            },
+            onFailure = {
+                callback(Result.failure(it))
+            },
+        )
     }
 }
