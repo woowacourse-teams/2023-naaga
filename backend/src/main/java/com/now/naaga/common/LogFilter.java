@@ -26,7 +26,7 @@ public class LogFilter implements Filter {
 
         chain.doFilter(request, response);
 
-        log(response,start);
+        log(response, start);
         queryCounter.close();
     }
 
@@ -35,7 +35,7 @@ public class LogFilter implements Filter {
         final int queryCount = queryCounter.count();
         final long end = System.currentTimeMillis();
         final long time = end - start;
-        MDC.put("time", String.valueOf(time)+"ms");
+        MDC.put("time", String.valueOf(time) + "ms");
         MDC.put("queryCount", String.valueOf(queryCount));
         log.info("queryCount: {}", queryCount);
     }
