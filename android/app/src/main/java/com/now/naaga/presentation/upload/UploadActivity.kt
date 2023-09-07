@@ -160,7 +160,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
         binding.btnUploadSubmit.setOnClickListener {
             if (isFormValid().not()) {
-                shortToast("모든 정보를 입력해주세요.")
+                shortToast(getString(R.string.upload_error_insufficient_info_message))
             } else {
                 viewModel.postPlace()
             }
