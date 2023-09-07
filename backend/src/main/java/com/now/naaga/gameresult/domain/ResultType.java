@@ -2,7 +2,12 @@ package com.now.naaga.gameresult.domain;
 
 import com.now.naaga.game.domain.EndType;
 import com.now.naaga.game.domain.Game;
+import com.now.naaga.game.domain.GameStatus;
+import com.now.naaga.gameresult.exception.GameResultException;
+import com.now.naaga.gameresult.exception.GameResultExceptionType;
 import com.now.naaga.place.domain.Position;
+
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 
 public enum ResultType {
 
@@ -13,7 +18,9 @@ public enum ResultType {
     public static ResultType decide(final Game game,
                                     final EndType endType,
                                     final Position position) {
-        game.validateDone();
+        if(game.getGameStatus() == IN_PROGRESS) {
+            throw new GameResultException(GameResultExceptionType.NOT_FINISH_GAME);
+        }
 
         if (endType == EndType.ARRIVED) {
             if (game.getPlace().isCoordinateInsideBounds(position)) {

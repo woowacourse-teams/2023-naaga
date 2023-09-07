@@ -13,6 +13,8 @@ import com.now.naaga.game.domain.GameRecord;
 import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.game.domain.Statistic;
 import com.now.naaga.game.exception.GameException;
+import com.now.naaga.gameresult.exception.GameResultException;
+import com.now.naaga.gameresult.exception.GameResultExceptionType;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
@@ -104,8 +106,8 @@ class GameServiceTest {
                 .build();
 
         //then
-        GameException gameException = assertThrows(GameException.class, () -> gameService.findGameResultByGameId(game.getId()));
-        assertThat(gameException.exceptionType()).isEqualTo(GAME_RESULT_NOT_EXIST);
+        GameResultException gameResultException = assertThrows(GameResultException.class, () -> gameService.findGameResultByGameId(game.getId()));
+        assertThat(gameResultException.exceptionType()).isEqualTo(GAME_RESULT_NOT_EXIST);
     }
 
     @Test
