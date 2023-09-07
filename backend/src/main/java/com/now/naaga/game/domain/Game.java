@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.now.naaga.game.domain.EndType.ARRIVED;
 import static com.now.naaga.game.domain.EndType.GIVE_UP;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
@@ -117,21 +118,29 @@ public class Game extends BaseEntity {
         return startPosition.calculateDistance(destinationPosition);
     }
 
-    public void subtractAttempts() {
+    public void endGame(final Position position,
+                        final EndType endType) {
+        if (endType == ARRIVED) {
+            subtractAttempts();
+        }
+        setDone(position, endType);
+    }
+
+    private void subtractAttempts() {
         remainingAttempts--;
     }
 
-    public void endGame(final Position position,
-                        final EndType endType) {
+    private void setDone(final Position position,
+                         final EndType endType) {
         validateInProgressing();
-        validateFinishedCondition(position, endType);
+        validateForEnd(position, endType);
 
         this.endTime = LocalDateTime.now();
         this.gameStatus = DONE;
     }
 
-    private void validateFinishedCondition(final Position position,
-                                           final EndType endType) {
+    private void validateForEnd(final Position position,
+                                             final EndType endType) {
         final boolean isUnfinishedCondition = remainingAttempts > 0
                 && !place.isCoordinateInsideBounds(position)
                 && endType != GIVE_UP;

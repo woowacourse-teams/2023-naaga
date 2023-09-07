@@ -46,20 +46,16 @@ public class GameService {
 
     private final GameFinishService gameFinishService;
 
-    private final GameManageService gameManageService;
-
     public GameService(final GameRepository gameRepository,
                        final GameResultRepository gameResultRepository,
                        final PlayerService playerService,
                        final PlaceService placeService,
-                       final GameFinishService gameFinishService,
-                       final GameManageService gameManageService) {
+                       final GameFinishService gameFinishService) {
         this.gameRepository = gameRepository;
         this.gameResultRepository = gameResultRepository;
         this.playerService = playerService;
         this.placeService = placeService;
         this.gameFinishService = gameFinishService;
-        this.gameManageService = gameManageService;
     }
 
     public Game createGame(final CreateGameCommand createGameCommand) {
@@ -89,7 +85,7 @@ public class GameService {
         final EndType endType = endGameCommand.endType();
         final Position position = endGameCommand.position();
 
-        gameManageService.endGame(game, endType, position);
+        game.endGame(position, endType);
 
         final CreateGameResultCommand createGameResultCommand = new CreateGameResultCommand(player, game, position, endType);
         gameFinishService.createGameResult(createGameResultCommand);

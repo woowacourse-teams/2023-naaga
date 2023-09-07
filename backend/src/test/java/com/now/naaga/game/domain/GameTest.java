@@ -42,7 +42,7 @@ class GameTest {
         final Game game = new Game(player, destination, startPosition);
 
         //when
-        game.endGame(currentPosition, GIVE_UP);
+        game.setDomeGame(currentPosition, GIVE_UP);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
@@ -61,7 +61,7 @@ class GameTest {
         final Game game = new Game(player, destination, startPosition);
 
         //when
-        game.endGame(currentPosition, ARRIVED);
+        game.setDomeGame(currentPosition, ARRIVED);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
@@ -80,7 +80,7 @@ class GameTest {
         final Game game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
 
         //when
-        game.endGame(currentPosition, ARRIVED);
+        game.setDomeGame(currentPosition, ARRIVED);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
@@ -100,7 +100,7 @@ class GameTest {
         final Game game = new Game(DONE, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
 
         //when & then
-        assertThatThrownBy(() -> game.endGame(currentPosition, ARRIVED)).isInstanceOf(GameException.class);
+        assertThatThrownBy(() -> game.setDomeGame(currentPosition, ARRIVED)).isInstanceOf(GameException.class);
     }
 
     @ParameterizedTest
@@ -113,6 +113,6 @@ class GameTest {
         final Game game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
 
         //when & then
-        assertThatThrownBy(() -> game.endGame(currentPosition, ARRIVED)).isInstanceOf(GameNotFinishedException.class);
+        assertThatThrownBy(() -> game.setDomeGame(currentPosition, ARRIVED)).isInstanceOf(GameNotFinishedException.class);
     }
 }
