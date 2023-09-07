@@ -31,9 +31,9 @@ logging:
 
 spring:
   config:
-    import: classpath:security/application-prod.yml
+    import: classpath:security/application-local.yml
     activate:
-      on-profile: prod
+      on-profile: local
 
 ---
 
