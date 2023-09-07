@@ -2,7 +2,7 @@ package com.now.naaga.game.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.exception.GameNotArrivalException;
+import com.now.naaga.game.exception.GameNotFinishedException;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.now.naaga.game.domain.EndType.ARRIVED;
 import static com.now.naaga.game.domain.EndType.GIVE_UP;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
@@ -117,30 +118,28 @@ public class Game extends BaseEntity {
         return startPosition.calculateDistance(destinationPosition);
     }
 
-    public void subtractAttempts() {
-        validateInProgressing();
-
-        this.remainingAttempts = this.remainingAttempts - 1;
-    }
-
     public void endGame(final Position position,
                         final EndType endType) {
         validateInProgressing();
 
-        this.remainingAttempts = this.remainingAttempts - 1;
-        this.endTime = LocalDateTime.now();
+        if (endType == ARRIVED) {
+            this.remainingAttempts = this.remainingAttempts - 1;
+        }
 
         validateFinishedCondition(position, endType);
+
+        this.endTime = LocalDateTime.now();
+        this.gameStatus = DONE;
     }
 
     private void validateFinishedCondition(final Position position,
                                            final EndType endType) {
         final boolean isUnfinishedCondition = remainingAttempts > 0
                 && !place.isCoordinateInsideBounds(position)
-                && endType == GIVE_UP;
+                && endType != GIVE_UP;
 
         if (isUnfinishedCondition) {
-            throw new GameNotArrivalException(NOT_ARRIVED);
+            throw new GameNotFinishedException(NOT_ARRIVED);
         }
     }
 

@@ -3,7 +3,7 @@ package com.now.naaga.game.application;
 import com.now.naaga.game.application.dto.*;
 import com.now.naaga.game.domain.*;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.exception.GameNotArrivalException;
+import com.now.naaga.game.exception.GameNotFinishedException;
 import com.now.naaga.game.persistence.GameRepository;
 
 // TODO: 8/31/23 제거할 대상 - 이슈 범위를 벗어나서 일단은 제거하지 않음
@@ -20,7 +20,6 @@ import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -76,40 +75,20 @@ public class GameService {
         }
     }
 
+    @Transactional(noRollbackFor = {GameNotFinishedException.class})
     public void endGame(final EndGameCommand endGameCommand) {
-        final Long gameId = endGameCommand.gameId();
-        final Long playerId = endGameCommand.playerId();
+        final Game game = gameRepository.findById(endGameCommand.gameId())
+                .orElseThrow(() -> new GameException(NOT_EXIST));
+        final Player player = playerService.findPlayerById(endGameCommand.playerId());
+        game.validateOwner(player);
+
         final EndType endType = endGameCommand.endType();
         final Position position = endGameCommand.position();
 
-        final Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new GameException(NOT_EXIST));
-        final Player player = playerService.findPlayerById(playerId);
-        game.validateOwner(player);
-
-        try {
-            game.endGame(position, endType);
-        } catch (final GameNotArrivalException gameNotArrivalException) {
-            final SubtractAttemptsCommand subtractAttemptsCommand = new SubtractAttemptsCommand(gameId, playerId);
-            subtractAttempts(subtractAttemptsCommand);
-            throw new GameNotArrivalException(NOT_ARRIVED);
-        }
+        game.endGame(position, endType);
 
         final CreateGameResultCommand createGameResultCommand = new CreateGameResultCommand(player, game, position, endType);
         gameFinishService.createGameResult(createGameResultCommand);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void subtractAttempts(final SubtractAttemptsCommand subtractAttemptsCommand) {
-        final Long gameId = subtractAttemptsCommand.gameId();
-        final Long playerId = subtractAttemptsCommand.playerId();
-
-        final Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new GameException(NOT_EXIST));
-        final Player player = playerService.findPlayerById(playerId);
-        game.validateOwner(player);
-
-        game.subtractAttempts();
     }
 
     @Transactional(readOnly = true)
