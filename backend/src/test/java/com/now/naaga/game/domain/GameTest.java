@@ -21,6 +21,7 @@ import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
 import static com.now.naaga.common.fixture.PositionFixture.*;
 import static com.now.naaga.game.domain.EndType.ARRIVED;
 import static com.now.naaga.game.domain.EndType.GIVE_UP;
+import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.Game.MAX_HINT_COUNT;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
@@ -42,12 +43,12 @@ class GameTest {
         final Game game = new Game(player, destination, startPosition);
 
         //when
-        game.setDomeGame(currentPosition, GIVE_UP);
+        game.endGame(currentPosition, GIVE_UP);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(game.getGameStatus()).isEqualTo(DONE);
-            softAssertions.assertThat(game.getRemainingAttempts()).isEqualTo(MAX_HINT_COUNT);
+            softAssertions.assertThat(game.getRemainingAttempts()).isEqualTo(MAX_ATTEMPT_COUNT);
         });
     }
 
@@ -61,12 +62,12 @@ class GameTest {
         final Game game = new Game(player, destination, startPosition);
 
         //when
-        game.setDomeGame(currentPosition, ARRIVED);
+        game.endGame(currentPosition, ARRIVED);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(game.getGameStatus()).isEqualTo(DONE);
-            softAssertions.assertThat(game.getRemainingAttempts()).isEqualTo(MAX_HINT_COUNT - 1);
+            softAssertions.assertThat(game.getRemainingAttempts()).isEqualTo(MAX_ATTEMPT_COUNT - 1);
         });
     }
 
@@ -80,12 +81,12 @@ class GameTest {
         final Game game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
 
         //when
-        game.setDomeGame(currentPosition, ARRIVED);
+        game.endGame(currentPosition, ARRIVED);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(game.getGameStatus()).isEqualTo(DONE);
-            softAssertions.assertThat(game.getRemainingAttempts()).isEqualTo(MAX_HINT_COUNT - 1);
+            softAssertions.assertThat(game.getRemainingAttempts()).isEqualTo(0);
         });
     }
 
@@ -100,7 +101,7 @@ class GameTest {
         final Game game = new Game(DONE, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
 
         //when & then
-        assertThatThrownBy(() -> game.setDomeGame(currentPosition, ARRIVED)).isInstanceOf(GameException.class);
+        assertThatThrownBy(() -> game.endGame(currentPosition, ARRIVED)).isInstanceOf(GameException.class);
     }
 
     @ParameterizedTest
@@ -113,6 +114,6 @@ class GameTest {
         final Game game = new Game(IN_PROGRESS, player, destination, startPosition, remainingAttempts, new ArrayList<>(), LocalDateTime.now(), null);
 
         //when & then
-        assertThatThrownBy(() -> game.setDomeGame(currentPosition, ARRIVED)).isInstanceOf(GameNotFinishedException.class);
+        assertThatThrownBy(() -> game.endGame(currentPosition, ARRIVED)).isInstanceOf(GameNotFinishedException.class);
     }
 }
