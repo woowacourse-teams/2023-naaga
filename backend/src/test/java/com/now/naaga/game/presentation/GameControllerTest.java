@@ -185,10 +185,6 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     void 게임_생성_요청시_주변에_추천_장소가_없다면_예외가_발생한다() {
         // given
-        final Place destination = placeBuilder.init()
-                                              .position(잠실_루터회관_정문_좌표)
-                                              .build();
-
         final Player player = playerBuilder.init()
                 .build();
 

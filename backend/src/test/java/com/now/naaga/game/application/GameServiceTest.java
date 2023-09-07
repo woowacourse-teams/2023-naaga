@@ -464,10 +464,6 @@ class GameServiceTest {
         final Player player = playerBuilder.init()
                 .build();
 
-        final Place destination = placeBuilder.init()
-                .position(역삼역_좌표)
-                .build();
-
         // when
         GameException gameException = assertThrows(GameException.class, () -> gameService.createGame(new CreateGameCommand(player.getId(), 잠실역_교보문고_좌표)));
 
