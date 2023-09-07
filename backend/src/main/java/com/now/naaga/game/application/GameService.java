@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.now.naaga.game.domain.EndType.ARRIVED;
 import static com.now.naaga.game.exception.GameExceptionType.*;
 
 // TODO: 8/31/23 제거할 대상 - 이슈 범위를 벗어나서 일단은 제거하지 않음
@@ -77,15 +78,23 @@ public class GameService {
 
     @Transactional(noRollbackFor = {GameNotFinishedException.class})
     public void endGame(final EndGameCommand endGameCommand) {
-        final Game game = gameRepository.findById(endGameCommand.gameId())
-                .orElseThrow(() -> new GameException(NOT_EXIST));
+        final Game game = gameRepository.findById(endGameCommand.gameId()).orElseThrow(() -> new GameException(NOT_EXIST));
         final Player player = playerService.findPlayerById(endGameCommand.playerId());
         game.validateOwner(player);
 
         final EndType endType = endGameCommand.endType();
         final Position position = endGameCommand.position();
 
+        /**
+         * 도메인 서비스로 빼내기
+         */
+        if (endType == ARRIVED) {
+            game.subtractAttempts();
+        }
         game.endGame(position, endType);
+        /**
+         * 여기까지
+         */
 
         final CreateGameResultCommand createGameResultCommand = new CreateGameResultCommand(player, game, position, endType);
         gameFinishService.createGameResult(createGameResultCommand);

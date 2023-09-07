@@ -34,6 +34,7 @@ import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 import static com.now.naaga.gameresult.domain.ResultType.FAIL;
 import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 import static com.now.naaga.game.exception.GameExceptionType.*;
+import static com.now.naaga.gameresult.exception.GameResultExceptionType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertThrows;
