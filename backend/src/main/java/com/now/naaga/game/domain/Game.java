@@ -2,6 +2,7 @@ package com.now.naaga.game.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.exception.GameException;
+import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.game.exception.GameNotFinishedException;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
@@ -127,7 +128,14 @@ public class Game extends BaseEntity {
     }
 
     private void subtractAttempts() {
+        validateAvailableAttempts();
         remainingAttempts--;
+    }
+
+    private void validateAvailableAttempts() {
+        if (remainingAttempts <= 0) {
+            throw new GameException(GameExceptionType.NOT_REMAIN_ATTEMPTS);
+        }
     }
 
     private void setDone(final Position position,
@@ -151,7 +159,7 @@ public class Game extends BaseEntity {
     }
 
     private void validateInProgressing() {
-        if (gameStatus == DONE || remainingAttempts <= 0) {
+        if (gameStatus == DONE) {
             throw new GameException(ALREADY_DONE);
         }
     }
