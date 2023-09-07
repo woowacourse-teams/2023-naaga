@@ -17,13 +17,15 @@ class UploadViewModel(
     private val placeRepository: PlaceRepository,
 ) : ViewModel() {
     private var imageUri: Uri = Uri.EMPTY
-    private var coordinate = DEFAULT_COORDINATE
 
     private val _name = MutableLiveData<String>()
     val title: LiveData<String> = _name
 
     private val _description = MutableLiveData<String>()
     val description: LiveData<String> = _description
+
+    private val _coordinate = MutableLiveData<Coordinate>()
+    val coordinate: LiveData<Coordinate> = _coordinate
 
     fun setTitle(editTitle: Editable) {
         _name.value = editTitle.toString()
@@ -38,7 +40,7 @@ class UploadViewModel(
     }
 
     fun setCoordinate(coordinate: Coordinate) {
-        this.coordinate = coordinate
+        _coordinate.value = coordinate
     }
 
     fun hasUri(): Boolean {
@@ -46,21 +48,23 @@ class UploadViewModel(
     }
 
     fun hasCoordinate(): Boolean {
-        return coordinate != DEFAULT_COORDINATE
+        return _coordinate.value != null
     }
 
     fun postPlace() {
-        placeRepository.postPlace(
-            name = _name.value.toString(),
-            description = _description.value.toString(),
-            coordinate = coordinate,
-            image = getAbsolutePathFromUri(application.applicationContext, imageUri) ?: "",
-            callback = { result: Result<Place> ->
-                result
-                    .onSuccess { }
-                    .onFailure { }
-            },
-        )
+        _coordinate.value?.let { coordinate ->
+            placeRepository.postPlace(
+                name = _name.value.toString(),
+                description = _description.value.toString(),
+                coordinate = coordinate,
+                image = getAbsolutePathFromUri(application.applicationContext, imageUri) ?: "",
+                callback = { result: Result<Place> ->
+                    result
+                        .onSuccess { }
+                        .onFailure { }
+                },
+            )
+        }
     }
 
     private fun getAbsolutePathFromUri(context: Context, uri: Uri): String? {
@@ -73,9 +77,5 @@ class UploadViewModel(
             }
         }
         return null
-    }
-
-    companion object {
-        val DEFAULT_COORDINATE = Coordinate(-1.0, -1.0)
     }
 }

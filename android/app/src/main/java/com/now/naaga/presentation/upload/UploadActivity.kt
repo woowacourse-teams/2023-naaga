@@ -69,6 +69,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         setContentView(binding.root)
 
         initViewModel()
+        subscribe()
         registerAnalytics(this.lifecycle)
         requestPermission()
         setCoordinate()
@@ -82,6 +83,12 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         setClickListeners()
+    }
+
+    private fun subscribe() {
+        viewModel.coordinate.observe(this) {
+            binding.lottieUploadLoading.visibility = View.GONE
+        }
     }
 
     private fun requestPermission() {
