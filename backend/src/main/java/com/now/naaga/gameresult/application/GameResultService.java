@@ -3,7 +3,7 @@ package com.now.naaga.gameresult.application;
 import com.now.naaga.game.application.dto.CreateGameResultCommand;
 import com.now.naaga.game.domain.EndType;
 import com.now.naaga.game.domain.Game;
-import com.now.naaga.game.domain.GameFinishService;
+import com.now.naaga.game.application.GameFinishService;
 import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.gameresult.domain.ResultType;
 import com.now.naaga.gameresult.domain.gamescore.ResultScoreCalculator;

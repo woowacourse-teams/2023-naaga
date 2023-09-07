@@ -1,4 +1,4 @@
-package com.now.naaga.game.domain;
+package com.now.naaga.game.application;
 
 import com.now.naaga.game.application.dto.CreateGameResultCommand;
 
