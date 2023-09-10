@@ -91,9 +91,14 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         viewModel.coordinate.observe(this) {
             binding.lottieUploadLoading.visibility = View.GONE
         }
-        viewModel.successUpload.observe(this) { isSuccess ->
-            if (isSuccess) {
-                finish()
+        viewModel.successUpload.observe(this) { uploadStatus ->
+            when (uploadStatus) {
+                UploadStatus.SUCCESS -> {
+                    binding.lottieUploadLoading.visibility = View.GONE
+                    finish()
+                }
+                UploadStatus.PENDING -> { binding.lottieUploadLoading.visibility = View.VISIBLE }
+                UploadStatus.FAIL -> { shortToast(MESSAGE_FAIL_UPLOAD) }
             }
         }
         viewModel.throwable.observe(this) { error: DataThrowable ->
@@ -182,6 +187,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             if (isFormValid().not()) {
                 shortToast(getString(R.string.upload_error_insufficient_info_message))
             } else {
+                viewModel.setSuccessUpload(UploadStatus.PENDING)
                 viewModel.postPlace()
             }
         }
@@ -261,6 +267,8 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CAMERA,
         )
+
+        private val MESSAGE_FAIL_UPLOAD = "장소등록에 실패했어요!"
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
