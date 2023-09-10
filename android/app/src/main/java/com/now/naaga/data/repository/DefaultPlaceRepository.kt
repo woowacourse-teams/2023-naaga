@@ -59,15 +59,10 @@ class DefaultPlaceRepository : PlaceRepository {
         )
 
         val postData = HashMap<String, RequestBody>()
-        val nameRequestBody = name.toRequestBody("text/plain".toMediaTypeOrNull())
-        val descriptionRequestBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
-        val latitudeRequestBody = coordinate.latitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val longitudeRequestBody = coordinate.longitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-
-        postData["name"] = nameRequestBody
-        postData["description"] = descriptionRequestBody
-        postData["latitude"] = latitudeRequestBody
-        postData["longitude"] = longitudeRequestBody
+        postData["name"] = name.toRequestBody("text/plain".toMediaTypeOrNull())
+        postData["description"] = description.toRequestBody("text/plain".toMediaTypeOrNull())
+        postData["latitude"] = coordinate.latitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        postData["longitude"] = coordinate.longitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
         val call = placeService.registerPlace(postData, imagePart)
 
