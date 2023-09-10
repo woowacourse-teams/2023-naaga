@@ -53,16 +53,16 @@ class DefaultPlaceRepository : PlaceRepository {
         val file = File(image)
         val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val imagePart = MultipartBody.Part.createFormData(
-            "imageFile",
+            KEY_IMAGE_FILE,
             file.name,
             requestFile,
         )
 
         val postData = HashMap<String, RequestBody>()
-        postData["name"] = name.toRequestBody("text/plain".toMediaTypeOrNull())
-        postData["description"] = description.toRequestBody("text/plain".toMediaTypeOrNull())
-        postData["latitude"] = coordinate.latitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        postData["longitude"] = coordinate.longitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        postData[KEY_NAME] = name.toRequestBody("text/plain".toMediaTypeOrNull())
+        postData[KEY_DESCRIPTION] = description.toRequestBody("text/plain".toMediaTypeOrNull())
+        postData[KEY_LATITUDE] = coordinate.latitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        postData[KEY_LONGITUDE] = coordinate.longitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
         val call = placeService.registerPlace(postData, imagePart)
 
@@ -74,5 +74,13 @@ class DefaultPlaceRepository : PlaceRepository {
                 callback(Result.failure(it))
             },
         )
+    }
+
+    companion object {
+        const val KEY_NAME = "name"
+        const val KEY_DESCRIPTION = "description"
+        const val KEY_LATITUDE = "latitude"
+        const val KEY_LONGITUDE = "longitude"
+        const val KEY_IMAGE_FILE = "imageFile"
     }
 }
