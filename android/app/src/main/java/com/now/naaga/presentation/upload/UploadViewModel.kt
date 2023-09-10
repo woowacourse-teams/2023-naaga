@@ -20,7 +20,6 @@ class UploadViewModel(
     private val placeRepository: PlaceRepository,
 ) : ViewModel() {
     private var imageUri: Uri = Uri.EMPTY
-    private var coordinate = DEFAULT_COORDINATE
 
     private val _name = MutableLiveData<String>()
     val title: LiveData<String> = _name
@@ -33,6 +32,9 @@ class UploadViewModel(
 
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
+
+    private val _coordinate = MutableLiveData<Coordinate>()
+    val coordinate: LiveData<Coordinate> = _coordinate
 
     fun setTitle(editTitle: Editable) {
         _name.value = editTitle.toString()
@@ -47,7 +49,7 @@ class UploadViewModel(
     }
 
     fun setCoordinate(coordinate: Coordinate) {
-        this.coordinate = coordinate
+        _coordinate.value = coordinate
     }
 
     fun hasUri(): Boolean {
@@ -55,21 +57,23 @@ class UploadViewModel(
     }
 
     fun hasCoordinate(): Boolean {
-        return coordinate != DEFAULT_COORDINATE
+        return _coordinate.value != null
     }
 
     fun postPlace() {
-        placeRepository.postPlace(
-            name = _name.value.toString(),
-            description = _description.value.toString(),
-            coordinate = coordinate,
-            image = getAbsolutePathFromUri(application.applicationContext, imageUri) ?: "",
-            callback = { result: Result<Place> ->
-                result
-                    .onSuccess { _successUpload.value = true }
-                    .onFailure { setError(it as DataThrowable) }
-            },
-        )
+        _coordinate.value?.let { coordinate ->
+            placeRepository.postPlace(
+                name = _name.value.toString(),
+                description = _description.value.toString(),
+                coordinate = coordinate,
+                image = getAbsolutePathFromUri(application.applicationContext, imageUri) ?: "",
+                callback = { result: Result<Place> ->
+                    result
+                        .onSuccess { _successUpload.value = true }
+                        .onFailure { setError(it as DataThrowable) }
+                },
+            )
+        }
     }
 
     private fun setError(throwable: DataThrowable) {
