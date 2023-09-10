@@ -11,6 +11,9 @@ import androidx.lifecycle.ViewModel
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
+import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
+import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
 
 class UploadViewModel(
     private val application: Application,
@@ -23,6 +26,12 @@ class UploadViewModel(
 
     private val _description = MutableLiveData<String>()
     val description: LiveData<String> = _description
+
+    private val _successUpload = MutableLiveData<Boolean>()
+    val successUpload: LiveData<Boolean> = _successUpload
+
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     private val _coordinate = MutableLiveData<Coordinate>()
     val coordinate: LiveData<Coordinate> = _coordinate
@@ -60,10 +69,18 @@ class UploadViewModel(
                 image = getAbsolutePathFromUri(application.applicationContext, imageUri) ?: "",
                 callback = { result: Result<Place> ->
                     result
-                        .onSuccess { }
-                        .onFailure { }
+                        .onSuccess { _successUpload.value = true }
+                        .onFailure { setError(it as DataThrowable) }
                 },
             )
+        }
+    }
+
+    private fun setError(throwable: DataThrowable) {
+        when (throwable) {
+            is UniversalThrowable -> _throwable.value = throwable
+            is PlaceThrowable -> _throwable.value = throwable
+            else -> {}
         }
     }
 
@@ -77,5 +94,13 @@ class UploadViewModel(
             }
         }
         return null
+    }
+
+    companion object {
+        val DEFAULT_COORDINATE = Coordinate(-1.0, -1.0)
+
+        const val ALREADY_EXISTS_NEARBY = 505
+        const val ERROR_STORE_PHOTO = 215
+        const val ERROR_POST_BODY = 205
     }
 }

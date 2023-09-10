@@ -21,11 +21,13 @@ import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.now.domain.model.Coordinate
+import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.firebase.analytics.UPLOAD_SET_COORDINATE
 import com.now.naaga.data.repository.DefaultPlaceRepository
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
@@ -88,6 +90,26 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private fun subscribe() {
         viewModel.coordinate.observe(this) {
             binding.lottieUploadLoading.visibility = View.GONE
+        }
+        viewModel.successUpload.observe(this) { isSuccess ->
+            if (isSuccess) {
+                finish()
+            }
+        }
+        viewModel.throwable.observe(this) { error: DataThrowable ->
+            when (error.code) {
+                UploadViewModel.ERROR_STORE_PHOTO -> {
+                    shortToast(getString(R.string.upload_error_store_photo_message))
+                }
+
+                UploadViewModel.ALREADY_EXISTS_NEARBY -> {
+                    shortToast(getString(R.string.upload_error_already_exists_nearby_message))
+                }
+
+                UploadViewModel.ERROR_POST_BODY -> {
+                    shortToast(getString(R.string.upload_error_post_message))
+                }
+            }
         }
     }
 
@@ -158,7 +180,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
         binding.btnUploadSubmit.setOnClickListener {
             if (isFormValid().not()) {
-                Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                shortToast(getString(R.string.upload_error_insufficient_info_message))
             } else {
                 viewModel.postPlace()
             }
@@ -203,6 +225,10 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 return imageUri
             }
         return null
+    }
+
+    private fun shortToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun isFormValid(): Boolean {
