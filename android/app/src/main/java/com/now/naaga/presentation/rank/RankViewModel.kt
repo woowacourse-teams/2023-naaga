@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.now.domain.model.OrderType
 import com.now.domain.model.Rank
 import com.now.domain.model.SortType
@@ -11,6 +12,7 @@ import com.now.domain.repository.RankRepository
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
+import kotlinx.coroutines.launch
 
 class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
     private val _myName = MutableLiveData<String>()
@@ -29,29 +31,29 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
     val throwable: LiveData<DataThrowable> = _throwable
 
     fun fetchMyRank() {
-        rankRepository.getMyRank(
-            callback = { result ->
-                result
-                    .onSuccess { rank ->
-                        _myName.value = rank.player.nickname
-                        _myScore.value = rank.player.score
-                        _myRank.value = rank.rank
-                    }
-                    .onFailure { setErrorMessage(it as DataThrowable) }
-            },
-        )
+        viewModelScope.launch {
+            runCatching {
+                rankRepository.getMyRank()
+            }.onSuccess { rank ->
+                _myName.value = rank.player.nickname
+                _myScore.value = rank.player.score
+                _myRank.value = rank.rank
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
+        }
     }
 
     fun fetchRanks() {
-        rankRepository.getAllRanks(
-            SortType.RANK.name,
-            OrderType.ASCENDING.name,
-            callback = { result ->
-                result
-                    .onSuccess { ranks -> _ranks.value = ranks }
-                    .onFailure { setErrorMessage(it as DataThrowable) }
-            },
-        )
+        viewModelScope.launch {
+            runCatching {
+                rankRepository.getAllRanks(SortType.RANK.name, OrderType.ASCENDING.name)
+            }.onSuccess { ranks ->
+                _ranks.value = ranks
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
+        }
     }
 
     private fun setErrorMessage(throwable: DataThrowable) {
