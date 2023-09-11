@@ -3,11 +3,10 @@ package com.now.domain.repository
 import com.now.domain.model.Rank
 
 interface RankRepository {
-    fun getAllRanks(
+    suspend fun getAllRanks(
         sortBy: String,
         order: String,
-        callback: (Result<List<Rank>>) -> Unit,
-    )
+    ): List<Rank>
 
-    fun getMyRank(callback: (Result<Rank>) -> Unit)
+    suspend fun getMyRank(): Rank
 }
