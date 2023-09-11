@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.now.domain.model.AdventureResult
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.RankRepository
@@ -11,6 +12,7 @@ import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
+import kotlinx.coroutines.launch
 
 class AdventureResultViewModel(
     private val adventureRepository: AdventureRepository,
@@ -38,13 +40,15 @@ class AdventureResultViewModel(
     }
 
     fun fetchMyRank() {
-        rankRepository.getMyRank(
-            callback = { result ->
-                result
-                    .onSuccess { rank -> _myRank.value = rank.rank }
-                    .onFailure { setErrorMessage(it as DataThrowable) }
-            },
-        )
+        viewModelScope.launch {
+            runCatching {
+                rankRepository.getMyRank()
+            }.onSuccess { rank ->
+                _myRank.value = rank.rank
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
+        }
     }
 
     private fun setErrorMessage(throwable: DataThrowable) {

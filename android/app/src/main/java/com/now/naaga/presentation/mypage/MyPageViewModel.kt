@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.now.domain.model.OrderType
 import com.now.domain.model.Place
 import com.now.domain.model.Rank
@@ -18,6 +19,7 @@ import com.now.naaga.data.repository.DefaultStatisticsRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
+import kotlinx.coroutines.launch
 
 class MyPageViewModel(
     private val rankRepository: RankRepository,
@@ -37,10 +39,14 @@ class MyPageViewModel(
     val throwable: LiveData<DataThrowable> = _throwable
 
     fun fetchRank() {
-        rankRepository.getMyRank { result: Result<Rank> ->
-            result
-                .onSuccess { rank -> _rank.value = rank }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+        viewModelScope.launch {
+            runCatching {
+                rankRepository.getMyRank()
+            }.onSuccess { rank ->
+                _rank.value = rank
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
         }
     }
 
