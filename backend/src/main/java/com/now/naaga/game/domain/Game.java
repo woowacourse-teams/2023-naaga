@@ -115,10 +115,19 @@ public class Game extends BaseEntity {
 
     public void endGame(final Position position,
                         final EndType endType) {
+        validateInProgressing();
+
         if (endType == ARRIVED) {
             subtractAttempts();
         }
+
         setGameStatusDone(position, endType);
+    }
+
+    private void validateInProgressing() {
+        if (gameStatus == DONE) {
+            throw new GameException(ALREADY_DONE);
+        }
     }
 
     private void subtractAttempts() {
@@ -134,17 +143,10 @@ public class Game extends BaseEntity {
 
     private void setGameStatusDone(final Position position,
                                    final EndType endType) {
-        validateInProgressing();
         validateForEnd(position, endType);
 
         this.endTime = LocalDateTime.now();
         this.gameStatus = DONE;
-    }
-
-    private void validateInProgressing() {
-        if (gameStatus == DONE) {
-            throw new GameException(ALREADY_DONE);
-        }
     }
 
     private void validateForEnd(final Position position,
