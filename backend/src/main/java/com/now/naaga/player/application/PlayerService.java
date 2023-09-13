@@ -90,8 +90,7 @@ public class PlayerService {
     public void addScore(final AddScoreCommand addScoreCommand) {
         final Long playerId = addScoreCommand.playerId();
         final Score score = addScoreCommand.score();
-        final Player player = playerRepository.findById(playerId)
-                .orElseThrow(() -> new PlayerException(PLAYER_NOT_FOUND));
+        final Player player = findPlayerById(playerId);
 
         player.addScore(score);
     }
