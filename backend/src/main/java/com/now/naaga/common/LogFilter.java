@@ -40,7 +40,7 @@ public class LogFilter implements Filter {
         final long time = end - start;
         MDC.put(TIME.getKey(), String.valueOf(time) + "ms");
         MDC.put(QUERYCOUNT.getKey(), String.valueOf(queryCount));
-        log.info("queryCount: {}", queryCount);
+        log.info("level: {}", "info");
     }
 
 }
