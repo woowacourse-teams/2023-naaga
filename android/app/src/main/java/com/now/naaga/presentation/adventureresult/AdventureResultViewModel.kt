@@ -29,14 +29,15 @@ class AdventureResultViewModel(
     val throwable: LiveData<DataThrowable> = _throwable
 
     fun fetchGameResult(adventureId: Long) {
-        adventureRepository.fetchAdventureResult(
-            adventureId,
-            callback = { result ->
-                result
-                    .onSuccess { adventureResult -> _adventureResult.value = adventureResult }
-                    .onFailure { setErrorMessage(it as DataThrowable) }
-            },
-        )
+        viewModelScope.launch {
+            runCatching {
+                adventureRepository.fetchAdventureResult(adventureId)
+            }.onSuccess { adventureResult ->
+                _adventureResult.value = adventureResult
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
+        }
     }
 
     fun fetchMyRank() {
@@ -53,7 +54,10 @@ class AdventureResultViewModel(
 
     private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is GameThrowable -> { _throwable.value = throwable }
+            is GameThrowable -> {
+                _throwable.value = throwable
+            }
+
             else -> {}
         }
     }
