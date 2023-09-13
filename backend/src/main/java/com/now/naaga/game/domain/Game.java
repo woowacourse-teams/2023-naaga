@@ -141,20 +141,20 @@ public class Game extends BaseEntity {
         this.gameStatus = DONE;
     }
 
+    private void validateInProgressing() {
+        if (gameStatus == DONE) {
+            throw new GameException(ALREADY_DONE);
+        }
+    }
+
     private void validateForEnd(final Position position,
-                                             final EndType endType) {
+                                final EndType endType) {
         final boolean isUnfinishedCondition = remainingAttempts > 0
                 && !place.isCoordinateInsideBounds(position)
                 && endType != GIVE_UP;
 
         if (isUnfinishedCondition) {
             throw new GameNotFinishedException(NOT_ARRIVED);
-        }
-    }
-
-    private void validateInProgressing() {
-        if (gameStatus == DONE) {
-            throw new GameException(ALREADY_DONE);
         }
     }
 
