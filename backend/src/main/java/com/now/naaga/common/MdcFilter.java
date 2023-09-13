@@ -7,7 +7,7 @@ import org.slf4j.MDC;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.now.naaga.common.MdcToken.REQUEST_ID;
+import static com.now.naaga.common.MdcToken.*;
 
 public class MdcFilter implements Filter {
 
@@ -19,8 +19,8 @@ public class MdcFilter implements Filter {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
         MDC.put(REQUEST_ID.getKey(), UUID.randomUUID().toString());
-        MDC.put("uri", httpServletRequest.getRequestURI());
-        MDC.put("method", httpServletRequest.getMethod());
+        MDC.put(URI.getKey(), httpServletRequest.getRequestURI());
+        MDC.put(METHOD.getKey(), httpServletRequest.getMethod());
 
         chain.doFilter(request, response);
     }

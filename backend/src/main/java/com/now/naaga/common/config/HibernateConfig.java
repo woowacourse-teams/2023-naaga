@@ -1,5 +1,6 @@
-package com.now.naaga.common;
+package com.now.naaga.common.config;
 
+import com.now.naaga.common.QueryInspector;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
