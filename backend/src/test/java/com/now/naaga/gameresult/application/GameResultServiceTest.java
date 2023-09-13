@@ -6,6 +6,7 @@ import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.game.application.dto.CreateGameResultCommand;
 import com.now.naaga.game.domain.Game;
+import com.now.naaga.game.exception.GameException;
 import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.gameresult.exception.GameResultException;
 import com.now.naaga.gameresult.repository.GameResultRepository;
@@ -85,6 +86,6 @@ class GameResultServiceTest {
 
         //when & then
         assertThatThrownBy(() -> gameResultService.createGameResult(createGameResultCommand))
-                .isInstanceOf(GameResultException.class);
+                .isInstanceOf(GameException.class);
     }
 }

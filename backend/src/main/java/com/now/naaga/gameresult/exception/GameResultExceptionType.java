@@ -10,12 +10,6 @@ public enum GameResultExceptionType implements BaseExceptionType {
             HttpStatus.NOT_FOUND,
             "해당게임의 게임결과가 존재하지 않습니다."
     ),
-
-    NOT_FINISH_GAME(
-            435,
-            HttpStatus.BAD_REQUEST,
-            "종료되지 않은 게임입니다."
-    ),
     ;
 
     private final int errorCode;

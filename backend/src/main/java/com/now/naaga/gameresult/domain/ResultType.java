@@ -18,14 +18,10 @@ public enum ResultType {
     public static ResultType decide(final Game game,
                                     final EndType endType,
                                     final Position position) {
-        if(game.getGameStatus() == IN_PROGRESS) {
-            throw new GameResultException(GameResultExceptionType.NOT_FINISH_GAME);
-        }
+        game.validateDoneGame();
 
-        if (endType == EndType.ARRIVED) {
-            if (game.getPlace().isCoordinateInsideBounds(position)) {
-                return ResultType.SUCCESS;
-            }
+        if (endType == EndType.ARRIVED && game.getPlace().isCoordinateInsideBounds(position)) {
+            return ResultType.SUCCESS;
         }
         return ResultType.FAIL;
     }

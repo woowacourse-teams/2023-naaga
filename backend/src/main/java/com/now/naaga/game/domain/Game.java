@@ -158,6 +158,12 @@ public class Game extends BaseEntity {
         }
     }
 
+    public void validateDoneGame() {
+        if(gameStatus == IN_PROGRESS) {
+            throw new GameException(NOT_DONE);
+        }
+    }
+
     public Long getId() {
         return id;
     }
