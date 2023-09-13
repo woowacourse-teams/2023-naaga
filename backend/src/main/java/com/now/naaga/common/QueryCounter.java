@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 public class QueryCounter {
 
     private static final int INITIAL_VALUE = 0;
-    private static final int WARNING_COUNT = 10;
 
     private final ThreadLocal<Integer> count = new ThreadLocal<>();
 
