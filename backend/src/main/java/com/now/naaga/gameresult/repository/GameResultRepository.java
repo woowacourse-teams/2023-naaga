@@ -1,4 +1,4 @@
-package com.now.naaga.gameresult.persistence;
+package com.now.naaga.gameresult.repository;
 
 import com.now.naaga.gameresult.domain.GameResult;
 import java.util.List;

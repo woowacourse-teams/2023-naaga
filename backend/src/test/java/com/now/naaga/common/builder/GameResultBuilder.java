@@ -5,7 +5,7 @@ import static com.now.naaga.game.domain.GameStatus.DONE;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.gameresult.domain.ResultType;
-import com.now.naaga.gameresult.persistence.GameResultRepository;
+import com.now.naaga.gameresult.repository.GameResultRepository;
 import com.now.naaga.score.domain.Score;
 import java.time.LocalDateTime;
 import java.util.Optional;

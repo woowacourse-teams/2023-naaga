@@ -8,7 +8,7 @@ import com.now.naaga.game.application.dto.CreateGameResultCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.gameresult.exception.GameResultException;
-import com.now.naaga.gameresult.persistence.GameResultRepository;
+import com.now.naaga.gameresult.repository.GameResultRepository;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;

@@ -4,12 +4,12 @@ import com.now.naaga.game.application.dto.*;
 import com.now.naaga.game.domain.*;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameNotFinishedException;
-import com.now.naaga.game.persistence.GameRepository;
+import com.now.naaga.game.repository.GameRepository;
 
 // TODO: 8/31/23 제거할 대상 - 이슈 범위를 벗어나서 일단은 제거하지 않음
 import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.gameresult.exception.GameResultException;
-import com.now.naaga.gameresult.persistence.GameResultRepository;
+import com.now.naaga.gameresult.repository.GameResultRepository;
 
 import com.now.naaga.place.application.PlaceService;
 import com.now.naaga.place.application.dto.RecommendPlaceCommand;
@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.now.naaga.game.domain.EndType.ARRIVED;
 import static com.now.naaga.game.exception.GameExceptionType.*;
 
 // TODO: 8/31/23 제거할 대상 - 이슈 범위를 벗어나서 일단은 제거하지 않음

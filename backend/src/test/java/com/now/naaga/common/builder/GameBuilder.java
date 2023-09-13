@@ -7,7 +7,7 @@ import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.game.domain.Hint;
-import com.now.naaga.game.persistence.GameRepository;
+import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;

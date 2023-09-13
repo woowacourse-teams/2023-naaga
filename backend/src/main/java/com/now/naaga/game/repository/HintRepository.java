@@ -1,4 +1,4 @@
-package com.now.naaga.game.persistence;
+package com.now.naaga.game.repository;
 
 import com.now.naaga.game.domain.Hint;
 import org.springframework.data.jpa.repository.JpaRepository;

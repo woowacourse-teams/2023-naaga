@@ -7,7 +7,7 @@ import com.now.naaga.game.application.GameFinishService;
 import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.gameresult.domain.ResultType;
 import com.now.naaga.gameresult.domain.gamescore.ResultScoreCalculator;
-import com.now.naaga.gameresult.persistence.GameResultRepository;
+import com.now.naaga.gameresult.repository.GameResultRepository;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.application.dto.AddScoreCommand;
