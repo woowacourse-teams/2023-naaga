@@ -118,7 +118,7 @@ public class Game extends BaseEntity {
         if (endType == ARRIVED) {
             subtractAttempts();
         }
-        setDone(position, endType);
+        setGameStatusDone(position, endType);
     }
 
     private void subtractAttempts() {
@@ -132,8 +132,8 @@ public class Game extends BaseEntity {
         }
     }
 
-    private void setDone(final Position position,
-                         final EndType endType) {
+    private void setGameStatusDone(final Position position,
+                                   final EndType endType) {
         validateInProgressing();
         validateForEnd(position, endType);
 
