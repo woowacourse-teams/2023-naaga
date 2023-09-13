@@ -11,127 +11,61 @@ import com.now.domain.model.SortType
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
-import com.now.naaga.data.remote.dto.AdventureDto
 import com.now.naaga.data.remote.dto.FinishGameDto
 import com.now.naaga.data.remote.retrofit.ServicePool
-import com.now.naaga.data.remote.retrofit.fetchResponse
+import com.now.naaga.util.getValueOrThrow
 
 class DefaultAdventureRepository : AdventureRepository {
-    override fun fetchMyAdventures(callback: (Result<List<Adventure>>) -> Unit) {
-        val call = ServicePool.adventureService.getMyGames()
-        call.fetchResponse(
-            onSuccess = { adventureDtos: List<AdventureDto> ->
-                callback(Result.success(adventureDtos.map { it.toDomain() }))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    override suspend fun fetchMyAdventures(): List<Adventure> {
+        val response = ServicePool.adventureService.getMyGames().getValueOrThrow()
+        return response.map { it.toDomain() }
     }
 
-    override fun fetchAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit) {
-        val call = ServicePool.adventureService.getGame(adventureId)
-        call.fetchResponse(
-            onSuccess = { adventureDto ->
-                callback(Result.success(adventureDto.toDomain()))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    override suspend fun fetchAdventure(adventureId: Long): Adventure {
+        val response = ServicePool.adventureService.getGame(adventureId).getValueOrThrow()
+        return response.toDomain()
     }
 
-    override fun fetchAdventureByStatus(status: AdventureStatus, callback: (Result<List<Adventure>>) -> Unit) {
-        val call = ServicePool.adventureService.getGamesByStatus(status.name)
-        call.fetchResponse(
-            onSuccess = { adventureDtos: List<AdventureDto> ->
-                callback(Result.success(adventureDtos.map { it.toDomain() }))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    override suspend fun fetchAdventureByStatus(status: AdventureStatus): List<Adventure> {
+        val response = ServicePool.adventureService.getGamesByStatus(status.name).getValueOrThrow()
+        return response.map { it.toDomain() }
     }
 
-    override fun beginAdventure(coordinate: Coordinate, callback: (Result<Adventure>) -> Unit) {
-        val call = ServicePool.adventureService.beginGame(coordinate.toDto())
-        call.fetchResponse(
-            onSuccess = { adventureDto ->
-                callback(Result.success(adventureDto.toDomain()))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    override suspend fun beginAdventure(coordinate: Coordinate): Adventure {
+        val response = ServicePool.adventureService.beginGame(coordinate.toDto()).getValueOrThrow()
+        return response.toDomain()
     }
 
-    override fun endGame(
+    override suspend fun endGame(
         adventureId: Long,
         endType: AdventureEndType,
         coordinate: Coordinate,
-        callback: (Result<AdventureStatus>) -> Unit,
-    ) {
+    ): AdventureStatus {
         val finishGameDto = FinishGameDto(endType.name, coordinate.toDto())
-        val call = ServicePool.adventureService.endGame(adventureId, finishGameDto)
-        call.fetchResponse(
-            onSuccess = { adventureStatusDto ->
-                callback(Result.success(AdventureStatus.getStatus(adventureStatusDto.gameStatus)))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+        val response = ServicePool.adventureService.endGame(adventureId, finishGameDto).getValueOrThrow()
+        return AdventureStatus.getStatus(response.gameStatus)
     }
 
-    override fun fetchAdventureResult(adventureId: Long, callback: (Result<AdventureResult>) -> Unit) {
-        val call = ServicePool.adventureService.getGameResult(adventureId)
-        call.fetchResponse(
-            onSuccess = { adventureResultDto ->
-                callback(Result.success(adventureResultDto.toDomain()))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    override suspend fun fetchAdventureResult(adventureId: Long): AdventureResult {
+        val response = ServicePool.adventureService.getGameResult(adventureId).getValueOrThrow()
+        return response.toDomain()
     }
 
-    override fun fetchMyAdventureResults(
+    override suspend fun fetchMyAdventureResults(
         sortBy: SortType,
         order: OrderType,
-        callback: (Result<List<AdventureResult>>) -> Unit,
-    ) {
-        val call = ServicePool.adventureService.getMyGameResults(sortBy.name, order.name)
-        call.fetchResponse(
-            onSuccess = { adventureResultDtos ->
-                callback(Result.success(adventureResultDtos.map { it.toDomain() }))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    ): List<AdventureResult> {
+        val response = ServicePool.adventureService.getMyGameResults(sortBy.name, order.name).getValueOrThrow()
+        return response.map { it.toDomain() }
     }
 
-    override fun fetchHint(adventureId: Long, hintId: Long, callback: (Result<Hint>) -> Unit) {
-        val call = ServicePool.adventureService.getHint(adventureId, hintId)
-        call.fetchResponse(
-            onSuccess = { hintDto ->
-                callback(Result.success(hintDto.toDomain()))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    override suspend fun fetchHint(adventureId: Long, hintId: Long): Hint {
+        val response = ServicePool.adventureService.getHint(adventureId, hintId).getValueOrThrow()
+        return response.toDomain()
     }
 
-    override fun makeHint(adventureId: Long, coordinate: Coordinate, callback: (Result<Hint>) -> Unit) {
-        val call = ServicePool.adventureService.requestHint(adventureId, coordinate.toDto())
-        call.fetchResponse(
-            onSuccess = { hintDto ->
-                callback(Result.success(hintDto.toDomain()))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    override suspend fun makeHint(adventureId: Long, coordinate: Coordinate): Hint {
+        val response = ServicePool.adventureService.requestHint(adventureId, coordinate.toDto()).getValueOrThrow()
+        return response.toDomain()
     }
 }
