@@ -4,9 +4,7 @@ import com.now.domain.model.PlatformAuth
 import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.mapper.toDto
-import com.now.naaga.data.remote.retrofit.ServicePool
 import com.now.naaga.data.remote.retrofit.ServicePool.authService
-import com.now.naaga.data.remote.retrofit.fetchResponse
 import com.now.naaga.util.getValueOrThrow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
