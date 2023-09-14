@@ -2,9 +2,9 @@ package com.now.naaga.presentation.splash
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.R
+import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.login.LoginActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -12,7 +12,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
-        viewModel.fetchInProgressAdventure()
+        viewModel.refreshAuth()
         subscribe()
         installSplashScreen()
         setContentView(R.layout.activity_splash)
@@ -23,14 +23,21 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun subscribe() {
-        viewModel.adventureStatus.observe(this) {
-            startNextActivity()
+        viewModel.event.observe(this) {
+            when (it) {
+                is SplashViewModel.Event.RefreshSucceed -> startBeginAdventureActivity()
+                is SplashViewModel.Event.RefreshFailed -> startLoginActivity()
+            }
         }
     }
 
-    private fun startNextActivity() {
-        val intent = LoginActivity.getIntent(this)
-        startActivity(intent)
+    private fun startBeginAdventureActivity() {
+        startActivity(BeginAdventureActivity.getIntent(this))
+        finish()
+    }
+
+    private fun startLoginActivity() {
+        startActivity(LoginActivity.getIntent(this))
         finish()
     }
 }
