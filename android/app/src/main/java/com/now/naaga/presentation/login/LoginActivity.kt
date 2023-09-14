@@ -17,7 +17,6 @@ import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.databinding.ActivityLoginBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.util.loginWithKakao
-import kotlinx.coroutines.Dispatchers
 
 class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityLoginBinding
@@ -36,7 +35,7 @@ class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytics
     }
 
     private fun initViewModel() {
-        val factory = LoginViewModelFactory(DefaultAuthRepository(NaagaApplication.authDataSource, Dispatchers.IO))
+        val factory = LoginViewModelFactory(DefaultAuthRepository(NaagaApplication.authDataSource))
         viewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
     }
 
