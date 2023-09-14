@@ -1,9 +1,6 @@
 package com.now.naaga.presentation.upload
 
-import android.app.Application
-import android.content.Context
 import android.net.Uri
-import android.provider.MediaStore
 import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,10 +15,9 @@ import com.now.naaga.util.MutableSingleLiveData
 import com.now.naaga.util.SingleLiveData
 
 class UploadViewModel(
-    private val application: Application,
     private val placeRepository: PlaceRepository,
 ) : ViewModel() {
-    private var imageUri: Uri = Uri.EMPTY
+    private var imageUri: String = URI_EMPTY
 
     private val _name = MutableLiveData<String>()
     val title: LiveData<String> = _name
@@ -46,7 +42,7 @@ class UploadViewModel(
         _description.value = editTitle.toString()
     }
 
-    fun setUri(uri: Uri) {
+    fun setUri(uri: String) {
         imageUri = uri
     }
 
@@ -55,7 +51,7 @@ class UploadViewModel(
     }
 
     fun hasUri(): Boolean {
-        return imageUri != Uri.EMPTY
+        return imageUri != URI_EMPTY
     }
 
     fun hasCoordinate(): Boolean {
@@ -69,7 +65,7 @@ class UploadViewModel(
                 name = _name.value.toString(),
                 description = _description.value.toString(),
                 coordinate = coordinate,
-                image = getAbsolutePathFromUri(application.applicationContext, imageUri) ?: "",
+                image = imageUri,
                 callback = { result: Result<Place> ->
                     result
                         .onSuccess { _successUpload.setValue(UploadStatus.SUCCESS) }
@@ -87,19 +83,9 @@ class UploadViewModel(
         }
     }
 
-    private fun getAbsolutePathFromUri(context: Context, uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = context.contentResolver.query(uri, projection, null, null, null)
-        cursor?.use {
-            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            if (it.moveToFirst()) {
-                return it.getString(columnIndex)
-            }
-        }
-        return null
-    }
-
     companion object {
+        val URI_EMPTY = Uri.EMPTY.toString()
+
         const val ALREADY_EXISTS_NEARBY = 505
         const val ERROR_STORE_PHOTO = 215
         const val ERROR_POST_BODY = 205

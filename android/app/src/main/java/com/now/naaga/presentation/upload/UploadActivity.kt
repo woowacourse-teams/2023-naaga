@@ -80,7 +80,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun initViewModel() {
         val repository = DefaultPlaceRepository()
-        val factory = UploadFactory(application, repository)
+        val factory = UploadFactory(repository)
         viewModel = ViewModelProvider(this, factory)[UploadViewModel::class.java]
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -215,7 +215,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private fun setImage(bitmap: Bitmap) {
         binding.ivUploadCameraIcon.visibility = View.GONE
         binding.ivUploadPhoto.setImageBitmap(bitmap)
-        val uri = getImageUri(bitmap) ?: Uri.EMPTY
+        val uri = getAbsolutePathFromUri(getImageUri(bitmap) ?: Uri.EMPTY) ?: ""
         viewModel.setUri(uri)
     }
 
@@ -229,6 +229,18 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 }
                 return imageUri
             }
+        return null
+    }
+
+    private fun getAbsolutePathFromUri(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = applicationContext.contentResolver.query(uri, projection, null, null, null)
+        cursor?.use {
+            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            if (it.moveToFirst()) {
+                return it.getString(columnIndex)
+            }
+        }
         return null
     }
 
