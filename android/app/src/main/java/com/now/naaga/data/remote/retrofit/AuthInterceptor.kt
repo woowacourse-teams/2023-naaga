@@ -46,7 +46,8 @@ class AuthInterceptor : Interceptor {
 
     private fun isLoginRequest(request: Request): Boolean {
         val path: String = request.url.encodedPath.substringAfter(BuildConfig.BASE_URL)
-        return path == AUTH_PATH
+        val httpMethod = request.method
+        return (path.contains(AUTH_PATH)) and (httpMethod == POST)
     }
 
     private fun reRequest(chain: Interceptor.Chain): Response {
@@ -83,7 +84,9 @@ class AuthInterceptor : Interceptor {
     }
 
     private fun getAccessToken(): String {
-        return NaagaApplication.authDataSource.getAccessToken() ?: throw IllegalStateException(NO_ACCESS_TOKEN)
+        val accessToken =
+            NaagaApplication.authDataSource.getAccessToken() ?: throw IllegalStateException(NO_ACCESS_TOKEN)
+        return BEARER + accessToken
     }
 
     private fun getRefreshToken(): String {
@@ -106,6 +109,9 @@ class AuthInterceptor : Interceptor {
 
         const val AUTH_PATH = "auth"
         const val AUTH_REFRESH_PATH = "auth/refresh"
+
+        const val POST = "POST"
+        const val BEARER = "Bearer "
 
         const val AUTH_ERROR = "%s에서 인증 오류 발생"
         const val REFRESH_EXPIRED = "리프레시 토큰 만료"
