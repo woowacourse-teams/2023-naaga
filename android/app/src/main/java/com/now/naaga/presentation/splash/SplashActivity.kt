@@ -14,7 +14,6 @@ class SplashActivity : AppCompatActivity() {
         initViewModel()
         viewModel.refreshAuth()
         subscribe()
-        installSplashScreen()
         setContentView(R.layout.activity_splash)
     }
 
