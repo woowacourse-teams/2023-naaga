@@ -51,10 +51,14 @@ class MyPageViewModel(
     }
 
     fun fetchStatistics() {
-        statisticsRepository.getMyStatistics { result: Result<Statistics> ->
-            result
-                .onSuccess { statistics -> _statistics.value = statistics }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+        viewModelScope.launch {
+            runCatching {
+                statisticsRepository.getMyStatistics()
+            }.onSuccess { statistics ->
+                _statistics.value = statistics
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
         }
     }
 
