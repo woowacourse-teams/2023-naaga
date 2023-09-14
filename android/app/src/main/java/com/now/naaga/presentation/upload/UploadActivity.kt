@@ -187,7 +187,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             if (isFormValid().not()) {
                 shortToast(getString(R.string.upload_error_insufficient_info_message))
             } else {
-                viewModel.setSuccessUpload(UploadStatus.PENDING)
                 viewModel.postPlace()
             }
         }

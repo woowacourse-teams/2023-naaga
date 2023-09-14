@@ -54,10 +54,6 @@ class UploadViewModel(
         _coordinate.value = coordinate
     }
 
-    fun setSuccessUpload(uploadStatus: UploadStatus) {
-        _successUpload.setValue(uploadStatus)
-    }
-
     fun hasUri(): Boolean {
         return imageUri != Uri.EMPTY
     }
@@ -68,6 +64,7 @@ class UploadViewModel(
 
     fun postPlace() {
         _coordinate.value?.let { coordinate ->
+            _successUpload.setValue(UploadStatus.PENDING)
             placeRepository.postPlace(
                 name = _name.value.toString(),
                 description = _description.value.toString(),
