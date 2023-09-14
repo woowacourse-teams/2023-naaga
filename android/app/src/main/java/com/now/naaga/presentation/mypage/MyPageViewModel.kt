@@ -63,10 +63,15 @@ class MyPageViewModel(
     }
 
     fun fetchPlaces() {
-        placeRepository.fetchMyPlaces(SortType.TIME.name, OrderType.DESCENDING.name) { result ->
-            result
-                .onSuccess { places -> _places.value = places }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+        viewModelScope.launch {
+            runCatching {
+                placeRepository.fetchMyPlaces(SortType.TIME.name, OrderType.DESCENDING.name)
+            }.onSuccess {
+                    places ->
+                _places.value = places
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
         }
     }
 
