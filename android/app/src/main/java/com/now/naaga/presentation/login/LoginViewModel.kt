@@ -1,6 +1,5 @@
 package com.now.naaga.presentation.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,7 +26,6 @@ class LoginViewModel(
             }.onSuccess { status ->
                 _isLoginSucceed.value = status
             }.onFailure {
-                Log.d("test", "${it.message} , ${it}")
                 _throwable.value = it as DataThrowable
             }
         }
