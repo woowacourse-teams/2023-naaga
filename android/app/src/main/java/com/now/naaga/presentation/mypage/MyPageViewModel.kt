@@ -66,8 +66,7 @@ class MyPageViewModel(
         viewModelScope.launch {
             runCatching {
                 placeRepository.fetchMyPlaces(SortType.TIME.name, OrderType.DESCENDING.name)
-            }.onSuccess {
-                    places ->
+            }.onSuccess { places ->
                 _places.value = places
             }.onFailure {
                 setErrorMessage(it as DataThrowable)
@@ -77,8 +76,14 @@ class MyPageViewModel(
 
     private fun setErrorMessage(throwable: Throwable) {
         when (throwable) {
-            is PlayerThrowable -> { _throwable.value = throwable }
-            is PlaceThrowable -> { _throwable.value = throwable }
+            is PlayerThrowable -> {
+                _throwable.value = throwable
+            }
+
+            is PlaceThrowable -> {
+                _throwable.value = throwable
+            }
+
             else -> {}
         }
     }

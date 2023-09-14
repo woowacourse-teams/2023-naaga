@@ -66,7 +66,8 @@ class UploadViewModel(
                         description = _description.value.toString(),
                         coordinate = coordinate,
                         image = imageUri,
-                    ) }.onSuccess {
+                    )
+                }.onSuccess {
                     _successUpload.value = true
                 }.onFailure {
                     setError(it as DataThrowable)
