@@ -4,22 +4,19 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
 
 interface PlaceRepository {
-    fun fetchMyPlaces(
+    suspend fun fetchMyPlaces(
         sortBy: String,
         order: String,
-        callback: (Result<List<Place>>) -> Unit,
-    )
+    ): List<Place>
 
-    fun fetchPlace(
+    suspend fun fetchPlace(
         placeId: Long,
-        callback: (Result<Place>) -> Unit,
-    )
+    ): Place
 
-    fun postPlace(
+    suspend fun postPlace(
         name: String,
         description: String,
         coordinate: Coordinate,
         image: String,
-        callback: (Result<Place>) -> Unit,
-    )
+    ): Place
 }

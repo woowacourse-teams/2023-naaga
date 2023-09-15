@@ -51,25 +51,39 @@ class MyPageViewModel(
     }
 
     fun fetchStatistics() {
-        statisticsRepository.getMyStatistics { result: Result<Statistics> ->
-            result
-                .onSuccess { statistics -> _statistics.value = statistics }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+        viewModelScope.launch {
+            runCatching {
+                statisticsRepository.getMyStatistics()
+            }.onSuccess { statistics ->
+                _statistics.value = statistics
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
         }
     }
 
     fun fetchPlaces() {
-        placeRepository.fetchMyPlaces(SortType.TIME.name, OrderType.DESCENDING.name) { result ->
-            result
-                .onSuccess { places -> _places.value = places }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+        viewModelScope.launch {
+            runCatching {
+                placeRepository.fetchMyPlaces(SortType.TIME.name, OrderType.DESCENDING.name)
+            }.onSuccess { places ->
+                _places.value = places
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
         }
     }
 
     private fun setErrorMessage(throwable: Throwable) {
         when (throwable) {
-            is PlayerThrowable -> { _throwable.value = throwable }
-            is PlaceThrowable -> { _throwable.value = throwable }
+            is PlayerThrowable -> {
+                _throwable.value = throwable
+            }
+
+            is PlaceThrowable -> {
+                _throwable.value = throwable
+            }
+
             else -> {}
         }
     }
