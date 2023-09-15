@@ -11,6 +11,8 @@ import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
+import com.now.naaga.util.MutableSingleLiveData
+import com.now.naaga.util.SingleLiveData
 import kotlinx.coroutines.launch
 
 class UploadViewModel(
@@ -24,8 +26,8 @@ class UploadViewModel(
     private val _description = MutableLiveData<String>()
     val description: LiveData<String> = _description
 
-    private val _successUpload = MutableLiveData<Boolean>()
-    val successUpload: LiveData<Boolean> = _successUpload
+    private val _successUpload = MutableSingleLiveData<UploadStatus>()
+    val successUpload: SingleLiveData<UploadStatus> = _successUpload
 
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
@@ -59,6 +61,7 @@ class UploadViewModel(
 
     fun postPlace() {
         _coordinate.value?.let { coordinate ->
+            _successUpload.setValue(UploadStatus.PENDING)
             viewModelScope.launch {
                 runCatching {
                     placeRepository.postPlace(
@@ -68,8 +71,9 @@ class UploadViewModel(
                         image = imageUri,
                     )
                 }.onSuccess {
-                    _successUpload.value = true
+                    _successUpload.setValue(UploadStatus.SUCCESS)
                 }.onFailure {
+                    _successUpload.setValue(UploadStatus.FAIL)
                     setError(it as DataThrowable)
                 }
             }
