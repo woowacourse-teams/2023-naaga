@@ -13,6 +13,6 @@ interface AuthService {
         @Body platformAuthDto: PlatformAuthDto,
     ): Response<NaagaAuthDto>
 
-    @DELETE("/auth/member")
+    @DELETE("/auth/unlink")
     suspend fun withdrawalMember()
 }
