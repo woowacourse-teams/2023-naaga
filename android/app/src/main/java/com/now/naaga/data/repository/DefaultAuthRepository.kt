@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 
 class DefaultAuthRepository(
     private val authDataSource: AuthDataSource,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AuthRepository {
 
     override suspend fun getToken(platformAuth: PlatformAuth): Boolean {
@@ -25,6 +25,13 @@ class DefaultAuthRepository(
                 return@withContext true
             }
             return@withContext false
+        }
+    }
+
+    override suspend fun logout() {
+        return withContext(dispatcher) {
+            val response = authService.requestLogout()
+            response.getValueOrThrow()
         }
     }
 }
