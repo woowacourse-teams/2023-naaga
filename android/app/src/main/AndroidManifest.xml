@@ -72,6 +72,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".presentation.setting.SettingActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+        <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
