@@ -4,9 +4,8 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.mapper.toDomain
-import com.now.naaga.data.remote.dto.PlaceDto
 import com.now.naaga.data.remote.retrofit.ServicePool.placeService
-import com.now.naaga.data.remote.retrofit.fetchResponse
+import com.now.naaga.util.getValueOrThrow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -15,41 +14,25 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class DefaultPlaceRepository : PlaceRepository {
-    override fun fetchMyPlaces(
+    override suspend fun fetchMyPlaces(
         sortBy: String,
         order: String,
-        callback: (Result<List<Place>>) -> Unit,
-    ) {
-        val call = placeService.getMyPlace(sortBy, order)
-        call.fetchResponse(
-            onSuccess = { placeDtos: List<PlaceDto> ->
-                callback(Result.success(placeDtos.map { it.toDomain() }))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    ): List<Place> {
+        val response = placeService.getMyPlace(sortBy, order)
+        return response.getValueOrThrow().map { it.toDomain() }
     }
 
-    override fun fetchPlace(placeId: Long, callback: (Result<Place>) -> Unit) {
-        val call = placeService.getPlace(placeId)
-        call.fetchResponse(
-            onSuccess = { placeDto ->
-                callback(Result.success(placeDto.toDomain()))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    override suspend fun fetchPlace(placeId: Long): Place {
+        val response = placeService.getPlace(placeId)
+        return response.getValueOrThrow().toDomain()
     }
 
-    override fun postPlace(
+    override suspend fun postPlace(
         name: String,
         description: String,
         coordinate: Coordinate,
         image: String,
-        callback: (Result<Place>) -> Unit,
-    ) {
+    ): Place {
         val file = File(image)
         val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val imagePart = MultipartBody.Part.createFormData(
@@ -64,16 +47,8 @@ class DefaultPlaceRepository : PlaceRepository {
         postData[KEY_LATITUDE] = coordinate.latitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         postData[KEY_LONGITUDE] = coordinate.longitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val call = placeService.registerPlace(postData, imagePart)
-
-        call.fetchResponse(
-            onSuccess = { placeDto ->
-                callback(Result.success(placeDto.toDomain()))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+        val response = placeService.registerPlace(postData, imagePart)
+        return response.getValueOrThrow().toDomain()
     }
 
     companion object {
