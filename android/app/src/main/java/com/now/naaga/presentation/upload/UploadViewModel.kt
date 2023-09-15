@@ -5,12 +5,13 @@ import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Coordinate
-import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
+import kotlinx.coroutines.launch
 import com.now.naaga.util.MutableSingleLiveData
 import com.now.naaga.util.SingleLiveData
 
@@ -60,18 +61,20 @@ class UploadViewModel(
 
     fun postPlace() {
         _coordinate.value?.let { coordinate ->
-            _successUpload.setValue(UploadStatus.PENDING)
-            placeRepository.postPlace(
-                name = _name.value.toString(),
-                description = _description.value.toString(),
-                coordinate = coordinate,
-                image = imageUri,
-                callback = { result: Result<Place> ->
-                    result
-                        .onSuccess { _successUpload.setValue(UploadStatus.SUCCESS) }
-                        .onFailure { setError(it as DataThrowable) }
-                },
-            )
+            viewModelScope.launch {
+                runCatching {
+                    placeRepository.postPlace(
+                        name = _name.value.toString(),
+                        description = _description.value.toString(),
+                        coordinate = coordinate,
+                        image = imageUri,
+                    )
+                }.onSuccess {
+                    _successUpload.value = true
+                }.onFailure {
+                    setError(it as DataThrowable)
+                }
+            }
         }
     }
 
