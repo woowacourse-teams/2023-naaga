@@ -91,9 +91,17 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         viewModel.coordinate.observe(this) {
             binding.lottieUploadLoading.visibility = View.GONE
         }
-        viewModel.successUpload.observe(this) { isSuccess ->
-            if (isSuccess) {
-                finish()
+        viewModel.successUpload.observe(this) { uploadStatus ->
+            when (uploadStatus) {
+                UploadStatus.SUCCESS -> {
+                    changeVisibility(binding.lottieUploadLoading, View.GONE)
+                    finish()
+                }
+                UploadStatus.PENDING -> { changeVisibility(binding.lottieUploadLoading, View.VISIBLE) }
+                UploadStatus.FAIL -> {
+                    changeVisibility(binding.lottieUploadLoading, View.GONE)
+                    shortToast(MESSAGE_FAIL_UPLOAD)
+                }
             }
         }
         viewModel.throwable.observe(this) { error: DataThrowable ->
@@ -110,6 +118,13 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                     shortToast(getString(R.string.upload_error_post_message))
                 }
             }
+        }
+    }
+
+    private fun changeVisibility(view: View, status: Int) {
+        when (status) {
+            View.VISIBLE -> { view.visibility = status }
+            View.GONE -> { view.visibility = status }
         }
     }
 
@@ -273,6 +288,8 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CAMERA,
         )
+
+        private val MESSAGE_FAIL_UPLOAD = "장소등록에 실패했어요!"
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")

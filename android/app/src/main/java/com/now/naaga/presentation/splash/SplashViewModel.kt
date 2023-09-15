@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.repository.DefaultAdventureRepository
+import kotlinx.coroutines.launch
 
 class SplashViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
@@ -17,10 +19,14 @@ class SplashViewModel(private val adventureRepository: AdventureRepository) : Vi
     val adventureStatus: LiveData<AdventureStatus> = _adventureStatus
 
     fun fetchInProgressAdventure() {
-        adventureRepository.fetchAdventureByStatus(AdventureStatus.IN_PROGRESS) { result: Result<List<Adventure>> ->
-            result
-                .onSuccess { fetchAdventure(it) }
-                .onFailure { _adventureStatus.value = AdventureStatus.NONE }
+        viewModelScope.launch {
+            runCatching {
+                adventureRepository.fetchAdventureByStatus(AdventureStatus.IN_PROGRESS)
+            }.onSuccess {
+                fetchAdventure(it)
+            }.onFailure {
+                _adventureStatus.value = AdventureStatus.NONE
+            }
         }
     }
 
