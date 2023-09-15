@@ -25,6 +25,9 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun setClickListeners() {
+        binding.tvSettingLogout.setOnClickListener {
+            viewModel.logout()
+        }
         binding.ivSettingBack.setOnClickListener {
             finish()
         }
