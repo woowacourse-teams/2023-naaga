@@ -58,9 +58,9 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         viewModelScope.launch {
             runCatching {
                 adventureRepository.endGame(
-                    adventureId = adventure.value?.id ?: throw IllegalStateException("[ERROR] adventure가 없습니다."),
+                    adventureId = adventure.value?.id ?: throw IllegalStateException(ADVENTURE_IS_NULL),
                     endType = AdventureEndType.GIVE_UP,
-                    coordinate = myCoordinate.value ?: throw IllegalStateException("[ERROR] myCoordinate가 없습니다."),
+                    coordinate = myCoordinate.value ?: throw IllegalStateException(MY_COORDINATE_IS_NULL),
                 )
             }.onSuccess { status: AdventureStatus ->
                 _adventure.value = adventure.value?.copy(adventureStatus = status)
@@ -78,8 +78,8 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         viewModelScope.launch {
             runCatching {
                 adventureRepository.makeHint(
-                    adventureId = adventure.value?.id ?: throw IllegalStateException("[ERROR] adventure가 없습니다."),
-                    coordinate = myCoordinate.value ?: throw IllegalStateException("[ERROR] myCoordinate가 없습니다."),
+                    adventureId = adventure.value?.id ?: throw IllegalStateException(ADVENTURE_IS_NULL),
+                    coordinate = myCoordinate.value ?: throw IllegalStateException(MY_COORDINATE_IS_NULL),
                 )
             }.onSuccess { hint: Hint ->
                 _adventure.value = adventure.value?.copy(hints = ((adventure.value?.hints ?: listOf()) + hint))
@@ -103,9 +103,9 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         viewModelScope.launch {
             runCatching {
                 adventureRepository.endGame(
-                    adventureId = adventure.value?.id ?: throw IllegalStateException("[ERROR] adventure가 없습니다."),
+                    adventureId = adventure.value?.id ?: throw IllegalStateException(ADVENTURE_IS_NULL),
                     endType = AdventureEndType.ARRIVED,
-                    coordinate = myCoordinate.value ?: throw IllegalStateException("[ERROR] myCoordinate가 없습니다."),
+                    coordinate = myCoordinate.value ?: throw IllegalStateException(MY_COORDINATE_IS_NULL),
                 )
             }.onSuccess {
                 _adventure.value = adventure.value?.copy(adventureStatus = it)
@@ -135,6 +135,9 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         const val NO_DESTINATION = 406
         const val NOT_ARRIVED = 415
         const val TRY_COUNT_OVER = 416
+        private const val ERROR_PREFIX = "[ERROR] OnAdventureViewModel:"
+        private const val ADVENTURE_IS_NULL = "$ERROR_PREFIX adventure가 널입니다."
+        private const val MY_COORDINATE_IS_NULL = "$ERROR_PREFIX myCoordinate가 널입니다."
         val Factory = ViewModelFactory(DefaultAdventureRepository())
 
         class ViewModelFactory(private val adventureRepository: AdventureRepository) : ViewModelProvider.Factory {
