@@ -11,9 +11,9 @@ import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
-import kotlinx.coroutines.launch
 import com.now.naaga.util.MutableSingleLiveData
 import com.now.naaga.util.SingleLiveData
+import kotlinx.coroutines.launch
 
 class UploadViewModel(
     private val placeRepository: PlaceRepository,
@@ -61,6 +61,7 @@ class UploadViewModel(
 
     fun postPlace() {
         _coordinate.value?.let { coordinate ->
+            _successUpload.setValue(UploadStatus.PENDING)
             viewModelScope.launch {
                 runCatching {
                     placeRepository.postPlace(
@@ -70,8 +71,9 @@ class UploadViewModel(
                         image = imageUri,
                     )
                 }.onSuccess {
-                    _successUpload.value = true
+                    _successUpload.setValue(UploadStatus.SUCCESS)
                 }.onFailure {
+                    _successUpload.setValue(UploadStatus.FAIL)
                     setError(it as DataThrowable)
                 }
             }
