@@ -16,11 +16,18 @@ class SettingActivity : AppCompatActivity() {
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViewModel()
+        setClickListeners()
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, SettingViewModel.Factory)[SettingViewModel::class.java]
         binding.lifecycleOwner = this
+    }
+
+    private fun setClickListeners() {
+        binding.ivSettingBack.setOnClickListener {
+            finish()
+        }
     }
 
     companion object {
