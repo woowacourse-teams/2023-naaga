@@ -12,6 +12,7 @@ import com.now.naaga.data.firebase.analytics.MYPAGE_GO_RESULTS
 import com.now.naaga.data.firebase.analytics.MY_PAGE_STATISTICS
 import com.now.naaga.databinding.ActivityMyPageBinding
 import com.now.naaga.presentation.adventurehistory.AdventureHistoryActivity
+import com.now.naaga.presentation.setting.SettingActivity
 
 class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityMyPageBinding
@@ -41,6 +42,10 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         binding.btnMypageAdventureResults.setOnClickListener {
             logClickEvent(getViewEntryName(it), MYPAGE_GO_RESULTS)
             val intent = AdventureHistoryActivity.getIntent(this)
+            startActivity(intent)
+        }
+        binding.ivMypageSetting.setOnClickListener {
+            val intent = SettingActivity.getIntent(this)
             startActivity(intent)
         }
     }
