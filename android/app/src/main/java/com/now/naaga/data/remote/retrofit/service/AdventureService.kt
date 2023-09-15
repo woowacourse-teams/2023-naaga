@@ -6,7 +6,7 @@ import com.now.naaga.data.remote.dto.AdventureStatusDto
 import com.now.naaga.data.remote.dto.CoordinateDto
 import com.now.naaga.data.remote.dto.FinishGameDto
 import com.now.naaga.data.remote.dto.HintDto
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -16,49 +16,49 @@ import retrofit2.http.Query
 
 interface AdventureService {
     @GET("/games")
-    fun getMyGames(): Call<List<AdventureDto>>
+    suspend fun getMyGames(): Response<List<AdventureDto>>
 
     @GET("/games/{gameId}")
-    fun getGame(
+    suspend fun getGame(
         @Path("gameId") gameId: Long,
-    ): Call<AdventureDto>
+    ): Response<AdventureDto>
 
     @GET("/games")
-    fun getGamesByStatus(
+    suspend fun getGamesByStatus(
         @Query("status") status: String,
-    ): Call<List<AdventureDto>>
+    ): Response<List<AdventureDto>>
 
     @POST("/games")
-    fun beginGame(
+    suspend fun beginGame(
         @Body coordinateDto: CoordinateDto,
-    ): Call<AdventureDto>
+    ): Response<AdventureDto>
 
     @PATCH("/games/{gameId}")
-    fun endGame(
+    suspend fun endGame(
         @Path("gameId") gameId: Long,
         @Body finishGameDto: FinishGameDto,
-    ): Call<AdventureStatusDto>
+    ): Response<AdventureStatusDto>
 
     @GET("/games/{gameId}/result")
-    fun getGameResult(
+    suspend fun getGameResult(
         @Path("gameId") gameId: Long,
-    ): Call<AdventureResultDto>
+    ): Response<AdventureResultDto>
 
     @GET("/games/results")
-    fun getMyGameResults(
+    suspend fun getMyGameResults(
         @Query("sort-by") sortBy: String,
         @Query("order") order: String,
-    ): Call<List<AdventureResultDto>>
+    ): Response<List<AdventureResultDto>>
 
     @GET("/games/{gameId}/hints/{hintId}")
-    fun getHint(
+    suspend fun getHint(
         @Path("gameId") gameId: Long,
         @Path("hintId") hingId: Long,
-    ): Call<HintDto>
+    ): Response<HintDto>
 
     @POST("/games/{gameId}/hints")
-    fun requestHint(
+    suspend fun requestHint(
         @Path("gameId") gameId: Long,
         @Body coordinateDto: CoordinateDto,
-    ): Call<HintDto>
+    ): Response<HintDto>
 }
