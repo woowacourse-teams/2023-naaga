@@ -94,11 +94,14 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         viewModel.successUpload.observe(this) { uploadStatus ->
             when (uploadStatus) {
                 UploadStatus.SUCCESS -> {
-                    binding.lottieUploadLoading.visibility = View.GONE
+                    changeVisibility(binding.lottieUploadLoading, View.GONE)
                     finish()
                 }
-                UploadStatus.PENDING -> { binding.lottieUploadLoading.visibility = View.VISIBLE }
-                UploadStatus.FAIL -> { shortToast(MESSAGE_FAIL_UPLOAD) }
+                UploadStatus.PENDING -> { changeVisibility(binding.lottieUploadLoading, View.VISIBLE) }
+                UploadStatus.FAIL -> {
+                    changeVisibility(binding.lottieUploadLoading, View.GONE)
+                    shortToast(MESSAGE_FAIL_UPLOAD)
+                }
             }
         }
         viewModel.throwable.observe(this) { error: DataThrowable ->
@@ -115,6 +118,13 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                     shortToast(getString(R.string.upload_error_post_message))
                 }
             }
+        }
+    }
+
+    private fun changeVisibility(view: View, status: Int) {
+        when (status) {
+            View.VISIBLE -> { view.visibility = status }
+            View.GONE -> { view.visibility = status }
         }
     }
 
