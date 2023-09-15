@@ -10,6 +10,8 @@ import com.kakao.sdk.user.UserApiClient
 private const val KAKAO_LOGIN_LOG_TAG = "kakao login"
 private const val KAKAO_LOGIN_FAIL_MESSAGE = "카카오계정으로 로그인 실패"
 private const val KAKAO_LOGIN_SUCCESS_MESSAGE = "카카오계정으로 로그인 성공"
+private const val KAKAO_UNLINK_FAIL_MESSAGE = "연결 끊기 실패"
+private const val KAKAO_UNLINK_SUCCESS_MESSAGE = "연결 끊기 성공. SDK에서 토큰 삭제 됨"
 
 private fun getLoginCallback(doNextAction: (token: String) -> Unit): (OAuthToken?, Throwable?) -> Unit {
     val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
@@ -50,3 +52,15 @@ fun loginWithKakao(context: Context, doNextAction: (token: String) -> Unit) {
         UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
     }
 }
+
+fun unlinkWithKakao() {
+    UserApiClient.instance.unlink { error ->
+        if (error != null) {
+            Log.e(KAKAO_LOGIN_LOG_TAG, KAKAO_UNLINK_FAIL_MESSAGE, error)
+        }
+        else {
+            Log.i(KAKAO_LOGIN_LOG_TAG, KAKAO_UNLINK_SUCCESS_MESSAGE)
+        }
+    }
+}
+
