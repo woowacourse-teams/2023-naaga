@@ -9,6 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.R
 import com.now.naaga.databinding.ActivitySettingBinding
+import com.now.naaga.presentation.login.LoginActivity
 import com.now.naaga.presentation.onadventure.NaagaAlertDialog
 
 class SettingActivity : AppCompatActivity() {
@@ -33,7 +34,7 @@ class SettingActivity : AppCompatActivity() {
         viewModel.isLoggedIn.observe(this) { isLoggedIn ->
             if (!isLoggedIn) {
                 shortToast(getString(R.string.setting_logout_message))
-                finish()
+                startActivity(LoginActivity.getIntentWithTop(this))
             }
         }
         viewModel.throwable.observe(this) {

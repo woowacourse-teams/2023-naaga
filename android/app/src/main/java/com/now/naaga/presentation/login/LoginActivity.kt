@@ -2,6 +2,8 @@ package com.now.naaga.presentation.login
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -74,6 +76,13 @@ class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytics
     companion object {
         fun getIntent(context: Context): Intent {
             return Intent(context, LoginActivity::class.java)
+        }
+
+        fun getIntentWithTop(context: Context): Intent {
+            return Intent(context, LoginActivity::class.java).apply {
+                addFlags(FLAG_ACTIVITY_NEW_TASK)
+                addFlags(FLAG_ACTIVITY_CLEAR_TASK)
+            }
         }
     }
 }
