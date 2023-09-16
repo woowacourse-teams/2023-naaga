@@ -11,6 +11,8 @@ import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.AuthorizationThrowable
 import kotlinx.coroutines.launch
+import com.now.naaga.data.throwable.DataThrowable
+import kotlinx.coroutines.launch
 
 class SettingViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _isLoggedIn = MutableLiveData(true)
@@ -35,6 +37,20 @@ class SettingViewModel(private val authRepository: AuthRepository) : ViewModel()
         when (throwable) {
             is AuthorizationThrowable -> _throwable.value = throwable
             else -> {}
+        }
+    }
+
+    private val _withdrawalStatus = MutableLiveData<Boolean>()
+    val withdrawalStatus: LiveData<Boolean> = _withdrawalStatus
+
+    private val _errorMessage = MutableLiveData<DataThrowable>()
+    val errorMessage: LiveData<DataThrowable> = _errorMessage
+
+    fun withdrawalMember() {
+        viewModelScope.launch {
+            runCatching { authRepository.withdrawalMember() }
+                .onSuccess { _withdrawalStatus.value = true }
+                .onFailure { _errorMessage.value = it as DataThrowable }
         }
     }
 

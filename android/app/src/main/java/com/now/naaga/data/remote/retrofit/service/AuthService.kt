@@ -13,6 +13,9 @@ interface AuthService {
         @Body platformAuthDto: PlatformAuthDto,
     ): Response<NaagaAuthDto>
 
+    @DELETE("/auth/unlink")
+    suspend fun withdrawalMember(): Response<Unit>
+
     @DELETE("/auth")
     suspend fun requestLogout(): Response<Unit>
 }

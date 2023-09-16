@@ -6,6 +6,7 @@ import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.retrofit.ServicePool.authService
 import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.unlinkWithKakao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -34,5 +35,10 @@ class DefaultAuthRepository(
             authDataSource.resetToken()
             response.getValueOrThrow()
         }
+    }
+
+    override suspend fun withdrawalMember() {
+        authService.withdrawalMember()
+        unlinkWithKakao()
     }
 }
