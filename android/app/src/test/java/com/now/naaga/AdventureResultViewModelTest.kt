@@ -51,8 +51,14 @@ class AdventureResultViewModelTest {
         distance = 200,
         hintUses = 3,
         tryCount = 2,
-        beginTime = LocalDateTime.of(LocalDate.of(2023,9,16), LocalTime.of(13,30)),
-        endTime = LocalDateTime.of(LocalDate.of(2023,9,16), LocalTime.of(14,0)),
+        beginTime = LocalDateTime.of(
+            LocalDate.of(2023,9,16),
+            LocalTime.of(13,30),
+        ),
+        endTime = LocalDateTime.of(
+            LocalDate.of(2023,9,16),
+            LocalTime.of(14,0),
+        ),
     )
 
     private val fakeAdventureResultOnFailure = AdventureResult(
@@ -72,8 +78,14 @@ class AdventureResultViewModelTest {
         distance = 200,
         hintUses = 3,
         tryCount = 2,
-        beginTime = LocalDateTime.of(LocalDate.of(2023,9,16), LocalTime.of(13,30)),
-        endTime = LocalDateTime.of(LocalDate.of(2023,9,16), LocalTime.of(14,0)),
+        beginTime = LocalDateTime.of(
+            LocalDate.of(2023,9,16),
+            LocalTime.of(13,30),
+        ),
+        endTime = LocalDateTime.of(
+            LocalDate.of(2023,9,16),
+            LocalTime.of(14,0),
+        ),
     )
 
     private val fakeMyRank = Rank(
