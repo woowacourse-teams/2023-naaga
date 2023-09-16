@@ -110,6 +110,7 @@
     <string name="setting_withdrawal_success_message">"성공적으로 회원 탈퇴 되었습니다."</string>
     <string name="setting_wrong_error_message">"인증 정보가 잘 못 되었어요!"</string>
     <string name="setting_expiration_error_message">"인증 정보가 만료 되었어요!"</string>
+    <string name="setting_logout_message">로그아웃 되었습니다.</string>
 
     <!-- Withdrawal Dialog -->
     <string name="withdrawal_dialog_title">정말 회원 탈퇴를 하시겠습니까?</string>
@@ -117,12 +118,9 @@
     <string name="withdrawal_dialog_positive">네</string>
     <string name="withdrawal_dialog_negative">아니요</string>
 
-    <!-- SettingActivity -->
-    <string name="setting_logout_message">로그아웃 되었습니다.</string>
-
     <!--logout dialog-->
-    <string name="logout_dialog_title">로그아웃 되었습니다.</string>
-    <string name="logout_dialog_description">정말 로그아웃 하시겠어요?</string>
+    <string name="logout_dialog_title">정말 로그아웃을 하시겠습니까?</string>
+    <string name="logout_dialog_description">나아가와 함께 즐거운 모험을 계속해보세요!</string>
     <string name="logout_dialog_positive_text">아니오</string>
     <string name="logout_dialog_negative_text">예</string>
 </resources>
