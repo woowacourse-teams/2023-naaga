@@ -39,7 +39,7 @@ class DefaultAuthRepository(
             }.onSuccess {
                 unlinkWithKakao()
             }.onFailure {
-                Log.d(KAKAO_LOGIN_LOG_TAG, "${it.message}, ${it}")
+                Log.d(KAKAO_LOGIN_LOG_TAG, "${it.message}, $it")
             }
             return@withContext false
         }

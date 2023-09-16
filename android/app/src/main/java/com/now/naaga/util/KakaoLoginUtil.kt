@@ -57,10 +57,8 @@ fun unlinkWithKakao() {
     UserApiClient.instance.unlink { error ->
         if (error != null) {
             Log.e(KAKAO_LOGIN_LOG_TAG, KAKAO_UNLINK_FAIL_MESSAGE, error)
-        }
-        else {
+        } else {
             Log.i(KAKAO_LOGIN_LOG_TAG, KAKAO_UNLINK_SUCCESS_MESSAGE)
         }
     }
 }
-

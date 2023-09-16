@@ -63,13 +63,12 @@ class SettingActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-
     companion object {
         private const val WITHDRAWAL_SUCCESS_MESSAGE = "성공적으로 회원 탈퇴 되었습니다."
         private const val WRONG_ERROR_MESSAGE = "인증 정보가 잘 못 되었어요!"
         private const val EXPIRATION_ERROR_MESSAGE = "인증 정보가 만료 되었어요!"
 
-    fun getIntent(context: Context): Intent {
+        fun getIntent(context: Context): Intent {
             return Intent(context, SettingActivity::class.java)
         }
     }
