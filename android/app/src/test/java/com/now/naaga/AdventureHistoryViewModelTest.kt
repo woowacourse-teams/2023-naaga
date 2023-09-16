@@ -32,6 +32,36 @@ class AdventureHistoryViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Before
+    fun setup() {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+        adventureRepository = mockk()
+        vm = AdventureHistoryViewModel(adventureRepository)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `내 게임 결과 리스트 불러오기`() {
+        // given
+        coEvery {
+            adventureRepository.fetchMyAdventureResults(SortType.TIME, OrderType.DESCENDING)
+        } coAnswers {
+            fakeAdventureResults
+        }
+
+        // when
+        vm.fetchHistories()
+
+        // then
+        assertEquals(vm.adventureResults.getOrAwaitValue(), fakeAdventureResults)
+    }
+
     private val fakeAdventureResults = listOf(
         AdventureResult(
             id = 1,
@@ -86,34 +116,4 @@ class AdventureHistoryViewModelTest {
             ),
         ),
     )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Before
-    fun setup() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
-        adventureRepository = mockk()
-        vm = AdventureHistoryViewModel(adventureRepository)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
-    @Test
-    fun `내 게임 결과 리스트 불러오기`() {
-        // given
-        coEvery {
-            adventureRepository.fetchMyAdventureResults(SortType.TIME, OrderType.DESCENDING)
-        } coAnswers {
-            fakeAdventureResults
-        }
-
-        // when
-        vm.fetchHistories()
-
-        // then
-        assertEquals(vm.adventureResults.getOrAwaitValue(), fakeAdventureResults)
-    }
 }
