@@ -132,4 +132,20 @@ class AdventureResultViewModelTest {
         assertEquals(vm.adventureResult.getOrAwaitValue(), fakeAdventureResultOnFailure)
         assertEquals(vm.adventureResult.getOrAwaitValue().resultType, AdventureResultType.FAIL)
     }
+
+    @Test
+    fun `내 랭킹 결과 불러오기`() {
+        // given
+        coEvery {
+            rankRepository.getMyRank()
+        } coAnswers {
+            fakeMyRank
+        }
+
+        // when
+        vm.fetchMyRank()
+
+        // then
+        assertEquals(vm.myRank.getOrAwaitValue(), fakeMyRank.rank)
+    }
 }
