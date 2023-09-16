@@ -6,6 +6,7 @@ import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.retrofit.ServicePool.authService
+import com.now.naaga.util.KAKAO_LOGIN_LOG_TAG
 import com.now.naaga.util.getValueOrThrow
 import com.now.naaga.util.unlinkWithKakao
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,15 +35,12 @@ class DefaultAuthRepository(
         return withContext(dispatcher) {
             runCatching {
                 authService.withdrawalMember()
-                Log.d("test", "회원탈퇴 성공")
                 return@withContext true
             }.onSuccess {
                 unlinkWithKakao()
-                Log.d("test", "카카오 회원탈퇴 성공")
             }.onFailure {
-                Log.d("test", "${it.message}, ${it}")
+                Log.d(KAKAO_LOGIN_LOG_TAG, "${it.message}, ${it}")
             }
-            Log.d("test", "회원탈퇴 실패")
             return@withContext false
         }
     }
