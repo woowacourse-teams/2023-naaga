@@ -52,12 +52,12 @@ class AdventureResultViewModelTest {
         hintUses = 3,
         tryCount = 2,
         beginTime = LocalDateTime.of(
-            LocalDate.of(2023,9,16),
-            LocalTime.of(13,30),
+            LocalDate.of(2023, 9, 16),
+            LocalTime.of(13, 30),
         ),
         endTime = LocalDateTime.of(
-            LocalDate.of(2023,9,16),
-            LocalTime.of(14,0),
+            LocalDate.of(2023, 9, 16),
+            LocalTime.of(14, 0),
         ),
     )
 
@@ -79,12 +79,12 @@ class AdventureResultViewModelTest {
         hintUses = 3,
         tryCount = 2,
         beginTime = LocalDateTime.of(
-            LocalDate.of(2023,9,16),
-            LocalTime.of(13,30),
+            LocalDate.of(2023, 9, 16),
+            LocalTime.of(13, 30),
         ),
         endTime = LocalDateTime.of(
-            LocalDate.of(2023,9,16),
-            LocalTime.of(14,0),
+            LocalDate.of(2023, 9, 16),
+            LocalTime.of(14, 0),
         ),
     )
 
