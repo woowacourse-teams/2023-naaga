@@ -6,4 +6,6 @@ interface AuthRepository {
     suspend fun getToken(
         platformAuth: PlatformAuth,
     ): Boolean
+
+    suspend fun withdrawalMember()
 }

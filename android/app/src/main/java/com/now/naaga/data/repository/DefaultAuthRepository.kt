@@ -6,13 +6,14 @@ import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.retrofit.ServicePool.authService
 import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.unlinkWithKakao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DefaultAuthRepository(
     private val authDataSource: AuthDataSource,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AuthRepository {
 
     override suspend fun getToken(platformAuth: PlatformAuth): Boolean {
@@ -26,5 +27,10 @@ class DefaultAuthRepository(
             }
             return@withContext false
         }
+    }
+
+    override suspend fun withdrawalMember() {
+        authService.withdrawalMember()
+        unlinkWithKakao()
     }
 }
