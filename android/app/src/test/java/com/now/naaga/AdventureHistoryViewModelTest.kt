@@ -66,8 +66,8 @@ class AdventureHistoryViewModelTest {
                 id = 1,
                 name = "파이브 가이즈",
                 coordinate = Coordinate(37.1234, 125.1234),
-                image = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net" +
-                    "%2Fdn%2FcPs9Im%2Fbtrb2k1feQq%2FBW34tbqjtHscUYkgCPyjcK%2Fimg.jpg,",
+                image = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fb" +
+                    "log.kakaocdn.net%2Fdn%2FcPs9Im%2Fbtrb2k1feQq%2FBW34tbqjtHscUYkgCPyjcK%2Fimg.jpg,",
                 description = "룰루랄라",
             ),
             resultType = AdventureResultType.FAIL,
