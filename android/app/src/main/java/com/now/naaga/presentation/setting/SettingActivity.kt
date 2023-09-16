@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.R
 import com.now.naaga.databinding.ActivitySettingBinding
+import com.now.naaga.presentation.onadventure.NaagaAlertDialog
 
 class SettingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
@@ -45,14 +47,27 @@ class SettingActivity : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.tvSettingLogout.setOnClickListener {
-            viewModel.logout()
+            makeLogoutDialog().show(supportFragmentManager, LOGOUT)
         }
         binding.ivSettingBack.setOnClickListener {
             finish()
         }
     }
 
+    private fun makeLogoutDialog(): DialogFragment {
+        return NaagaAlertDialog.Builder().build(
+            title = getString(R.string.logout_dialog_title),
+            description = getString(R.string.logout_dialog_description),
+            positiveText = getString(R.string.logout_dialog_positive_text),
+            negativeText = getString(R.string.logout_dialog_negative_text),
+            positiveAction = { },
+            negativeAction = { viewModel.logout() },
+        )
+    }
+
     companion object {
+        private const val LOGOUT = "LOGOUT"
+
         fun getIntent(context: Context): Intent {
             return Intent(context, SettingActivity::class.java)
         }
