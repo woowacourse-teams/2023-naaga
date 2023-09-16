@@ -23,6 +23,24 @@ public class PlaceStatistics extends BaseEntity {
 
     private Long likeCount;
 
+    protected PlaceStatistics() {
+
+    }
+
+    public PlaceStatistics(final Place place,
+                           final Long likeCount) {
+        this(null, place, likeCount);
+    }
+
+
+    public PlaceStatistics(final Long id,
+                           final Place place,
+                           final Long likeCount) {
+        this.id = id;
+        this.place = place;
+        this.likeCount = likeCount;
+    }
+
     public Long getId() {
         return id;
     }
