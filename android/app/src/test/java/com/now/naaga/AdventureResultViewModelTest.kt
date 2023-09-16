@@ -115,4 +115,21 @@ class AdventureResultViewModelTest {
         assertEquals(vm.adventureResult.getOrAwaitValue(), fakeAdventureResultOnSuccess)
         assertEquals(vm.adventureResult.getOrAwaitValue().resultType, AdventureResultType.SUCCESS)
     }
+
+    @Test
+    fun `실패한 게임 결과 불러오기`() {
+        // given
+        coEvery {
+            adventureRepository.fetchAdventureResult(2)
+        } coAnswers {
+            fakeAdventureResultOnFailure
+        }
+
+        // when
+        vm.fetchGameResult(2)
+
+        // then
+        assertEquals(vm.adventureResult.getOrAwaitValue(), fakeAdventureResultOnFailure)
+        assertEquals(vm.adventureResult.getOrAwaitValue().resultType, AdventureResultType.FAIL)
+    }
 }
