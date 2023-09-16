@@ -39,7 +39,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun subscribe() {
-        viewModel.withdrawalStatue.observe(this) { status ->
+        viewModel.withdrawalStatus.observe(this) { status ->
             if (status == true) {
                 shortToast(WITHDRAWAL_SUCCESS_MESSAGE)
                 navigateLogin()
