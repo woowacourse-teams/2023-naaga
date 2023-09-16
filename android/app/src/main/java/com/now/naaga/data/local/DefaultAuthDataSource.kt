@@ -34,7 +34,13 @@ class DefaultAuthDataSource(context: Context) : AuthDataSource {
         authPreference.edit().putString(REFRESH_TOKEN, newToken).apply()
     }
 
+    override fun resetToken() {
+        authPreference.edit().putString(ACCESS_TOKEN, DEFAULT_TOKEN).apply()
+        authPreference.edit().putString(REFRESH_TOKEN, DEFAULT_TOKEN).apply()
+    }
+
     companion object {
+        private const val DEFAULT_TOKEN = ""
         private const val AUTH_ENCRYPTED_PREFERENCE = "AUTH_ENCRYPTED_PREFERENCE"
         private const val ACCESS_TOKEN = "ACCESS_TOKEN"
         private const val REFRESH_TOKEN = "REFRESH_TOKEN"

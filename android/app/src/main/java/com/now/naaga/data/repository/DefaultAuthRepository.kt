@@ -31,6 +31,7 @@ class DefaultAuthRepository(
     override suspend fun logout() {
         return withContext(dispatcher) {
             val response = authService.requestLogout()
+            authDataSource.resetToken()
             response.getValueOrThrow()
         }
     }
