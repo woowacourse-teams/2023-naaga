@@ -48,8 +48,8 @@ class SettingActivity : AppCompatActivity() {
 
         viewModel.errorMessage.observe(this) { error: DataThrowable ->
             when (error.code) {
-                101 -> shortToast(WRONG_ERROR_MESSAGE)
-                102 -> shortToast(EXPIRATION_ERROR_MESSAGE)
+                WRONG_AUTH_ERROR_CODE -> shortToast(WRONG_ERROR_MESSAGE)
+                EXPIRATION_AUTH_ERROR_CODE -> shortToast(EXPIRATION_ERROR_MESSAGE)
             }
         }
     }
@@ -64,6 +64,8 @@ class SettingActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val WRONG_AUTH_ERROR_CODE = 101
+        private const val EXPIRATION_AUTH_ERROR_CODE = 102
         private const val WITHDRAWAL_SUCCESS_MESSAGE = "성공적으로 회원 탈퇴 되었습니다."
         private const val WRONG_ERROR_MESSAGE = "인증 정보가 잘 못 되었어요!"
         private const val EXPIRATION_ERROR_MESSAGE = "인증 정보가 만료 되었어요!"
