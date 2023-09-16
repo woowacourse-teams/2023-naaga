@@ -7,5 +7,5 @@ interface AuthRepository {
         platformAuth: PlatformAuth,
     ): Boolean
 
-    suspend fun withdrawalMember(): Boolean
+    suspend fun withdrawalMember()
 }

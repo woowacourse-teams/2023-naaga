@@ -22,7 +22,7 @@ class SettingViewModel(private val authRepository: AuthRepository) : ViewModel()
     fun withdrawalMember() {
         viewModelScope.launch {
             runCatching { authRepository.withdrawalMember() }
-                .onSuccess { _withdrawalStatus.value = it }
+                .onSuccess { _withdrawalStatus.value = true }
                 .onFailure { _errorMessage.value = it as DataThrowable }
         }
     }
