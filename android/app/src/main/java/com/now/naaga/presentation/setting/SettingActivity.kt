@@ -5,11 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.R
 import com.now.naaga.data.throwable.DataThrowable
-import com.now.naaga.R
 import com.now.naaga.databinding.ActivitySettingBinding
 import com.now.naaga.presentation.login.LoginActivity
 import com.now.naaga.presentation.onadventure.NaagaAlertDialog
@@ -25,7 +23,6 @@ class SettingActivity : AppCompatActivity() {
         initViewModel()
         subscribe()
         setClickListeners()
-        subscribe()
     }
 
     private fun initViewModel() {
@@ -40,41 +37,29 @@ class SettingActivity : AppCompatActivity() {
                 startActivity(LoginActivity.getIntentWithTop(this))
             }
         }
-        viewModel.throwable.observe(this) {
-            shortToast(it.message.toString())
+        viewModel.throwable.observe(this) { error: DataThrowable ->
+            when (error.code) {
+                WRONG_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_wrong_error_message))
+                EXPIRATION_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_expiration_error_message))
+            }
         }
-    }
-
-    private fun shortToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun setClickListeners() {
-        binding.tvSettingLogout.setOnClickListener {
-            makeLogoutDialog().show(supportFragmentManager, LOGOUT)
-        }
-        binding.ivSettingBack.setOnClickListener {
-            finish()
-        }
-
-        binding.tvSettingUnlink.setOnClickListener {
-            showWithdrawalDialog()
-        }
-    }
-
-    private fun subscribe() {
         viewModel.withdrawalStatus.observe(this) { status ->
             if (status == true) {
                 shortToast(getString(R.string.setting_withdrawal_success_message))
                 navigateLogin()
             }
         }
+    }
 
-        viewModel.errorMessage.observe(this) { error: DataThrowable ->
-            when (error.code) {
-                WRONG_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_wrong_error_message))
-                EXPIRATION_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_expiration_error_message))
-            }
+    private fun setClickListeners() {
+        binding.tvSettingLogout.setOnClickListener {
+            showLogoutDialog()
+        }
+        binding.ivSettingBack.setOnClickListener {
+            finish()
+        }
+        binding.tvSettingUnlink.setOnClickListener {
+            showWithdrawalDialog()
         }
     }
 
@@ -98,20 +83,19 @@ class SettingActivity : AppCompatActivity() {
         ).show(supportFragmentManager, WITHDRAWAL)
     }
 
-    private fun makeLogoutDialog(): DialogFragment {
-        return NaagaAlertDialog.Builder().build(
+    private fun showLogoutDialog() {
+        NaagaAlertDialog.Builder().build(
             title = getString(R.string.logout_dialog_title),
             description = getString(R.string.logout_dialog_description),
             positiveText = getString(R.string.logout_dialog_positive_text),
             negativeText = getString(R.string.logout_dialog_negative_text),
             positiveAction = { },
             negativeAction = { viewModel.logout() },
-        )
+        ).show(supportFragmentManager, LOGOUT)
     }
 
     companion object {
         private const val LOGOUT = "LOGOUT"
-
         private const val WITHDRAWAL = "WITHDRAWAL"
 
         private const val WRONG_AUTH_ERROR_CODE = 101
