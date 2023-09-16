@@ -14,5 +14,5 @@ interface AuthService {
     ): Response<NaagaAuthDto>
 
     @DELETE("/auth/unlink")
-    suspend fun withdrawalMember()
+    suspend fun withdrawalMember(): Response<Unit>?
 }
