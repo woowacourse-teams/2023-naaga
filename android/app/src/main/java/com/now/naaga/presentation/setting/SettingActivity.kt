@@ -55,7 +55,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun navigateLogin() {
-        startActivity(LoginActivity.getIntent(this))
+        startActivity(LoginActivity.getIntentWithTop(this))
         finish()
     }
 
