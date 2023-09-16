@@ -1,8 +1,10 @@
 package com.now.naaga
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.now.domain.model.OrderType
 import com.now.domain.model.Player
 import com.now.domain.model.Rank
+import com.now.domain.model.SortType
 import com.now.domain.repository.RankRepository
 import com.now.naaga.presentation.rank.RankViewModel
 import io.mockk.coEvery
@@ -95,5 +97,21 @@ class RankViewModelTest {
         assertEquals(vm.myRank.getOrAwaitValue(), fakeMyLank.rank)
         assertEquals(vm.myName.getOrAwaitValue(), fakeMyLank.player.nickname)
         assertEquals(vm.myScore.getOrAwaitValue(), fakeMyLank.player.score)
+    }
+
+    @Test
+    fun `전체 랭킹 조회`() {
+        // given
+        coEvery {
+            rankRepository.getAllRanks(SortType.RANK.name, OrderType.ASCENDING.name)
+        } coAnswers {
+            fakeRanksList
+        }
+
+        // when
+        vm.fetchRanks()
+
+        // then
+        assertEquals(vm.ranks.getOrAwaitValue(), fakeRanksList)
     }
 }
