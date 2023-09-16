@@ -1,4 +1,4 @@
-package com.now.naaga.place.domain.like;
+package com.now.naaga.like;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.place.domain.Place;
@@ -14,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity
-public class Like extends BaseEntity {
+public class PlaceLike extends BaseEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -29,25 +29,25 @@ public class Like extends BaseEntity {
     private Player player;
 
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private PlaceLikeType placeLikeType;
 
-    protected Like() {
+    protected PlaceLike() {
     }
 
-    public Like(final Place place,
-                final Player player,
-                final Type type) {
-        this(null, place, player, type);
+    public PlaceLike(final Place place,
+                     final Player player,
+                     final PlaceLikeType placeLikeType) {
+        this(null, place, player, placeLikeType);
     }
 
-    public Like(final Long id,
-                final Place place,
-                final Player player,
-                final Type type) {
+    public PlaceLike(final Long id,
+                     final Place place,
+                     final Player player,
+                     final PlaceLikeType placeLikeType) {
         this.id = id;
         this.place = place;
         this.player = player;
-        this.type = type;
+        this.placeLikeType = placeLikeType;
     }
 
     public Long getId() {
@@ -62,8 +62,8 @@ public class Like extends BaseEntity {
         return player;
     }
 
-    public Type getType() {
-        return type;
+    public PlaceLikeType getType() {
+        return placeLikeType;
     }
 
     @Override
@@ -74,8 +74,8 @@ public class Like extends BaseEntity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Like like = (Like) o;
-        return Objects.equals(id, like.id);
+        final PlaceLike placeLike = (PlaceLike) o;
+        return Objects.equals(id, placeLike.id);
     }
 
     @Override
@@ -85,11 +85,11 @@ public class Like extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Like{" +
+        return "PlaceLike{" +
                 "id=" + id +
                 ", placeId=" + place.getId() +
                 ", playerId=" + player.getId() +
-                ", type=" + type +
+                ", placeLikeType=" + placeLikeType +
                 '}';
     }
 }
