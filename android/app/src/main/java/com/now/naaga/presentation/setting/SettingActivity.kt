@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.now.naaga.R
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivitySettingBinding
 import com.now.naaga.presentation.login.LoginActivity
+import com.now.naaga.presentation.onadventure.NaagaAlertDialog
 
 class SettingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
@@ -34,22 +36,22 @@ class SettingActivity : AppCompatActivity() {
         }
 
         binding.tvSettingUnlink.setOnClickListener {
-            viewModel.withdrawalMember()
+            showWithdrawalDialog()
         }
     }
 
     private fun subscribe() {
         viewModel.withdrawalStatus.observe(this) { status ->
             if (status == true) {
-                shortToast(WITHDRAWAL_SUCCESS_MESSAGE)
+                shortToast(getString(R.string.setting_withdrawal_success_message))
                 navigateLogin()
             }
         }
 
         viewModel.errorMessage.observe(this) { error: DataThrowable ->
             when (error.code) {
-                WRONG_AUTH_ERROR_CODE -> shortToast(WRONG_ERROR_MESSAGE)
-                EXPIRATION_AUTH_ERROR_CODE -> shortToast(EXPIRATION_ERROR_MESSAGE)
+                WRONG_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_wrong_error_message))
+                EXPIRATION_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_expiration_error_message))
             }
         }
     }
@@ -63,12 +65,22 @@ class SettingActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
+    private fun showWithdrawalDialog() {
+        NaagaAlertDialog.Builder().build(
+            title = getString(R.string.withdrawal_dialog_title),
+            description = getString(R.string.withdrawal_dialog_description),
+            positiveText = getString(R.string.withdrawal_dialog_negative),
+            negativeText = getString(R.string.withdrawal_dialog_positive),
+            positiveAction = { },
+            negativeAction = { viewModel.withdrawalMember() },
+        ).show(supportFragmentManager, WITHDRAWAL)
+    }
+
     companion object {
+        private const val WITHDRAWAL = "WITHDRAWAL"
+
         private const val WRONG_AUTH_ERROR_CODE = 101
         private const val EXPIRATION_AUTH_ERROR_CODE = 102
-        private const val WITHDRAWAL_SUCCESS_MESSAGE = "성공적으로 회원 탈퇴 되었습니다."
-        private const val WRONG_ERROR_MESSAGE = "인증 정보가 잘 못 되었어요!"
-        private const val EXPIRATION_ERROR_MESSAGE = "인증 정보가 만료 되었어요!"
 
         fun getIntent(context: Context): Intent {
             return Intent(context, SettingActivity::class.java)
