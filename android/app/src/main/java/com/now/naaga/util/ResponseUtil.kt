@@ -12,8 +12,14 @@ private fun <T> Response<T>.codeIn500s(): Boolean {
     return this.code() in 500..599
 }
 
+private fun <T> Response<T>.isDelete(): Boolean {
+    return this.raw().request.method == "DELETE"
+}
+
+@Suppress("UNCHECKED_CAST")
 fun <T> Response<T>.getValueOrThrow(): T {
     if (this.isSuccessful) {
+        if (this.isDelete()) { return Unit as T }
         return this.body() ?: throw DataThrowable.IllegalStateThrowable()
     }
 

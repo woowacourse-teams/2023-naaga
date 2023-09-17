@@ -21,8 +21,8 @@ class SettingActivity : AppCompatActivity() {
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViewModel()
-        setClickListeners()
         subscribe()
+        setClickListeners()
     }
 
     private fun initViewModel() {
@@ -30,29 +30,36 @@ class SettingActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
     }
 
-    private fun setClickListeners() {
-        binding.ivSettingBack.setOnClickListener {
-            finish()
-        }
-
-        binding.tvSettingUnlink.setOnClickListener {
-            showWithdrawalDialog()
-        }
-    }
-
     private fun subscribe() {
+        viewModel.isLoggedIn.observe(this) { isLoggedIn ->
+            if (!isLoggedIn) {
+                shortToast(getString(R.string.setting_logout_message))
+                startActivity(LoginActivity.getIntentWithTop(this))
+            }
+        }
+        viewModel.throwable.observe(this) { error: DataThrowable ->
+            when (error.code) {
+                WRONG_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_wrong_error_message))
+                EXPIRATION_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_expiration_error_message))
+            }
+        }
         viewModel.withdrawalStatus.observe(this) { status ->
             if (status == true) {
                 shortToast(getString(R.string.setting_withdrawal_success_message))
                 navigateLogin()
             }
         }
+    }
 
-        viewModel.errorMessage.observe(this) { error: DataThrowable ->
-            when (error.code) {
-                WRONG_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_wrong_error_message))
-                EXPIRATION_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_expiration_error_message))
-            }
+    private fun setClickListeners() {
+        binding.tvSettingLogout.setOnClickListener {
+            showLogoutDialog()
+        }
+        binding.ivSettingBack.setOnClickListener {
+            finish()
+        }
+        binding.tvSettingUnlink.setOnClickListener {
+            showWithdrawalDialog()
         }
     }
 
@@ -76,7 +83,19 @@ class SettingActivity : AppCompatActivity() {
         ).show(supportFragmentManager, WITHDRAWAL)
     }
 
+    private fun showLogoutDialog() {
+        NaagaAlertDialog.Builder().build(
+            title = getString(R.string.logout_dialog_title),
+            description = getString(R.string.logout_dialog_description),
+            positiveText = getString(R.string.logout_dialog_positive_text),
+            negativeText = getString(R.string.logout_dialog_negative_text),
+            positiveAction = { },
+            negativeAction = { viewModel.logout() },
+        ).show(supportFragmentManager, LOGOUT)
+    }
+
     companion object {
+        private const val LOGOUT = "LOGOUT"
         private const val WITHDRAWAL = "WITHDRAWAL"
 
         private const val WRONG_AUTH_ERROR_CODE = 101

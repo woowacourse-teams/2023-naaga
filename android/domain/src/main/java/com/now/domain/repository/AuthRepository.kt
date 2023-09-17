@@ -8,4 +8,6 @@ interface AuthRepository {
     ): Boolean
 
     suspend fun withdrawalMember()
+
+    suspend fun logout()
 }
