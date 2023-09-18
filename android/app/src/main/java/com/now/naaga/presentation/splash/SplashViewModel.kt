@@ -1,44 +1,24 @@
 package com.now.naaga.presentation.splash
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.now.domain.repository.AuthRepository
-import com.now.naaga.NaagaApplication
-import com.now.naaga.data.repository.DefaultAuthRepository
-import com.now.naaga.data.throwable.DataThrowable
+import androidx.lifecycle.viewModelScope
+import com.now.domain.repository.RankRepository
+import com.now.naaga.data.repository.DefaultRankRepository
+import kotlinx.coroutines.launch
 
-class SplashViewModel(
-    private val authRepository: AuthRepository,
-) : ViewModel() {
-    private val _event = MutableLiveData<Event>()
-    val event: LiveData<Event> get() = _event
+class SplashViewModel(private val rankRepository: RankRepository) : ViewModel() {
 
-    fun refreshAuth() {
-        authRepository.refreshToken { result ->
-            result.onSuccess {
-                _event.value = Event.RefreshSucceed
-            }.onFailure {
-                when (it as DataThrowable) {
-                    is DataThrowable.AuthorizationThrowable -> _event.value = Event.RefreshFailed
-                    else -> throw it
-                }
-            }
+    fun getMyRank() {
+        viewModelScope.launch {
+            rankRepository.getMyRank()
         }
     }
 
-    sealed interface Event {
-        object RefreshSucceed : Event
-        object RefreshFailed : Event
-    }
-
     companion object {
-        val Factory = ViewModelFactory(DefaultAuthRepository(NaagaApplication.authDataSource))
-
-        class ViewModelFactory(private val authRepository: AuthRepository) : ViewModelProvider.Factory {
+        val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SplashViewModel(authRepository) as T
+                return SplashViewModel(DefaultRankRepository()) as T
             }
         }
     }

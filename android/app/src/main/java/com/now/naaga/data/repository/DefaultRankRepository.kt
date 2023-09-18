@@ -16,7 +16,9 @@ class DefaultRankRepository : RankRepository {
     }
 
     override suspend fun getMyRank(): Rank {
+        println("여기까진 옴?1")
         val response = rankService.getMyRank()
+        println("여기까진 옴?2")
         return response.getValueOrThrow().toDomain()
     }
 }

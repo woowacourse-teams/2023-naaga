@@ -5,12 +5,15 @@ import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Coordinate
-import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
+import com.now.naaga.util.MutableSingleLiveData
+import com.now.naaga.util.SingleLiveData
+import kotlinx.coroutines.launch
 
 class UploadViewModel(
     private val placeRepository: PlaceRepository,
@@ -23,8 +26,8 @@ class UploadViewModel(
     private val _description = MutableLiveData<String>()
     val description: LiveData<String> = _description
 
-    private val _successUpload = MutableLiveData<Boolean>()
-    val successUpload: LiveData<Boolean> = _successUpload
+    private val _successUpload = MutableSingleLiveData<UploadStatus>()
+    val successUpload: SingleLiveData<UploadStatus> = _successUpload
 
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
@@ -58,17 +61,22 @@ class UploadViewModel(
 
     fun postPlace() {
         _coordinate.value?.let { coordinate ->
-            placeRepository.postPlace(
-                name = _name.value.toString(),
-                description = _description.value.toString(),
-                coordinate = coordinate,
-                image = imageUri,
-                callback = { result: Result<Place> ->
-                    result
-                        .onSuccess { _successUpload.value = true }
-                        .onFailure { setError(it as DataThrowable) }
-                },
-            )
+            _successUpload.setValue(UploadStatus.PENDING)
+            viewModelScope.launch {
+                runCatching {
+                    placeRepository.postPlace(
+                        name = _name.value.toString(),
+                        description = _description.value.toString(),
+                        coordinate = coordinate,
+                        image = imageUri,
+                    )
+                }.onSuccess {
+                    _successUpload.setValue(UploadStatus.SUCCESS)
+                }.onFailure {
+                    _successUpload.setValue(UploadStatus.FAIL)
+                    setError(it as DataThrowable)
+                }
+            }
         }
     }
 

@@ -4,38 +4,41 @@ import com.now.domain.model.PlatformAuth
 import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.mapper.toDto
-import com.now.naaga.data.remote.dto.RefreshTokenDto
-import com.now.naaga.data.remote.retrofit.ServicePool
-import com.now.naaga.data.remote.retrofit.fetchResponse
-import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.remote.retrofit.ServicePool.authService
+import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.unlinkWithKakao
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class DefaultAuthRepository(private val authDataSource: AuthDataSource) : AuthRepository {
-    override fun getToken(
-        platformAuth: PlatformAuth,
-        callback: (Result<Boolean>) -> Unit,
-    ) {
-        val call = ServicePool.authService.requestAuth(platformAuth.toDto())
-        call.fetchResponse(
-            onSuccess = { naagaAuthDto ->
+class DefaultAuthRepository(
+    private val authDataSource: AuthDataSource,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : AuthRepository {
+
+    override suspend fun getToken(platformAuth: PlatformAuth): Boolean {
+        return withContext(dispatcher) {
+            val response = authService.requestAuth(platformAuth.toDto())
+            runCatching {
+                val naagaAuthDto = response.getValueOrThrow()
                 authDataSource.setAccessToken(naagaAuthDto.accessToken)
                 authDataSource.setRefreshToken(naagaAuthDto.refreshToken)
-                callback(Result.success(true))
-            },
-            onFailure = { callback(Result.failure(it)) },
-        )
+                return@withContext true
+            }
+            return@withContext false
+        }
     }
 
-    override fun refreshToken(callback: (Result<Boolean>) -> Unit) {
-        val refreshToken: String = authDataSource.getRefreshToken()
-            ?: return callback(Result.failure(DataThrowable.AuthorizationThrowable(101, "로컬에 리프레시 토큰이 없습니다.")))
-        val call = ServicePool.authService.refreshAuth(RefreshTokenDto(refreshToken))
-        call.fetchResponse(
-            onSuccess = { naagaAuthDto ->
-                authDataSource.setAccessToken(naagaAuthDto.accessToken)
-                authDataSource.setRefreshToken(naagaAuthDto.refreshToken)
-                callback(Result.success(true))
-            },
-            onFailure = { callback(Result.failure(it)) },
-        )
+    override suspend fun logout() {
+        withContext(dispatcher) {
+            val response = authService.requestLogout()
+            authDataSource.resetToken()
+            response.getValueOrThrow()
+        }
+    }
+
+    override suspend fun withdrawalMember() {
+        authService.withdrawalMember()
+        unlinkWithKakao()
     }
 }
