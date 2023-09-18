@@ -39,6 +39,7 @@ class AuthInterceptor() : Interceptor {
                     response.close()
                     return newResponse
                 }
+                startLoginActivity()
             }.onFailure {
                 startLoginActivity()
             }
@@ -83,19 +84,13 @@ class AuthInterceptor() : Interceptor {
         }
         val failedResponse = response.getDto<FailureDto>()
         if (failedResponse.code == 101) {
-            startLoginActivity()
             return null
         }
         throw IllegalStateException(REFRESH_FAILURE)
     }
 
     private fun getAccessToken(): String {
-        val accessToken = NaagaApplication.authDataSource.getAccessToken()
-        if (accessToken == null) {
-            startLoginActivity()
-            return ""
-        }
-        return accessToken
+        return NaagaApplication.authDataSource.getAccessToken() ?: return ""
     }
 
     private fun getRefreshToken(): String {
@@ -114,7 +109,7 @@ class AuthInterceptor() : Interceptor {
 
     private fun startLoginActivity() {
         val intent = Intent(NaagaApplication.context, LoginActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
         NaagaApplication.context.startActivity(intent)
     }
