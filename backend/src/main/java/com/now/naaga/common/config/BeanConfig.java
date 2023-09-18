@@ -1,10 +1,10 @@
 package com.now.naaga.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.now.naaga.game.domain.gamescore.FailGameScorePolicy;
-import com.now.naaga.game.domain.gamescore.GameScoreCalculator;
-import com.now.naaga.game.domain.gamescore.GameScorePolicy;
-import com.now.naaga.game.domain.gamescore.SuccessGameScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.FailResultScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.ResultScoreCalculator;
+import com.now.naaga.gameresult.domain.gamescore.ResultScorePolicy;
+import com.now.naaga.gameresult.domain.gamescore.SuccessResultScorePolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -25,21 +25,21 @@ public class BeanConfig {
     }
 
     @Bean
-    public SuccessGameScorePolicy successGameScorePolicy() {
-        return new SuccessGameScorePolicy();
+    public SuccessResultScorePolicy successGameScorePolicy() {
+        return new SuccessResultScorePolicy();
     }
 
     @Bean
-    public FailGameScorePolicy failGameScorePolicy() {
-        return new FailGameScorePolicy();
+    public FailResultScorePolicy failGameScorePolicy() {
+        return new FailResultScorePolicy();
     }
 
     @Bean
-    public GameScoreCalculator gameScoreCalculator() {
-        final List<GameScorePolicy> gameScorePolicies = List.of(
+    public ResultScoreCalculator gameScoreCalculator() {
+        final List<ResultScorePolicy> gameScorePolicies = List.of(
                 successGameScorePolicy(),
                 failGameScorePolicy()
         );
-        return new GameScoreCalculator(gameScorePolicies);
+        return new ResultScoreCalculator(gameScorePolicies);
     }
 }
