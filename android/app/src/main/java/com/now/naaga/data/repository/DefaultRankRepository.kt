@@ -3,10 +3,12 @@ package com.now.naaga.data.repository
 import com.now.domain.model.Rank
 import com.now.domain.repository.RankRepository
 import com.now.naaga.data.mapper.toDomain
-import com.now.naaga.data.remote.retrofit.ServicePool.rankService
+import com.now.naaga.data.remote.retrofit.service.RankService
 import com.now.naaga.util.getValueOrThrow
 
-class DefaultRankRepository : RankRepository {
+class DefaultRankRepository(
+    private val rankService: RankService,
+) : RankRepository {
     override suspend fun getAllRanks(
         sortBy: String,
         order: String,
