@@ -3,18 +3,18 @@ package com.now.naaga.presentation.adventureresult
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.AdventureResult
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.RankRepository
-import com.now.naaga.data.repository.DefaultAdventureRepository
-import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AdventureResultViewModel(
+@HiltViewModel
+class AdventureResultViewModel @Inject constructor(
     private val adventureRepository: AdventureRepository,
     private val rankRepository: RankRepository,
 ) : ViewModel() {
@@ -59,20 +59,6 @@ class AdventureResultViewModel(
             }
 
             else -> {}
-        }
-    }
-
-    companion object {
-        val Factory = AdventureResultFactory(DefaultAdventureRepository(), DefaultRankRepository())
-
-        class AdventureResultFactory(
-            private val adventureRepository: AdventureRepository,
-            private val rankRepository: RankRepository,
-        ) :
-            ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return AdventureResultViewModel(adventureRepository, rankRepository) as T
-            }
         }
     }
 }

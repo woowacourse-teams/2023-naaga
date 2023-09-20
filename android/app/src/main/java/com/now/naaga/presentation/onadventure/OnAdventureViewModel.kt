@@ -3,7 +3,6 @@ package com.now.naaga.presentation.onadventure
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Adventure
@@ -13,14 +12,16 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.model.RemainingTryCount
 import com.now.domain.repository.AdventureRepository
-import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OnAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
+@HiltViewModel
+class OnAdventureViewModel @Inject constructor(private val adventureRepository: AdventureRepository) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
     val adventure: LiveData<Adventure> = _adventure
     val hints = DisposableLiveData<List<Hint>>(_adventure.map { it.hints })
@@ -138,12 +139,5 @@ class OnAdventureViewModel(private val adventureRepository: AdventureRepository)
         private const val ERROR_PREFIX = "[ERROR] OnAdventureViewModel:"
         private const val ADVENTURE_IS_NULL = "$ERROR_PREFIX adventure가 널입니다."
         private const val MY_COORDINATE_IS_NULL = "$ERROR_PREFIX myCoordinate가 널입니다."
-        val Factory = ViewModelFactory(DefaultAdventureRepository())
-
-        class ViewModelFactory(private val adventureRepository: AdventureRepository) : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return OnAdventureViewModel(adventureRepository) as T
-            }
-        }
     }
 }
