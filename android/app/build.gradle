@@ -115,6 +115,8 @@ dependencies {
     // hilt
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
+
+    implementation "androidx.activity:activity-ktx:1.7.2"
 }
 
 // Allow references to generated code
