@@ -5,7 +5,7 @@ import com.now.domain.repository.AuthRepository
 import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
-import com.now.naaga.NaagaApplication
+import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.data.repository.DefaultPlaceRepository
@@ -26,7 +26,7 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideAuthRepository(): AuthRepository = DefaultAuthRepository(NaagaApplication.authDataSource)
+    fun provideAuthRepository(authDataSource: AuthDataSource): AuthRepository = DefaultAuthRepository(authDataSource)
 
     @Singleton
     @Provides
