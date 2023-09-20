@@ -1,7 +1,5 @@
 package com.now.naaga.presentation.upload
 
-import android.net.Uri
-import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,11 +18,9 @@ class UploadViewModel(
 ) : ViewModel() {
     private var imageUri: String = URI_EMPTY
 
-    private val _name = MutableLiveData<String>()
-    val title: LiveData<String> = _name
+    val name = MutableLiveData<String>()
 
-    private val _description = MutableLiveData<String>()
-    val description: LiveData<String> = _description
+    val description = MutableLiveData<String>()
 
     private val _successUpload = MutableSingleLiveData<UploadStatus>()
     val successUpload: SingleLiveData<UploadStatus> = _successUpload
@@ -34,14 +30,6 @@ class UploadViewModel(
 
     private val _coordinate = MutableLiveData<Coordinate>()
     val coordinate: LiveData<Coordinate> = _coordinate
-
-    fun setTitle(editTitle: Editable) {
-        _name.value = editTitle.toString()
-    }
-
-    fun setDescription(editTitle: Editable) {
-        _description.value = editTitle.toString()
-    }
 
     fun setUri(uri: String) {
         imageUri = uri
@@ -65,8 +53,8 @@ class UploadViewModel(
             viewModelScope.launch {
                 runCatching {
                     placeRepository.postPlace(
-                        name = _name.value.toString(),
-                        description = _description.value.toString(),
+                        name = name.value.toString(),
+                        description = description.value.toString(),
                         coordinate = coordinate,
                         image = imageUri,
                     )
@@ -89,7 +77,7 @@ class UploadViewModel(
     }
 
     companion object {
-        val URI_EMPTY = Uri.EMPTY.toString()
+        const val URI_EMPTY = "EMPTY"
 
         const val ALREADY_EXISTS_NEARBY = 505
         const val ERROR_STORE_PHOTO = 215
