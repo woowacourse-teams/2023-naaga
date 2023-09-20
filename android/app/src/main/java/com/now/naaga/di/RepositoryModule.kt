@@ -5,7 +5,12 @@ import com.now.domain.repository.AuthRepository
 import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
-import com.now.naaga.NaagaApplication
+import com.now.naaga.data.local.AuthDataSource
+import com.now.naaga.data.remote.retrofit.service.AdventureService
+import com.now.naaga.data.remote.retrofit.service.AuthService
+import com.now.naaga.data.remote.retrofit.service.PlaceService
+import com.now.naaga.data.remote.retrofit.service.RankService
+import com.now.naaga.data.remote.retrofit.service.StatisticsService
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.data.repository.DefaultPlaceRepository
@@ -22,21 +27,24 @@ import javax.inject.Singleton
 class RepositoryModule {
     @Singleton
     @Provides
-    fun provideRankRepository(): RankRepository = DefaultRankRepository()
+    fun provideRankRepository(rankService: RankService): RankRepository = DefaultRankRepository(rankService)
 
     @Singleton
     @Provides
-    fun provideAuthRepository(): AuthRepository = DefaultAuthRepository(NaagaApplication.authDataSource)
+    fun provideAuthRepository(authDataSource: AuthDataSource, authService: AuthService): AuthRepository =
+        DefaultAuthRepository(authDataSource, authService)
 
     @Singleton
     @Provides
-    fun provideAdventureRepository(): AdventureRepository = DefaultAdventureRepository()
+    fun provideAdventureRepository(adventureService: AdventureService): AdventureRepository =
+        DefaultAdventureRepository(adventureService)
 
     @Singleton
     @Provides
-    fun providePlaceRepository(): PlaceRepository = DefaultPlaceRepository()
+    fun providePlaceRepository(placeService: PlaceService): PlaceRepository = DefaultPlaceRepository(placeService)
 
     @Singleton
     @Provides
-    fun provideStatisticsRepository(): StatisticsRepository = DefaultStatisticsRepository()
+    fun provideStatisticsRepository(statisticsService: StatisticsService): StatisticsRepository =
+        DefaultStatisticsRepository(statisticsService)
 }
