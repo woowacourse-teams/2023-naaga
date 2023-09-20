@@ -82,7 +82,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private fun initViewModel() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        setClickListeners()
     }
 
     private fun subscribe() {
