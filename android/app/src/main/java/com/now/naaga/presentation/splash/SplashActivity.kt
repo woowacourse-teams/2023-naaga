@@ -1,28 +1,26 @@
 package com.now.naaga.presentation.splash
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.SPLASH_MY_PAGE_STATISTICS
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.login.LoginActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
-    private lateinit var viewModel: SplashViewModel
+    private val viewModel: SplashViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerAnalytics(this.lifecycle)
-        initViewModel()
         viewModel.testTokenValid()
         subscribe()
         setContentView(R.layout.activity_splash)
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, SplashViewModel.Factory)[SplashViewModel::class.java]
     }
 
     private fun subscribe() {

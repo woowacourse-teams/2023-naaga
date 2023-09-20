@@ -3,14 +3,15 @@ package com.now.naaga.presentation.splash
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.now.domain.repository.StatisticsRepository
-import com.now.naaga.data.repository.DefaultStatisticsRepository
 import com.now.naaga.data.throwable.DataThrowable
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SplashViewModel(private val statisticsRepository: StatisticsRepository) : ViewModel() {
+@HiltViewModel
+class SplashViewModel @Inject constructor(private val statisticsRepository: StatisticsRepository) : ViewModel() {
 
     private val _isTokenValid = MutableLiveData<Boolean>()
     val isTokenValid: LiveData<Boolean> = _isTokenValid
@@ -27,14 +28,6 @@ class SplashViewModel(private val statisticsRepository: StatisticsRepository) : 
             }.onFailure {
                 _isTokenValid.value = false
                 _error.value = it as DataThrowable.AuthorizationThrowable
-            }
-        }
-    }
-
-    companion object {
-        val Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SplashViewModel(DefaultStatisticsRepository()) as T
             }
         }
     }

@@ -4,18 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.Rank
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.RANK_RANK
 import com.now.naaga.databinding.ActivityRankBinding
 import com.now.naaga.presentation.rank.recyclerview.RankAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RankActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityRankBinding
-    private lateinit var viewModel: RankViewModel
+    private val viewModel: RankViewModel by viewModels()
 
     private val rankAdapter = RankAdapter()
 
@@ -33,7 +35,6 @@ class RankActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsD
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, RankViewModel.Factory)[RankViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }

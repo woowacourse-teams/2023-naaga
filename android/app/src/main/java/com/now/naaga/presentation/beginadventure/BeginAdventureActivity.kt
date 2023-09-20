@@ -10,8 +10,8 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.AdventureStatus
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
@@ -27,10 +27,12 @@ import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.rank.RankActivity
 import com.now.naaga.presentation.upload.UploadActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityBeginAdventureBinding
-    private lateinit var viewModel: BeginAdventureViewModel
+    private val viewModel: BeginAdventureViewModel by viewModels()
 
     private val onAdventureActivityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
@@ -63,7 +65,6 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
         startLoading()
         registerAnalytics(this.lifecycle)
-        initViewModel()
         fetchInProgressAdventure()
         requestLocationPermission()
         setClickListeners()
@@ -71,10 +72,6 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, BeginAdventureViewModel.Factory)[BeginAdventureViewModel::class.java]
     }
 
     private fun fetchInProgressAdventure() {

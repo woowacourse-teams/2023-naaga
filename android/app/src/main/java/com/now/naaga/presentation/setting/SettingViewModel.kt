@@ -3,16 +3,16 @@ package com.now.naaga.presentation.setting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.now.domain.repository.AuthRepository
-import com.now.naaga.NaagaApplication.DependencyContainer.authDataSource
-import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.AuthorizationThrowable
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SettingViewModel(private val authRepository: AuthRepository) : ViewModel() {
+@HiltViewModel
+class SettingViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
     private val _isLoggedIn = MutableLiveData(true)
     val isLoggedIn: LiveData<Boolean> = _isLoggedIn
 
@@ -42,18 +42,6 @@ class SettingViewModel(private val authRepository: AuthRepository) : ViewModel()
         when (throwable) {
             is AuthorizationThrowable -> _throwable.value = throwable
             else -> {}
-        }
-    }
-
-    companion object {
-        val Factory = SettingFactory(DefaultAuthRepository(authDataSource))
-
-        @Suppress("UNCHECKED_CAST")
-        class SettingFactory(private val authRepository: AuthRepository) :
-            ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SettingViewModel(authRepository) as T
-            }
         }
     }
 }

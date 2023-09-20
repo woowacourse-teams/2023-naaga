@@ -5,6 +5,7 @@ import com.now.naaga.BuildConfig
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
 object RetrofitFactory {
@@ -19,6 +20,7 @@ object RetrofitFactory {
     private fun createOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder().apply {
             addInterceptor(AuthInterceptor())
+            addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC })
         }.build()
     }
 }
