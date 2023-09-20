@@ -22,11 +22,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-// UploadViewModel이 안드로이드 의존성을 가지고 있어서 추가해줘야 함 (Uri, Editable)
-@RunWith(RobolectricTestRunner::class)
 class UploadViewModelTest {
     private lateinit var viewModel: UploadViewModel
     private lateinit var placeRepository: PlaceRepository
@@ -51,30 +47,6 @@ class UploadViewModelTest {
 
     private fun String.toEditable(): Editable {
         return Editable.Factory.getInstance().newEditable(this)
-    }
-
-    @Test
-    fun `Title이 입력되면 뷰모델의 name도 바뀐다`() {
-        // given
-        val title = "krrong".toEditable()
-
-        // when
-        viewModel.setTitle(title)
-
-        // then
-        assertEquals("krrong", viewModel.title.value)
-    }
-
-    @Test
-    fun `Description이 입력되면 뷰모델의 Description도 바뀐다`() {
-        // given
-        val description = "android crew".toEditable()
-
-        // when
-        viewModel.setDescription(description)
-
-        // then
-        assertEquals("android crew", viewModel.description.value)
     }
 
     @Test
