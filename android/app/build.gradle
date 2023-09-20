@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 Properties properties = new Properties()
@@ -109,4 +111,15 @@ dependencies {
 
     // ViewModel Test
     testImplementation("androidx.arch.core:core-testing:2.2.0")
+
+    // hilt
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-compiler:2.44"
+
+    implementation "androidx.activity:activity-ktx:1.7.2"
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
 }

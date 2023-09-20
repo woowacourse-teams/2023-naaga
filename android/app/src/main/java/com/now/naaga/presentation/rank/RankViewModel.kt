@@ -3,18 +3,19 @@ package com.now.naaga.presentation.rank
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.OrderType
 import com.now.domain.model.Rank
 import com.now.domain.model.SortType
 import com.now.domain.repository.RankRepository
-import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
+@HiltViewModel
+class RankViewModel @Inject constructor(private val rankRepository: RankRepository) : ViewModel() {
     private val _myName = MutableLiveData<String>()
     val myName: LiveData<String> = _myName
 
@@ -60,17 +61,6 @@ class RankViewModel(private val rankRepository: RankRepository) : ViewModel() {
         when (throwable) {
             is PlayerThrowable -> { _throwable.value = throwable }
             else -> {}
-        }
-    }
-
-    companion object {
-        val Factory = RankFactory(DefaultRankRepository())
-
-        class RankFactory(private val rankRepository: RankRepository) :
-            ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return RankViewModel(rankRepository) as T
-            }
         }
     }
 }
