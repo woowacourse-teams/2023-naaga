@@ -42,12 +42,9 @@ class UploadViewModel @Inject constructor(
         _coordinate.value = coordinate
     }
 
-    fun hasUri(): Boolean {
-        return imageUri != URI_EMPTY
-    }
-
-    fun hasCoordinate(): Boolean {
-        return _coordinate.value != null
+    fun isFormValid(): Boolean {
+        return (imageUri != URI_EMPTY) && (_coordinate.value != null) &&
+            (name.value != null) && (description.value != null)
     }
 
     fun postPlace() {

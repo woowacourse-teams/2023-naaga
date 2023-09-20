@@ -256,23 +256,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun isFormValid(): Boolean {
-        return (isEmptyPhoto() || isEmptyTitle() || isEmptyCoordinate() || isEmptyDescription()).not()
-    }
-
-    private fun isEmptyPhoto(): Boolean {
-        return viewModel.hasUri().not()
-    }
-
-    private fun isEmptyTitle(): Boolean {
-        return viewModel.name.value == null
-    }
-
-    private fun isEmptyCoordinate(): Boolean {
-        return viewModel.hasCoordinate().not()
-    }
-
-    private fun isEmptyDescription(): Boolean {
-        return viewModel.description.value == null
+        return viewModel.isFormValid()
     }
 
     private fun Coordinate.toText(): String {
