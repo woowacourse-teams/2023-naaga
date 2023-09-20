@@ -8,9 +8,12 @@ import com.now.domain.model.AuthPlatformType
 import com.now.domain.model.PlatformAuth
 import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.throwable.DataThrowable
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _isLoginSucceed = MutableLiveData<Boolean>()

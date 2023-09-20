@@ -11,9 +11,12 @@ import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
 import com.now.naaga.util.MutableSingleLiveData
 import com.now.naaga.util.SingleLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UploadViewModel(
+@HiltViewModel
+class UploadViewModel @Inject constructor(
     private val placeRepository: PlaceRepository,
 ) : ViewModel() {
     private var imageUri: String = URI_EMPTY

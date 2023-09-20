@@ -4,30 +4,27 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.R
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivitySettingBinding
 import com.now.naaga.presentation.login.LoginActivity
 import com.now.naaga.presentation.onadventure.NaagaAlertDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
-    private lateinit var viewModel: SettingViewModel
+    private val viewModel: SettingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initViewModel()
+        binding.lifecycleOwner = this
         subscribe()
         setClickListeners()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, SettingViewModel.Factory)[SettingViewModel::class.java]
-        binding.lifecycleOwner = this
     }
 
     private fun subscribe() {

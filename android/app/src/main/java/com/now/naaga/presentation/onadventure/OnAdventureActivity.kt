@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
@@ -30,13 +30,15 @@ import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.getParcelableCompat
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OnAdventureActivity :
     AppCompatActivity(),
     NaverMapSettingDelegate by DefaultNaverMapSettingDelegate(),
     AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityOnAdventureBinding
-    private lateinit var viewModel: OnAdventureViewModel
+    private val viewModel: OnAdventureViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setNaverMap(this, R.id.fcv_onAdventure_map)
@@ -124,7 +126,6 @@ class OnAdventureActivity :
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }

@@ -13,9 +13,9 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -26,16 +26,17 @@ import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.firebase.analytics.UPLOAD_SET_COORDINATE
-import com.now.naaga.data.repository.DefaultPlaceRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityUploadBinding
-    private lateinit var viewModel: UploadViewModel
+    private val viewModel: UploadViewModel by viewModels()
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicturePreview(),
@@ -79,9 +80,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun initViewModel() {
-        val repository = DefaultPlaceRepository()
-        val factory = UploadFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[UploadViewModel::class.java]
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         setClickListeners()
@@ -267,7 +265,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun isEmptyTitle(): Boolean {
-        return viewModel.title.value == null
+        return viewModel.name.value == null
     }
 
     private fun isEmptyCoordinate(): Boolean {
@@ -289,7 +287,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             Manifest.permission.CAMERA,
         )
 
-        private val MESSAGE_FAIL_UPLOAD = "장소등록에 실패했어요!"
+        private const val MESSAGE_FAIL_UPLOAD = "장소등록에 실패했어요!"
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")

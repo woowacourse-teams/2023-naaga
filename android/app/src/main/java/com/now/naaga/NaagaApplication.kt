@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.kakao.sdk.common.KakaoSdk
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.local.DefaultAuthDataSource
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class NaagaApplication : Application() {
 
     override fun onCreate() {
