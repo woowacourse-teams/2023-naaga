@@ -24,6 +24,7 @@ android {
         versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.now.naaga.HiltTestRunner"
         buildConfigField "String", "BASE_URL", properties["BASE_URL"]
         buildConfigField "String", "KAKAO_NATIVE_APP_KEY", properties["KAKAO_NATIVE_APP_KEY"]
         resValue "string", "kakao_redirection_scheme", properties["kakao_redirection_scheme"]
@@ -45,6 +46,11 @@ android {
     dataBinding {
         enable = true
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -54,6 +60,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation project(path: ':domain')
+    implementation 'androidx.test:runner:1.5.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -120,6 +127,11 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:2.44"
 
     implementation "androidx.activity:activity-ktx:1.7.2"
+
+    // For Robolectric tests.
+    testImplementation 'com.google.dagger:hilt-android-testing:2.44'
+    // ...with Kotlin.
+    kaptTest 'com.google.dagger:hilt-android-compiler:2.44'
 }
 
 // Allow references to generated code
