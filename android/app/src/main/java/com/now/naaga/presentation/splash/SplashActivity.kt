@@ -4,15 +4,19 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.R
+import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.SPLASH_MY_PAGE_STATISTICS
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.login.LoginActivity
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var viewModel: SplashViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        registerAnalytics(this.lifecycle)
         initViewModel()
-        viewModel.getMyRank()
+        viewModel.testTokenValid()
         subscribe()
         setContentView(R.layout.activity_splash)
     }
@@ -28,6 +32,9 @@ class SplashActivity : AppCompatActivity() {
                 return@observe
             }
             startLoginActivity()
+        }
+        viewModel.error.observe(this) {
+            logServerError(SPLASH_MY_PAGE_STATISTICS, it.code, it.message.toString())
         }
     }
 
