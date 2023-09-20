@@ -22,16 +22,16 @@
             android:id="@+id/lottie_upload_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="80dp"
-            android:elevation="4dp"
             android:background="@color/main_gray_opacity_medium"
-            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="4dp"
+            android:padding="80dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:lottie_rawRes="@raw/simple_loading"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_autoPlay="true" />
+            app:lottie_rawRes="@raw/simple_loading" />
 
         <ImageView
             android:id="@+id/iv_upload_photo"
