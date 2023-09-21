@@ -8,4 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     List<Player> findByMemberId(final Long memberId);
+
+    @Override
+    @Query("SELECT p FROM Player p JOIN FETCH p.member")
+    List<Player> findAll();
 }
