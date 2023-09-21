@@ -21,7 +21,6 @@ public class QueryInspector implements StatementInspector {
 
     @Override
     public String inspect(String sql) {
-        log.info("sql={}", sql);
         if (isInRequestScope()) {
             queryCounter.increase();
         }
