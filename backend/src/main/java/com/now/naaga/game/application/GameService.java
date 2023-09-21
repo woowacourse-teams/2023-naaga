@@ -137,11 +137,7 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public Statistic findStatistic(final PlayerRequest playerRequest) {
-        final List<Game> gamesByPlayerId = gameRepository.findByPlayerIdAndGameStatus(playerRequest.playerId(),
-                GameStatus.DONE);
-        final List<GameResult> gameResults = gamesByPlayerId.stream()
-                .map(game -> findGameResultByGameId(game.getId()))
-                .toList();
+        final List<GameResult> gameResults = gameResultRepository.findByPlayerId(playerRequest.playerId());
         final List<GameRecord> gameRecords = gameResults.stream()
                 .map(GameRecord::from).toList();
 
