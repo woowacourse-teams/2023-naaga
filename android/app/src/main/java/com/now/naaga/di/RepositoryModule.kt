@@ -6,6 +6,7 @@ import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
 import com.now.naaga.data.local.AuthDataSource
+import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.remote.retrofit.service.AdventureService
 import com.now.naaga.data.remote.retrofit.service.AuthService
 import com.now.naaga.data.remote.retrofit.service.PlaceService
