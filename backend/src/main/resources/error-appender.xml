@@ -35,7 +35,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>error-history.log.%d{yyyy-MM-dd}.txt</fileNamePattern>
             <maxHistory>30</maxHistory>
-            <totalSizeCap>5GB</totalSizeCap>
+            <totalSizeCap>2GB</totalSizeCap>
         </rollingPolicy>
 
     </appender>

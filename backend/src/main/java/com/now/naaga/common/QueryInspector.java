@@ -1,6 +1,8 @@
 package com.now.naaga.common;
 
 import org.hibernate.resource.jdbc.spi.StatementInspector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -8,6 +10,8 @@ import java.util.Objects;
 
 @Component
 public class QueryInspector implements StatementInspector {
+
+    private final Logger log = LoggerFactory.getLogger(QueryInspector.class);
 
     private final QueryCounter queryCounter;
 
@@ -17,6 +21,7 @@ public class QueryInspector implements StatementInspector {
 
     @Override
     public String inspect(String sql) {
+        log.info("sql={}", sql);
         if (isInRequestScope()) {
             queryCounter.increase();
         }
