@@ -5,7 +5,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.google.firebase.FirebaseApp
-import com.now.domain.repository.PlaceRepository
 import com.now.naaga.presentation.upload.UploadActivity
 import com.now.naaga.presentation.upload.UploadViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -19,7 +18,6 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import javax.inject.Inject
 
 @RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
@@ -32,12 +30,8 @@ class UploadViewModelTestWithRobolectric {
     @get:Rule(order = 1)
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @Inject
-    lateinit var placeRepository: PlaceRepository
-
     @Before
     fun setup() {
-        hiltRule.inject()
         FirebaseApp.initializeApp(getApplicationContext())
     }
 
