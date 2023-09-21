@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration> <!-- Logback 설정의 시작을 나타내는 최상위 요소입니다.-->
+    <include resource="error-appender.xml" />
+    <include resource="warn-appender.xml" />
+    <include resource="info-appender.xml" />
+
+    <root level="info"> <!-- info, error, warn 레벨의 로그 메시지만 출력됩니다. -->
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="WARN"/>
+    </root>
+</configuration>

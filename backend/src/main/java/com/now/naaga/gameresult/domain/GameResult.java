@@ -1,6 +1,7 @@
-package com.now.naaga.game.domain;
+package com.now.naaga.gameresult.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
+import com.now.naaga.game.domain.Game;
 import com.now.naaga.score.domain.Score;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
