@@ -28,7 +28,7 @@ public class Player extends BaseEntity {
     private Score totalScore;
 
     @JoinColumn(name = "member_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne//(fetch = FetchType.LAZY)
     private Member member;
 
     private boolean deleted = FALSE;
