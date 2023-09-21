@@ -4,7 +4,7 @@ import com.now.domain.model.PlatformAuth
 import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.mapper.toDto
-import com.now.naaga.data.remote.retrofit.ServicePool.authService
+import com.now.naaga.data.remote.retrofit.service.AuthService
 import com.now.naaga.util.getValueOrThrow
 import com.now.naaga.util.unlinkWithKakao
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 
 class DefaultAuthRepository(
     private val authDataSource: AuthDataSource,
+    private val authService: AuthService,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AuthRepository {
 
