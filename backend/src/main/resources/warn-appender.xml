@@ -1,0 +1,43 @@
+<included>
+    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/warn.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc>
+                    <fieldNames>
+                        <request_id>request_id</request_id>
+                        <uri>uri</uri>
+                        <method>method</method>
+                        <time>time</time>
+                        <queryCount>queryCount</queryCount>
+                    </fieldNames>
+                </mdc>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%date{yyyy/MM/dd HH.mm.ss.SSSSSS}",
+                        "message": "%yellow(%message)"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+            <jsonGeneratorDecorator class="net.logstash.logback.decorate.CompositeJsonGeneratorDecorator">
+                <decorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
+            </jsonGeneratorDecorator>
+            <timestampPattern>yyyy/MM/dd HH.mm.ss.SSSSSS</timestampPattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>warn-history.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+
+    </appender>
+
+</included>

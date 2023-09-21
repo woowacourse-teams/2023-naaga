@@ -1,0 +1,44 @@
+<included>
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/info.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc>
+                    <fieldNames>
+                        <request_id>request_id</request_id>
+                        <uri>uri</uri>
+                        <method>method</method>
+                        <time>time</time>
+                        <queryCount>queryCount</queryCount>
+                        <jsonResponse>jsonResponse</jsonResponse>
+                    </fieldNames>
+                </mdc>
+                <pattern>
+                    <pattern>
+                        {
+                        "message": "%message",
+                        "timestamp": "%date{yyyy/MM/dd HH.mm.ss.SSSSSS}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+            <jsonGeneratorDecorator class="net.logstash.logback.decorate.CompositeJsonGeneratorDecorator">
+                <decorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
+            </jsonGeneratorDecorator>
+            <timestampPattern>yyyy/MM/dd HH.mm.ss.SSSSSS</timestampPattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>info-history.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+
+    </appender>
+
+</included>
