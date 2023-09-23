@@ -4,39 +4,31 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.now.domain.model.Adventure
-import com.now.domain.model.AdventureStatus
-import com.now.domain.repository.AdventureRepository
+import com.now.domain.repository.StatisticsRepository
+import com.now.naaga.data.throwable.DataThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(private val adventureRepository: AdventureRepository) : ViewModel() {
-    private val _adventure = MutableLiveData<Adventure>()
-    val adventure: LiveData<Adventure> = _adventure
+class SplashViewModel @Inject constructor(private val statisticsRepository: StatisticsRepository) : ViewModel() {
 
-    private val _adventureStatus = MutableLiveData<AdventureStatus>()
-    val adventureStatus: LiveData<AdventureStatus> = _adventureStatus
+    private val _isTokenValid = MutableLiveData<Boolean>()
+    val isTokenValid: LiveData<Boolean> = _isTokenValid
 
-    fun fetchInProgressAdventure() {
+    private val _error = MutableLiveData<DataThrowable>()
+    val error: LiveData<DataThrowable> = _error
+
+    fun testTokenValid() {
         viewModelScope.launch {
             runCatching {
-                adventureRepository.fetchAdventureByStatus(AdventureStatus.IN_PROGRESS)
+                statisticsRepository.getMyStatistics()
             }.onSuccess {
-                fetchAdventure(it)
+                _isTokenValid.value = true
             }.onFailure {
-                _adventureStatus.value = AdventureStatus.NONE
+                _isTokenValid.value = false
+                _error.value = it as DataThrowable.AuthorizationThrowable
             }
-        }
-    }
-
-    private fun fetchAdventure(adventures: List<Adventure>) {
-        if (adventures.isNotEmpty()) {
-            _adventure.value = adventures.first()
-            _adventureStatus.value = adventures.first().adventureStatus
-        } else {
-            _adventureStatus.value = AdventureStatus.NONE
         }
     }
 }

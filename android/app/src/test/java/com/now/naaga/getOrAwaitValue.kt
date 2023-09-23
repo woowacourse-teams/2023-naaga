@@ -1,4 +1,4 @@
-package com.now.naaga
+package com.now.naaga // ktlint-disable filename
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException
 
 fun <T> LiveData<T>.getOrAwaitValue(
     time: Long = 2,
-    timeUnit: TimeUnit = TimeUnit.SECONDS
+    timeUnit: TimeUnit = TimeUnit.SECONDS,
 ): T {
     var data: T? = null
     val latch = CountDownLatch(1)

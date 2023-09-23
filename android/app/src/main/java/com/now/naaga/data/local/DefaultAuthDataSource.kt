@@ -19,7 +19,8 @@ class DefaultAuthDataSource(context: Context) : AuthDataSource {
         )
 
     override fun getAccessToken(): String? {
-        return authPreference.getString(ACCESS_TOKEN, null)
+        val accessToken = authPreference.getString(ACCESS_TOKEN, null) ?: return null
+        return BEARER + accessToken
     }
 
     override fun setAccessToken(newToken: String) {
@@ -27,7 +28,8 @@ class DefaultAuthDataSource(context: Context) : AuthDataSource {
     }
 
     override fun getRefreshToken(): String? {
-        return authPreference.getString(REFRESH_TOKEN, null)
+        val refreshToken = authPreference.getString(REFRESH_TOKEN, null) ?: return null
+        return BEARER + refreshToken
     }
 
     override fun setRefreshToken(newToken: String) {
@@ -44,5 +46,6 @@ class DefaultAuthDataSource(context: Context) : AuthDataSource {
         private const val AUTH_ENCRYPTED_PREFERENCE = "AUTH_ENCRYPTED_PREFERENCE"
         private const val ACCESS_TOKEN = "ACCESS_TOKEN"
         private const val REFRESH_TOKEN = "REFRESH_TOKEN"
+        private const val BEARER = "Bearer "
     }
 }
