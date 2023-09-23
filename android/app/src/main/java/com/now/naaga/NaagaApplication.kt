@@ -1,7 +1,6 @@
 package com.now.naaga
 
 import android.app.Application
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.kakao.sdk.common.KakaoSdk
 import com.now.naaga.data.local.AuthDataSource
@@ -14,7 +13,6 @@ class NaagaApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initKakaoSdk()
-        initContext()
         initDataSources()
         disableDarkMode()
     }
@@ -31,12 +29,7 @@ class NaagaApplication : Application() {
         authDataSource = DefaultAuthDataSource(applicationContext)
     }
 
-    private fun initContext() {
-        context = applicationContext
-    }
-
     companion object DependencyContainer {
-        lateinit var context: Context
         lateinit var authDataSource: AuthDataSource
     }
 }
