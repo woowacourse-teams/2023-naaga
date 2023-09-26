@@ -2,11 +2,8 @@ package com.now.naaga.common;
 
 public enum MdcToken {
 
-    REQUEST_ID("request_id"),
-    URI("uri"),
-    TIME("time"),
-    QUERY_COUNT("queryCount"),
-    METHOD("method");
+    REQUEST_ID("request_id")
+    ;
 
     private final String key;
 
