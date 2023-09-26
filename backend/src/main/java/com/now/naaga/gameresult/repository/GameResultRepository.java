@@ -10,7 +10,7 @@ public interface GameResultRepository extends JpaRepository<GameResult, Long> {
 
     List<GameResult> findByGameId(final Long gameId);
 
-    @Query("SELECT r FROM GameResult r JOIN FETCH r.game LEFT JOIN FETCH r.game.hints Where r.game.player.id = :playerId")
+    @Query("SELECT r FROM GameResult r JOIN FETCH r.game g LEFT JOIN FETCH g.hints Where g.player.id = :playerId")
     List<GameResult> findByPlayerId(@Param("playerId") Long playerId);
 
 }
