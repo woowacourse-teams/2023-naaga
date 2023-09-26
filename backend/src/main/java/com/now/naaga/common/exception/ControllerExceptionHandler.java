@@ -19,9 +19,6 @@ public class ControllerExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    public ControllerExceptionHandler() {
-    }
-
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ExceptionResponse> handleBaseException(final BaseException e) {
         final BaseExceptionType baseExceptionType = e.exceptionType();

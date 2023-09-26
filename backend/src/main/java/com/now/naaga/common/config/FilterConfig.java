@@ -20,17 +20,17 @@ public class FilterConfig {
     }
 
     @Bean
-    FilterRegistrationBean<MdcFilter> mdcFilter() {
-        MdcFilter mdcFilter = new MdcFilter();
-        FilterRegistrationBean<MdcFilter> registrationBean = new FilterRegistrationBean<>(mdcFilter);
+    public FilterRegistrationBean<MdcFilter> mdcFilter() {
+        final MdcFilter mdcFilter = new MdcFilter();
+        final FilterRegistrationBean<MdcFilter> registrationBean = new FilterRegistrationBean<>(mdcFilter);
         registrationBean.setOrder(FIRST);
         return registrationBean;
     }
 
     @Bean
-    FilterRegistrationBean<LogFilter> logFilter() {
-        LogFilter logFilter = new LogFilter(queryCounter);
-        FilterRegistrationBean<LogFilter> registrationBean = new FilterRegistrationBean<>(logFilter);
+    public FilterRegistrationBean<LogFilter> logFilter() {
+        final LogFilter logFilter = new LogFilter(queryCounter);
+        final FilterRegistrationBean<LogFilter> registrationBean = new FilterRegistrationBean<>(logFilter);
         registrationBean.setOrder(SECOND);
         return registrationBean;
     }

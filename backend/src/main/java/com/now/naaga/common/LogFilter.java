@@ -7,7 +7,7 @@ import org.slf4j.MDC;
 
 import java.io.IOException;
 
-import static com.now.naaga.common.MdcToken.QUERYCOUNT;
+import static com.now.naaga.common.MdcToken.QUERY_COUNT;
 import static com.now.naaga.common.MdcToken.TIME;
 
 public class LogFilter implements Filter {
@@ -20,9 +20,9 @@ public class LogFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain chain)
+    public void doFilter(final ServletRequest request,
+                         final ServletResponse response,
+                         final FilterChain chain)
             throws IOException, ServletException {
         queryCounter.init();
         final long start = System.currentTimeMillis();
@@ -31,6 +31,7 @@ public class LogFilter implements Filter {
 
         log(response, start);
         queryCounter.close();
+        MDC.clear();
     }
 
     private void log(final ServletResponse response,
@@ -39,8 +40,7 @@ public class LogFilter implements Filter {
         final long end = System.currentTimeMillis();
         final long time = end - start;
         MDC.put(TIME.getKey(), String.valueOf(time) + "ms");
-        MDC.put(QUERYCOUNT.getKey(), String.valueOf(queryCount));
+        MDC.put(QUERY_COUNT.getKey(), String.valueOf(queryCount));
         log.info("level: {}", "info");
     }
-
 }

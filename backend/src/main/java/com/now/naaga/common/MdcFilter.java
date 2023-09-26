@@ -14,8 +14,7 @@ public class MdcFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest request,
                          final ServletResponse response,
-                         final FilterChain chain)
-            throws IOException, ServletException {
+                         final FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
         MDC.put(REQUEST_ID.getKey(), UUID.randomUUID().toString());
@@ -24,5 +23,4 @@ public class MdcFilter implements Filter {
 
         chain.doFilter(request, response);
     }
-
 }
