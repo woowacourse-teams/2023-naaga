@@ -12,8 +12,22 @@
             <appender-ref ref="WARN_CONSOLE" />
         </root>
     </springProfile>
-    <!-- 개발 및 프로덕션 환경 -->
-    <springProfile name="dev,prod">
+
+    <!-- 개발 환경 -->
+    <springProfile name="dev">
+        <include resource="error-appender.xml" />
+        <include resource="warn-appender.xml" />
+        <include resource="info-appender.xml" />
+
+        <root level="info">
+            <appender-ref ref="INFO" />
+            <appender-ref ref="ERROR" />
+            <appender-ref ref="WARN" />
+        </root>
+    </springProfile>
+
+    <!-- 프로덕션 환경 -->
+    <springProfile name="prod">
         <include resource="error-appender.xml" />
         <include resource="warn-appender.xml" />
         <include resource="info-appender.xml" />
