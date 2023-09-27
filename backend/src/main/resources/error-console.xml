@@ -1,5 +1,5 @@
 <included>
-    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="ERROR_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <file>./logs/error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -24,12 +24,5 @@
             </jsonGeneratorDecorator>
             <timestampPattern>yyyy/MM/dd HH.mm.ss.SSSSSS</timestampPattern>
         </encoder>
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>error-history.log.%d{yyyy-MM-dd}.txt</fileNamePattern>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>5GB</totalSizeCap>
-        </rollingPolicy>
-
     </appender>
 </included>

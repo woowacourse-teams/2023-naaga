@@ -11,6 +11,7 @@
                 <pattern>
                     <pattern>
                         {
+                        "level": "%level",
                         "timestamp": "%date{yyyy/MM/dd HH.mm.ss.SSSSSS}",
                         "message": "%yellow(%message)"
                         }

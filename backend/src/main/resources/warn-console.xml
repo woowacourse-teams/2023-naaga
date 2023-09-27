@@ -1,24 +1,19 @@
 <included>
-    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/info.log</file>
+    <appender name="WARN_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <file>./logs/warn.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
+            <level>WARN</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <mdc>
-                    <fieldNames>
-                        <jsonResponse>jsonResponse</jsonResponse>
-                    </fieldNames>
-                </mdc>
                 <pattern>
                     <pattern>
                         {
                         "level": "%level",
-                        "message": "%message",
-                        "timestamp": "%date{yyyy/MM/dd HH:mm:ss.SSSSSS}"
+                        "timestamp": "%date{yyyy/MM/dd HH.mm.ss.SSSSSS}",
+                        "message": "%yellow(%message)"
                         }
                     </pattern>
                 </pattern>
@@ -28,13 +23,5 @@
             </jsonGeneratorDecorator>
             <timestampPattern>yyyy/MM/dd HH.mm.ss.SSSSSS</timestampPattern>
         </encoder>
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>info-history.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>5GB</totalSizeCap>
-        </rollingPolicy>
-
     </appender>
-
 </included>
