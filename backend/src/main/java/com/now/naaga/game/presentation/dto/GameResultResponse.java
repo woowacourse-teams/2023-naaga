@@ -1,9 +1,7 @@
 package com.now.naaga.game.presentation.dto;
 
 import com.now.naaga.game.domain.GameRecord;
-import com.now.naaga.game.domain.ResultType;
-
-import java.time.LocalDateTime;
+import com.now.naaga.gameresult.domain.ResultType;
 
 public record GameResultResponse(Long id,
                                  Long gameId,

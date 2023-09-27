@@ -1,12 +1,12 @@
-package com.now.naaga.game.domain.gamescore;
+package com.now.naaga.gameresult.domain.gamescore;
 
 import com.now.naaga.game.domain.Game;
-import com.now.naaga.game.domain.ResultType;
+import com.now.naaga.gameresult.domain.ResultType;
 import com.now.naaga.score.domain.Score;
 
-import static com.now.naaga.game.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
 
-public class FailGameScorePolicy implements GameScorePolicy {
+public class FailResultScorePolicy implements ResultScorePolicy {
     
     @Override
     public Score calculate(final Game game) {

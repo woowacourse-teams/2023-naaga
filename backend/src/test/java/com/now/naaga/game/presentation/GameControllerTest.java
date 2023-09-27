@@ -10,6 +10,7 @@ import com.now.naaga.game.domain.*;
 import com.now.naaga.game.presentation.dto.*;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.HintRepository;
+import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.presentation.dto.CoordinateResponse;
@@ -39,8 +40,8 @@ import static com.now.naaga.common.fixture.PositionFixture.*;
 import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.game.domain.ResultType.FAIL;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 import static com.now.naaga.game.exception.GameExceptionType.*;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -184,10 +185,6 @@ class GameControllerTest extends CommonControllerTest {
     @Test
     void 게임_생성_요청시_주변에_추천_장소가_없다면_예외가_발생한다() {
         // given
-        final Place destination = placeBuilder.init()
-                                              .position(잠실_루터회관_정문_좌표)
-                                              .build();
-
         final Player player = playerBuilder.init()
                 .build();
 
