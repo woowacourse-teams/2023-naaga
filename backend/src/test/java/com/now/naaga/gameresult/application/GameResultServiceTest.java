@@ -55,6 +55,7 @@ class GameResultServiceTest {
     private PlaceBuilder placeBuilder;
 
     @Test
+    @Transactional
     void 사용자의_위치가_도착_범위_안이고_엔트타입이_도착이면_게임_결과를_성공으로_생성_후_저장하고_플레이어의_점수를_올린다() {
         //given
         final Player player = playerBuilder.init().build();
