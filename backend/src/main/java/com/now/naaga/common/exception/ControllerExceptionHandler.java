@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import static com.now.naaga.common.MdcToken.JSON_RESPONSE;
+
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -24,7 +26,7 @@ public class ControllerExceptionHandler {
         final BaseExceptionType baseExceptionType = e.exceptionType();
         final ExceptionResponse exceptionResponse = new ExceptionResponse(baseExceptionType.errorCode(), baseExceptionType.errorMessage());
 
-        MDC.put("jsonResponse", exceptionResponse.toString());
+        MDC.put(JSON_RESPONSE.getKey(), exceptionResponse.toString());
         return ResponseEntity.status(baseExceptionType.httpStatus()).body(exceptionResponse);
     }
 
