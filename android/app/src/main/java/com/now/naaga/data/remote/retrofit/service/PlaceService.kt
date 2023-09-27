@@ -25,7 +25,7 @@ interface PlaceService {
     ): Response<PlaceDto>
 
     @Multipart
-    @POST("/places")
+    @POST("/temporary-places")
     suspend fun registerPlace(
         @PartMap postData: HashMap<String, RequestBody>,
         @Part imageFile: MultipartBody.Part,
