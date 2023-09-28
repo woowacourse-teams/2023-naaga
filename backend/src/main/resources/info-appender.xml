@@ -10,19 +10,15 @@
             <providers>
                 <mdc>
                     <fieldNames>
-                        <request_id>request_id</request_id>
-                        <uri>uri</uri>
-                        <method>method</method>
-                        <time>time</time>
-                        <queryCount>queryCount</queryCount>
                         <jsonResponse>jsonResponse</jsonResponse>
                     </fieldNames>
                 </mdc>
                 <pattern>
                     <pattern>
                         {
+                        "level": "%level",
                         "message": "%message",
-                        "timestamp": "%date{yyyy/MM/dd HH.mm.ss.SSSSSS}"
+                        "timestamp": "%date{yyyy/MM/dd HH:mm:ss.SSSSSS}"
                         }
                     </pattern>
                 </pattern>

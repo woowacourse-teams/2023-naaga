@@ -38,7 +38,6 @@ public class PlayerController {
     public ResponseEntity<List<RankResponse>> findAllRank(@RequestParam(name = "sort-by") final String sortBy,
                                                           @RequestParam(name = "order") final String order) {
         if (!sortBy.equalsIgnoreCase("RANK") || !order.equalsIgnoreCase("ASCENDING")) {
-            System.out.println("sortBy: " + sortBy);
             throw new CommonException(INVALID_REQUEST_PARAMETERS);
         }
 

@@ -8,17 +8,10 @@
         </filter> <!-- 레벨별 필터링이 필요없을 경우 filter class 관련된 부분을 삭제하면 됨-->
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <mdc>
-                    <fieldNames>
-                        <request_id>request_id</request_id>
-                        <uri>uri</uri>
-                        <method>method</method>
-                        <queryCount>queryCount</queryCount>
-                    </fieldNames>
-                </mdc>
                 <pattern>
                     <pattern>
                         {
+                        "level": "%level",
                         "timestamp": "%date{yyyy/MM/dd HH.mm.ss.SSSSSS}",
                         "message": "%message",
                         "stacktrace": "%exception{full}"

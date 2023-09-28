@@ -1,11 +1,10 @@
 package com.now.naaga.common;
 
 public enum MdcToken {
+
     REQUEST_ID("request_id"),
-    URI("uri"),
-    TIME("time"),
-    QUERYCOUNT("queryCount"),
-    METHOD("method");
+    JSON_RESPONSE("jsonResponse")
+    ;
 
     private final String key;
 
@@ -16,5 +15,4 @@ public enum MdcToken {
     public String getKey() {
         return key;
     }
-
 }

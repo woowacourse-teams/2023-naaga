@@ -3,8 +3,8 @@ package com.now.naaga.game.domain;
 import java.time.Duration;
 import java.util.List;
 
-import static com.now.naaga.game.domain.ResultType.FAIL;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 
 public class Statistic {
 

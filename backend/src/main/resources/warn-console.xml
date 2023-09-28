@@ -1,5 +1,5 @@
 <included>
-    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="WARN_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <file>./logs/warn.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
@@ -23,13 +23,5 @@
             </jsonGeneratorDecorator>
             <timestampPattern>yyyy/MM/dd HH.mm.ss.SSSSSS</timestampPattern>
         </encoder>
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>warn-history.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
-
     </appender>
-
 </included>

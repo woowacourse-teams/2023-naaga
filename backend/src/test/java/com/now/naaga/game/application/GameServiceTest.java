@@ -10,9 +10,12 @@ import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameRecord;
-import com.now.naaga.game.domain.GameResult;
+import com.now.naaga.game.exception.GameNotFinishedException;
+import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.game.domain.Statistic;
 import com.now.naaga.game.exception.GameException;
+import com.now.naaga.gameresult.exception.GameResultException;
+import com.now.naaga.gameresult.exception.GameResultExceptionType;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
@@ -28,12 +31,14 @@ import java.time.Month;
 import java.util.List;
 
 import static com.now.naaga.common.fixture.PositionFixture.*;
+import static com.now.naaga.game.domain.EndType.ARRIVED;
 import static com.now.naaga.game.domain.EndType.GIVE_UP;
 import static com.now.naaga.game.domain.GameStatus.DONE;
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.game.domain.ResultType.FAIL;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 import static com.now.naaga.game.exception.GameExceptionType.*;
+import static com.now.naaga.gameresult.exception.GameResultExceptionType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -103,8 +108,8 @@ class GameServiceTest {
                 .build();
 
         //then
-        GameException gameException = assertThrows(GameException.class, () -> gameService.findGameResultByGameId(game.getId()));
-        assertThat(gameException.exceptionType()).isEqualTo(GAME_RESULT_NOT_EXIST);
+        GameResultException gameResultException = assertThrows(GameResultException.class, () -> gameService.findGameResultByGameId(game.getId()));
+        assertThat(gameResultException.exceptionType()).isEqualTo(GAME_RESULT_NOT_EXIST);
     }
 
     @Test
@@ -318,7 +323,7 @@ class GameServiceTest {
     }
 
     @Test
-    void 종료요청이_들어오면_게임결과를_저장한다() {
+    void 게임을_포기하면_게임을_종료한다() {
         // given
         final Player player = playerBuilder.init()
                 .build();
@@ -340,12 +345,16 @@ class GameServiceTest {
         gameService.endGame(new EndGameCommand(player.getId(), GIVE_UP, 잠실_루터회관_정문_좌표, game.getId()));
 
         // then
-        final GameResult expected = gameService.findGameResultByGameId(game.getId());
-        assertThat(expected.getGame().getId()).isEqualTo(game.getId());
+        final FindGameByIdCommand findGameByIdCommand = new FindGameByIdCommand(game.getId(), player.getId());
+        final Game expected = gameService.findGameById(findGameByIdCommand);
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(expected.getEndTime()).isNotNull();
+            softAssertions.assertThat(expected.getGameStatus()).isEqualTo(DONE);
+        });
     }
 
     @Test
-    void 종료요청이_들어왔을때_GameNotArrivalException이_발생해도_롤백되지않고_게임결과를_저장한다() {
+    void 목적지_주변에서_도착_도전하면_게임을_종료한다() {
         // given
         final Player player = playerBuilder.init()
                 .build();
@@ -364,15 +373,49 @@ class GameServiceTest {
                 .build();
 
         // when
-        gameService.endGame(new EndGameCommand(player.getId(), GIVE_UP, 역삼역_좌표, game.getId()));
+        gameService.endGame(new EndGameCommand(player.getId(), ARRIVED, 잠실_루터회관_정문_좌표, game.getId()));
 
         // then
-        final GameResult expected = gameService.findGameResultByGameId(game.getId());
-        assertThat(expected.getGame().getId()).isEqualTo(game.getId());
+        final FindGameByIdCommand findGameByIdCommand = new FindGameByIdCommand(game.getId(), player.getId());
+        final Game expected = gameService.findGameById(findGameByIdCommand);
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(expected.getEndTime()).isNotNull();
+            softAssertions.assertThat(expected.getGameStatus()).isEqualTo(DONE);
+        });
     }
 
     @Test
-    void 게임임생성_요청이_들어오면_게임을_저장하고_반환한다() {
+    void 종료요청이_들어왔을때_GameNotArrivalException이_발생해도_롤백되지않고_게임결과를_저장한다() {
+        // given
+        final Player player = playerBuilder.init()
+                .build();
+
+        final Place destination = placeBuilder.init()
+                .position(잠실_루터회관_정문_좌표)
+                .build();
+
+        final Game game = gameBuilder.init()
+                .place(destination)
+                .player(player)
+                .gameStatus(IN_PROGRESS)
+                .startTime(LocalDateTime.of(2023, Month.AUGUST, 13, 15, 30, 0))
+                .startPosition(잠실역_교보문고_좌표)
+                .remainingAttempts(3)
+                .build();
+
+        // when & then
+        final EndGameCommand endGameCommand = new EndGameCommand(player.getId(), ARRIVED, 역삼역_좌표, game.getId());
+        final FindGameByIdCommand findGameByIdCommand = new FindGameByIdCommand(game.getId(), player.getId());
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThatThrownBy(() -> gameService.endGame(endGameCommand)).isInstanceOf(GameNotFinishedException.class);
+            final Game expected = gameService.findGameById(findGameByIdCommand);
+            softAssertions.assertThat(expected.getGameStatus()).isEqualTo(IN_PROGRESS);
+            softAssertions.assertThat(expected.getEndTime()).isNull();
+        });
+    }
+
+    @Test
+    void 게임생성_요청이_들어오면_게임을_저장하고_반환한다() {
         // given
         final Player player = playerBuilder.init()
                 .build();
@@ -389,7 +432,7 @@ class GameServiceTest {
     }
 
     @Test
-    void 게임임생성_요청이_들어왔을때_진행중인_게임이_있다면_예외를_발생시킨다() {
+    void 게임생성_요청이_들어왔을때_진행중인_게임이_있다면_예외를_발생시킨다() {
         // given
         final Player player = playerBuilder.init()
                 .build();
@@ -419,10 +462,6 @@ class GameServiceTest {
     void 게임임생성_요청이_들어왔을때_추천장소가_없다면_예외를_발생시킨다() {
         // given
         final Player player = playerBuilder.init()
-                .build();
-
-        final Place destination = placeBuilder.init()
-                .position(역삼역_좌표)
                 .build();
 
         // when
