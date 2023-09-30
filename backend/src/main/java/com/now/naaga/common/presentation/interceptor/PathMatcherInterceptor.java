@@ -7,9 +7,13 @@ import org.springframework.util.PathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PathMatcherInterceptor implements HandlerInterceptor {
+
+    private static final List<HttpMethod> ALL_HTTP_METHODS = Arrays.stream(HttpMethod.values()).toList();
 
     private final HandlerInterceptor handlerInterceptor;
 
@@ -37,17 +41,34 @@ public class PathMatcherInterceptor implements HandlerInterceptor {
     }
 
     public PathMatcherInterceptor includeRequestPattern(final String requestPathPattern,
-                                                     final HttpMethod requestPathMethod) {
-        this.includedRequestPatterns.add(new RequestPattern(requestPathPattern, requestPathMethod));
+                                                        final HttpMethod... requestMethods) {
+        final List<HttpMethod> mappingRequestMethods = decideRequestMethods(requestMethods);
+
+        for (HttpMethod httpMethod : mappingRequestMethods) {
+            this.includedRequestPatterns.add(new RequestPattern(requestPathPattern, httpMethod));
+        }
+
         return this;
     }
 
     public PathMatcherInterceptor excludeRequestPattern(final String requestPathPattern,
-                                                     final HttpMethod requestPathMethod) {
-        this.excludedRequestPatterns.add(new RequestPattern(requestPathPattern, requestPathMethod));
+                                                        final HttpMethod... requestMethods) {
+        final List<HttpMethod> mappingRequestMethods = decideRequestMethods(requestMethods);
+
+        for (HttpMethod httpMethod : mappingRequestMethods) {
+            this.excludedRequestPatterns.add(new RequestPattern(requestPathPattern, httpMethod));
+        }
+
         return this;
     }
 
+    private List<HttpMethod> decideRequestMethods(final HttpMethod[] requestMethods) {
+        final List<HttpMethod> httpMethods = Arrays.stream(requestMethods).collect(Collectors.toList());
+        if (httpMethods.isEmpty()) {
+            httpMethods.addAll(ALL_HTTP_METHODS);
+        }
+        return httpMethods;
+    }
 
     private boolean isIncludedRequestPattern(final HttpServletRequest request) {
         final String requestPath = request.getServletPath();
