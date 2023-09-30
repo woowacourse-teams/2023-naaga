@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -42,6 +43,7 @@ class HintServiceTest {
     @Autowired
     private PlaceBuilder placeBuilder;
 
+    @Transactional
     @Test
     void 힌트를_생성한다() {
         // given
