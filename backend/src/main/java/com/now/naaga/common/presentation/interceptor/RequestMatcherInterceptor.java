@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PathMatcherInterceptor implements HandlerInterceptor {
+public class RequestMatcherInterceptor implements HandlerInterceptor {
 
     private static final List<HttpMethod> ALL_HTTP_METHODS = Arrays.stream(HttpMethod.values()).toList();
 
@@ -24,8 +24,8 @@ public class PathMatcherInterceptor implements HandlerInterceptor {
     private final List<RequestPattern> excludedRequestPatterns = new ArrayList<>();
 
 
-    public PathMatcherInterceptor(final HandlerInterceptor handlerInterceptor,
-                                  final PathMatcher pathMatcher) {
+    public RequestMatcherInterceptor(final HandlerInterceptor handlerInterceptor,
+                                     final PathMatcher pathMatcher) {
         this.handlerInterceptor = handlerInterceptor;
         this.pathMatcher = pathMatcher;
     }
@@ -40,8 +40,8 @@ public class PathMatcherInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    public PathMatcherInterceptor includeRequestPattern(final String requestPathPattern,
-                                                        final HttpMethod... requestMethods) {
+    public RequestMatcherInterceptor includeRequestPattern(final String requestPathPattern,
+                                                           final HttpMethod... requestMethods) {
         final List<HttpMethod> mappingRequestMethods = decideRequestMethods(requestMethods);
 
         for (HttpMethod httpMethod : mappingRequestMethods) {
@@ -51,8 +51,8 @@ public class PathMatcherInterceptor implements HandlerInterceptor {
         return this;
     }
 
-    public PathMatcherInterceptor excludeRequestPattern(final String requestPathPattern,
-                                                        final HttpMethod... requestMethods) {
+    public RequestMatcherInterceptor excludeRequestPattern(final String requestPathPattern,
+                                                           final HttpMethod... requestMethods) {
         final List<HttpMethod> mappingRequestMethods = decideRequestMethods(requestMethods);
 
         for (HttpMethod httpMethod : mappingRequestMethods) {

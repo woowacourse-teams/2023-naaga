@@ -25,7 +25,7 @@ import static org.springframework.http.HttpMethod.POST;
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class PathMatcherInterceptorTest {
+class RequestMatcherInterceptorTest {
 
     private final PathMatcher pathMatcher = new AntPathMatcher();
 
@@ -41,15 +41,15 @@ class PathMatcherInterceptorTest {
         final Controller controller = Mockito.mock(Controller.class);
         final MockHttpServletRequest request = new MockHttpServletRequest();
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final PathMatcherInterceptor pathMatcherInterceptor = new PathMatcherInterceptor(handlerInterceptor, pathMatcher);
+        final RequestMatcherInterceptor requestMatcherInterceptor = new RequestMatcherInterceptor(handlerInterceptor, pathMatcher);
 
         // when
         request.setServletPath(requestPath);
         request.setMethod(requestMethod);
 
-        pathMatcherInterceptor.includeRequestPattern(pathPattern, matchingMethods);
+        requestMatcherInterceptor.includeRequestPattern(pathPattern, matchingMethods);
 
-        pathMatcherInterceptor.preHandle(request, response, controller);
+        requestMatcherInterceptor.preHandle(request, response, controller);
         // then
         verify(handlerInterceptor, times(count)).preHandle(request, response, controller);
     }
@@ -77,16 +77,16 @@ class PathMatcherInterceptorTest {
         final Controller controller = Mockito.mock(Controller.class);
         final MockHttpServletRequest request = new MockHttpServletRequest();
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final PathMatcherInterceptor pathMatcherInterceptor = new PathMatcherInterceptor(handlerInterceptor, pathMatcher);
+        final RequestMatcherInterceptor requestMatcherInterceptor = new RequestMatcherInterceptor(handlerInterceptor, pathMatcher);
 
         // when
         request.setServletPath(requestPath);
         request.setMethod(requestMethod);
 
-        pathMatcherInterceptor.includeRequestPattern("/**")
+        requestMatcherInterceptor.includeRequestPattern("/**")
                 .excludeRequestPattern(pathPattern, matchingMethods);
 
-        pathMatcherInterceptor.preHandle(request, response, controller);
+        requestMatcherInterceptor.preHandle(request, response, controller);
         // then
         verify(handlerInterceptor, times(count)).preHandle(request, response, controller);
     }

@@ -6,7 +6,7 @@ import com.now.naaga.auth.presentation.argumentresolver.PlayerArgumentResolver;
 import java.util.List;
 
 import com.now.naaga.auth.presentation.argumentresolver.MemberAuthArgumentResolver;
-import com.now.naaga.common.presentation.interceptor.PathMatcherInterceptor;
+import com.now.naaga.common.presentation.interceptor.RequestMatcherInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -47,7 +47,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     private HandlerInterceptor mapAuthInterceptor() {
-        return new PathMatcherInterceptor(authInterceptor, pathMatcher)
+        return new RequestMatcherInterceptor(authInterceptor, pathMatcher)
                 .includeRequestPattern("/**")
                 .excludeRequestPattern("/h2-console/**")
                 .excludeRequestPattern("/auth/**")
