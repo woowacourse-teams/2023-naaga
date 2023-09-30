@@ -53,12 +53,12 @@ public class PathMatcherInterceptor implements HandlerInterceptor {
         final String requestPath = request.getServletPath();
         final String requestMethod = request.getMethod();
 
-        final boolean isNotExcludedPattern = excludedRequestPatterns.stream()
-                .noneMatch(requestPattern -> requestPattern.match(pathMatcher, requestPath, requestMethod));
-
         final boolean isIncludedPattern = includedRequestPatterns.stream()
                 .anyMatch(requestPattern -> requestPattern.match(pathMatcher, requestPath, requestMethod));
 
-        return isNotExcludedPattern && isIncludedPattern;
+        final boolean isNotExcludedPattern = excludedRequestPatterns.stream()
+                .noneMatch(requestPattern -> requestPattern.match(pathMatcher, requestPath, requestMethod));
+
+        return isIncludedPattern && isNotExcludedPattern;
     }
 }
