@@ -1,7 +1,6 @@
 package com.now.naaga.auth.presentation.interceptor;
 
 import com.now.naaga.auth.exception.AuthException;
-import com.now.naaga.auth.exception.AuthExceptionType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +8,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 
 import static com.now.naaga.auth.exception.AuthExceptionType.*;
@@ -18,6 +19,8 @@ import static com.now.naaga.auth.exception.AuthExceptionType.*;
 public class ManagerAuthInterceptor implements HandlerInterceptor {
 
     public static final int AUTH_HEADER_INFO_SIZE = 2;
+
+    public static final String AUTH_HEADER_TYPE = "Basic ";
 
     @Value("${manager.id}")
     private String id;
@@ -29,26 +32,30 @@ public class ManagerAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request,
                              final HttpServletResponse response,
                              final Object handler) throws Exception {
-        final String[] idAndPassword = extractHeaderInfo(request);
+        final List<String> idAndPassword = extractHeaderInfo(request);
         return loginForManager(idAndPassword);
     }
 
-    private String[] extractHeaderInfo(final HttpServletRequest request) {
+    private List<String> extractHeaderInfo(final HttpServletRequest request) {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (header == null) {
             throw new AuthException(NOT_EXIST_HEADER);
         }
         final String decodedHeader = new String(Base64.getDecoder().decode(header));
-        final String[] idAndPassword = decodedHeader.split(":");
+        if (!decodedHeader.startsWith(AUTH_HEADER_TYPE)) {
+            throw new AuthException(INVALID_HEADER);
+        }
+        final String decodedHeaderWithoutType = decodedHeader.replace(AUTH_HEADER_TYPE, "");
+        final String[] idAndPassword = decodedHeaderWithoutType.split(":");
         if (idAndPassword.length != AUTH_HEADER_INFO_SIZE) {
             throw new AuthException(INVALID_HEADER);
         }
-        return idAndPassword;
+        return Arrays.asList(idAndPassword);
     }
 
-    private boolean loginForManager(final String[] idAndPassword) {
-        final String inputId = idAndPassword[0].trim();
-        final String inputPassword = idAndPassword[1].trim();
+    private boolean loginForManager(final List<String> idAndPassword) {
+        final String inputId = idAndPassword.get(0).trim();
+        final String inputPassword = idAndPassword.get(1).trim();
         if (Objects.equals(id, inputId) && Objects.equals(password, inputPassword)) {
             return true;
         }
