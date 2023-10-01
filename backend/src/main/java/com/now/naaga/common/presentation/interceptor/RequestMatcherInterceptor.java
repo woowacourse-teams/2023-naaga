@@ -35,6 +35,19 @@ public class RequestMatcherInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    private boolean isIncludedRequestPattern(final HttpServletRequest request) {
+        final String requestPath = request.getServletPath();
+        final String requestMethod = request.getMethod();
+
+        final boolean isIncludedPattern = includedRequestPatterns.stream()
+                .anyMatch(requestPattern -> requestPattern.match(requestPath, requestMethod));
+
+        final boolean isNotExcludedPattern = excludedRequestPatterns.stream()
+                .noneMatch(requestPattern -> requestPattern.match(requestPath, requestMethod));
+
+        return isIncludedPattern && isNotExcludedPattern;
+    }
+
     public RequestMatcherInterceptor includeRequestPattern(final String requestPathPattern,
                                                            final HttpMethod... requestMethods) {
         final List<HttpMethod> mappingRequestMethods = decideRequestMethods(requestMethods);
@@ -65,18 +78,5 @@ public class RequestMatcherInterceptor implements HandlerInterceptor {
         }
 
         return httpMethods;
-    }
-
-    private boolean isIncludedRequestPattern(final HttpServletRequest request) {
-        final String requestPath = request.getServletPath();
-        final String requestMethod = request.getMethod();
-
-        final boolean isIncludedPattern = includedRequestPatterns.stream()
-                .anyMatch(requestPattern -> requestPattern.match(requestPath, requestMethod));
-
-        final boolean isNotExcludedPattern = excludedRequestPatterns.stream()
-                .noneMatch(requestPattern -> requestPattern.match(requestPath, requestMethod));
-
-        return isIncludedPattern && isNotExcludedPattern;
     }
 }
