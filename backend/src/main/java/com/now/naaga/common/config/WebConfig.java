@@ -1,21 +1,19 @@
 package com.now.naaga.common.config;
 
-import com.now.naaga.auth.presentation.interceptor.AuthInterceptor;
-import com.now.naaga.auth.presentation.argumentresolver.PlayerArgumentResolver;
-
-import java.util.List;
-
 import com.now.naaga.auth.presentation.argumentresolver.MemberAuthArgumentResolver;
+import com.now.naaga.auth.presentation.argumentresolver.PlayerArgumentResolver;
+import com.now.naaga.auth.presentation.interceptor.AuthInterceptor;
 import com.now.naaga.common.presentation.interceptor.RequestMatcherInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.util.PathMatcher;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -26,19 +24,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
 
-    private final PathMatcher pathMatcher;
-
     @Value("${manager.origin-url}")
     private String managerUriPath;
 
     public WebConfig(final PlayerArgumentResolver playerArgumentResolver,
                      final MemberAuthArgumentResolver memberAuthArgumentResolver,
-                     final AuthInterceptor authInterceptor,
-                     final PathMatcher pathMatcher) {
+                     final AuthInterceptor authInterceptor) {
         this.playerArgumentResolver = playerArgumentResolver;
         this.memberAuthArgumentResolver = memberAuthArgumentResolver;
         this.authInterceptor = authInterceptor;
-        this.pathMatcher = pathMatcher;
     }
 
     @Override
@@ -47,7 +41,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     private HandlerInterceptor mapAuthInterceptor() {
-        return new RequestMatcherInterceptor(authInterceptor, pathMatcher)
+        return new RequestMatcherInterceptor(authInterceptor)
                 .includeRequestPattern("/**")
                 .excludeRequestPattern("/h2-console/**")
                 .excludeRequestPattern("/auth/**")

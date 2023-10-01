@@ -3,12 +3,12 @@ package com.now.naaga.common.presentation.interceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
-import org.springframework.util.PathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RequestMatcherInterceptor implements HandlerInterceptor {
 
@@ -16,17 +16,13 @@ public class RequestMatcherInterceptor implements HandlerInterceptor {
 
     private final HandlerInterceptor handlerInterceptor;
 
-    private final PathMatcher pathMatcher;
-
     private final List<RequestPattern> includedRequestPatterns = new ArrayList<>();
 
     private final List<RequestPattern> excludedRequestPatterns = new ArrayList<>();
 
 
-    public RequestMatcherInterceptor(final HandlerInterceptor handlerInterceptor,
-                                     final PathMatcher pathMatcher) {
+    public RequestMatcherInterceptor(final HandlerInterceptor handlerInterceptor) {
         this.handlerInterceptor = handlerInterceptor;
-        this.pathMatcher = pathMatcher;
     }
 
     @Override
@@ -76,10 +72,10 @@ public class RequestMatcherInterceptor implements HandlerInterceptor {
         final String requestMethod = request.getMethod();
 
         final boolean isIncludedPattern = includedRequestPatterns.stream()
-                .anyMatch(requestPattern -> requestPattern.match(pathMatcher, requestPath, requestMethod));
+                .anyMatch(requestPattern -> requestPattern.match(requestPath, requestMethod));
 
         final boolean isNotExcludedPattern = excludedRequestPatterns.stream()
-                .noneMatch(requestPattern -> requestPattern.match(pathMatcher, requestPath, requestMethod));
+                .noneMatch(requestPattern -> requestPattern.match(requestPath, requestMethod));
 
         return isIncludedPattern && isNotExcludedPattern;
     }

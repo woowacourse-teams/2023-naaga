@@ -22,8 +22,6 @@ import static org.springframework.http.HttpMethod.POST;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class RequestPatternTest {
 
-    PathMatcher pathMatcher = new AntPathMatcher();
-
     @ParameterizedTest
     @MethodSource("requestDummy")
     void 매칭되는_요청을_판단한다(final String pathPattern,
@@ -35,7 +33,7 @@ class RequestPatternTest {
         final RequestPattern requestPattern = new RequestPattern(pathPattern, matchingMethod);
 
         // when
-        final boolean actual = requestPattern.match(pathMatcher, requestPath, requestMethod);
+        final boolean actual = requestPattern.match(requestPath, requestMethod);
 
         // then
         assertThat(actual).isEqualTo(expected);

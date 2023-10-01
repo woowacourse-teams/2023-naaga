@@ -27,8 +27,6 @@ import static org.springframework.http.HttpMethod.POST;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class RequestMatcherInterceptorTest {
 
-    private final PathMatcher pathMatcher = new AntPathMatcher();
-
     @ParameterizedTest
     @MethodSource("includeRequestPatternDummy")
     void 특정_패스와_메서드를_인터셉터와_매칭_시킨다_메서드를_입력하지_않으면_모든_메서드를_매칭_시킨다(final String requestPath,
@@ -41,7 +39,7 @@ class RequestMatcherInterceptorTest {
         final Controller controller = Mockito.mock(Controller.class);
         final MockHttpServletRequest request = new MockHttpServletRequest();
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final RequestMatcherInterceptor requestMatcherInterceptor = new RequestMatcherInterceptor(handlerInterceptor, pathMatcher);
+        final RequestMatcherInterceptor requestMatcherInterceptor = new RequestMatcherInterceptor(handlerInterceptor);
 
         // when
         request.setServletPath(requestPath);
@@ -77,7 +75,7 @@ class RequestMatcherInterceptorTest {
         final Controller controller = Mockito.mock(Controller.class);
         final MockHttpServletRequest request = new MockHttpServletRequest();
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        final RequestMatcherInterceptor requestMatcherInterceptor = new RequestMatcherInterceptor(handlerInterceptor, pathMatcher);
+        final RequestMatcherInterceptor requestMatcherInterceptor = new RequestMatcherInterceptor(handlerInterceptor);
 
         // when
         request.setServletPath(requestPath);
