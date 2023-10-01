@@ -57,6 +57,7 @@ class RequestMatcherInterceptorTest {
                 Arguments.arguments("/places/my", "POST", "/places/**", new HttpMethod[]{}, 1),
                 Arguments.arguments("/places/my", "GET", "/places/**", new HttpMethod[]{}, 1),
                 Arguments.arguments("/place", "POST", "/places/**", new HttpMethod[]{}, 0),
+                Arguments.arguments("/places", "POST", "/places/**", new HttpMethod[]{GET}, 0),
                 Arguments.arguments("/ranks", "POST", "/ranks", new HttpMethod[]{POST}, 1),
                 Arguments.arguments("/ranks", "GET", "/ranks", new HttpMethod[]{POST, GET}, 1),
                 Arguments.arguments("/ranks/my", "POST", "/ranks", new HttpMethod[]{POST}, 0)
@@ -94,6 +95,7 @@ class RequestMatcherInterceptorTest {
                 Arguments.arguments("/places/my", "POST", "/places/**", new HttpMethod[]{}, 0),
                 Arguments.arguments("/places/my", "GET", "/places/**", new HttpMethod[]{}, 0),
                 Arguments.arguments("/place", "POST", "/places/**", new HttpMethod[]{}, 1),
+                Arguments.arguments("/places", "POST", "/places/**", new HttpMethod[]{GET}, 1),
                 Arguments.arguments("/ranks", "POST", "/ranks", new HttpMethod[]{POST}, 0),
                 Arguments.arguments("/ranks", "GET", "/ranks", new HttpMethod[]{POST, GET}, 0),
                 Arguments.arguments("/ranks/my", "POST", "/ranks", new HttpMethod[]{POST}, 1)
