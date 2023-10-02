@@ -15,5 +15,5 @@ data class MyPageStatisticsUiModel(
 
 enum class MyPageViewType(val text: String) {
     STATISTICS("Statistics"),
-    PLACES("My Places"),
+    PLACES("내가 추가한 장소"),
 }

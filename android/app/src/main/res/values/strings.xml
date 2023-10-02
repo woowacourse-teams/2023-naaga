@@ -84,6 +84,7 @@
     <string name="mypage_total_hint_uses">사용 힌트 개수</string>
     <string name="mypage_empty_item_title">My Places</string>
     <string name="mypage_empty_description">추가한 장소가 없어요!\n장소를 추가해 주세요!</string>
+    <string name="mypage_item_adventure_count_suffix">회</string>
 
     <!--give up dialog-->
     <string name="give_up_dialog_title">게임을 포기하시겠어요?</string>

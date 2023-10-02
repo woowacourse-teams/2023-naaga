@@ -13,12 +13,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/pretendard_bold"
-            android:textColor="@color/main_purple"
-            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Statistics" />
+            tools:text="내가 추가한 장소" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_mypage_item_content"
