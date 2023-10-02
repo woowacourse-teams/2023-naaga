@@ -124,15 +124,16 @@ public class GameService {
 
     @Transactional(readOnly = true)
     public List<GameRecord> findAllGameResult(final PlayerRequest playerRequest) {
-        final List<Game> gamesByPlayerId = gameRepository.findByPlayerId(playerRequest.playerId());
-        final List<GameResult> gameResults = gamesByPlayerId.stream()
-                .map(game -> findGameResultByGameId(game.getId()))
+        final Long playerId = playerRequest.playerId();
+        final List<GameResult> gameResults = gameResultRepository.findByPlayerId(playerId);
+
+        final List<GameResult> sortedGameResults = gameResults.stream()
                 .sorted((gr1, gr2) -> gr2.getCreatedAt().compareTo(gr1.getCreatedAt()))
                 .toList();
 
-        return gameResults.stream()
+        return sortedGameResults.stream()
                 .map(GameRecord::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional(readOnly = true)
