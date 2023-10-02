@@ -108,7 +108,8 @@
             android:autofillHints="no"
             android:backgroundTint="@color/white"
             android:ellipsize="end"
-            android:hint="@string/upload_photo_title"
+            android:hint="@string/upload_photo_title_hint"
+            android:textColorHint="@color/white"
             android:inputType="text"
             android:maxLines="1"
             android:text="@={viewModel.name}"
@@ -117,8 +118,7 @@
             android:textSize="28sp"
             app:layout_constraintEnd_toEndOf="@id/v_upload_divide_line_1"
             app:layout_constraintStart_toStartOf="@id/v_upload_divide_line_1"
-            app:layout_constraintTop_toBottomOf="@id/tv_upload_title"
-            tools:text="선정릉 돌담길" />
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_title"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_upload_submit"
