@@ -86,8 +86,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/rect_radius_small_white"
-                android:backgroundTint="@color/purple_white"
+                android:background="@drawable/rect_white_radius_small"
                 android:elevation="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rv_mypage_statistics" />
