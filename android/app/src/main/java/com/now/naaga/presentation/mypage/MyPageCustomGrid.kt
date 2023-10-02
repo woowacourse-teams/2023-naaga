@@ -7,12 +7,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.now.naaga.R
 import com.now.naaga.databinding.CustomMypageGridBinding
 import com.now.naaga.databinding.CustomMypageGridEmptyBinding
+import com.now.naaga.presentation.mypage.place.MyPageItemUiModel
+import com.now.naaga.presentation.mypage.place.MyPagePlaceAdapter
+import com.now.naaga.presentation.mypage.place.MyPageViewType
 
 class MyPageCustomGrid(context: Context, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
     private lateinit var layoutInflater: LayoutInflater
     private lateinit var notEmptybinding: CustomMypageGridBinding
     private lateinit var emptyBinding: CustomMypageGridEmptyBinding
-    private lateinit var adapter: MyPageAdapter
+    private lateinit var adapter: MyPagePlaceAdapter
 
     private fun initNotEmptyView() {
         layoutInflater = LayoutInflater.from(context)
@@ -40,9 +43,9 @@ class MyPageCustomGrid(context: Context, attrs: AttributeSet? = null) : Constrai
     private fun makeAdapter(data: List<MyPageItemUiModel>) {
         adapter = if (data.first().viewType == MyPageViewType.PLACES) {
             val lastIndex = if (data.size > END_PLACE_INDEX) END_PLACE_INDEX else data.size
-            MyPageAdapter(data.subList(START_PLACE_INDEX, lastIndex))
+            MyPagePlaceAdapter(data.subList(START_PLACE_INDEX, lastIndex))
         } else {
-            MyPageAdapter(data)
+            MyPagePlaceAdapter(data)
         }
     }
 

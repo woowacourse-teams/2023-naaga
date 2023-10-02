@@ -1,9 +1,9 @@
-package com.now.naaga.presentation.mypage
+package com.now.naaga.presentation.mypage.place
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class MyPageAdapter(
+class MyPagePlaceAdapter(
     private val contents: List<MyPageItemUiModel>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

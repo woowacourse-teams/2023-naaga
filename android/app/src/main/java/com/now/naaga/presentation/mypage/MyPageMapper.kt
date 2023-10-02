@@ -4,6 +4,8 @@ import android.content.Context
 import com.now.domain.model.Place
 import com.now.domain.model.Statistics
 import com.now.naaga.R
+import com.now.naaga.presentation.mypage.place.MyPagePlaceUiModel
+import com.now.naaga.presentation.mypage.place.MyPageStatisticsUiModel
 
 fun Statistics.toUiModel(context: Context): List<MyPageStatisticsUiModel> {
     return listOf(

@@ -1,4 +1,4 @@
-package com.now.naaga.presentation.mypage
+package com.now.naaga.presentation.mypage.place
 
 abstract class MyPageItemUiModel(val viewType: MyPageViewType)
 

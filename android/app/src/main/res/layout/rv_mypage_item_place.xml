@@ -6,7 +6,7 @@
     <data>
         <variable
             name="model"
-            type="com.now.naaga.presentation.mypage.MyPagePlaceUiModel" />
+            type="com.now.naaga.presentation.mypage.place.MyPagePlaceUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

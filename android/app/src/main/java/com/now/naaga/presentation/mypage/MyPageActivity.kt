@@ -25,6 +25,7 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         setContentView(binding.root)
         registerAnalytics(this.lifecycle)
         initViewModel()
+        initRecyclerView()
         setClickListeners()
         subscribe()
         fetchData()
@@ -33,6 +34,9 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private fun initViewModel() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+    }
+
+    private fun initRecyclerView() {
     }
 
     private fun setClickListeners() {

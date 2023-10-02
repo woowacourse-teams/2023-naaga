@@ -1,4 +1,4 @@
-package com.now.naaga.presentation.mypage
+package com.now.naaga.presentation.mypage.place
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

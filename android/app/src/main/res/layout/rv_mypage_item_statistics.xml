@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.now.naaga.presentation.mypage.MyPageStatisticsUiModel" />
+            type="com.now.naaga.presentation.mypage.place.MyPageStatisticsUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
