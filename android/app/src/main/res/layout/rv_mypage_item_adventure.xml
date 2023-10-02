@@ -11,6 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <View
+            android:id="@+id/v_mypage_item_icon_background"
+            android:layout_width="77dp"
+            android:layout_height="77dp"
+            android:layout_marginVertical="@dimen/space_default_medium"
+            android:layout_marginStart="@dimen/space_default_large"
+            android:scaleType="centerCrop"
+            android:background="@drawable/oval"
+            android:backgroundTint="@color/main_yellow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/iv_mypage_item_icon"
             android:layout_width="77dp"
@@ -20,7 +32,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_location_dialog" />
+            tools:src="@drawable/ic_all_adventure" />
 
         <TextView
             android:id="@+id/tv_mypage_item_adventure_title"

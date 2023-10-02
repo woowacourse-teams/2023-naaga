@@ -74,10 +74,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_mypage_nickname"
                 app:layout_constraintBottom_toTopOf="@id/customGrid_mypage_places"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
                 tools:itemCount="3"
                 tools:listitem="@layout/rv_mypage_item_adventure" />
 
-            <com.now.naaga.presentation.mypage.MyPageCustomGrid
+            <com.now.naaga.presentation.mypage.place.MyPageCustomGrid
                 android:id="@+id/customGrid_mypage_places"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

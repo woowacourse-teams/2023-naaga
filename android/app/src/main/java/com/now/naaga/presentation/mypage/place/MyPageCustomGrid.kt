@@ -1,4 +1,4 @@
-package com.now.naaga.presentation.mypage
+package com.now.naaga.presentation.mypage.place
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,9 +7,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.now.naaga.R
 import com.now.naaga.databinding.CustomMypageGridBinding
 import com.now.naaga.databinding.CustomMypageGridEmptyBinding
-import com.now.naaga.presentation.mypage.place.MyPageItemUiModel
-import com.now.naaga.presentation.mypage.place.MyPagePlaceAdapter
-import com.now.naaga.presentation.mypage.place.MyPageViewType
 
 class MyPageCustomGrid(context: Context, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
     private lateinit var layoutInflater: LayoutInflater
