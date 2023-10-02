@@ -102,7 +102,9 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
         viewModel.throwable.observe(this) { error: DataThrowable ->
             when (error.code) {
-                UploadViewModel.ERROR_STORE_PHOTO -> { shortToast(getString(R.string.upload_error_store_photo_message)) }
+                UploadViewModel.ERROR_STORE_PHOTO -> {
+                    shortToast(getString(R.string.upload_error_store_photo_message))
+                }
                 UploadViewModel.ALREADY_EXISTS_NEARBY -> {
                     shortToast(getString(R.string.upload_error_already_exists_nearby_message))
                 }
