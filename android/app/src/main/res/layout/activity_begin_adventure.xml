@@ -69,7 +69,6 @@
             style="@style/BeginActivity.Button"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/ic_mypage"
             app:layout_constraintBottom_toBottomOf="@+id/iv_beginAdventure_upload"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_beginAdventure_upload"
