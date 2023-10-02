@@ -213,14 +213,17 @@ class GameServiceTest {
                 .game(game2)
                 .build();
 
+        final int expectedTotalDistance = (int) 잠실_루터회관_정문_좌표.calculateDistance(잠실역_교보문고_좌표);
+
         // when
-        final Statistic expected = gameService.findStatistic(new PlayerRequest(player.getId()));
+        final Statistic actual = gameService.findStatistic(new PlayerRequest(player.getId()));
 
         // then
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(expected.getSuccessGameCount()).isEqualTo(1);
-            softAssertions.assertThat(expected.getFailGameCount()).isEqualTo(1);
-            softAssertions.assertThat(expected.getGameCount()).isEqualTo(2);
+            softAssertions.assertThat(actual.getSuccessGameCount()).isEqualTo(1);
+            softAssertions.assertThat(actual.getFailGameCount()).isEqualTo(1);
+            softAssertions.assertThat(actual.getGameCount()).isEqualTo(2);
+            softAssertions.assertThat(actual.getTotalDistance()).isEqualTo(expectedTotalDistance);
         });
     }
 
