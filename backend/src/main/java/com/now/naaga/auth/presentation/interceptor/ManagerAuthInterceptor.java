@@ -54,8 +54,8 @@ public class ManagerAuthInterceptor implements HandlerInterceptor {
     }
 
     private boolean loginForManager(final List<String> idAndPassword) {
-        final String inputId = idAndPassword.get(0).trim();
-        final String inputPassword = idAndPassword.get(1).trim();
+        final String inputId = idAndPassword.get(0).strip();
+        final String inputPassword = idAndPassword.get(1).strip();
         if (Objects.equals(id, inputId) && Objects.equals(password, inputPassword)) {
             return true;
         }
