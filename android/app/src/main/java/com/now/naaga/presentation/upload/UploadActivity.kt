@@ -96,23 +96,17 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 UploadStatus.PENDING -> { changeVisibility(binding.lottieUploadLoading, View.VISIBLE) }
                 UploadStatus.FAIL -> {
                     changeVisibility(binding.lottieUploadLoading, View.GONE)
-                    shortToast(MESSAGE_FAIL_UPLOAD)
+                    shortToast(getString(R.string.upload_fail_submit))
                 }
             }
         }
         viewModel.throwable.observe(this) { error: DataThrowable ->
             when (error.code) {
-                UploadViewModel.ERROR_STORE_PHOTO -> {
-                    shortToast(getString(R.string.upload_error_store_photo_message))
-                }
-
+                UploadViewModel.ERROR_STORE_PHOTO -> { shortToast(getString(R.string.upload_error_store_photo_message)) }
                 UploadViewModel.ALREADY_EXISTS_NEARBY -> {
                     shortToast(getString(R.string.upload_error_already_exists_nearby_message))
                 }
-
-                UploadViewModel.ERROR_POST_BODY -> {
-                    shortToast(getString(R.string.upload_error_post_message))
-                }
+                UploadViewModel.ERROR_POST_BODY -> { shortToast(getString(R.string.upload_error_post_message)) }
             }
         }
     }
@@ -198,14 +192,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         cameraLauncher.launch(null)
     }
 
-    private fun checkLocationPermission() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
-        } else {
-            setCoordinate()
-        }
-    }
-
     private fun setImage(bitmap: Bitmap) {
         binding.ivUploadCameraIcon.visibility = View.GONE
         binding.ivUploadPhoto.setImageBitmap(bitmap)
@@ -256,8 +242,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CAMERA,
         )
-
-        private const val MESSAGE_FAIL_UPLOAD = "장소등록에 실패했어요!"
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
