@@ -6,13 +6,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RequestMatcherInterceptor implements HandlerInterceptor {
 
-    private static final List<HttpMethod> ALL_HTTP_METHODS = Arrays.asList(HttpMethod.values());
+    private static final List<HttpMethod> ALL_HTTP_METHODS = new ArrayList<>(List.of(HttpMethod.values()));
 
     private final HandlerInterceptor handlerInterceptor;
 
@@ -71,7 +69,7 @@ public class RequestMatcherInterceptor implements HandlerInterceptor {
     }
 
     private List<HttpMethod> decideRequestMethods(final HttpMethod[] requestMethods) {
-        final List<HttpMethod> httpMethods = Arrays.stream(requestMethods).collect(Collectors.toList());
+        final List<HttpMethod> httpMethods = new ArrayList<>(List.of(requestMethods));
 
         if (httpMethods.isEmpty()) {
             httpMethods.addAll(ALL_HTTP_METHODS);
