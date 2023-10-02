@@ -17,16 +17,16 @@ public record GameResultResponse(Long id,
 
     public static GameResultResponse from(final GameRecord gameRecord) {
         return new GameResultResponse(
-                gameRecord.getGameResult().getId(),
-                gameRecord.getGameResult().getGame().getId(),
-                GameDestinationResponse.from(gameRecord.getGameResult().getGame().getPlace()),
-                gameRecord.getGameResult().getResultType(),
-                gameRecord.getGameResult().getScore().getValue(),
-                gameRecord.durationToInteger(gameRecord.getTotalPlayTime()),
-                gameRecord.getDistance(),
-                gameRecord.getHintUses(),
-                gameRecord.getTryCount(),
-                gameRecord.getStartTime().toString(),
-                gameRecord.getFinishTime().toString());
+                gameRecord.gameResult().getId(),
+                gameRecord.gameResult().getGame().getId(),
+                GameDestinationResponse.from(gameRecord.gameResult().getGame().getPlace()),
+                gameRecord.gameResult().getResultType(),
+                gameRecord.gameResult().getScore().getValue(),
+                gameRecord.durationToInteger(gameRecord.totalPlayTime()),
+                gameRecord.distance(),
+                gameRecord.hintUses(),
+                gameRecord.tryCount(),
+                gameRecord.startTime().toString(),
+                gameRecord.finishTime().toString());
     }
 }

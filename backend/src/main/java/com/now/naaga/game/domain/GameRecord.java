@@ -8,31 +8,13 @@ import com.now.naaga.place.domain.Position;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class GameRecord {
-
-    private GameResult gameResult;
-    private Duration totalPlayTime;
-    private int distance;
-    private int hintUses;
-    private int tryCount;
-    private LocalDateTime startTime;
-    private LocalDateTime finishTime;
-
-    public GameRecord(final GameResult gameResult,
-                      final Duration totalPlayTime,
-                      final int distance,
-                      final int hintUses,
-                      final int tryCount,
-                      final LocalDateTime startTime,
-                      final LocalDateTime finishTime) {
-        this.gameResult = gameResult;
-        this.totalPlayTime = totalPlayTime;
-        this.distance = distance;
-        this.hintUses = hintUses;
-        this.tryCount = tryCount;
-        this.startTime = startTime;
-        this.finishTime = finishTime;
-    }
+public record GameRecord(GameResult gameResult,
+                         Duration totalPlayTime,
+                         int distance,
+                         int hintUses,
+                         int tryCount,
+                         LocalDateTime startTime,
+                         LocalDateTime finishTime) {
 
     public static GameRecord from(final GameResult gameResult) {
         final Duration totalPlayTime = calculateTotalPlayTime(gameResult);
@@ -59,35 +41,7 @@ public class GameRecord {
         return (int) startPosition.calculateDistance(destinationPosition);
     }
 
-    public int durationToInteger(Duration duration){
+    public int durationToInteger(Duration duration) {
         return (int) duration.toMinutes();
-    }
-
-    public GameResult getGameResult() {
-        return gameResult;
-    }
-
-    public Duration getTotalPlayTime() {
-        return totalPlayTime;
-    }
-
-    public int getDistance() {
-        return distance;
-    }
-
-    public int getHintUses() {
-        return hintUses;
-    }
-
-    public int getTryCount() {
-        return tryCount;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalDateTime getFinishTime() {
-        return finishTime;
     }
 }
