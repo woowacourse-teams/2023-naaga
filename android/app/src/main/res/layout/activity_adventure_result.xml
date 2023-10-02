@@ -60,7 +60,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_adventureResult_photo"
             app:layout_constraintBottom_toBottomOf="@id/iv_adventureResult_photo"
-            tools:src="@drawable/ic_success" />
+            tools:src="@drawable/ic_success_adventure" />
 
         <LinearLayout
             android:id="@+id/ll_adventureResult_window"
