@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev_backend
+
 jobs:
   deploy:
     runs-on: naaga
