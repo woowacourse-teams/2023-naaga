@@ -11,7 +11,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="android:fontFamily">@font/main_font</item>
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@drawable/rect_main</item>
+        <item name="android:windowBackground">@color/main_dark_blue</item>
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
