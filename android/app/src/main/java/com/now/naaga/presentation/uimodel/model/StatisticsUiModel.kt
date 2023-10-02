@@ -14,15 +14,16 @@ data class StatisticsUiModel(
             return StatisticsUiModel(
                 R.drawable.ic_success_adventure,
                 R.drawable.oval_orange_gradient,
-                "성공 모험",
+                SUCCESS_DETAIL,
                 count,
             )
         }
+
         fun getFailAdventureStatisticsModel(count: Int): StatisticsUiModel {
             return StatisticsUiModel(
                 R.drawable.ic_fail_adventure,
                 R.drawable.oval_yellow_gradient,
-                "실패 모험",
+                FAIL_DETAIL,
                 count,
             )
         }
@@ -30,9 +31,13 @@ data class StatisticsUiModel(
             return StatisticsUiModel(
                 R.drawable.ic_all_adventure,
                 R.drawable.oval_blue_gradient,
-                "전체 모험",
+                ALL_DETAIL,
                 count,
             )
         }
+
+        private const val SUCCESS_DETAIL = "성공 모험"
+        private const val FAIL_DETAIL = "실패 모험"
+        private const val ALL_DETAIL = "전체 모험"
     }
 }
