@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_mypage_item_icon"
+        android:layout_width="77dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="@dimen/space_default_large"
+        android:layout_marginVertical="@dimen/space_default_medium"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_location_dialog" />
+
+    <TextView
+        android:id="@+id/tv_mypage_item_adventure_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_default_medium"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_mypage_item_icon"
+        app:layout_constraintStart_toEndOf="@id/iv_mypage_item_icon"
+        app:layout_constraintTop_toTopOf="@id/iv_mypage_item_icon"
+        tools:text="성공 모험" />
+
+    <TextView
+        android:id="@+id/tv_mypage_item_adventure_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_default_medium"
+        android:layout_marginStart="@dimen/space_default_medium"
+        android:textAlignment="textEnd"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_mypage_item_icon"
+        app:layout_constraintEnd_toStartOf="@id/tv_mypage_item_adventure_suffix"
+        app:layout_constraintStart_toEndOf="@id/tv_mypage_item_adventure_title"
+        app:layout_constraintTop_toTopOf="@id/iv_mypage_item_icon"
+        tools:text="5" />
+
+    <TextView
+        android:id="@+id/tv_mypage_item_adventure_suffix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_default_medium"
+        android:layout_marginEnd="@dimen/space_default_medium"
+        android:text="회"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_mypage_item_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_mypage_item_adventure_count"
+        app:layout_constraintTop_toTopOf="@id/iv_mypage_item_icon" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        app:layout_constraintStart_toEndOf="@id/iv_mypage_item_icon"
+        app:layout_constraintEnd_toEndOf="@id/tv_mypage_item_adventure_suffix"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/tv_mypage_item_adventure_title"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
