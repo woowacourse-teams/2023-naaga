@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.Statistics
-import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.MYPAGE_GO_RESULTS
@@ -71,27 +70,12 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun initRecyclerView(statistics: Statistics) {
-        val list = mutableListOf(
-            StatisticsUiModel(
-                R.drawable.ic_success_adventure,
-                R.drawable.oval_orange_gradient,
-                "성공 모험",
-                statistics.successCount,
-            ),
-            StatisticsUiModel(
-                R.drawable.ic_fail_adventure,
-                R.drawable.oval_yellow_gradient,
-                "성공 모험",
-                statistics.failureCount,
-            ),
-            StatisticsUiModel(
-                R.drawable.ic_all_adventure,
-                R.drawable.oval_blue_gradient,
-                "성공 모험",
-                statistics.adventureCount,
-            ),
+        val statisticsUiModels = mutableListOf(
+            StatisticsUiModel.getSuccessAdventureStatisticsModel(statistics.successCount),
+            StatisticsUiModel.getFailAdventureStatisticsModel(statistics.failureCount),
+            StatisticsUiModel.getAllAdventureStatisticsModel(statistics.adventureCount),
         )
-        val adapter = MyPageStatisticsAdapter(list)
+        val adapter = MyPageStatisticsAdapter(statisticsUiModels)
         binding.rvMypageStatistics.adapter = adapter
     }
 
