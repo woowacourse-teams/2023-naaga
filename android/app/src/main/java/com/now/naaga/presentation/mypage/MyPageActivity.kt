@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.now.domain.model.Statistics
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
@@ -57,13 +58,7 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun subscribe() {
         viewModel.statistics.observe(this) { statistics ->
-            val list = listOf(
-                StatisticsUiModel(R.drawable.ic_success_adventure, "성공 모험", statistics.successCount),
-                StatisticsUiModel(R.drawable.ic_fail_adventure, "실패 모험", statistics.failureCount),
-                StatisticsUiModel(R.drawable.ic_all_adventure, "전체 모험", statistics.adventureCount),
-            )
-            val adapter = MyPageStatisticsAdapter(list)
-            binding.rvMypageStatistics.adapter = adapter
+            initRecyclerView(statistics)
         }
         viewModel.places.observe(this) { places ->
             val placesUiModel = places.map { it.toUiModel() }
@@ -73,6 +68,31 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
             logServerError(MY_PAGE_STATISTICS, throwable.code, throwable.message.toString())
         }
+    }
+
+    private fun initRecyclerView(statistics: Statistics) {
+        val list = mutableListOf(
+            StatisticsUiModel(
+                R.drawable.ic_success_adventure,
+                R.drawable.oval_orange_gradient,
+                "성공 모험",
+                statistics.successCount,
+            ),
+            StatisticsUiModel(
+                R.drawable.ic_fail_adventure,
+                R.drawable.oval_yellow_gradient,
+                "성공 모험",
+                statistics.failureCount,
+            ),
+            StatisticsUiModel(
+                R.drawable.ic_all_adventure,
+                R.drawable.oval_blue_gradient,
+                "성공 모험",
+                statistics.adventureCount,
+            ),
+        )
+        val adapter = MyPageStatisticsAdapter(list)
+        binding.rvMypageStatistics.adapter = adapter
     }
 
     companion object {
