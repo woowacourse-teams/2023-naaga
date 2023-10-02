@@ -53,10 +53,9 @@
     <string name="adventureResult_rank">%d등</string>
 
     <!-- UploadActivity -->
-    <string name="upload_description">Description</string>
-    <string name="upload_photo_description">장소에 대한 설명을 입력해주세요! \n\n자세할수록 좋습니다!</string>
-    <string name="upload_submit">등록할게요!</string>
-    <string name="upload_photo_title">장소명을 입력해주세요!</string>
+    <string name="upload_title">장소 등록</string>
+    <string name="upload_photo_title">장소이름</string>
+    <string name="upload_submit">장소 등록</string>
 
     <!-- CameraDialog-->
     <string name="cameraDialog_description">장소를 올리기 위해서는\n카메라 접근 권한이 필요해요!</string>

@@ -25,7 +25,6 @@ import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
-import com.now.naaga.data.firebase.analytics.UPLOAD_SET_COORDINATE
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
@@ -140,11 +139,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             fusedLocationClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, createCancellationToken())
                 .addOnSuccessListener { location ->
-                    if (location != null) {
-                        val coordinate = getCoordinate(location)
-                        binding.tvUploadPhotoCoordinate.text = coordinate.toText()
-                        viewModel.setCoordinate(coordinate)
-                    }
+                    location.let { viewModel.setCoordinate(getCoordinate(location)) }
                 }
                 .addOnFailureListener { }
         }
@@ -178,17 +173,9 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
-
         binding.ivUploadPhoto.setOnClickListener {
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
-        }
-        binding.ivUploadPhotoCoordinate.setOnClickListener {
-            logClickEvent(getViewEntryName(it), UPLOAD_SET_COORDINATE)
-            checkLocationPermission()
-        }
-        binding.ivUploadClose.setOnClickListener {
-            finish()
         }
         binding.btnUploadSubmit.setOnClickListener {
             if (isFormValid().not()) {
