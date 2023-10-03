@@ -43,10 +43,10 @@
                 android:text="@{viewModel.rank.player.nickname}"
                 android:textColor="@color/white"
                 android:textSize="52sp"
+                app:layout_constraintBottom_toTopOf="@id/rv_mypage_statistics"
                 app:layout_constraintEnd_toStartOf="@id/btn_mypage_adventure_results"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_mypage_back"
-                app:layout_constraintBottom_toTopOf="@id/rv_mypage_statistics"
                 tools:text="krrrrrrrrrrrrrrrrrong" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -88,7 +88,6 @@
                 android:layout_marginHorizontal="@dimen/space_default_large"
                 android:layout_marginTop="@dimen/space_default_large"
                 android:background="@drawable/rect_white_radius_small"
-                android:elevation="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

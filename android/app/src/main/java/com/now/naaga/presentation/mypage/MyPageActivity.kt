@@ -60,8 +60,8 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             initRecyclerView(statistics)
         }
         viewModel.places.observe(this) { places ->
-            val placesUiModel = places.map { it.toUiModel() }
-            binding.customGridMypagePlaces.initContent(placesUiModel)
+            val placesUiModels = places.map { it.toUiModel() }
+            binding.customGridMypagePlaces.initContent(placesUiModels)
         }
         viewModel.throwable.observe(this) { throwable ->
             Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()

@@ -82,7 +82,7 @@
     <string name="mypage_total_play_time">총 모험 시간</string>
     <string name="mypage_total_adventure_distance">총 직경 거리</string>
     <string name="mypage_total_hint_uses">사용 힌트 개수</string>
-    <string name="mypage_empty_item_title">My Places</string>
+    <string name="mypage_place_title">내가 추가한 장소</string>
     <string name="mypage_empty_description">추가한 장소가 없어요!\n장소를 추가해 주세요!</string>
     <string name="mypage_item_adventure_count_suffix">회</string>
 
