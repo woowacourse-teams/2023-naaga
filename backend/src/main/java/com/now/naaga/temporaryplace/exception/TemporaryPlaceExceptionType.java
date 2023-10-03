@@ -1,9 +1,9 @@
-package com.now.naaga.place.exception;
+package com.now.naaga.temporaryplace.exception;
 
 import com.now.naaga.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
 
-public enum PlaceExceptionType implements BaseExceptionType {
+public enum TemporaryPlaceExceptionType implements BaseExceptionType {
 
     INACCESSIBLE_AUTHENTICATION(
             503,
@@ -17,15 +17,20 @@ public enum PlaceExceptionType implements BaseExceptionType {
             "해당 장소가 존재하지 않습니다."
     ),
 
+    ALREADY_EXIST_NEARBY(
+            505,
+            HttpStatus.BAD_REQUEST,
+            "이미 주변에 장소가 존재합니다."
+    ),
     ;
 
     private final int errorCode;
     private final HttpStatus httpStatus;
     private final String errorMessage;
 
-    PlaceExceptionType(final int errorCode,
-                       final HttpStatus httpStatus,
-                       final String errorMessage) {
+    TemporaryPlaceExceptionType(final int errorCode,
+                                final HttpStatus httpStatus,
+                                final String errorMessage) {
         this.errorCode = errorCode;
         this.httpStatus = httpStatus;
         this.errorMessage = errorMessage;
