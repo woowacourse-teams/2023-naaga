@@ -19,4 +19,6 @@
     <color name="main_yellow">#F6BF0C</color>
     <color name="main_blue">#10C1FD</color>
     <color name="main_pink">#E93394</color>
+
+    <color name="main_black_gray">#616161</color>
 </resources>
