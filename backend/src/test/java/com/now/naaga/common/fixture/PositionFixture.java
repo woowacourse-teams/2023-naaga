@@ -1,6 +1,7 @@
 package com.now.naaga.common.fixture;
 
 import com.now.naaga.place.domain.Position;
+
 import java.math.BigDecimal;
 
 public class PositionFixture {
