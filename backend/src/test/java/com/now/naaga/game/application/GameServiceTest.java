@@ -15,7 +15,6 @@ import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.game.domain.Statistic;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.gameresult.exception.GameResultException;
-import com.now.naaga.gameresult.exception.GameResultExceptionType;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
@@ -153,8 +152,8 @@ class GameServiceTest {
 
         // then
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(expected.get(0).getGameResult().getId()).isEqualTo(gameResult2.getId());
-            softAssertions.assertThat(expected.get(1).getGameResult().getId()).isEqualTo(gameResult1.getId());
+            softAssertions.assertThat(expected.get(0).gameResult().getId()).isEqualTo(gameResult2.getId());
+            softAssertions.assertThat(expected.get(1).gameResult().getId()).isEqualTo(gameResult1.getId());
             softAssertions.assertThat(expected.size()).isEqualTo(2);
         });
     }
@@ -214,14 +213,17 @@ class GameServiceTest {
                 .game(game2)
                 .build();
 
+        final int expectedTotalDistance = (int) 잠실_루터회관_정문_좌표.calculateDistance(잠실역_교보문고_좌표);
+
         // when
-        final Statistic expected = gameService.findStatistic(new PlayerRequest(player.getId()));
+        final Statistic actual = gameService.findStatistic(new PlayerRequest(player.getId()));
 
         // then
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(expected.getSuccessGameCount()).isEqualTo(1);
-            softAssertions.assertThat(expected.getFailGameCount()).isEqualTo(1);
-            softAssertions.assertThat(expected.getGameCount()).isEqualTo(2);
+            softAssertions.assertThat(actual.getSuccessGameCount()).isEqualTo(1);
+            softAssertions.assertThat(actual.getFailGameCount()).isEqualTo(1);
+            softAssertions.assertThat(actual.getGameCount()).isEqualTo(2);
+            softAssertions.assertThat(actual.getTotalDistance()).isEqualTo(expectedTotalDistance);
         });
     }
 
