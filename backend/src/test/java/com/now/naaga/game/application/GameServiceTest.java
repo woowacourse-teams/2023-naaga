@@ -126,6 +126,7 @@ class GameServiceTest {
                 .player(player)
                 .startTime(LocalDateTime.of(2023, Month.AUGUST, 13, 15, 30, 0))
                 .endTime(LocalDateTime.of(2023, Month.AUGUST, 13, 17, 30, 0))
+                .gameStatus(DONE)
                 .startPosition(잠실역_교보문고_좌표)
                 .build();
 
@@ -134,6 +135,16 @@ class GameServiceTest {
                 .player(player)
                 .startTime(LocalDateTime.of(2023, Month.AUGUST, 12, 15, 30, 0))
                 .endTime(LocalDateTime.of(2023, Month.AUGUST, 12, 17, 30, 0))
+                .gameStatus(DONE)
+                .startPosition(잠실역_교보문고_좌표)
+                .build();
+
+        final Game game3 = gameBuilder.init()
+                .place(destination)
+                .player(player)
+                .startTime(LocalDateTime.of(2023, Month.AUGUST, 12, 15, 30, 0))
+                .endTime(null)
+                .gameStatus(IN_PROGRESS)
                 .startPosition(잠실역_교보문고_좌표)
                 .build();
 
@@ -159,13 +170,22 @@ class GameServiceTest {
     }
 
     @Test
-    void 플레이어의_게임과_게임_결과가_없으면_빈리스트를_반환한다() {
+    void 플레이어의_게임_결과가_없으면_빈리스트를_반환한다() {
         // given
         final Player player = playerBuilder.init()
                 .build();
 
         final Place destination = placeBuilder.init()
                 .position(잠실_루터회관_정문_좌표)
+                .build();
+
+        final Game game = gameBuilder.init()
+                .place(destination)
+                .player(player)
+                .startTime(LocalDateTime.of(2023, Month.AUGUST, 12, 15, 30, 0))
+                .endTime(null)
+                .gameStatus(IN_PROGRESS)
+                .startPosition(잠실역_교보문고_좌표)
                 .build();
 
         //when
