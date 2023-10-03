@@ -1,4 +1,4 @@
-package com.now.naaga.common;
+package com.now.naaga.common.presentation;
 
 import org.hibernate.resource.jdbc.spi.StatementInspector;
 import org.slf4j.Logger;

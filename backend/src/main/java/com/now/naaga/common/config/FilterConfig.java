@@ -1,7 +1,7 @@
 package com.now.naaga.common.config;
 
-import com.now.naaga.common.LogFilter;
-import com.now.naaga.common.QueryCounter;
+import com.now.naaga.common.presentation.LogFilter;
+import com.now.naaga.common.presentation.QueryCounter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

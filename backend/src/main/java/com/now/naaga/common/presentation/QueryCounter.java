@@ -1,4 +1,4 @@
-package com.now.naaga.common;
+package com.now.naaga.common.presentation;
 
 import org.springframework.stereotype.Component;
 

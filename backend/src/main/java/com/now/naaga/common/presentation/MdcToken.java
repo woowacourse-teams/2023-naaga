@@ -1,4 +1,4 @@
-package com.now.naaga.common;
+package com.now.naaga.common.presentation;
 
 public enum MdcToken {
 

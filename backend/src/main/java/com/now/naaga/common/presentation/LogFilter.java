@@ -1,4 +1,4 @@
-package com.now.naaga.common;
+package com.now.naaga.common.presentation;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +9,7 @@ import org.slf4j.MDC;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.now.naaga.common.MdcToken.*;
+import static com.now.naaga.common.presentation.MdcToken.*;
 
 public class LogFilter implements Filter {
 
