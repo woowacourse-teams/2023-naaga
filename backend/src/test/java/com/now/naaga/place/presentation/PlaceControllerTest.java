@@ -60,60 +60,6 @@ public class PlaceControllerTest extends CommonControllerTest {
     }
 
     @Test
-    void 장소_추가_요청을_받으면_추가된_장소_정보를_응답한다() throws FileNotFoundException {
-        //given
-        final Player player = playerBuilder.init()
-                                           .build();
-
-        final Place place = PLACE();
-
-        when(fileManager.save(any())).thenReturn(new File("/임시경로", "이미지.png"));
-
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
-        //when
-        final ExtractableResponse<Response> extract = given()
-                .log().all()
-                .multiPart(new MultiPartSpecBuilder(place.getName()).controlName("name").charset(StandardCharsets.UTF_8).build())
-                .multiPart(new MultiPartSpecBuilder(place.getDescription()).controlName("description").charset(StandardCharsets.UTF_8).build())
-                .multiPart(
-                        new MultiPartSpecBuilder(place.getPosition().getLatitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName(
-                                "latitude").charset(StandardCharsets.UTF_8).build())
-                .multiPart(
-                        new MultiPartSpecBuilder(place.getPosition().getLongitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName(
-                                "longitude").charset(StandardCharsets.UTF_8).build())
-                .multiPart(new MultiPartSpecBuilder(new FileInputStream(new File("src/test/java/com/now/naaga/place/fixture/루터회관.png"))).controlName(
-                                                                                                                                                "imageFile").charset(StandardCharsets.UTF_8)
-                                                                                                                                        .fileName(
-                                                                                                                                                "src/test/java/com/now/naaga/place/fixture/루터회관.png")
-                                                                                                                                        .mimeType(
-                                                                                                                                                "image/png")
-                                                                                                                                        .build())
-                .header("Authorization", "Bearer " + accessToken)
-                .when()
-                .post("/places")
-                .then()
-                .log().all()
-                .extract();
-        final int statusCode = extract.statusCode();
-        final String location = extract.header("Location");
-        final PlaceResponse actual = extract.as(PlaceResponse.class);
-        final PlaceResponse expected = PlaceResponse.from(place);
-
-        //then
-        assertSoftly(softAssertions -> {
-            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.CREATED.value());
-            softAssertions.assertThat(location).isEqualTo("/places/" + actual.id());
-            softAssertions.assertThat(expected)
-                          .usingRecursiveComparison()
-                          .ignoringFields("id", "imageUrl")
-                          .isEqualTo(actual);
-        });
-
-    }
-
-    @Test
     void 장소를_아이디로_조회한다() {
         //given
         final Place place = placeBuilder.init()

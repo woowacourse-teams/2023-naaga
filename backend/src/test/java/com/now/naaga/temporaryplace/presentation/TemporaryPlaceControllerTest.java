@@ -122,16 +122,16 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
         //given
         final Player player = playerBuilder.init()
                 .build();
+        temporaryPlaceBuilder.init()
+                .position(잠실_루터회관_정문_좌표)
+                .build();
+
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
         final TemporaryPlace temporaryPlace = TEMPORARY_PLACE();
 
         when(fileManager.save(any())).thenReturn(new File("/임시경로", "이미지.png"));
 
-        temporaryPlaceBuilder.init()
-                .position(잠실_루터회관_정문_좌표)
-                .build();
-        final Place seoulPlace = PLACE();
 
         //when
         //when
