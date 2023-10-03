@@ -9,12 +9,10 @@ import com.now.naaga.temporaryplace.presentation.dto.CreateTemporaryPlaceRequest
 import com.now.naaga.temporaryplace.presentation.dto.TemporaryPlaceResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RequestMapping("/temporary-places")
 @RestController
@@ -24,6 +22,15 @@ public class TemporaryPlaceController {
 
     public TemporaryPlaceController(final TemporaryPlaceService temporaryPlaceService) {
         this.temporaryPlaceService = temporaryPlaceService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TemporaryPlaceResponse>> findAllTemporaryPlace() {
+        final List<TemporaryPlace> temporaryPlaces = temporaryPlaceService.findAllPlace();
+        final List<TemporaryPlaceResponse> response = TemporaryPlaceResponse.convertToResponses(temporaryPlaces);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
     @PostMapping
