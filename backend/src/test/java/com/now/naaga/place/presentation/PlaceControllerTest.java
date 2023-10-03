@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -44,6 +45,12 @@ public class PlaceControllerTest extends CommonControllerTest {
     @Autowired
     private PlaceBuilder placeBuilder;
 
+    @Value("${manager.id}")
+    private String id;
+
+    @Value("${manager.password}")
+    private String password;
+
     @BeforeEach
     protected void setUp() {
         super.setUp();
@@ -54,9 +61,6 @@ public class PlaceControllerTest extends CommonControllerTest {
         // given
         final Player player = playerBuilder.init()
                                            .build();
-
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
 
         final CreatePlaceRequest createPlaceRequest = new CreatePlaceRequest("루터회관",
                                                                              "이곳은 역사와 전통이 깊은 루터회관입니다.",
@@ -69,7 +73,7 @@ public class PlaceControllerTest extends CommonControllerTest {
         // when
         final ExtractableResponse<Response> extract = given()
                 .log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .auth().preemptive().basic(id, password)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(createPlaceRequest)
                 .when()

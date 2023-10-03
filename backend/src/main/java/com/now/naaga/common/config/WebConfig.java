@@ -3,7 +3,9 @@ package com.now.naaga.common.config;
 import com.now.naaga.auth.presentation.argumentresolver.MemberAuthArgumentResolver;
 import com.now.naaga.auth.presentation.argumentresolver.PlayerArgumentResolver;
 import com.now.naaga.auth.presentation.interceptor.AuthInterceptor;
+import com.now.naaga.auth.presentation.interceptor.ManagerAuthInterceptor;
 import com.now.naaga.common.presentation.interceptor.RequestMatcherInterceptor;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,8 +14,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -24,20 +24,25 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
 
+    private final ManagerAuthInterceptor managerAuthInterceptor;
+
     @Value("${manager.origin-url}")
     private String managerUriPath;
 
     public WebConfig(final PlayerArgumentResolver playerArgumentResolver,
                      final MemberAuthArgumentResolver memberAuthArgumentResolver,
-                     final AuthInterceptor authInterceptor) {
+                     final AuthInterceptor authInterceptor,
+                     final ManagerAuthInterceptor managerAuthInterceptor) {
         this.playerArgumentResolver = playerArgumentResolver;
         this.memberAuthArgumentResolver = memberAuthArgumentResolver;
         this.authInterceptor = authInterceptor;
+        this.managerAuthInterceptor = managerAuthInterceptor;
     }
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(mapAuthInterceptor());
+        registry.addInterceptor(mapManagerAuthInterceptor());
     }
 
     private HandlerInterceptor mapAuthInterceptor() {
@@ -51,7 +56,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludeRequestPattern("/**/*.gif")
                 .excludeRequestPattern("/**/*.ico")
                 .excludeRequestPattern("/ranks")
-                .excludeRequestPattern("/**", HttpMethod.OPTIONS);
+                .excludeRequestPattern("/**", HttpMethod.OPTIONS)
+                .excludeRequestPattern("/places", HttpMethod.POST);
+    }
+
+    private HandlerInterceptor mapManagerAuthInterceptor() {
+        return new RequestMatcherInterceptor(managerAuthInterceptor)
+                .includeRequestPattern("/places", HttpMethod.POST);
     }
 
     @Override
