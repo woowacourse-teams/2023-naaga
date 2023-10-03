@@ -1,29 +1,22 @@
 package com.now.naaga.place.application;
 
-import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
-
 import com.now.naaga.common.domain.OrderType;
-import com.now.naaga.common.infrastructure.FileManager;
 import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.application.dto.FindAllPlaceCommand;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
 import com.now.naaga.place.application.dto.RecommendPlaceCommand;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.place.domain.PlaceCheckService;
 import com.now.naaga.place.domain.PlaceRecommendService;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.domain.SortType;
 import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.persistence.repository.PlaceRepository;
-import com.now.naaga.player.application.PlayerService;
-import com.now.naaga.player.domain.Player;
-import java.io.File;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
 
 @Transactional
 @Service
@@ -31,24 +24,12 @@ public class PlaceService {
 
     private final PlaceRepository placeRepository;
 
-    private final PlayerService playerService;
-
-    private final PlaceCheckService placeCheckService;
-
     private final PlaceRecommendService placeRecommendService;
 
-    private final FileManager<MultipartFile> fileManager;
-
     public PlaceService(final PlaceRepository placeRepository,
-                        final PlayerService playerService,
-                        final PlaceCheckService placeCheckService,
-                        final PlaceRecommendService placeRecommendService,
-                        final FileManager<MultipartFile> fileManager) {
+                        final PlaceRecommendService placeRecommendService) {
         this.placeRepository = placeRepository;
-        this.playerService = playerService;
-        this.placeCheckService = placeCheckService;
         this.placeRecommendService = placeRecommendService;
-        this.fileManager = fileManager;
     }
 
     @Transactional(readOnly = true)
@@ -73,23 +54,6 @@ public class PlaceService {
     }
 
     public Place createPlace(final CreatePlaceCommand createPlaceCommand) {
-        final Position position = createPlaceCommand.position();
-        placeCheckService.checkOtherPlaceNearby(position);
-        final File uploadPath = fileManager.save(createPlaceCommand.imageFile());
-        try {
-            final Long playerId = createPlaceCommand.playerId();
-            final Player registeredPlayer = playerService.findPlayerById(playerId);
-            final Place place = new Place(
-                    createPlaceCommand.name(),
-                    createPlaceCommand.description(),
-                    position,
-                    fileManager.convertToUrlPath(uploadPath),
-                    registeredPlayer);
-            placeRepository.save(place);
-            return place;
-        } catch (final RuntimeException exception) {
-            uploadPath.delete();
-            throw exception;
-        }
+        return null;
     }
 }
