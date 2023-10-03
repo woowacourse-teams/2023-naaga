@@ -3,15 +3,8 @@ package com.now.naaga.gameresult.domain;
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.score.domain.Score;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Entity
@@ -27,7 +20,7 @@ public class GameResult extends BaseEntity {
     @Embedded
     private Score score;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     private Game game;
 
