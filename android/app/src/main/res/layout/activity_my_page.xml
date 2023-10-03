@@ -71,7 +71,7 @@
                 android:id="@+id/rv_mypage_statistics"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/space_default_large"
+                android:layout_marginTop="@dimen/space_default_large"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toTopOf="@id/customGrid_mypage_places"
