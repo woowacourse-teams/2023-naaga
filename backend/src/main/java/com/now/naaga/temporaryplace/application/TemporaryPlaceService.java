@@ -11,6 +11,8 @@ import com.now.naaga.temporaryplace.repository.TemporaryPlaceRepository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.Comparator;
+import java.util.List;
 
 public class TemporaryPlaceService {
 
@@ -50,5 +52,11 @@ public class TemporaryPlaceService {
             uploadPath.delete();
             throw exception;
         }
+    }
+
+    public List<TemporaryPlace> findAllPlace() {
+        final List<TemporaryPlace> temporaryPlaces = temporaryPlaceRepository.findAll();
+        temporaryPlaces.sort(Comparator.comparing(TemporaryPlace::getCreatedAt));
+        return temporaryPlaces;
     }
 }
