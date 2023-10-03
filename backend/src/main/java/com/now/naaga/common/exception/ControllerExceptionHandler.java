@@ -2,7 +2,6 @@ package com.now.naaga.common.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,11 +9,6 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import static com.now.naaga.common.MdcToken.JSON_RESPONSE;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -26,7 +20,8 @@ public class ControllerExceptionHandler {
         final BaseExceptionType baseExceptionType = e.exceptionType();
         final ExceptionResponse exceptionResponse = new ExceptionResponse(baseExceptionType.errorCode(), baseExceptionType.errorMessage());
 
-        MDC.put(JSON_RESPONSE.getKey(), exceptionResponse.toString());
+        log.info("error = {}", exceptionResponse);
+
         return ResponseEntity.status(baseExceptionType.httpStatus()).body(exceptionResponse);
     }
 
@@ -60,7 +55,7 @@ public class ControllerExceptionHandler {
         log.error(e.getMessage(), e);
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse(10000, "예기치 못한 오류입니다");
-        e.printStackTrace();
+        // e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(exceptionResponse);
     }

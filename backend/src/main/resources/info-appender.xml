@@ -6,35 +6,16 @@
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <mdc>
-                    <fieldNames>
-                        <jsonResponse>jsonResponse</jsonResponse>
-                    </fieldNames>
-                </mdc>
-                <pattern>
-                    <pattern>
-                        {
-                        "level": "%level",
-                        "message": "%message",
-                        "timestamp": "%date{yyyy/MM/dd HH:mm:ss.SSSSSS}"
-                        }
-                    </pattern>
-                </pattern>
-            </providers>
-            <jsonGeneratorDecorator class="net.logstash.logback.decorate.CompositeJsonGeneratorDecorator">
-                <decorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
-            </jsonGeneratorDecorator>
-            <timestampPattern>yyyy/MM/dd HH.mm.ss.SSSSSS</timestampPattern>
+        <encoder>
+            <charset>utf8</charset>
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%X{request_id}] [%logger{1}] - %message %n
+            </pattern>
         </encoder>
-
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>info-history.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <maxHistory>30</maxHistory>
             <totalSizeCap>2GB</totalSizeCap>
         </rollingPolicy>
-
     </appender>
-
 </included>

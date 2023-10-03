@@ -13,7 +13,7 @@ import static com.now.naaga.common.MdcToken.*;
 
 public class LogFilter implements Filter {
 
-    private final static String LOG_FORMAT = "uri: {}, method: {}, time: {}ms, queryCount: {}";
+    private static final String LOG_FORMAT = "uri: {}, method: {}, time: {}ms, queryCount: {}";
 
     private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
     private final QueryCounter queryCounter;
