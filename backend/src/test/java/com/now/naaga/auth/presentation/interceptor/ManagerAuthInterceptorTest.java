@@ -36,12 +36,12 @@ class ManagerAuthInterceptorTest {
     @Test
     void Auth_헤더를_Base64_헤더를_디코딩해서_관리자_로그인을_처리한다() throws Exception {
         // given
-        final String s = "Basic "+id+":"+password;
+        final String s = id+":"+password;
         final String authHeader = new String(Base64.getEncoder().encode(s.getBytes()));
         final MockHttpServletRequest request = new MockHttpServletRequest();
         final MockHttpServletResponse response = new MockHttpServletResponse();
         final Controller controller = Mockito.mock(Controller.class);
-        request.addHeader("Authorization", authHeader);
+        request.addHeader("Authorization","Basic "+ authHeader);
 
         // when
         final boolean expected = managerAuthInterceptor.preHandle(request, response, controller);
