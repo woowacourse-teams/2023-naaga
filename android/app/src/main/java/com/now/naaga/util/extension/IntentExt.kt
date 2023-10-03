@@ -1,4 +1,4 @@
-package com.now.naaga.util
+package com.now.naaga.util.extension
 
 import android.content.Intent
 import android.os.Build
