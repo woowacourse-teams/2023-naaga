@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rect_radius_small"
+        android:backgroundTint="@color/white">
+
+        <TextView
+            android:id="@+id/tv_confirm_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/confirm_dialog_title" />
+
+        <TextView
+            android:id="@+id/tv_confirm_dialog_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/light_gray"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_confirm_dialog_title"
+            tools:text="@string/confirm_dialog_description" />
+
+        <TextView
+            android:id="@+id/tv_confirm_dialog_positive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/rect_radius_small_bottom_left"
+            android:backgroundTint="@color/main_dark_blue"
+            android:gravity="center"
+            android:paddingVertical="20dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_confirm_dialog_negative"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_confirm_dialog_description"
+            tools:text="@string/confirm_dialog_positive_text" />
+
+        <TextView
+            android:id="@+id/tv_confirm_dialog_negative"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rect_radius_small_bottom_right"
+            android:backgroundTint="@color/light_gray"
+            android:gravity="center"
+            android:paddingVertical="20dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_confirm_dialog_positive"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_confirm_dialog_positive"
+            app:layout_constraintTop_toTopOf="@+id/tv_confirm_dialog_positive"
+            tools:text="@string/confirm_dialog_negative_text" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
