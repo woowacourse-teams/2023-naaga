@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.MYPAGE_GO_RESULTS
@@ -13,10 +13,12 @@ import com.now.naaga.data.firebase.analytics.MY_PAGE_STATISTICS
 import com.now.naaga.databinding.ActivityMyPageBinding
 import com.now.naaga.presentation.adventurehistory.AdventureHistoryActivity
 import com.now.naaga.presentation.setting.SettingActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityMyPageBinding
-    private lateinit var viewModel: MyPageViewModel
+    private val viewModel: MyPageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +32,6 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, MyPageViewModel.Factory)[MyPageViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }

@@ -4,7 +4,7 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.mapper.toDomain
-import com.now.naaga.data.remote.retrofit.ServicePool.placeService
+import com.now.naaga.data.remote.retrofit.service.PlaceService
 import com.now.naaga.util.getValueOrThrow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -13,7 +13,9 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-class DefaultPlaceRepository : PlaceRepository {
+class DefaultPlaceRepository(
+    private val placeService: PlaceService,
+) : PlaceRepository {
     override suspend fun fetchMyPlaces(
         sortBy: String,
         order: String,

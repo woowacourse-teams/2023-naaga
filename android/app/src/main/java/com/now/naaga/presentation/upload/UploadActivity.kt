@@ -13,9 +13,9 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -26,16 +26,17 @@ import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.firebase.analytics.UPLOAD_SET_COORDINATE
-import com.now.naaga.data.repository.DefaultPlaceRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityUploadBinding
-    private lateinit var viewModel: UploadViewModel
+    private val viewModel: UploadViewModel by viewModels()
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicturePreview(),
@@ -79,21 +80,25 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun initViewModel() {
-        val repository = DefaultPlaceRepository()
-        val factory = UploadFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[UploadViewModel::class.java]
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        setClickListeners()
     }
 
     private fun subscribe() {
         viewModel.coordinate.observe(this) {
             binding.lottieUploadLoading.visibility = View.GONE
         }
-        viewModel.successUpload.observe(this) { isSuccess ->
-            if (isSuccess) {
-                finish()
+        viewModel.successUpload.observe(this) { uploadStatus ->
+            when (uploadStatus) {
+                UploadStatus.SUCCESS -> {
+                    changeVisibility(binding.lottieUploadLoading, View.GONE)
+                    finish()
+                }
+                UploadStatus.PENDING -> { changeVisibility(binding.lottieUploadLoading, View.VISIBLE) }
+                UploadStatus.FAIL -> {
+                    changeVisibility(binding.lottieUploadLoading, View.GONE)
+                    shortToast(MESSAGE_FAIL_UPLOAD)
+                }
             }
         }
         viewModel.throwable.observe(this) { error: DataThrowable ->
@@ -110,6 +115,13 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                     shortToast(getString(R.string.upload_error_post_message))
                 }
             }
+        }
+    }
+
+    private fun changeVisibility(view: View, status: Int) {
+        when (status) {
+            View.VISIBLE -> { view.visibility = status }
+            View.GONE -> { view.visibility = status }
         }
     }
 
@@ -244,23 +256,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun isFormValid(): Boolean {
-        return (isEmptyPhoto() || isEmptyTitle() || isEmptyCoordinate() || isEmptyDescription()).not()
-    }
-
-    private fun isEmptyPhoto(): Boolean {
-        return viewModel.hasUri().not()
-    }
-
-    private fun isEmptyTitle(): Boolean {
-        return viewModel.title.value == null
-    }
-
-    private fun isEmptyCoordinate(): Boolean {
-        return viewModel.hasCoordinate().not()
-    }
-
-    private fun isEmptyDescription(): Boolean {
-        return viewModel.description.value == null
+        return viewModel.isFormValid()
     }
 
     private fun Coordinate.toText(): String {
@@ -273,6 +269,8 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CAMERA,
         )
+
+        private const val MESSAGE_FAIL_UPLOAD = "장소등록에 실패했어요!"
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")

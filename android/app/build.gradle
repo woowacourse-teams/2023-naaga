@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 Properties properties = new Properties()
@@ -22,6 +24,7 @@ android {
         versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.now.naaga.HiltTestRunner"
         buildConfigField "String", "BASE_URL", properties["BASE_URL"]
         buildConfigField "String", "KAKAO_NATIVE_APP_KEY", properties["KAKAO_NATIVE_APP_KEY"]
         resValue "string", "kakao_redirection_scheme", properties["kakao_redirection_scheme"]
@@ -43,15 +46,20 @@ android {
     dataBinding {
         enable = true
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation project(path: ':domain')
+    implementation 'androidx.test:runner:1.5.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -88,6 +96,7 @@ dependencies {
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
     // splash
     implementation "androidx.core:core-splashscreen:1.0.0"
@@ -105,4 +114,26 @@ dependencies {
 
     // lottie
     implementation "com.airbnb.android:lottie:6.1.0"
+
+    // ViewModel Test
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+
+    // Robolectric
+    testImplementation("org.robolectric:robolectric:4.9")
+
+    // hilt
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-compiler:2.44"
+
+    implementation "androidx.activity:activity-ktx:1.7.2"
+
+    // For Robolectric tests.
+    testImplementation 'com.google.dagger:hilt-android-testing:2.44'
+    // ...with Kotlin.
+    kaptTest 'com.google.dagger:hilt-android-compiler:2.44'
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
 }

@@ -57,7 +57,7 @@
             android:layout_marginTop="12dp"
             android:adjustViewBounds="true"
             android:layout_marginBottom="12dp"
-            android:src="@drawable/ic_success"
+            android:src="@drawable/ic_success_adventure"
             app:layout_constraintWidth_percent="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_adventureHistory_name"
