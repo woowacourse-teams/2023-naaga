@@ -3,6 +3,7 @@ package com.now.naaga.common.config;
 import com.now.naaga.auth.presentation.argumentresolver.MemberAuthArgumentResolver;
 import com.now.naaga.auth.presentation.argumentresolver.PlayerArgumentResolver;
 import com.now.naaga.auth.presentation.interceptor.AuthInterceptor;
+import com.now.naaga.auth.presentation.interceptor.ManagerAuthInterceptor;
 import com.now.naaga.common.presentation.interceptor.RequestMatcherInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -24,15 +25,19 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
 
+    private final ManagerAuthInterceptor managerAuthInterceptor;
+
     @Value("${manager.origin-url}")
     private String managerUriPath;
 
     public WebConfig(final PlayerArgumentResolver playerArgumentResolver,
                      final MemberAuthArgumentResolver memberAuthArgumentResolver,
-                     final AuthInterceptor authInterceptor) {
+                     final AuthInterceptor authInterceptor,
+                     final ManagerAuthInterceptor managerAuthInterceptor) {
         this.playerArgumentResolver = playerArgumentResolver;
         this.memberAuthArgumentResolver = memberAuthArgumentResolver;
         this.authInterceptor = authInterceptor;
+        this.managerAuthInterceptor = managerAuthInterceptor;
     }
 
     @Override
@@ -51,7 +56,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludeRequestPattern("/**/*.gif")
                 .excludeRequestPattern("/**/*.ico")
                 .excludeRequestPattern("/ranks")
-                .excludeRequestPattern("/**", HttpMethod.OPTIONS);
+                .excludeRequestPattern("/**", HttpMethod.OPTIONS)
+                .excludeRequestPattern("/temporary-places", HttpMethod.GET);
+    }
+
+    private HandlerInterceptor mapManagerAuthInterceptor() {
+        return new RequestMatcherInterceptor(managerAuthInterceptor)
+                .includeRequestPattern("/temporary-places", HttpMethod.GET);
     }
 
     @Override
