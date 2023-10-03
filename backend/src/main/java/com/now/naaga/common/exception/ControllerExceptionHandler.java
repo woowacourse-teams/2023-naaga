@@ -47,8 +47,7 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleInternalException(final InternalException e) {
         final BaseExceptionType internalExceptionType = e.exceptionType();
 
-        log.error("error = {}\nstacktrace = {}",
-                e.toString(), getStackTraceAsString(e));
+        log.error(e.getMessage(), e);
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse(10000, "예기치 못한 오류입니다");
         return ResponseEntity.status(internalExceptionType.httpStatus())
@@ -58,19 +57,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(final Exception e) {
 
-        log.error("error = {}\nstacktrace = {}",
-                e.toString(), getStackTraceAsString(e));
+        log.error(e.getMessage(), e);
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse(10000, "예기치 못한 오류입니다");
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(exceptionResponse);
-    }
-
-    private String getStackTraceAsString(Exception e) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        return sw.toString();
     }
 }
