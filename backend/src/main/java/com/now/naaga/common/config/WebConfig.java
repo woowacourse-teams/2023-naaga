@@ -43,6 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(mapAuthInterceptor());
+        registry.addInterceptor(mapManagerAuthInterceptor());
     }
 
     private HandlerInterceptor mapAuthInterceptor() {
