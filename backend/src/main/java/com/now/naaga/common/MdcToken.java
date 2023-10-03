@@ -2,8 +2,7 @@ package com.now.naaga.common;
 
 public enum MdcToken {
 
-    REQUEST_ID("request_id"),
-    JSON_RESPONSE("jsonResponse")
+    REQUEST_ID("request_id")
     ;
 
     private final String key;
