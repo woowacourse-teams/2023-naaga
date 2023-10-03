@@ -1,5 +1,6 @@
 package com.now.naaga.letter.domain;
 
+import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
 import jakarta.persistence.*;
@@ -7,7 +8,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Letter {
+public class Letter extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
