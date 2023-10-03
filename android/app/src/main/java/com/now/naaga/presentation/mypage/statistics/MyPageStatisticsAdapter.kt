@@ -4,7 +4,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.now.naaga.presentation.uimodel.model.StatisticsUiModel
 
-class MyPageStatisticsAdapter(private val statisticsUiModels: List<StatisticsUiModel>) : RecyclerView.Adapter<MyPageStatisticsViewHolder>() {
+class MyPageStatisticsAdapter(private val statisticsUiModels: List<StatisticsUiModel>) :
+    RecyclerView.Adapter<MyPageStatisticsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyPageStatisticsViewHolder {
         return MyPageStatisticsViewHolder(parent)
     }
