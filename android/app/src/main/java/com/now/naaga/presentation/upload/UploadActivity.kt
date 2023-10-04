@@ -173,6 +173,9 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
+        binding.ivUploadBack.setOnClickListener {
+            finish()
+        }
         binding.btnUploadSubmit.setOnClickListener {
             if (isFormValid().not()) {
                 shortToast(getString(R.string.upload_error_insufficient_info_message))
