@@ -106,7 +106,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_default_medium"
             android:autofillHints="no"
-            android:backgroundTint="@color/white"
             android:ellipsize="end"
             android:hint="@string/upload_photo_title_hint"
             android:textColorHint="@color/white"
@@ -115,13 +114,13 @@
             android:text="@={viewModel.name}"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@id/v_upload_divide_line_1"
             app:layout_constraintStart_toStartOf="@id/v_upload_divide_line_1"
             app:layout_constraintTop_toBottomOf="@id/tv_upload_title"/>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_upload_submit"
+            android:id="@+id/btn_upload_su경bmit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_default_large"

@@ -55,7 +55,7 @@
     <!-- UploadActivity -->
     <string name="upload_title">장소 등록</string>
     <string name="upload_photo_title">장소이름</string>
-    <string name="upload_photo_title_hint">장소이름을 적어주세요!</string>
+    <string name="upload_photo_title_hint">이곳에 장소이름을 적어주세요!</string>
     <string name="upload_submit">장소 등록</string>
     <string name="upload_fail_submit">장소등록에 실패했어요!</string>
     <string name="upload_error_store_photo_message">사진을 저장하는데 문제가 생겼어요! 다시 시도해주세요!</string>
