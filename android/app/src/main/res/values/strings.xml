@@ -7,7 +7,8 @@
     <string name="beginAdventure_approximate_access">대략적인 위치 권한만 허용되었습니다</string>
     <string name="beginAdventure_denied_access">위치 권한 요청이 거절되었습니다</string>
     <string name="beginAdventure_features_not_ready">아직 준비되지 않은 기능입니다.</string>
-    <string name="beginAdventure_do_adventure">모험 하기</string>
+    <string name="beginAdventure_do_adventure">모험 시작</string>
+    <string name="beginAdventure_upload_place">장소 등록</string>
     <string name="beginAdventure_continue_adventure">이어 하기</string>
 
     <!-- LocationDialog-->
