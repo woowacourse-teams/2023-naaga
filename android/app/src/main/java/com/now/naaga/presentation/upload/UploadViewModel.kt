@@ -23,8 +23,6 @@ class UploadViewModel @Inject constructor(
 
     val name = MutableLiveData<String>()
 
-    val description = MutableLiveData<String>()
-
     private val _successUpload = MutableSingleLiveData<UploadStatus>()
     val successUpload: SingleLiveData<UploadStatus> = _successUpload
 
@@ -43,8 +41,7 @@ class UploadViewModel @Inject constructor(
     }
 
     fun isFormValid(): Boolean {
-        return (imageUri != URI_EMPTY) && (_coordinate.value != null) &&
-            (name.value != null) && (description.value != null)
+        return (imageUri != URI_EMPTY) && (_coordinate.value != null) && (name.value != null)
     }
 
     fun postPlace() {
@@ -54,7 +51,7 @@ class UploadViewModel @Inject constructor(
                 runCatching {
                     placeRepository.postPlace(
                         name = name.value.toString(),
-                        description = description.value.toString(),
+                        description = "",
                         coordinate = coordinate,
                         image = imageUri,
                     )

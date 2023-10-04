@@ -45,7 +45,7 @@ class UploadViewModelTestWithRobolectric {
             .get()
 
         // EditText 찾기
-        val editTextTitle = activity.findViewById<EditText>(R.id.et_upload_photo_title)
+        val editTextTitle = activity.findViewById<EditText>(R.id.et_upload_place_name)
 
         // when : EditText 값 변경
         val testInput = "Test Input"
