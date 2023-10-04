@@ -33,7 +33,7 @@ public class ControllerExceptionHandler {
         final CommonExceptionType commonExceptionType = CommonExceptionType.INVALID_REQUEST_BODY;
         final ExceptionResponse exceptionResponse = new ExceptionResponse(commonExceptionType.errorCode(), commonExceptionType.errorMessage());
 
-        log.warn("error = {}", exceptionResponse);
+        log.info("error = {}", exceptionResponse);
 
         return ResponseEntity.status(commonExceptionType.httpStatus()).body(exceptionResponse);
     }
