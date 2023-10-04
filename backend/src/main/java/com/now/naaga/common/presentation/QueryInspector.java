@@ -11,8 +11,6 @@ import java.util.Objects;
 @Component
 public class QueryInspector implements StatementInspector {
 
-    private final Logger log = LoggerFactory.getLogger(QueryInspector.class);
-
     private final QueryCounter queryCounter;
 
     public QueryInspector(final QueryCounter queryCounter) {
