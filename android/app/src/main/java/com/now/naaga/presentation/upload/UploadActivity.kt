@@ -22,10 +22,8 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
-import com.now.naaga.common.dialog.CameraPermissionDialog
-import com.now.naaga.common.dialog.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
-import com.now.naaga.common.dialog.LocationPermissionDialog
-import com.now.naaga.common.dialog.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
+import com.now.naaga.common.dialog.DialogType
+import com.now.naaga.common.dialog.PermissionDialog
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
@@ -54,11 +52,13 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             if (isGranted.not()) {
                 when (entry.key) {
                     Manifest.permission.CAMERA -> {
-                        CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+                        PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
+//                        CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
                     }
 
                     Manifest.permission.ACCESS_FINE_LOCATION -> {
-                        LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
+                        PermissionDialog(DialogType.LOCATION).show(supportFragmentManager)
+//                        LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
                     }
                 }
             }
@@ -188,7 +188,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun checkCameraPermission() {
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+            PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
         } else {
             openCamera()
         }

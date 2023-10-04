@@ -1,5 +1,6 @@
 package com.now.naaga.common.dialog
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,23 +11,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
+import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.CAMERA_PERMISSION_OPEN_SETTING
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
-import com.now.naaga.databinding.DialogCameraPermissionBinding
+import com.now.naaga.databinding.DialogPermissionBinding
 import com.now.naaga.util.dpToPx
 import com.now.naaga.util.getWidthProportionalToDevice
 
-class CameraPermissionDialog : DialogFragment(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
-    private lateinit var binding: DialogCameraPermissionBinding
+class PermissionDialog(private val type: DialogType) :
+    DialogFragment(),
+    AnalyticsDelegate by DefaultAnalyticsDelegate() {
+    private lateinit var binding: DialogPermissionBinding
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = DialogCameraPermissionBinding.inflate(layoutInflater)
+        binding = DialogPermissionBinding.inflate(layoutInflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        when (type) {
+            DialogType.CAMERA -> {
+                binding.ivDialogPermissionIcon.setImageDrawable(context?.getDrawable(R.drawable.ic_camera_dialog))
+                binding.btnDialogPermissionSetting.text = getString(R.string.locationDialog_setting)
+                binding.tvDialogPermissionDescription.text = getString(R.string.cameraDialog_description)
+            }
+
+            DialogType.LOCATION -> {
+                binding.ivDialogPermissionIcon.setImageDrawable(context?.getDrawable(R.drawable.ic_location_dialog))
+                binding.btnDialogPermissionSetting.text = getString(R.string.locationDialog_setting)
+                binding.tvDialogPermissionDescription.text = getString(R.string.locationDialog_description)
+            }
+        }
+
         return binding.root
     }
 
@@ -38,7 +59,7 @@ class CameraPermissionDialog : DialogFragment(), AnalyticsDelegate by DefaultAna
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setSize()
-        binding.btnDialogLocationSetting.setOnClickListener {
+        binding.btnDialogPermissionSetting.setOnClickListener {
             logClickEvent(requireContext().getViewEntryName(it), CAMERA_PERMISSION_OPEN_SETTING)
             openSetting()
             dismiss()
@@ -46,8 +67,8 @@ class CameraPermissionDialog : DialogFragment(), AnalyticsDelegate by DefaultAna
     }
 
     private fun setSize() {
-        val dialogWidth = getWidthProportionalToDevice(requireContext(), LocationPermissionDialog.WIDTH_RATE)
-        val dialogHeight = dpToPx(requireContext(), LocationPermissionDialog.HEIGHT)
+        val dialogWidth = getWidthProportionalToDevice(requireContext(), WIDTH_RATE)
+        val dialogHeight = dpToPx(requireContext(), HEIGHT)
         dialog?.window?.setLayout(dialogWidth, dialogHeight)
     }
 
@@ -59,7 +80,12 @@ class CameraPermissionDialog : DialogFragment(), AnalyticsDelegate by DefaultAna
         startActivity(appDetailsIntent)
     }
 
+    fun show(manager: FragmentManager) {
+        show(manager, type.name)
+    }
+
     companion object {
-        const val TAG_CAMERA_DIALOG = "CAMERA"
+        const val WIDTH_RATE = 0.83f
+        const val HEIGHT = 400
     }
 }
