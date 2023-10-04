@@ -4,6 +4,7 @@ import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
+import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.builder.TemporaryPlaceBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
@@ -49,6 +50,9 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
 
     @Autowired
     private TemporaryPlaceBuilder temporaryPlaceBuilder;
+
+    @Autowired
+    private PlaceBuilder placeBuilder;
 
     @Autowired
     private PlayerBuilder playerBuilder;
@@ -122,28 +126,25 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
         //given
         final Player player = playerBuilder.init()
                 .build();
-        temporaryPlaceBuilder.init()
+        final Place place = placeBuilder.init()
                 .position(잠실_루터회관_정문_좌표)
                 .build();
+        final TemporaryPlace temporaryPlace = TEMPORARY_PLACE();
 
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-        final TemporaryPlace temporaryPlace = TEMPORARY_PLACE();
-
         when(fileManager.save(any())).thenReturn(new File("/임시경로", "이미지.png"));
 
-
-        //when
         //when
         final ExtractableResponse<Response> extract = given()
                 .log().all()
                 .multiPart(new MultiPartSpecBuilder(temporaryPlace.getName()).controlName("name").charset(StandardCharsets.UTF_8).build())
                 .multiPart(new MultiPartSpecBuilder(temporaryPlace.getDescription()).controlName("description").charset(StandardCharsets.UTF_8).build())
                 .multiPart(
-                        new MultiPartSpecBuilder(temporaryPlace.getPosition().getLatitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName(
+                        new MultiPartSpecBuilder(place.getPosition().getLatitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName(
                                 "latitude").charset(StandardCharsets.UTF_8).build())
                 .multiPart(
-                        new MultiPartSpecBuilder(temporaryPlace.getPosition().getLongitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName(
+                        new MultiPartSpecBuilder(place.getPosition().getLongitude().setScale(6, RoundingMode.HALF_DOWN).doubleValue()).controlName(
                                 "longitude").charset(StandardCharsets.UTF_8).build())
                 .multiPart(new MultiPartSpecBuilder(new FileInputStream(new File("src/test/java/com/now/naaga/temporaryplace/fixture/루터회관.png"))).controlName(
                                 "imageFile").charset(StandardCharsets.UTF_8)
@@ -161,8 +162,8 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
 
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
-        TemporaryPlaceExceptionType exceptionType = TemporaryPlaceExceptionType.ALREADY_EXIST_NEARBY;
-        ExceptionResponse expected = new ExceptionResponse(exceptionType.errorCode(), exceptionType.errorMessage());
+        final TemporaryPlaceExceptionType exceptionType = TemporaryPlaceExceptionType.ALREADY_EXIST_NEARBY;
+        final ExceptionResponse expected = new ExceptionResponse(exceptionType.errorCode(), exceptionType.errorMessage());
 
         //then
         assertSoftly(softAssertions -> {
