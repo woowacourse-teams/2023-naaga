@@ -234,10 +234,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         return viewModel.isFormValid()
     }
 
-    private fun Coordinate.toText(): String {
-        return "$latitude, $longitude"
-    }
-
     companion object {
         private val requestPermissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
