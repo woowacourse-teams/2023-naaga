@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowInsetsControllerCompat
 import com.now.domain.model.AuthPlatformType
-import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.LOGIN_AUTH
@@ -32,7 +30,6 @@ class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytics
         registerAnalytics(this.lifecycle)
         subscribe()
         setClickListeners()
-//        setStatusBar()
     }
 
     private fun subscribe() {
@@ -51,13 +48,6 @@ class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytics
     private fun setClickListeners() {
         binding.ivLoginKakao.setOnClickListener {
             loginWithKakao(this) { viewModel.signIn(it, AuthPlatformType.KAKAO) }
-        }
-    }
-
-    private fun setStatusBar() {
-        window.apply {
-            statusBarColor = getColor(R.color.white)
-            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = true
         }
     }
 

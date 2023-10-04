@@ -71,12 +71,12 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     }
 
     private fun setSuccessTypeView(destinationName: String) {
-        binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_success_lable)
+        binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_success_label)
         binding.tvAdventureResultDestination.text = destinationName
     }
 
     private fun setFailTypeView() {
-        binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_fail_lable)
+        binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_fail_label)
         binding.tvAdventureResultDestination.text = getString(R.string.adventureResult_fail_destination_name)
     }
 
