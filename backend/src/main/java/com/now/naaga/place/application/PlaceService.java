@@ -69,6 +69,8 @@ public class PlaceService {
     }
 
     public Place createPlace(final CreatePlaceCommand createPlaceCommand) {
+        placeCheckService.checkOtherPlaceNearby(createPlaceCommand.position());
+
         final Long registeredPlayerId = createPlaceCommand.registeredPlayerId();
         final Player registeredPlayer = playerService.findPlayerById(registeredPlayerId);
         final Place place = new Place(createPlaceCommand.name(),
@@ -76,30 +78,9 @@ public class PlaceService {
                                       createPlaceCommand.position(),
                                       createPlaceCommand.imageUrl(),
                                       registeredPlayer);
+
         placeRepository.save(place);
         temporaryPlaceService.deleteById(createPlaceCommand.temporaryPlaceId());
         return place;
     }
-
-    // TODO: 2023/10/03 장소 검수 API 구현 이후 삭제 예정
-//    public Place createPlace(final CreatePlaceCommand createPlaceCommand) {
-//        final Position position = createPlaceCommand.position();
-//        placeCheckService.checkOtherPlaceNearby(position);
-//        final File uploadPath = fileManager.save(createPlaceCommand.imageFile());
-//        try {
-//            final Long playerId = createPlaceCommand.playerId();
-//            final Player registeredPlayer = playerService.findPlayerById(playerId);
-//            final Place place = new Place(
-//                    createPlaceCommand.name(),
-//                    createPlaceCommand.description(),
-//                    position,
-//                    fileManager.convertToUrlPath(uploadPath),
-//                    registeredPlayer);
-//            placeRepository.save(place);
-//            return place;
-//        } catch (final RuntimeException exception) {
-//            uploadPath.delete();
-//            throw exception;
-//        }
-//    }
 }
