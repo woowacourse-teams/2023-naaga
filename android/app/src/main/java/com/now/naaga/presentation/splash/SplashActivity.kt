@@ -43,7 +43,7 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             if (it.isSuccessful) {
                 val minVersion = remoteConfig.getString(MIN_VERSION)
                 if (minVersion > curVersion) {
-                    showConfirmDialog()
+                    showUpdateDialog()
                 } else {
                     viewModel.testTokenValid()
                 }
@@ -51,7 +51,7 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
     }
 
-    private fun showConfirmDialog() {
+    private fun showUpdateDialog() {
         ConfirmDialog.Builder().build(
             title = getString(R.string.confirm_dialog_title),
             description = getString(R.string.confirm_dialog_description),
