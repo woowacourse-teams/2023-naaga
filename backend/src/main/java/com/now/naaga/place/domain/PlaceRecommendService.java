@@ -10,11 +10,10 @@ import java.util.Random;
 
 import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
 
-@Transactional
 @Service
 public class PlaceRecommendService {
 
-    private static final int DISTANCE = 500;
+    private static final double DISTANCE = 0.3;
 
     private final PlaceRepository placeRepository;
 
