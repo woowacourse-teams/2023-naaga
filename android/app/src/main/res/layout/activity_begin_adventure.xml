@@ -20,7 +20,6 @@
             android:id="@+id/lottie_beginAdventure_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:background="@color/main_gray_opacity_medium"
             app:lottie_rawRes="@raw/simple_loading"
             app:lottie_loop="true"
