@@ -19,12 +19,13 @@
     <string name="onAdventure_loading_photo">사진을 로딩 중이에요</string>
     <string name="onAdventure_fail_load_description">목적지를 받아오는데 실패했어요!</string>
     <string name="OnAdventure_on_adventure">모험 중</string>
-    <string name="onAdventure_left_distance_description">목적지까지</string>
-    <string name="onAdventure_left_distance">%dm</string>
+    <string name="onAdventure_to_destination">목적지까지</string>
+    <string name="onAdventure_left_distance">%d</string>
+    <string name="onAdventure_meter">m</string>
     <string name="OnAdventure_end_adventure">도착!</string>
     <string name="onAdventure_on_adventure">모험 중</string>
     <string name="onAdventure_end_adventure">정답 도전</string>
-    <string name="onAdventure_nearby">목적지 인근이에요</string>
+    <string name="onAdventure_nearby">목적지 근처예요!</string>
     <string name="polaroid_description">이곳은 어디일까요?</string>
     <string name="onAdventure_retry">목적지가 아니에요. %d회 남았어요!</string>
     <string name="onAdventure_try_count_over">시도 횟수를 초과했어요. 게임이 종료돼요</string>
