@@ -63,17 +63,4 @@ public class PlaceController {
                 .location(URI.create("/places/" + place.getId()))
                 .body(response);
     }
-
-// TODO: 2023/10/03 장소 검수 API 구현 이후 삭제 예정
-//    @PostMapping
-//    public ResponseEntity<PlaceResponse> createPlace(@Auth final PlayerRequest playerRequest,
-//                                                     @ModelAttribute final CreatePlaceRequest createPlaceRequest) {
-//        CreatePlaceCommand createPlaceCommand = CreatePlaceCommand.of(playerRequest, createPlaceRequest);
-//        final Place savedPlace = placeService.createPlace(createPlaceCommand);
-//        final PlaceResponse response = PlaceResponse.from(savedPlace);
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .location(URI.create("/places/" + savedPlace.getId()))
-//                .body(response);
-//    }
 }
