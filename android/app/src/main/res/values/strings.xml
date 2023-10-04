@@ -98,7 +98,7 @@
     <string name="hint_using_dialog_give_up">취소 하기</string>
 
     <!-- LoginActivity -->
-    <string name="login_app_title">NAAGA</string>
+    <string name="login_app_title">나 아 가</string>
 
     <!-- UploadActivity -->
     <string name="upload_error_store_photo_message">사진을 저장하는데 문제가 생겼어요! 다시 시도해주세요!</string>
