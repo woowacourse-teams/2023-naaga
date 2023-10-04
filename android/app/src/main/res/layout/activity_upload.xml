@@ -104,7 +104,7 @@
             android:id="@+id/et_upload_place_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_default_medium"
+            android:layout_marginTop="@dimen/space_default_large"
             android:autofillHints="no"
             android:ellipsize="end"
             android:hint="@string/upload_photo_title_hint"
