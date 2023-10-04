@@ -53,22 +53,27 @@
     <string name="adventureResult_rank">%d등</string>
 
     <!-- UploadActivity -->
-    <string name="upload_description">Description</string>
-    <string name="upload_photo_description">장소에 대한 설명을 입력해주세요! \n\n자세할수록 좋습니다!</string>
-    <string name="upload_submit">등록할게요!</string>
-    <string name="upload_photo_title">장소명을 입력해주세요!</string>
+    <string name="upload_title">장소 등록</string>
+    <string name="upload_photo_title">장소이름</string>
+    <string name="upload_photo_title_hint">이곳에 장소이름을 적어주세요!</string>
+    <string name="upload_submit">장소 등록</string>
+    <string name="upload_fail_submit">장소등록에 실패했어요!</string>
+    <string name="upload_error_store_photo_message">사진을 저장하는데 문제가 생겼어요! 다시 시도해주세요!</string>
+    <string name="upload_error_already_exists_nearby_message">근방에 다른 미션장소가 존재해서 추가할 수 없어요!</string>
+    <string name="upload_error_post_message">전송에 실패했어요! 다시 시도해주세요!</string>
+    <string name="upload_error_insufficient_info_message">모든 정보를 입력해주세요.</string>
 
     <!-- CameraDialog-->
     <string name="cameraDialog_description">장소를 올리기 위해서는\n카메라 접근 권한이 필요해요!</string>
 
     <!-- AdventureHistoryActivity -->
-    <string name="history_title">History</string>
+    <string name="history_title">모험 기록</string>
 
     <!-- RankActivity -->
     <string name="rank_title">Leader Board</string>
     <string name="rank_my_rank">%d등</string>
 
-    <!-- mypage -->
+    <!-- MyPageActivity -->
     <string name="mypage_adventure_record">모험 기록</string>
     <string name="mypage_rank">%d등</string>
     <string name="mypage_percentage">(상위%d%%)</string>
@@ -85,42 +90,46 @@
     <string name="mypage_empty_item_title">My Places</string>
     <string name="mypage_empty_description">추가한 장소가 없어요!\n장소를 추가해 주세요!</string>
 
-    <!--give up dialog-->
+    <!--GiveUpDialog-->
     <string name="give_up_dialog_title">게임을 포기하시겠어요?</string>
     <string name="give_up_dialog_description">지금 떠나면 점수가 하락해요</string>
     <string name="give_up_dialog_continue">이어 하기</string>
     <string name="give_up_dialog_give_up">포기 하기</string>
 
-    <!--hint using dialog-->
+    <!--HintUsingDialog-->
     <string name="hint_using_dialog_title">힌트를 사용하시겠어요?</string>
     <string name="hint_using_dialog_description">힌트가 %d개 남았어요</string>
     <string name="hint_using_dialog_continue">힌트 받기</string>
     <string name="hint_using_dialog_give_up">취소 하기</string>
 
     <!-- LoginActivity -->
-    <string name="login_app_title">NAAGA</string>
-
-    <!-- UploadActivity -->
-    <string name="upload_error_store_photo_message">사진을 저장하는데 문제가 생겼어요! 다시 시도해주세요!</string>
-    <string name="upload_error_already_exists_nearby_message">근방에 다른 미션장소가 존재해서 추가할 수 없어요!</string>
-    <string name="upload_error_post_message">전송에 실패했어요! 다시 시도해주세요!</string>
-    <string name="upload_error_insufficient_info_message">모든 정보를 입력해주세요.</string>
+    <string name="login_app_title">나 아 가</string>
 
     <!-- SettingActivity -->
     <string name="setting_withdrawal_success_message">"성공적으로 회원 탈퇴 되었습니다."</string>
     <string name="setting_wrong_error_message">"인증 정보가 잘 못 되었어요!"</string>
     <string name="setting_expiration_error_message">"인증 정보가 만료 되었어요!"</string>
     <string name="setting_logout_message">로그아웃 되었습니다.</string>
+    <string name="setting_title">설정</string>
+    <string name="setting_logout_title">로그아웃</string>
+    <string name="setting_unlink_title">회원탈퇴</string>
+    <string name="setting_question_title">문의하기</string>
 
-    <!-- Withdrawal Dialog -->
+    <!-- WithdrawalDialog -->
     <string name="withdrawal_dialog_title">정말 회원 탈퇴를 하시겠습니까?</string>
     <string name="withdrawal_dialog_description">나아가와 함께 즐거운 모험을 계속해보세요!</string>
     <string name="withdrawal_dialog_positive">네</string>
     <string name="withdrawal_dialog_negative">아니요</string>
 
-    <!--logout dialog-->
+    <!-- LogoutDialog -->
     <string name="logout_dialog_title">정말 로그아웃을 하시겠습니까?</string>
     <string name="logout_dialog_description">나아가와 함께 즐거운 모험을 계속해보세요!</string>
     <string name="logout_dialog_positive_text">아니오</string>
     <string name="logout_dialog_negative_text">예</string>
+
+    <!-- ConfirmDialog -->
+    <string name="confirm_dialog_title">업데이트 확인</string>
+    <string name="confirm_dialog_description">새로운 버전이 출시되었어요!\n업데이트가 필요해요!</string>
+    <string name="confirm_dialog_positive_text">업데이트</string>
+    <string name="confirm_dialog_negative_text">취소</string>
 </resources>
