@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytics
         registerAnalytics(this.lifecycle)
         subscribe()
         setClickListeners()
-        setStatusBar()
+//        setStatusBar()
     }
 
     private fun subscribe() {
