@@ -4,43 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="model"
-            type="com.now.naaga.presentation.mypage.MyPagePlaceUiModel" />
+            type="com.now.naaga.presentation.uimodel.model.MyPagePlaceUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent">
 
-        <TextView
-            tools:text="전체 모험"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_mypage_item_description"
-            android:textSize="12sp"
-            android:fontFamily="@font/pretendard_medium"
-            android:textColor="@color/main_purple"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="18dp"
-            android:text="@{model.description}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_mypage_item"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <ImageView
-            android:layout_marginHorizontal="8dp"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            tools:srcCompat="@tools:sample/avatars"
             android:id="@+id/iv_mypage_item"
-            android:scaleType="centerCrop"
+            android:layout_width="77dp"
+            android:layout_height="77dp"
+            android:layout_marginHorizontal="@dimen/space_default_medium"
             android:background="@drawable/oval"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/tv_mypage_item_description"
             app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tv_mypage_item_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="6dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{model.name}"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/iv_mypage_item"
+            app:layout_constraintStart_toStartOf="@id/iv_mypage_item"
+            app:layout_constraintTop_toBottomOf="@+id/iv_mypage_item"
+            tools:text="krrrrrrrrrrrrrrrrrrrrrrrrrong" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
