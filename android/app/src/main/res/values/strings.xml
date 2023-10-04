@@ -22,9 +22,12 @@
     <string name="onAdventure_to_destination">목적지까지</string>
     <string name="onAdventure_left_distance">%d</string>
     <string name="onAdventure_meter">m</string>
+    <string name="onAdventure_show_photo">사진보기</string>
+    <string name="onAdventure_search_direction">방향찾기</string>
+    <string name="onAdventure_stop">그만하기</string>
     <string name="OnAdventure_end_adventure">도착!</string>
     <string name="onAdventure_on_adventure">모험 중</string>
-    <string name="onAdventure_end_adventure">정답 도전</string>
+    <string name="onAdventure_end_adventure">목적지\n도착</string>
     <string name="onAdventure_nearby">목적지 근처예요!</string>
     <string name="polaroid_description">이곳은 어디일까요?</string>
     <string name="onAdventure_retry">목적지가 아니에요. %d회 남았어요!</string>
