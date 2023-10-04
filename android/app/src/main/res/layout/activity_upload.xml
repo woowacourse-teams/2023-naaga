@@ -120,7 +120,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_upload_title"/>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_upload_su경bmit"
+            android:id="@+id/btn_upload_submit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_default_large"
