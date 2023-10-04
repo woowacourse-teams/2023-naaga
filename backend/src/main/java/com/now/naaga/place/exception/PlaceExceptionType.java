@@ -17,6 +17,12 @@ public enum PlaceExceptionType implements BaseExceptionType {
             "해당 장소가 존재하지 않습니다."
     ),
 
+    ALREADY_EXIST_NEARBY(
+            505,
+            HttpStatus.BAD_REQUEST,
+            "이미 주변에 장소가 존재합니다."
+    ),
+
     ;
 
     private final int errorCode;
