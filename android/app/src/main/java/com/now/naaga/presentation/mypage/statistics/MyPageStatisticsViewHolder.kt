@@ -14,12 +14,14 @@ class MyPageStatisticsViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     private val binding = RvMypageItemAdventureBinding.bind(itemView)
 
     fun bind(statisticsUiModels: StatisticsUiModel) {
-        binding.ivMypageItemIcon.setImageDrawable(
-            AppCompatResources.getDrawable(itemView.context, statisticsUiModels.icon),
-        )
-        binding.tvMypageItemAdventureCount.text = statisticsUiModels.count.toString()
-        binding.tvMypageItemAdventureTitle.text = statisticsUiModels.detail
-        binding.vMypageItemIconBackground.background =
-            AppCompatResources.getDrawable(itemView.context, statisticsUiModels.background)
+        binding.apply {
+            ivMypageItemIcon.setImageDrawable(
+                AppCompatResources.getDrawable(itemView.context, statisticsUiModels.icon),
+            )
+            tvMypageItemAdventureCount.text = statisticsUiModels.count.toString()
+            tvMypageItemAdventureTitle.text = statisticsUiModels.detail
+            vMypageItemIconBackground.background =
+                AppCompatResources.getDrawable(itemView.context, statisticsUiModels.background)
+        }
     }
 }

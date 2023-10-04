@@ -18,8 +18,10 @@ class MyPagePlaceViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     private val binding = RvMypageItemPlaceBinding.bind(itemView)
 
     fun bind(data: MyPagePlaceUiModel) {
-        binding.model = data
-        Glide.with(binding.ivMypageItem).load(data.image).into(binding.ivMypageItem)
-        binding.ivMypageItem.clipToOutline = true
+        binding.apply {
+            model = data
+            Glide.with(ivMypageItem).load(data.image).into(ivMypageItem)
+            ivMypageItem.clipToOutline = true
+        }
     }
 }
