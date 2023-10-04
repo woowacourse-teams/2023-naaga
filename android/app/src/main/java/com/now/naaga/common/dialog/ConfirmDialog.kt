@@ -1,4 +1,4 @@
-package com.now.naaga.util.dialog
+package com.now.naaga.common.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
