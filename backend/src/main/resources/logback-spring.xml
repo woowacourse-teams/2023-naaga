@@ -28,7 +28,7 @@
                   value="/home/ubuntu/logs"/>
     </springProfile>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
 
