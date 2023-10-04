@@ -97,7 +97,7 @@
                     android:id="@+id/tv_adventureResult_playTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
+                    android:layout_marginStart="100dp"
                     android:background="@drawable/bg_adventure_result_blue_gradient"
                     android:gravity="end"
                     android:paddingVertical="4dp"
