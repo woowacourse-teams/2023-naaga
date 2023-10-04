@@ -42,8 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/pretendard_medium"
-            android:text="로그아웃"
+            android:text="@string/setting_logout_title"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,8 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/pretendard_medium"
-            android:text="회원 탈퇴"
+            android:text="@string/setting_unlink_title"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -92,8 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/pretendard_medium"
-            android:text="문의하기"
+            android:text="@string/setting_question_title"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -110,6 +107,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_setting_inquiry" />
+
+        <TextView
+            android:id="@+id/tv_setting_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/setting_title"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            app:layout_constraintStart_toEndOf="@+id/iv_setting_back"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_setting_building"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_building" />
+
+        <ImageView
+            android:id="@+id/iv_setting_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/v_setting_fourth"
+            app:srcCompat="@drawable/ic_star" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

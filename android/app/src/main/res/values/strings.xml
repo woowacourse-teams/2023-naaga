@@ -110,6 +110,10 @@
     <string name="setting_wrong_error_message">"인증 정보가 잘 못 되었어요!"</string>
     <string name="setting_expiration_error_message">"인증 정보가 만료 되었어요!"</string>
     <string name="setting_logout_message">로그아웃 되었습니다.</string>
+    <string name="setting_title">설정</string>
+    <string name="setting_logout_title">로그아웃</string>
+    <string name="setting_unlink_title">회원탈퇴</string>
+    <string name="setting_question_title">문의하기</string>
 
     <!-- WithdrawalDialog -->
     <string name="withdrawal_dialog_title">정말 회원 탈퇴를 하시겠습니까?</string>
