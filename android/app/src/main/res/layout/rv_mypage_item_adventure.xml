@@ -15,7 +15,7 @@
             android:id="@+id/v_mypage_item_icon_background"
             android:layout_width="77dp"
             android:layout_height="77dp"
-            android:layout_marginStart="@dimen/space_default_medium"
+            android:layout_marginStart="@dimen/space_default_large"
             android:layout_marginVertical="@dimen/space_default_medium"
             android:background="@drawable/oval"
             android:scaleType="centerCrop"
@@ -42,12 +42,13 @@
             android:id="@+id/tv_mypage_item_adventure_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_default_large"
+            android:layout_marginStart="@dimen/space_default_medium"
             android:textColor="@color/white"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_mypage_item_icon"
-            app:layout_constraintStart_toEndOf="@id/iv_mypage_item_icon"
-            app:layout_constraintTop_toTopOf="@id/iv_mypage_item_icon"
+            app:layout_constraintBottom_toBottomOf="@id/v_mypage_item_icon_background"
+            app:layout_constraintStart_toEndOf="@id/v_mypage_item_icon_background"
+            app:layout_constraintTop_toTopOf="@id/v_mypage_item_icon_background"
+            app:layout_constraintEnd_toStartOf="@id/tv_mypage_item_adventure_count"
             tools:text="성공 모험" />
 
         <TextView
@@ -70,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_default_medium"
-            android:layout_marginEnd="@dimen/space_default_medium"
+            android:layout_marginEnd="@dimen/space_default_large"
             android:text="@string/mypage_item_adventure_count_suffix"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -83,6 +84,7 @@
             android:layout_width="0dp"
             android:layout_height="2dp"
             android:background="@color/white"
+            android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="@id/tv_mypage_item_adventure_suffix"
             app:layout_constraintStart_toEndOf="@id/iv_mypage_item_icon"
             app:layout_constraintTop_toBottomOf="@id/tv_mypage_item_adventure_title" />
