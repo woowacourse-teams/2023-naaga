@@ -6,7 +6,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         tools:context=".presentation.login.LoginActivity">
 
         <ImageView
@@ -15,34 +14,45 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_kakao_login" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_logo_purple" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/pretendard_medium"
+            android:layout_marginTop="200dp"
             android:text="@string/login_app_title"
-            android:textColor="@color/main_purple"
-            android:textSize="50sp"
+            android:textColor="@color/white"
+            android:textSize="64sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toTopOf="@+id/iv_login_kakao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_building_full" />
+
+        <ImageView
+            android:id="@+id/iv_login_star"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="52dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toTopOf="@+id/iv_login_kakao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_star" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

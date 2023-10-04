@@ -22,8 +22,8 @@ class AdventureHistoryViewHolder(private val binding: ItemHistoryBinding) : Recy
 
     private fun setSuccessOrFailure(resultType: AdventureResultType) {
         when (resultType) {
-            AdventureResultType.SUCCESS -> binding.ivAdventureHistoryStamp.setImageResource(R.drawable.ic_success_lable)
-            AdventureResultType.FAIL -> binding.ivAdventureHistoryStamp.setImageResource(R.drawable.ic_fail_lable)
+            AdventureResultType.SUCCESS -> binding.ivAdventureHistoryStamp.setImageResource(R.drawable.ic_success_label)
+            AdventureResultType.FAIL -> binding.ivAdventureHistoryStamp.setImageResource(R.drawable.ic_fail_label)
             AdventureResultType.NONE -> {}
         }
     }
