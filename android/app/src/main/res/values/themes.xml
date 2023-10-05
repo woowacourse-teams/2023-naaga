@@ -14,10 +14,4 @@
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/main_dark_blue</item>
     </style>
-
-    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/main_dark_blue</item>
-        <item name="windowSplashScreenAnimatedIcon">@android:color/transparent</item>
-        <item name="postSplashScreenTheme">@style/Theme.Naaga</item>
-    </style>
 </resources>
