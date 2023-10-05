@@ -2,12 +2,12 @@
     <string name="app_name">Naaga</string>
 
     <!-- BeginAdventureActivity -->
-    <string name="beginAdventure_begin_adventure">지금 나아가 볼까요?</string>
     <string name="beginAdventure_precise_access">위치 권한 요청이 허용되었습니다</string>
     <string name="beginAdventure_approximate_access">대략적인 위치 권한만 허용되었습니다</string>
     <string name="beginAdventure_denied_access">위치 권한 요청이 거절되었습니다</string>
-    <string name="beginAdventure_features_not_ready">아직 준비되지 않은 기능입니다.</string>
-    <string name="beginAdventure_do_adventure">모험 하기</string>
+    <string name="beginAdventure_do_adventure">모험 시작</string>
+    <string name="beginAdventure_upload_place">장소 등록</string>
+    <string name="beginAdventure_my_page">나의 모험</string>
     <string name="beginAdventure_continue_adventure">이어 하기</string>
 
     <!-- LocationDialog-->
@@ -43,10 +43,10 @@
     <!-- AdventureResultActivity -->
     <string name="adventureResult_destination_description">오늘의 목적지</string>
     <string name="adventureResult_fail_destination_name">\????</string>
-    <string name="adventureResult_time_description">TIME</string>
-    <string name="adventureResult_distance_description">DISTANCE</string>
-    <string name="adventureResult_hint_description">HINT USES</string>
-    <string name="adventureResult_try_description">TRY COUNT</string>
+    <string name="adventureResult_time_description">시간</string>
+    <string name="adventureResult_distance_description">거리</string>
+    <string name="adventureResult_hint_description">힌트 사용 횟수</string>
+    <string name="adventureResult_try_description">정답 도전 횟수</string>
     <string name="adventureResult_score_description">Score</string>
     <string name="adventureResult_play_time_value">%d분</string>
     <string name="adventureResult_distance_value">%dm</string>
@@ -91,8 +91,9 @@
     <string name="mypage_total_play_time">총 모험 시간</string>
     <string name="mypage_total_adventure_distance">총 직경 거리</string>
     <string name="mypage_total_hint_uses">사용 힌트 개수</string>
-    <string name="mypage_empty_item_title">My Places</string>
+    <string name="mypage_place_title">내가 추가한 장소</string>
     <string name="mypage_empty_description">추가한 장소가 없어요!\n장소를 추가해 주세요!</string>
+    <string name="mypage_item_adventure_count_suffix">회</string>
 
     <!--GiveUpDialog-->
     <string name="give_up_dialog_title">게임을 포기하시겠어요?</string>
