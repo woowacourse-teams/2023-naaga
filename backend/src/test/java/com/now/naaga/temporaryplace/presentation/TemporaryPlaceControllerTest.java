@@ -12,13 +12,14 @@ import com.now.naaga.common.infrastructure.FileManager;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
 import com.now.naaga.temporaryplace.presentation.dto.TemporaryPlaceResponse;
+import io.restassured.RestAssured;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,13 +37,14 @@ import java.util.List;
 
 import static com.now.naaga.common.fixture.TemporaryPlaceFixture.TEMPORARY_PLACE;
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
-@ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@DisplayNameGeneration(ReplaceUnderscores.class)
+@ActiveProfiles("test")
 class TemporaryPlaceControllerTest extends CommonControllerTest {
 
     @Autowired
@@ -148,5 +150,25 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
                     .usingRecursiveComparison()
                     .isEqualTo(actual);
         });
+    }
+
+    void ID를_통한_삭제_요청이_성공하면_204_응답코드를_반환한다() {
+        // given
+        final TemporaryPlace temporaryPlace = temporaryPlaceBuilder.init()
+                .build();
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured.given()
+                .log().all()
+                .auth().preemptive().basic(id, password)
+                .when()
+                .delete("/temporary-places/{temporaryPlaceId}", temporaryPlace.getId())
+                .then()
+                .log().all()
+                .extract();
+
+        // then
+        final int statusCode = extract.statusCode();
+        assertThat(statusCode).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

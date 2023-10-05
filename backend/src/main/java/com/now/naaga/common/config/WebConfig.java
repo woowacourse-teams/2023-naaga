@@ -5,6 +5,7 @@ import com.now.naaga.auth.presentation.argumentresolver.PlayerArgumentResolver;
 import com.now.naaga.auth.presentation.interceptor.AuthInterceptor;
 import com.now.naaga.auth.presentation.interceptor.ManagerAuthInterceptor;
 import com.now.naaga.common.presentation.interceptor.RequestMatcherInterceptor;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,8 +14,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -58,12 +57,16 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludeRequestPattern("/**/*.ico")
                 .excludeRequestPattern("/ranks")
                 .excludeRequestPattern("/**", HttpMethod.OPTIONS)
-                .excludeRequestPattern("/temporary-places", HttpMethod.GET);
+                .excludeRequestPattern("/temporary-places", HttpMethod.GET)
+                .excludeRequestPattern("/places", HttpMethod.POST)
+                .excludeRequestPattern("/temporary-places/**", HttpMethod.DELETE);
     }
 
     private HandlerInterceptor mapManagerAuthInterceptor() {
         return new RequestMatcherInterceptor(managerAuthInterceptor)
-                .includeRequestPattern("/temporary-places", HttpMethod.GET);
+                .includeRequestPattern("/temporary-places", HttpMethod.GET)
+                .includeRequestPattern("/places", HttpMethod.POST)
+                .includeRequestPattern("/temporary-places/**", HttpMethod.DELETE);
     }
 
     @Override

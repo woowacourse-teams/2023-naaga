@@ -44,4 +44,12 @@ public class TemporaryPlaceController {
                 .location(URI.create("/temporary-places/" + temporaryPlace.getId()))
                 .body(response);
     }
+
+    @DeleteMapping("/{temporaryPlaceId}")
+    public ResponseEntity<Void> deleteTemporaryPlace(@PathVariable final Long temporaryPlaceId) {
+        temporaryPlaceService.deleteById(temporaryPlaceId);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }

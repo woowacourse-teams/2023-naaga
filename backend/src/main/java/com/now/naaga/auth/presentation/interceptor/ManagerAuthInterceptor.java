@@ -42,7 +42,7 @@ public class ManagerAuthInterceptor implements HandlerInterceptor {
             throw new AuthException(NOT_EXIST_HEADER);
         }
         final String[] authHeader = header.split(" ");
-        if (!AUTH_HEADER_TYPE.equals(authHeader[0])) {
+        if (!AUTH_HEADER_TYPE.equalsIgnoreCase(authHeader[0])) {
             throw new AuthException(INVALID_HEADER);
         }
         final String decodedHeader = new String(Base64.getDecoder().decode(authHeader[1]));

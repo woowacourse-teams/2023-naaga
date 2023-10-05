@@ -17,6 +17,7 @@ import com.now.naaga.game.domain.Direction;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.Hint;
 import com.now.naaga.game.exception.GameException;
+import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -31,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @Sql("/truncate.sql")
+
+@ActiveProfiles("test")
 @SpringBootTest
 class HintServiceTest {
 
@@ -62,6 +65,9 @@ class HintServiceTest {
 
         // when
         final Hint actual = hintService.createHint(createHintCommand);
+
+        place.getRegisteredPlayer().getMember();
+        game.getPlayer().getMember();
 
         // then
         final Hint expected = new Hint(서울_좌표,

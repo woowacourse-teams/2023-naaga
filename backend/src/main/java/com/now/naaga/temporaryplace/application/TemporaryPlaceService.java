@@ -52,6 +52,10 @@ public class TemporaryPlaceService {
         }
     }
 
+    public void deleteById(final Long id) {
+        temporaryPlaceRepository.deleteById(id);
+    }
+
     @Transactional(readOnly = true)
     public List<TemporaryPlace> findAllTemporaryPlace() {
         final List<TemporaryPlace> temporaryPlaces = temporaryPlaceRepository.findAll();

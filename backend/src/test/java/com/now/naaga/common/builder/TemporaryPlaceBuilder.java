@@ -1,17 +1,17 @@
 package com.now.naaga.common.builder;
 
-import com.now.naaga.place.domain.Place;
+import static com.now.naaga.common.fixture.PlaceFixture.DESCRIPTION;
+import static com.now.naaga.common.fixture.PlaceFixture.IMAGE_URL;
+import static com.now.naaga.common.fixture.PlaceFixture.NAME;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
+
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
 import com.now.naaga.temporaryplace.repository.TemporaryPlaceRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
-
-import static com.now.naaga.common.fixture.PlaceFixture.*;
-import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
 
 @Component
 public class TemporaryPlaceBuilder {
@@ -35,7 +35,7 @@ public class TemporaryPlaceBuilder {
     public TemporaryPlaceBuilder init() {
         this.name = NAME;
         this.description = DESCRIPTION;
-        this.position = 잠실_루터회관_정문_좌표;
+        this.position = 잠실역_교보문고_좌표;
         this.imageUrl = IMAGE_URL;
         this.registeredPlayer = Optional.empty();
         return this;
@@ -74,6 +74,6 @@ public class TemporaryPlaceBuilder {
 
     private Player getPersistedPlayer() {
         return playerBuilder.init()
-                .build();
+                            .build();
     }
 }
