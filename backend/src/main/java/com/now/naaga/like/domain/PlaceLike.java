@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
+// 아직 미구역 영역입니다. 사실 백엔드 디렉토리 변경을 위한 변경사항입니다.
 @Entity
 public class PlaceLike extends BaseEntity {
 

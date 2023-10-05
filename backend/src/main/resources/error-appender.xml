@@ -1,6 +1,6 @@
 <included>
     <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/error.log</file>
+        <file>/home/ubuntu/logs/error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch> <!-- 해당 레벨만 기록한다. -->
