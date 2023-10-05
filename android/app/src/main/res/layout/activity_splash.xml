@@ -10,34 +10,12 @@
         android:id="@+id/iv_splash_logo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/ic_logo_splash"
+        android:src="@drawable/ic_naaga_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.5" />
-
-    <ImageView
-        android:id="@+id/iv_splash_star"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="52dp"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_star" />
-
-    <ImageView
-        android:id="@+id/iv_splash_building"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_building_full" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
