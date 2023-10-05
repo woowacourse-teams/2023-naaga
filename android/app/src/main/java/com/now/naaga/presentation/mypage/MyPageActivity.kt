@@ -42,7 +42,7 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         binding.ivMypageBack.setOnClickListener {
             finish()
         }
-        binding.btnMypageAdventureResults.setOnClickListener {
+        binding.btnMypageAdventureHistory.setOnClickListener {
             logClickEvent(getViewEntryName(it), MYPAGE_GO_RESULTS)
             val intent = AdventureHistoryActivity.getIntent(this)
             startActivity(intent)
