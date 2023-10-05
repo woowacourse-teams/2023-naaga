@@ -57,12 +57,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludeRequestPattern("/**/*.ico")
                 .excludeRequestPattern("/ranks")
                 .excludeRequestPattern("/**", HttpMethod.OPTIONS)
-                .excludeRequestPattern("/places", HttpMethod.POST);
+                .excludeRequestPattern("/places", HttpMethod.POST)
+                .excludeRequestPattern("/temporary-places/**", HttpMethod.DELETE);
     }
 
     private HandlerInterceptor mapManagerAuthInterceptor() {
         return new RequestMatcherInterceptor(managerAuthInterceptor)
-                .includeRequestPattern("/places", HttpMethod.POST);
+                .includeRequestPattern("/places", HttpMethod.POST)
+                .includeRequestPattern("/temporary-places/**", HttpMethod.DELETE);
     }
 
     @Override

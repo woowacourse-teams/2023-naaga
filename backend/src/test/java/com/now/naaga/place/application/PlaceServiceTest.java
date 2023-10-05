@@ -3,11 +3,10 @@ package com.now.naaga.place.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.builder.TemporaryPlaceBuilder;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.place.application.dto.CreatePlaceCommand;
 import com.now.naaga.place.domain.Place;
@@ -15,13 +14,13 @@ import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.exception.PlaceExceptionType;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.temporaryplace.application.TemporaryPlaceService;
+import com.now.naaga.temporaryplace.domain.TemporaryPlace;
+import com.now.naaga.temporaryplace.repository.TemporaryPlaceRepository;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,11 +32,14 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 class PlaceServiceTest {
 
-    @MockBean
-    private TemporaryPlaceService temporaryPlaceService;
+    @Autowired
+    private TemporaryPlaceRepository temporaryPlaceRepository;
 
     @Autowired
     private PlaceService placeService;
+
+    @Autowired
+    private TemporaryPlaceBuilder temporaryPlaceBuilder;
 
     @Autowired
     private PlaceBuilder placeBuilder;
@@ -52,7 +54,10 @@ class PlaceServiceTest {
         final Player player = playerBuilder.init()
                                            .build();
 
-        final Long temporaryPlaceId = 1L;
+        final TemporaryPlace temporaryPlace = temporaryPlaceBuilder.init()
+                                                                   .build();
+
+        final Long temporaryPlaceId = temporaryPlace.getId();
 
         final CreatePlaceCommand createPlaceCommand = new CreatePlaceCommand("루터회관",
                                                                              "이곳은 루터회관이다 알겠냐",
@@ -71,11 +76,14 @@ class PlaceServiceTest {
                                          createPlaceCommand.imageUrl(),
                                          player);
 
+        final TemporaryPlace found = temporaryPlaceRepository.findById(temporaryPlaceId)
+                                                             .orElse(null);
+
         assertSoftly(softAssertions -> {
             assertThat(actual).usingRecursiveComparison()
                               .ignoringExpectedNullFields()
                               .isEqualTo(expected);
-            verify(temporaryPlaceService, times(1)).deleteById(temporaryPlaceId);
+            assertThat(found).isNull();
         });
     }
 
