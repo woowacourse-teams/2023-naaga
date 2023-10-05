@@ -58,6 +58,9 @@ class SettingActivity : AppCompatActivity() {
         binding.tvSettingUnlink.setOnClickListener {
             showWithdrawalDialog()
         }
+        binding.tvSettingInquiry.setOnClickListener {
+            sendEmail()
+        }
     }
 
     private fun navigateLogin() {
@@ -91,9 +94,21 @@ class SettingActivity : AppCompatActivity() {
         ).show(supportFragmentManager, LOGOUT)
     }
 
+    private fun sendEmail() {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.apply {
+            type = INTENT_TYPE
+            val emails = arrayOf(getString(R.string.setting_question_email))
+            putExtra(Intent.EXTRA_EMAIL, emails)
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.setting_question_email_title))
+            startActivity(this)
+        }
+    }
+
     companion object {
         private const val LOGOUT = "LOGOUT"
         private const val WITHDRAWAL = "WITHDRAWAL"
+        private const val INTENT_TYPE = "plain/text"
 
         private const val WRONG_AUTH_ERROR_CODE = 101
         private const val EXPIRATION_AUTH_ERROR_CODE = 102
