@@ -34,7 +34,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_dialog_permission_icon"
-            tools:text="@string/cameraDialog_description" />
+            tools:text="@string/permissionDialog_camera_description" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_dialog_permission_setting"
@@ -44,7 +44,7 @@
             android:layout_marginBottom="28dp"
             android:background="@drawable/bg_yellow_button"
             android:fontFamily="@font/pretendard_medium"
-            android:text="@string/locationDialog_setting"
+            android:text="@string/permissionDialog_setting"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
