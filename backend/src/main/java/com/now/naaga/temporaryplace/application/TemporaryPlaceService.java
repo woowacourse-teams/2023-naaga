@@ -55,7 +55,7 @@ public class TemporaryPlaceService {
     @Transactional(readOnly = true)
     public List<TemporaryPlace> findAllTemporaryPlace() {
         final List<TemporaryPlace> temporaryPlaces = temporaryPlaceRepository.findAll();
-        temporaryPlaces.sort(Comparator.comparing(TemporaryPlace::getCreatedAt));
+        temporaryPlaces.sort(Comparator.comparing(TemporaryPlace::getCreatedAt).reversed());
         return temporaryPlaces;
     }
 }
