@@ -22,7 +22,8 @@ import com.now.naaga.data.firebase.analytics.BEGIN_GO_UPLOAD
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
+import com.now.naaga.presentation.common.dialog.LocationPermissionDialog
+import com.now.naaga.presentation.common.dialog.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.setting.SettingActivity

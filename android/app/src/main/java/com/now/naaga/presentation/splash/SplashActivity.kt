@@ -14,8 +14,8 @@ import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.SPLASH_MY_PAGE_STATISTICS
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
+import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.login.LoginActivity
-import com.now.naaga.presentation.onadventure.NaagaAlertDialog
 import com.now.naaga.util.extension.getPackageInfoCompat
 import dagger.hilt.android.AndroidEntryPoint
 

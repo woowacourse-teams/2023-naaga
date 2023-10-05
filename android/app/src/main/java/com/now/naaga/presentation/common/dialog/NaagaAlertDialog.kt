@@ -1,4 +1,4 @@
-package com.now.naaga.presentation.onadventure
+package com.now.naaga.presentation.common.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -20,7 +20,7 @@ class NaagaAlertDialog private constructor() : DialogFragment() {
     private lateinit var positiveAction: () -> Unit
     private lateinit var negativeAction: () -> Unit
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = DialogNaagaAlertBinding.inflate(layoutInflater)
         return binding.root
     }
