@@ -43,7 +43,6 @@
             android:layout_marginBottom="28dp"
             android:background="@drawable/bg_yellow_button"
             android:text="@string/locationDialog_setting"
-            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
