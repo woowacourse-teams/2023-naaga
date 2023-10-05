@@ -15,6 +15,7 @@ import com.now.naaga.player.domain.Player;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
 import com.now.naaga.temporaryplace.presentation.dto.TemporaryPlaceResponse;
 import io.restassured.builder.MultiPartSpecBuilder;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +45,7 @@ import static org.mockito.Mockito.doReturn;
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class TemporaryPlaceControllerTest extends CommonControllerTest {
+class TemporaryPlaceCon정trollerTest extends CommonControllerTest {
 
     @Autowired
     private TemporaryPlaceBuilder temporaryPlaceBuilder;
@@ -57,9 +58,6 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
 
     @Autowired
     private AuthTokenGenerator authTokenGenerator;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @SpyBean
     private FileManager<MultipartFile> fileManager;
@@ -142,8 +140,7 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
                 .log().all()
                 .extract();
         final int statusCode = extract.statusCode();
-        final String jsonResponse = extract.body().asString();
-        final List<TemporaryPlaceResponse> actual = objectMapper.readValue(jsonResponse, new TypeReference<List<TemporaryPlaceResponse>>() {
+        final List<TemporaryPlaceResponse> actual = extract.as(new TypeRef<>() {
         });
         final List<TemporaryPlaceResponse> expected = TemporaryPlaceResponse.convertToResponses(List.of(temporaryPlace));
         //then
