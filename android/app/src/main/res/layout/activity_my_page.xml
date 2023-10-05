@@ -36,94 +36,69 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_default_large"
-                android:fontFamily="@font/pretendard_bold"
+                android:layout_marginBottom="@dimen/space_default_medium"
+                android:ellipsize="end"
                 android:includeFontPadding="false"
+                android:maxLines="1"
                 android:text="@{viewModel.rank.player.nickname}"
                 android:textColor="@color/white"
                 android:textSize="52sp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                app:layout_constraintEnd_toStartOf="@id/btn_mypage_adventure_results"
+                app:layout_constraintBottom_toTopOf="@id/rv_mypage_statistics"
+                app:layout_constraintEnd_toEndOf="@id/g_mypage"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_mypage_back"
                 tools:text="krrrrrrrrrrrrrrrrrong" />
 
-            <TextView
-                android:id="@+id/tv_mypage_rank"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/pretendard_bold"
-                android:text="@{@string/mypage_rank(viewModel.rank.rank)}"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="@id/tv_mypage_nickname"
-                app:layout_constraintTop_toBottomOf="@id/tv_mypage_nickname"
-                tools:text="28등" />
-
-            <TextView
-                android:id="@+id/tv_mypage_percent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:fontFamily="@font/pretendard_semibold"
-                android:text="@{@string/mypage_percentage(viewModel.rank.percent)}"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBaseline_toBaselineOf="@id/tv_mypage_rank"
-                app:layout_constraintStart_toEndOf="@id/tv_mypage_rank"
-                tools:text="(상위 12%)" />
-
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_mypage_adventure_results"
-                android:layout_width="wrap_content"
+                android:id="@+id/btn_mypage_adventure_history"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/rect_radius_small"
-                android:backgroundTint="@color/light_purple"
-                android:fontFamily="@font/pretendard_semibold"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:paddingHorizontal="@dimen/space_default_large"
+                android:background="@drawable/bg_yellow_button"
                 android:paddingVertical="16dp"
                 android:text="@string/mypage_adventure_record"
-                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_mypage_nickname"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/g_mypage"
+                app:layout_constraintTop_toTopOf="@id/tv_mypage_nickname" />
 
-            <com.now.naaga.presentation.mypage.MyPageCustomGrid
-                android:id="@+id/customGrid_mypage_statistics"
-                android:layout_width="match_parent"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_mypage_statistics"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rect_radius_small_white"
-                android:backgroundTint="@color/purple_white"
-                android:elevation="2dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_mypage_rank" />
+                android:layout_marginTop="@dimen/space_default_large"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/customGrid_mypage_places"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_mypage_nickname"
+                tools:itemCount="3"
+                tools:listitem="@layout/rv_mypage_item_adventure" />
 
-            <com.now.naaga.presentation.mypage.MyPageCustomGrid
+            <com.now.naaga.presentation.mypage.place.MyPageCustomGrid
                 android:id="@+id/customGrid_mypage_places"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/rect_radius_small_white"
-                android:backgroundTint="@color/purple_white"
-                android:elevation="2dp"
+                android:layout_margin="@dimen/space_default_large"
+                android:background="@drawable/rect_white_radius_small"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/customGrid_mypage_statistics" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_mypage_statistics" />
 
-            <ImageView
-                android:id="@+id/iv_mypage_setting"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g_mypage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="245dp"
+                android:layout_marginEnd="166dp"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_setting" />
+                app:layout_constraintGuide_begin="245dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

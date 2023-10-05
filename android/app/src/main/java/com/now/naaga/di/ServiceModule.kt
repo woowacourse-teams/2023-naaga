@@ -2,7 +2,7 @@ package com.now.naaga.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.now.naaga.BuildConfig
-import com.now.naaga.NaagaApplication
+import com.now.naaga.data.remote.retrofit.AuthInterceptor
 import com.now.naaga.data.remote.retrofit.service.AdventureService
 import com.now.naaga.data.remote.retrofit.service.AuthService
 import com.now.naaga.data.remote.retrofit.service.PlaceService
@@ -13,7 +13,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -26,24 +25,9 @@ class ServiceModule {
 
     @Singleton
     @Provides
-    fun createInterceptor(): Interceptor = Interceptor { chain ->
-        val token: String = NaagaApplication.authDataSource.getAccessToken() ?: ""
-        with(chain) {
-            val newRequest = request().newBuilder()
-                .addHeader("Authorization", "Bearer $token")
-                .addHeader("Content-Type", "application/json")
-                .build()
-            proceed(newRequest)
-        }
-    }
-
-    @Singleton
-    @Provides
-    fun createOkHttpClient(interceptor: Interceptor): OkHttpClient {
-        return OkHttpClient.Builder().apply {
-            addInterceptor(interceptor)
-        }.build()
-    }
+    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().apply {
+        addInterceptor(AuthInterceptor())
+    }.build()
 
     @Singleton
     @Provides

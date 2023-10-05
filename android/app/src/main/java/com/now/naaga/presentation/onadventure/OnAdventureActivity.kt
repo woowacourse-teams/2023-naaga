@@ -29,7 +29,7 @@ import com.now.naaga.presentation.adventureresult.AdventureResultActivity
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
-import com.now.naaga.util.getParcelableCompat
+import com.now.naaga.util.extension.getParcelableCompat
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -71,15 +71,15 @@ class OnAdventureActivity :
     }
 
     private fun setClickListeners() {
-        binding.ivOnAdventureGiveUp.setOnClickListener {
+        binding.clOnAdventureStop.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_GIVE_UP)
             showGiveUpDialog()
         }
-        binding.ivOnAdventurePhoto.setOnClickListener {
+        binding.clOnAdventureShowPhoto.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_POLAROID)
             showPolaroidDialog()
         }
-        binding.ivOnAdventureHint.setOnClickListener {
+        binding.clOnAdventureSearchDirection.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_HINT)
             showHintDialog()
         }
@@ -99,12 +99,13 @@ class OnAdventureActivity :
         viewModel.hints.observe(this) { hints ->
             drawHintMarkers(hints)
             binding.lottieOnAdventureLoading.visibility = View.GONE
+            showPolaroidDialog()
         }
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
         }
         viewModel.remainingHintCount.observe(this) {
-            binding.tvOnAdventureHintCount.text = it.toString()
+            // binding.tvOnAdventureHintCount.text = it.toString()
         }
         viewModel.error.observe(this) { error: DataThrowable ->
             logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())

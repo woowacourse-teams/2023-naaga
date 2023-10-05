@@ -25,7 +25,6 @@ import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
-import com.now.naaga.data.firebase.analytics.UPLOAD_SET_COORDINATE
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
@@ -97,7 +96,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 UploadStatus.PENDING -> { changeVisibility(binding.lottieUploadLoading, View.VISIBLE) }
                 UploadStatus.FAIL -> {
                     changeVisibility(binding.lottieUploadLoading, View.GONE)
-                    shortToast(MESSAGE_FAIL_UPLOAD)
+                    shortToast(getString(R.string.upload_fail_submit))
                 }
             }
         }
@@ -106,14 +105,10 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 UploadViewModel.ERROR_STORE_PHOTO -> {
                     shortToast(getString(R.string.upload_error_store_photo_message))
                 }
-
                 UploadViewModel.ALREADY_EXISTS_NEARBY -> {
                     shortToast(getString(R.string.upload_error_already_exists_nearby_message))
                 }
-
-                UploadViewModel.ERROR_POST_BODY -> {
-                    shortToast(getString(R.string.upload_error_post_message))
-                }
+                UploadViewModel.ERROR_POST_BODY -> { shortToast(getString(R.string.upload_error_post_message)) }
             }
         }
     }
@@ -140,11 +135,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             fusedLocationClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, createCancellationToken())
                 .addOnSuccessListener { location ->
-                    if (location != null) {
-                        val coordinate = getCoordinate(location)
-                        binding.tvUploadPhotoCoordinate.text = coordinate.toText()
-                        viewModel.setCoordinate(coordinate)
-                    }
+                    location.let { viewModel.setCoordinate(getCoordinate(location)) }
                 }
                 .addOnFailureListener { }
         }
@@ -178,16 +169,11 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
-
         binding.ivUploadPhoto.setOnClickListener {
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
-        binding.ivUploadPhotoCoordinate.setOnClickListener {
-            logClickEvent(getViewEntryName(it), UPLOAD_SET_COORDINATE)
-            checkLocationPermission()
-        }
-        binding.ivUploadClose.setOnClickListener {
+        binding.ivUploadBack.setOnClickListener {
             finish()
         }
         binding.btnUploadSubmit.setOnClickListener {
@@ -209,14 +195,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun openCamera() {
         cameraLauncher.launch(null)
-    }
-
-    private fun checkLocationPermission() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
-        } else {
-            setCoordinate()
-        }
     }
 
     private fun setImage(bitmap: Bitmap) {
@@ -259,18 +237,12 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         return viewModel.isFormValid()
     }
 
-    private fun Coordinate.toText(): String {
-        return "$latitude, $longitude"
-    }
-
     companion object {
         private val requestPermissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CAMERA,
         )
-
-        private const val MESSAGE_FAIL_UPLOAD = "장소등록에 실패했어요!"
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
