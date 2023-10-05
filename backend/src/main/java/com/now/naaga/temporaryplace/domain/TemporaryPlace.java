@@ -3,13 +3,8 @@ package com.now.naaga.temporaryplace.domain;
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Entity
@@ -28,7 +23,7 @@ public class TemporaryPlace extends BaseEntity {
 
     private String imageUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id")
     private Player registeredPlayer;
 
