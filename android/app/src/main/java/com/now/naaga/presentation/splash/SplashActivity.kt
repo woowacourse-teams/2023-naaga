@@ -1,5 +1,6 @@
 package com.now.naaga.presentation.splash
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.now.naaga.presentation.login.LoginActivity
 import com.now.naaga.util.extension.getPackageInfoCompat
 import dagger.hilt.android.AndroidEntryPoint
 
+@SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private val viewModel: SplashViewModel by viewModels()
