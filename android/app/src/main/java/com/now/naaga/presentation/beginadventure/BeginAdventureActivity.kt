@@ -17,7 +17,7 @@ import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.BEGIN_BEGIN_ADVENTURE
 import com.now.naaga.data.firebase.analytics.BEGIN_GO_MYPAGE
-import com.now.naaga.data.firebase.analytics.BEGIN_GO_RANK
+import com.now.naaga.data.firebase.analytics.BEGIN_GO_SETTING
 import com.now.naaga.data.firebase.analytics.BEGIN_GO_UPLOAD
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.throwable.DataThrowable
@@ -25,7 +25,7 @@ import com.now.naaga.databinding.ActivityBeginAdventureBinding
 import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
-import com.now.naaga.presentation.rank.RankActivity
+import com.now.naaga.presentation.setting.SettingActivity
 import com.now.naaga.presentation.upload.UploadActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -113,21 +113,21 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
     }
 
     private fun setClickListeners() {
-        binding.clBeginAdventureBegin.setOnClickListener {
+        binding.btnBeginAdventureBegin.setOnClickListener {
             logClickEvent(getViewEntryName(it), BEGIN_BEGIN_ADVENTURE)
             checkPermissionAndBeginAdventure()
         }
-        binding.ivBeginAdventureRank.setOnClickListener {
-            logClickEvent(getViewEntryName(it), BEGIN_GO_RANK)
-            startActivity(RankActivity.getIntent(this))
-        }
-        binding.ivBeginAdventureUpload.setOnClickListener {
+        binding.btnBeginAdventureUpload.setOnClickListener {
             logClickEvent(getViewEntryName(it), BEGIN_GO_UPLOAD)
             startActivity(UploadActivity.getIntent(this))
         }
-        binding.ivBeginAdventureMypage.setOnClickListener {
+        binding.btnBeginAdventureMyPage.setOnClickListener {
             logClickEvent(getViewEntryName(it), BEGIN_GO_MYPAGE)
             startActivity(MyPageActivity.getIntent(this))
+        }
+        binding.ivBeginAdventureSetting.setOnClickListener {
+            logClickEvent(getViewEntryName(it), BEGIN_GO_SETTING)
+            startActivity(SettingActivity.getIntent(this))
         }
     }
 
