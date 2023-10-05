@@ -9,7 +9,7 @@ public record CreateTemporaryPlaceCommand(Long playerId,
                                           String name,
                                           String description,
                                           Position position,
-                                          MultipartFile imageFile)  {
+                                          MultipartFile imageFile) {
 
     public static CreateTemporaryPlaceCommand of(final PlayerRequest playerRequest,
                                                  final CreateTemporaryPlaceRequest createTemporaryPlaceRequest) {

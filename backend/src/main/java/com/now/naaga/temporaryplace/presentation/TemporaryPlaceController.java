@@ -26,7 +26,7 @@ public class TemporaryPlaceController {
 
     @GetMapping
     public ResponseEntity<List<TemporaryPlaceResponse>> findAllTemporaryPlace() {
-        final List<TemporaryPlace> temporaryPlaces = temporaryPlaceService.findAllPlace();
+        final List<TemporaryPlace> temporaryPlaces = temporaryPlaceService.findAllTemporaryPlace();
         final List<TemporaryPlaceResponse> response = TemporaryPlaceResponse.convertToResponses(temporaryPlaces);
         return ResponseEntity
                 .status(HttpStatus.OK)
