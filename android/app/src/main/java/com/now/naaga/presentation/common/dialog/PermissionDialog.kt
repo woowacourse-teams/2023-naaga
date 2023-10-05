@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.now.naaga.R
@@ -33,22 +34,27 @@ class PermissionDialog(private val type: DialogType) :
     ): View {
         binding = DialogPermissionBinding.inflate(layoutInflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        initView()
+        return binding.root
+    }
 
+    private fun initView() {
+        binding.btnDialogPermissionSetting.text = getString(R.string.permissionDialog_setting)
         when (type) {
-            DialogType.CAMERA -> {
-                binding.ivDialogPermissionIcon.setImageDrawable(context?.getDrawable(R.drawable.ic_camera_dialog))
-                binding.btnDialogPermissionSetting.text = getString(R.string.locationDialog_setting)
-                binding.tvDialogPermissionDescription.text = getString(R.string.cameraDialog_description)
+            DialogType.LOCATION -> {
+                binding.ivDialogPermissionIcon.setImageDrawable(
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_location_dialog),
+                )
+                binding.tvDialogPermissionDescription.text = getString(R.string.permissionDialog_location_description)
             }
 
-            DialogType.LOCATION -> {
-                binding.ivDialogPermissionIcon.setImageDrawable(context?.getDrawable(R.drawable.ic_location_dialog))
-                binding.btnDialogPermissionSetting.text = getString(R.string.locationDialog_setting)
-                binding.tvDialogPermissionDescription.text = getString(R.string.locationDialog_description)
+            DialogType.CAMERA -> {
+                binding.ivDialogPermissionIcon.setImageDrawable(
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_camera_dialog),
+                )
+                binding.tvDialogPermissionDescription.text = getString(R.string.permissionDialog_camera_description)
             }
         }
-
-        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
