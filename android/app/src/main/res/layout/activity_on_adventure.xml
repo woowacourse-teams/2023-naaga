@@ -23,7 +23,6 @@
             android:layout_height="match_parent"
             android:padding="80dp"
             android:elevation="4dp"
-            android:visibility="gone"
             android:background="@color/main_gray_opacity_medium"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
