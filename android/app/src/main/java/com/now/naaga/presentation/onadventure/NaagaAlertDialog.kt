@@ -71,6 +71,7 @@ class NaagaAlertDialog private constructor() : DialogFragment() {
     }
 
     class Builder() {
+        private var isCancelable = true
 
         fun build(
             title: String,
@@ -87,7 +88,13 @@ class NaagaAlertDialog private constructor() : DialogFragment() {
                 this.negativeText = negativeText
                 this.positiveAction = positiveAction
                 this.negativeAction = negativeAction
+                this.isCancelable = this@Builder.isCancelable
             }
+        }
+
+        fun setIsCancelable(isCancelable: Boolean): Builder {
+            this.isCancelable = isCancelable
+            return this
         }
     }
 
