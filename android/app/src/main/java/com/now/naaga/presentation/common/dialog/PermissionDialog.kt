@@ -1,8 +1,7 @@
 package com.now.naaga.presentation.common.dialog
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -11,27 +10,51 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
+import com.now.naaga.data.firebase.analytics.CAMERA_PERMISSION_OPEN_SETTING
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
-import com.now.naaga.data.firebase.analytics.LOCATION_PERMISSION_OPEN_SETTING
-import com.now.naaga.databinding.DialogLocationPermissionBinding
+import com.now.naaga.databinding.DialogPermissionBinding
 import com.now.naaga.util.dpToPx
 import com.now.naaga.util.getWidthProportionalToDevice
 
-class LocationPermissionDialog : DialogFragment(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
-    private lateinit var binding: DialogLocationPermissionBinding
+class PermissionDialog(private val type: DialogType) :
+    DialogFragment(),
+    AnalyticsDelegate by DefaultAnalyticsDelegate() {
+    private lateinit var binding: DialogPermissionBinding
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = DialogLocationPermissionBinding.inflate(layoutInflater)
+        binding = DialogPermissionBinding.inflate(layoutInflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        initView()
         return binding.root
+    }
+
+    private fun initView() {
+        binding.btnDialogPermissionSetting.text = getString(R.string.permissionDialog_setting)
+        when (type) {
+            DialogType.LOCATION -> {
+                binding.ivDialogPermissionIcon.setImageDrawable(
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_location_dialog),
+                )
+                binding.tvDialogPermissionDescription.text = getString(R.string.permissionDialog_location_description)
+            }
+
+            DialogType.CAMERA -> {
+                binding.ivDialogPermissionIcon.setImageDrawable(
+                    AppCompatResources.getDrawable(requireContext(), R.drawable.ic_camera_dialog),
+                )
+                binding.tvDialogPermissionDescription.text = getString(R.string.permissionDialog_camera_description)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,10 +64,9 @@ class LocationPermissionDialog : DialogFragment(), AnalyticsDelegate by DefaultA
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkPermission()
         setSize()
-        binding.btnDialogLocationSetting.setOnClickListener {
-            logClickEvent(requireContext().getViewEntryName(it), LOCATION_PERMISSION_OPEN_SETTING)
+        binding.btnDialogPermissionSetting.setOnClickListener {
+            logClickEvent(requireContext().getViewEntryName(it), CAMERA_PERMISSION_OPEN_SETTING)
             openSetting()
             dismiss()
         }
@@ -64,27 +86,12 @@ class LocationPermissionDialog : DialogFragment(), AnalyticsDelegate by DefaultA
         startActivity(appDetailsIntent)
     }
 
-    private fun checkPermission() {
-        if (checkSelfPermission(requireContext(), ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED) {
-            setDescription(true)
-            return
-        }
-        setDescription(false)
-    }
-
-    private fun setDescription(isApproximateAccessGranted: Boolean) {
-        val description: String = if (isApproximateAccessGranted) {
-            getString(R.string.locationDialog_approximate_description)
-        } else {
-            getString(R.string.locationDialog_description)
-        }
-
-        binding.tvDialogLocationDescription.text = description
+    fun show(manager: FragmentManager) {
+        show(manager, type.name)
     }
 
     companion object {
         const val WIDTH_RATE = 0.83f
         const val HEIGHT = 400
-        const val TAG_LOCATION_DIALOG = "LOCATION"
     }
 }

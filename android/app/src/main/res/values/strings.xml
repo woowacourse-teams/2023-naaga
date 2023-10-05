@@ -10,10 +10,11 @@
     <string name="beginAdventure_my_page">나의 모험</string>
     <string name="beginAdventure_continue_adventure">이어 하기</string>
 
-    <!-- LocationDialog-->
-    <string name="locationDialog_setting">설정으로 이동해요</string>
-    <string name="locationDialog_description">나아가 서비스를 이용하기 위해서는\n위치에 엑세스할 권한을\n부여해주셔야 해요</string>
-    <string name="locationDialog_approximate_description">대략적인 위치 권한만 허용되었어요\n나아가 서비스를 이용하기 위해서는\n정확한 위치 권한을\n부여해주셔야 해요</string>
+    <!-- PermissionDialog-->
+    <string name="permissionDialog_setting">설정으로 이동해요</string>
+    <string name="permissionDialog_location_description">나아가 서비스를 이용하기 위해서는\n위치 권한을 부여해주셔야 해요</string>
+    <string name="permissionDialog_approximate_description">대략적인 위치 권한만 허용되었어요\n나아가 서비스를 이용하기 위해서는\n정확한 위치 권한을\n부여해주셔야 해요</string>
+    <string name="permissionDialog_camera_description">장소를 올리기 위해서는\n카메라 접근 권한이 필요해요!</string>
 
     <!--OnAdventureActivity-->
     <string name="onAdventure_loading_photo">사진을 로딩 중이에요</string>
@@ -66,9 +67,6 @@
     <string name="upload_error_already_exists_nearby_message">근방에 다른 미션장소가 존재해서 추가할 수 없어요!</string>
     <string name="upload_error_post_message">전송에 실패했어요! 다시 시도해주세요!</string>
     <string name="upload_error_insufficient_info_message">모든 정보를 입력해주세요.</string>
-
-    <!-- CameraDialog-->
-    <string name="cameraDialog_description">장소를 올리기 위해서는\n카메라 접근 권한이 필요해요!</string>
 
     <!-- AdventureHistoryActivity -->
     <string name="history_title">모험 기록</string>

@@ -22,8 +22,8 @@ import com.now.naaga.data.firebase.analytics.BEGIN_GO_UPLOAD
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
-import com.now.naaga.presentation.common.dialog.LocationPermissionDialog
-import com.now.naaga.presentation.common.dialog.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
+import com.now.naaga.presentation.common.dialog.DialogType
+import com.now.naaga.presentation.common.dialog.PermissionDialog
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.setting.SettingActivity
@@ -134,7 +134,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
     private fun checkPermissionAndBeginAdventure() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
+            PermissionDialog(DialogType.LOCATION).show(supportFragmentManager)
         } else {
             checkLocationPermissionInStatusBar()
         }

@@ -27,10 +27,8 @@ import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
-import com.now.naaga.presentation.common.dialog.CameraPermissionDialog
-import com.now.naaga.presentation.common.dialog.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
-import com.now.naaga.presentation.common.dialog.LocationPermissionDialog
-import com.now.naaga.presentation.common.dialog.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
+import com.now.naaga.presentation.common.dialog.DialogType
+import com.now.naaga.presentation.common.dialog.PermissionDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -54,11 +52,11 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             if (isGranted.not()) {
                 when (entry.key) {
                     Manifest.permission.CAMERA -> {
-                        CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+                        PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
                     }
 
                     Manifest.permission.ACCESS_FINE_LOCATION -> {
-                        LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
+                        PermissionDialog(DialogType.LOCATION).show(supportFragmentManager)
                     }
                 }
             }
@@ -202,7 +200,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun checkCameraPermission() {
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+            PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
         } else {
             openCamera()
         }
