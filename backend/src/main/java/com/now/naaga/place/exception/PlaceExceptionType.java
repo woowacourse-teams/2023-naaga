@@ -22,7 +22,6 @@ public enum PlaceExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "이미 주변에 장소가 존재합니다."
     ),
-
     ;
 
     private final int errorCode;
