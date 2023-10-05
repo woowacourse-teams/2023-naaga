@@ -91,6 +91,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             when (uploadStatus) {
                 UploadStatus.SUCCESS -> {
                     changeVisibility(binding.lottieUploadLoading, View.GONE)
+                    shortToast(getString(R.string.upload_success_submit))
                     finish()
                 }
                 UploadStatus.PENDING -> { changeVisibility(binding.lottieUploadLoading, View.VISIBLE) }
