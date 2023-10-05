@@ -20,7 +20,7 @@ public class ManagerAuthInterceptor implements HandlerInterceptor {
 
     public static final int AUTH_HEADER_INFO_SIZE = 2;
 
-    public static final String AUTH_HEADER_TYPE = "Basic ";
+    public static final String AUTH_HEADER_TYPE = "Basic";
 
     @Value("${manager.id}")
     private String id;
@@ -41,12 +41,12 @@ public class ManagerAuthInterceptor implements HandlerInterceptor {
         if (header == null) {
             throw new AuthException(NOT_EXIST_HEADER);
         }
-        final String decodedHeader = new String(Base64.getDecoder().decode(header));
-        if (!decodedHeader.startsWith(AUTH_HEADER_TYPE)) {
+        final String[] authHeader = header.split(" ");
+        if (!AUTH_HEADER_TYPE.equalsIgnoreCase(authHeader[0])) {
             throw new AuthException(INVALID_HEADER);
         }
-        final String decodedHeaderWithoutType = decodedHeader.replace(AUTH_HEADER_TYPE, "");
-        final String[] idAndPassword = decodedHeaderWithoutType.split(":");
+        final String decodedHeader = new String(Base64.getDecoder().decode(authHeader[1]));
+        final String[] idAndPassword = decodedHeader.split(":");
         if (idAndPassword.length != AUTH_HEADER_INFO_SIZE) {
             throw new AuthException(INVALID_HEADER);
         }
