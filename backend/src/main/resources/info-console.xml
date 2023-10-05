@@ -1,0 +1,16 @@
+<included>
+    <appender name="INFO_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <file>./logs/info.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <charset>utf8</charset>
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%X{request_id}] [%logger{1}] - %message %n
+            </pattern>
+        </encoder>
+    </appender>
+</included>

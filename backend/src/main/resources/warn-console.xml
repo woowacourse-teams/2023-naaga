@@ -1,0 +1,16 @@
+<included>
+    <appender name="WARN_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <file>./logs/warn.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <charset>utf8</charset>
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%X{request_id}] [%logger{1}] - %message %n
+            </pattern>
+        </encoder>
+    </appender>
+</included>
