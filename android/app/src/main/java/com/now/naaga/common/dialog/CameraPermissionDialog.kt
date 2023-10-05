@@ -1,4 +1,4 @@
-package com.now.naaga.presentation.upload
+package com.now.naaga.common.dialog
 
 import android.content.Intent
 import android.graphics.Color
@@ -14,7 +14,6 @@ import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.CAMERA_PERMISSION_OPEN_SETTING
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.databinding.DialogCameraPermissionBinding
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
 import com.now.naaga.util.dpToPx
 import com.now.naaga.util.getWidthProportionalToDevice
 

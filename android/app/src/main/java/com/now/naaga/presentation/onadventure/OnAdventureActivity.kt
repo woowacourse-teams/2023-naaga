@@ -16,6 +16,7 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.naaga.R
+import com.now.naaga.common.dialog.NaagaAlertDialog
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_END_ADVENTURE

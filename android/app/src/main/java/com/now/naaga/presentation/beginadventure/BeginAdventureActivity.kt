@@ -14,6 +14,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.AdventureStatus
 import com.now.naaga.R
+import com.now.naaga.common.dialog.LocationPermissionDialog
+import com.now.naaga.common.dialog.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.BEGIN_BEGIN_ADVENTURE
 import com.now.naaga.data.firebase.analytics.BEGIN_GO_MYPAGE
@@ -22,7 +24,6 @@ import com.now.naaga.data.firebase.analytics.BEGIN_GO_UPLOAD
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.setting.SettingActivity

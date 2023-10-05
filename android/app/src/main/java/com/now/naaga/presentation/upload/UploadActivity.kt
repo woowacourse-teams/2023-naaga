@@ -22,14 +22,15 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
+import com.now.naaga.common.dialog.CameraPermissionDialog
+import com.now.naaga.common.dialog.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
+import com.now.naaga.common.dialog.LocationPermissionDialog
+import com.now.naaga.common.dialog.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
-import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

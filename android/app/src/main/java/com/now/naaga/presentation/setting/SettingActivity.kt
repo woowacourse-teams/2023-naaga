@@ -7,10 +7,10 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.R
+import com.now.naaga.common.dialog.NaagaAlertDialog
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivitySettingBinding
 import com.now.naaga.presentation.login.LoginActivity
-import com.now.naaga.presentation.onadventure.NaagaAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

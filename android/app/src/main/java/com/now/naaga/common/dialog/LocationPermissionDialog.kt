@@ -1,4 +1,4 @@
-package com.now.naaga.presentation.beginadventure
+package com.now.naaga.common.dialog
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.content.Intent
