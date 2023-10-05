@@ -127,8 +127,9 @@
             android:layout_marginTop="@dimen/space_default_large"
             android:layout_marginBottom="@dimen/space_default_large"
             android:background="@drawable/bg_yellow_button"
+            android:paddingVertical="@dimen/space_default_medium"
             android:text="@string/upload_submit"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
