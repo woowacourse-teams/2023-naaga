@@ -25,7 +25,6 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-        setTheme(R.style.Theme_Naaga)
         super.onCreate(savedInstanceState)
         registerAnalytics(this.lifecycle)
         updateCheck()
