@@ -1,8 +1,6 @@
 package com.now.naaga.temporaryplace.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
@@ -45,7 +43,7 @@ import static org.mockito.Mockito.doReturn;
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class TemporaryPlaceCon정trollerTest extends CommonControllerTest {
+class TemporaryPlaceControllerTest extends CommonControllerTest {
 
     @Autowired
     private TemporaryPlaceBuilder temporaryPlaceBuilder;
@@ -119,7 +117,7 @@ class TemporaryPlaceCon정trollerTest extends CommonControllerTest {
             softAssertions.assertThat(location).isEqualTo("/temporary-places/" + actual.id());
             softAssertions.assertThat(actual)
                     .usingRecursiveComparison()
-                    .ignoringFields("id", "imageUrl", "playerId")
+                    .ignoringFields("id", "imageUrl", "registeredPlayerId")
                     .isEqualTo(expected);
         });
     }

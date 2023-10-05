@@ -11,7 +11,7 @@ public record TemporaryPlaceResponse(Long id,
                                      CoordinateResponse coordinate,
                                      String imageUrl,
                                      String description,
-                                     Long playerId
+                                     Long registeredPlayerId
 
 ) {
 
