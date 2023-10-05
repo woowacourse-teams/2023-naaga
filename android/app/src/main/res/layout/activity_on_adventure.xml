@@ -267,6 +267,7 @@
                     android:layout_height="match_parent"
                     android:text="@string/onAdventure_end_adventure"
                     android:background="@drawable/bg_yellow_button"
+                    android:layout_margin="8dp"
                     android:visibility="@{viewModel.isNearby() ? View.VISIBLE : View.GONE}"
                     android:textSize="20sp" />
 
