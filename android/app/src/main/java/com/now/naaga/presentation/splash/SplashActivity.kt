@@ -55,7 +55,7 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun showUpdateDialog() {
         NaagaAlertDialog.Builder()
-            .setIsCancelable(false)
+            .setCancelable(false)
             .build(
                 title = getString(R.string.confirm_dialog_title),
                 description = getString(R.string.confirm_dialog_description),

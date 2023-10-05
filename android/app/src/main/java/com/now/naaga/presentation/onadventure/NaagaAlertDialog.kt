@@ -62,14 +62,6 @@ class NaagaAlertDialog private constructor() : DialogFragment() {
         binding.tvAlertDialogNegative.text = negativeText
     }
 
-    fun setPositiveButton(action: () -> Unit) {
-        positiveAction = action
-    }
-
-    fun setNegativeButton(action: () -> Unit) {
-        negativeAction = action
-    }
-
     class Builder() {
         private var isCancelable = true
 
@@ -92,7 +84,7 @@ class NaagaAlertDialog private constructor() : DialogFragment() {
             }
         }
 
-        fun setIsCancelable(isCancelable: Boolean): Builder {
+        fun setCancelable(isCancelable: Boolean): Builder {
             this.isCancelable = isCancelable
             return this
         }
