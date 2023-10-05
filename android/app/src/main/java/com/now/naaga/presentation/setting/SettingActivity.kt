@@ -100,7 +100,7 @@ class SettingActivity : AppCompatActivity() {
             type = INTENT_TYPE
             val emails = arrayOf(getString(R.string.setting_question_email))
             putExtra(Intent.EXTRA_EMAIL, emails)
-            putExtra(Intent.EXTRA_SUBJECT, TITLE)
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.setting_question_email_title))
             startActivity(this)
         }
     }
@@ -109,7 +109,6 @@ class SettingActivity : AppCompatActivity() {
         private const val LOGOUT = "LOGOUT"
         private const val WITHDRAWAL = "WITHDRAWAL"
         private const val INTENT_TYPE = "plain/text"
-        private const val TITLE = "[나아가에게 문의하기]"
 
         private const val WRONG_AUTH_ERROR_CODE = 101
         private const val EXPIRATION_AUTH_ERROR_CODE = 102
