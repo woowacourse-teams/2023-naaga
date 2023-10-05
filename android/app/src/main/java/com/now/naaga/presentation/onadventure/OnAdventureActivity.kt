@@ -99,6 +99,7 @@ class OnAdventureActivity :
         viewModel.hints.observe(this) { hints ->
             drawHintMarkers(hints)
             binding.lottieOnAdventureLoading.visibility = View.GONE
+            showPolaroidDialog()
         }
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
