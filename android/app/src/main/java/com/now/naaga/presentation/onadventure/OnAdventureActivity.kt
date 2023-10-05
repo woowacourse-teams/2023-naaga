@@ -71,15 +71,15 @@ class OnAdventureActivity :
     }
 
     private fun setClickListeners() {
-        binding.ivOnAdventureGiveUp.setOnClickListener {
+        binding.clOnAdventureStop.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_GIVE_UP)
             showGiveUpDialog()
         }
-        binding.ivOnAdventurePhoto.setOnClickListener {
+        binding.clOnAdventureShowPhoto.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_POLAROID)
             showPolaroidDialog()
         }
-        binding.ivOnAdventureHint.setOnClickListener {
+        binding.clOnAdventureSearchDirection.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_HINT)
             showHintDialog()
         }
@@ -105,7 +105,7 @@ class OnAdventureActivity :
             drawHintMarkers(listOf(it))
         }
         viewModel.remainingHintCount.observe(this) {
-            binding.tvOnAdventureHintCount.text = it.toString()
+            // binding.tvOnAdventureHintCount.text = it.toString()
         }
         viewModel.error.observe(this) { error: DataThrowable ->
             logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
