@@ -77,7 +77,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="64sp"
                     android:layout_marginStart="24dp"
-                    android:text="@{@string/onAdventure_left_distance(viewModel.distance)}"
+                    android:text="@{viewModel.distance == null ? String.valueOf(0) : String.valueOf(viewModel.distance)}"
                     tools:text="172" />
 
                 <TextView
