@@ -1,6 +1,6 @@
 <included>
     <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/info.log</file>
+        <file>/home/ubuntu/logs/info.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
             <onMatch>ACCEPT</onMatch>

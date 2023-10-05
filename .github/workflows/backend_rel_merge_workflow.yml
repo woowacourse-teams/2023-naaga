@@ -1,12 +1,12 @@
-name: NAAGA BACKEND PRODUCT SERVER MERGE CI/CD
+name: NAAGA BACKEND RELEASE SERVER MERGE CI/CD
 
 on:
   push:
     branches:
-      - main
+      - release/**
     paths:
       - backend/**
-
+      
 jobs:
   deploy:
     runs-on: naaga
@@ -51,11 +51,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
-
-      - name: merge main -> dev_backend
+          
+      - name: merge release -> dev_backend
         uses: devmasx/merge-branch@master
         with:
           type: now
-          from_branch: main
           target_branch: dev_backend
           github_token: ${{ secrets.GITHUB_TOKEN }}
