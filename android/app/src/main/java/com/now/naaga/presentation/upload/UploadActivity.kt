@@ -22,13 +22,13 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
-import com.now.naaga.common.dialog.DialogType
-import com.now.naaga.common.dialog.PermissionDialog
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
+import com.now.naaga.presentation.common.dialog.DialogType
+import com.now.naaga.presentation.common.dialog.PermissionDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,12 +53,10 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 when (entry.key) {
                     Manifest.permission.CAMERA -> {
                         PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
-//                        CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
                     }
 
                     Manifest.permission.ACCESS_FINE_LOCATION -> {
                         PermissionDialog(DialogType.LOCATION).show(supportFragmentManager)
-//                        LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
                     }
                 }
             }
@@ -94,7 +92,11 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                     changeVisibility(binding.lottieUploadLoading, View.GONE)
                     finish()
                 }
-                UploadStatus.PENDING -> { changeVisibility(binding.lottieUploadLoading, View.VISIBLE) }
+
+                UploadStatus.PENDING -> {
+                    changeVisibility(binding.lottieUploadLoading, View.VISIBLE)
+                }
+
                 UploadStatus.FAIL -> {
                     changeVisibility(binding.lottieUploadLoading, View.GONE)
                     shortToast(getString(R.string.upload_fail_submit))
@@ -106,18 +108,27 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 UploadViewModel.ERROR_STORE_PHOTO -> {
                     shortToast(getString(R.string.upload_error_store_photo_message))
                 }
+
                 UploadViewModel.ALREADY_EXISTS_NEARBY -> {
                     shortToast(getString(R.string.upload_error_already_exists_nearby_message))
                 }
-                UploadViewModel.ERROR_POST_BODY -> { shortToast(getString(R.string.upload_error_post_message)) }
+
+                UploadViewModel.ERROR_POST_BODY -> {
+                    shortToast(getString(R.string.upload_error_post_message))
+                }
             }
         }
     }
 
     private fun changeVisibility(view: View, status: Int) {
         when (status) {
-            View.VISIBLE -> { view.visibility = status }
-            View.GONE -> { view.visibility = status }
+            View.VISIBLE -> {
+                view.visibility = status
+            }
+
+            View.GONE -> {
+                view.visibility = status
+            }
         }
     }
 

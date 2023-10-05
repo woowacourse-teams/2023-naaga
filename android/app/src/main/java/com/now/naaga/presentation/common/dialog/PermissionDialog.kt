@@ -1,4 +1,4 @@
-package com.now.naaga.common.dialog
+package com.now.naaga.presentation.common.dialog
 
 import android.annotation.SuppressLint
 import android.content.Intent

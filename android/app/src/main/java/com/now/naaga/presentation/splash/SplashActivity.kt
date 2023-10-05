@@ -10,11 +10,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.now.naaga.R
-import com.now.naaga.common.dialog.ConfirmDialog
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.SPLASH_MY_PAGE_STATISTICS
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
+import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.login.LoginActivity
 import com.now.naaga.util.extension.getPackageInfoCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,14 +54,16 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun showUpdateDialog() {
-        ConfirmDialog.Builder().build(
-            title = getString(R.string.confirm_dialog_title),
-            description = getString(R.string.confirm_dialog_description),
-            positiveText = getString(R.string.confirm_dialog_positive_text),
-            negativeText = getString(R.string.confirm_dialog_negative_text),
-            positiveAction = ::navigateToPlayStore,
-            negativeAction = ::finish,
-        ).show(supportFragmentManager, TAG_CONFIRM_DIALOG)
+        NaagaAlertDialog.Builder()
+            .setCancelable(false)
+            .build(
+                title = getString(R.string.confirm_dialog_title),
+                description = getString(R.string.confirm_dialog_description),
+                positiveText = getString(R.string.confirm_dialog_positive_text),
+                negativeText = getString(R.string.confirm_dialog_negative_text),
+                positiveAction = ::navigateToPlayStore,
+                negativeAction = ::finish,
+            ).show(supportFragmentManager, TAG_CONFIRM_DIALOG)
     }
 
     private fun navigateToPlayStore() {
