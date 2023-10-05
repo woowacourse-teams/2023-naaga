@@ -23,7 +23,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +39,7 @@ import static com.now.naaga.common.fixture.TemporaryPlaceFixture.TEMPORARY_PLACE
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doReturn;
 
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
@@ -61,7 +61,7 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @SpyBean
     private FileManager<MultipartFile> fileManager;
 
     @Value("${manager.id}")
@@ -84,8 +84,8 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
         final String accessToken = generate.getAccessToken();
         final TemporaryPlace temporaryPlace = TEMPORARY_PLACE();
 
-        when(fileManager.save(any())).thenReturn(new File("/임시경로", "이미지.png"));
-
+        doReturn(new File("/임시경로", "이미지.png")).when(fileManager)
+                .save(any());
         //when
         final ExtractableResponse<Response> extract = given()
                 .log().all()
@@ -121,7 +121,7 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
             softAssertions.assertThat(location).isEqualTo("/temporary-places/" + actual.id());
             softAssertions.assertThat(actual)
                     .usingRecursiveComparison()
-                    .ignoringFields("id", "imageUrl")
+                    .ignoringFields("id", "imageUrl", "playerId")
                     .isEqualTo(expected);
         });
     }

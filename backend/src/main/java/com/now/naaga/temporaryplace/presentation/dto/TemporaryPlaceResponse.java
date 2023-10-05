@@ -10,7 +10,8 @@ public record TemporaryPlaceResponse(Long id,
                                      String name,
                                      CoordinateResponse coordinate,
                                      String imageUrl,
-                                     String description
+                                     String description,
+                                     Long playerId
 
 ) {
 
@@ -21,7 +22,8 @@ public record TemporaryPlaceResponse(Long id,
                 savedTemporaryPlace.getName(),
                 coordinateResponse,
                 savedTemporaryPlace.getImageUrl(),
-                savedTemporaryPlace.getDescription()
+                savedTemporaryPlace.getDescription(),
+                savedTemporaryPlace.getRegisteredPlayer().getId()
         );
     }
 
