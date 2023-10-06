@@ -10,11 +10,11 @@ import java.util.Objects;
 @Entity
 public class Letter extends BaseEntity {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id")
     private Player registeredPlayer;
 

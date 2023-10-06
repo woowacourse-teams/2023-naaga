@@ -59,5 +59,4 @@ public class LetterBuilder {
         return playerBuilder.init()
                 .build();
     }
-
 }
