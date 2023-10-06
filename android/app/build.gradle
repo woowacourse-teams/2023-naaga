@@ -20,8 +20,8 @@ android {
         applicationId "com.now.naaga"
         minSdk 28
         targetSdk 33
-        versionCode 4
-        versionName "1.0.1"
+        versionCode 5
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "com.now.naaga.HiltTestRunner"
@@ -34,6 +34,8 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            ndk.debugSymbolLevel 'FULL'
         }
     }
     compileOptions {
