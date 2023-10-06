@@ -1,81 +1,83 @@
 package com.now.naaga.presentation.upload
 
-import android.app.Application
-import android.content.Context
-import android.net.Uri
-import android.provider.MediaStore
-import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Coordinate
-import com.now.domain.model.Place
 import com.now.domain.repository.PlaceRepository
+import com.now.naaga.data.throwable.DataThrowable
+import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
+import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
+import com.now.naaga.util.MutableSingleLiveData
+import com.now.naaga.util.SingleLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UploadViewModel(
-    private val application: Application,
+@HiltViewModel
+class UploadViewModel @Inject constructor(
     private val placeRepository: PlaceRepository,
 ) : ViewModel() {
-    private var imageUri: Uri = Uri.EMPTY
-    private var coordinate = DEFAULT_COORDINATE
+    private var imageUri: String = URI_EMPTY
 
-    private val _name = MutableLiveData<String>()
-    val title: LiveData<String> = _name
+    val name = MutableLiveData<String>()
 
-    private val _description = MutableLiveData<String>()
-    val description: LiveData<String> = _description
+    private val _successUpload = MutableSingleLiveData<UploadStatus>()
+    val successUpload: SingleLiveData<UploadStatus> = _successUpload
 
-    fun setTitle(editTitle: Editable) {
-        _name.value = editTitle.toString()
-    }
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
-    fun setDescription(editTitle: Editable) {
-        _description.value = editTitle.toString()
-    }
+    private val _coordinate = MutableLiveData<Coordinate>()
+    val coordinate: LiveData<Coordinate> = _coordinate
 
-    fun setUri(uri: Uri) {
+    fun setUri(uri: String) {
         imageUri = uri
     }
 
     fun setCoordinate(coordinate: Coordinate) {
-        this.coordinate = coordinate
+        _coordinate.value = coordinate
     }
 
-    fun hasUri(): Boolean {
-        return imageUri != Uri.EMPTY
-    }
-
-    fun hasCoordinate(): Boolean {
-        return coordinate != DEFAULT_COORDINATE
+    fun isFormValid(): Boolean {
+        return (imageUri != URI_EMPTY) && (_coordinate.value != null) && (name.value != null)
     }
 
     fun postPlace() {
-        placeRepository.postPlace(
-            name = _name.value.toString(),
-            description = _description.value.toString(),
-            coordinate = coordinate,
-            image = getAbsolutePathFromUri(application.applicationContext, imageUri) ?: "",
-            callback = { result: Result<Place> ->
-                result
-                    .onSuccess { }
-                    .onFailure { }
-            },
-        )
-    }
-
-    private fun getAbsolutePathFromUri(context: Context, uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = context.contentResolver.query(uri, projection, null, null, null)
-        cursor?.use {
-            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            if (it.moveToFirst()) {
-                return it.getString(columnIndex)
+        _coordinate.value?.let { coordinate ->
+            _successUpload.setValue(UploadStatus.PENDING)
+            viewModelScope.launch {
+                runCatching {
+                    placeRepository.postPlace(
+                        name = name.value.toString(),
+                        description = "",
+                        coordinate = coordinate,
+                        image = imageUri,
+                    )
+                }.onSuccess {
+                    _successUpload.setValue(UploadStatus.SUCCESS)
+                }.onFailure {
+                    _successUpload.setValue(UploadStatus.FAIL)
+                    setError(it as DataThrowable)
+                }
             }
         }
-        return null
+    }
+
+    private fun setError(throwable: DataThrowable) {
+        when (throwable) {
+            is UniversalThrowable -> _throwable.value = throwable
+            is PlaceThrowable -> _throwable.value = throwable
+            else -> {}
+        }
     }
 
     companion object {
-        val DEFAULT_COORDINATE = Coordinate(-1.0, -1.0)
+        const val URI_EMPTY = "EMPTY"
+
+        const val ALREADY_EXISTS_NEARBY = 505
+        const val ERROR_STORE_PHOTO = 215
+        const val ERROR_POST_BODY = 205
     }
 }

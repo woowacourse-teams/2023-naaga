@@ -7,30 +7,34 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.now.domain.model.Coordinate
+import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
-import com.now.naaga.data.firebase.analytics.UPLOAD_SET_COORDINATE
-import com.now.naaga.data.repository.DefaultPlaceRepository
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
-import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
+import com.now.naaga.presentation.common.dialog.DialogType
+import com.now.naaga.presentation.common.dialog.PermissionDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityUploadBinding
-    private lateinit var viewModel: UploadViewModel
+    private val viewModel: UploadViewModel by viewModels()
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicturePreview(),
@@ -48,11 +52,11 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             if (isGranted.not()) {
                 when (entry.key) {
                     Manifest.permission.CAMERA -> {
-                        CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+                        PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
                     }
 
                     Manifest.permission.ACCESS_FINE_LOCATION -> {
-                        LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
+                        PermissionDialog(DialogType.LOCATION).show(supportFragmentManager)
                     }
                 }
             }
@@ -66,6 +70,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         setContentView(binding.root)
 
         initViewModel()
+        subscribe()
         registerAnalytics(this.lifecycle)
         requestPermission()
         setCoordinate()
@@ -73,12 +78,59 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun initViewModel() {
-        val repository = DefaultPlaceRepository()
-        val factory = UploadFactory(application, repository)
-        viewModel = ViewModelProvider(this, factory)[UploadViewModel::class.java]
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        setClickListeners()
+    }
+
+    private fun subscribe() {
+        viewModel.coordinate.observe(this) {
+            binding.lottieUploadLoading.visibility = View.GONE
+        }
+        viewModel.successUpload.observe(this) { uploadStatus ->
+            when (uploadStatus) {
+                UploadStatus.SUCCESS -> {
+                    changeVisibility(binding.lottieUploadLoading, View.GONE)
+                    shortToast(getString(R.string.upload_success_submit))
+                    finish()
+                }
+
+                UploadStatus.PENDING -> {
+                    changeVisibility(binding.lottieUploadLoading, View.VISIBLE)
+                }
+
+                UploadStatus.FAIL -> {
+                    changeVisibility(binding.lottieUploadLoading, View.GONE)
+                    shortToast(getString(R.string.upload_fail_submit))
+                }
+            }
+        }
+        viewModel.throwable.observe(this) { error: DataThrowable ->
+            when (error.code) {
+                UploadViewModel.ERROR_STORE_PHOTO -> {
+                    shortToast(getString(R.string.upload_error_store_photo_message))
+                }
+
+                UploadViewModel.ALREADY_EXISTS_NEARBY -> {
+                    shortToast(getString(R.string.upload_error_already_exists_nearby_message))
+                }
+
+                UploadViewModel.ERROR_POST_BODY -> {
+                    shortToast(getString(R.string.upload_error_post_message))
+                }
+            }
+        }
+    }
+
+    private fun changeVisibility(view: View, status: Int) {
+        when (status) {
+            View.VISIBLE -> {
+                view.visibility = status
+            }
+
+            View.GONE -> {
+                view.visibility = status
+            }
+        }
     }
 
     private fun requestPermission() {
@@ -93,13 +145,23 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun setCoordinate() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            fusedLocationClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, createCancellationToken())
+                .addOnSuccessListener { location ->
+                    location.let { viewModel.setCoordinate(getCoordinate(location)) }
+                }
+                .addOnFailureListener { }
+        }
+    }
 
-            if (location != null) {
-                val coordinate = getCoordinate(location)
-                binding.tvUploadPhotoCoordinate.text = coordinate.toText()
-                viewModel.setCoordinate(coordinate)
+    private fun createCancellationToken(): CancellationToken {
+        return object : CancellationToken() {
+            override fun onCanceledRequested(p0: OnTokenCanceledListener): CancellationToken {
+                return CancellationTokenSource().token
+            }
+
+            override fun isCancellationRequested(): Boolean {
+                return false
             }
         }
     }
@@ -120,21 +182,16 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
-
         binding.ivUploadPhoto.setOnClickListener {
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
             checkCameraPermission()
         }
-        binding.ivUploadPhotoCoordinate.setOnClickListener {
-            logClickEvent(getViewEntryName(it), UPLOAD_SET_COORDINATE)
-            checkLocationPermission()
-        }
-        binding.ivUploadClose.setOnClickListener {
+        binding.ivUploadBack.setOnClickListener {
             finish()
         }
         binding.btnUploadSubmit.setOnClickListener {
             if (isFormValid().not()) {
-                Toast.makeText(this, "모든 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                shortToast(getString(R.string.upload_error_insufficient_info_message))
             } else {
                 viewModel.postPlace()
             }
@@ -143,7 +200,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun checkCameraPermission() {
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+            PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
         } else {
             openCamera()
         }
@@ -153,18 +210,10 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         cameraLauncher.launch(null)
     }
 
-    private fun checkLocationPermission() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
-        } else {
-            setCoordinate()
-        }
-    }
-
     private fun setImage(bitmap: Bitmap) {
         binding.ivUploadCameraIcon.visibility = View.GONE
         binding.ivUploadPhoto.setImageBitmap(bitmap)
-        val uri = getImageUri(bitmap) ?: Uri.EMPTY
+        val uri = getAbsolutePathFromUri(getImageUri(bitmap) ?: Uri.EMPTY) ?: ""
         viewModel.setUri(uri)
     }
 
@@ -181,28 +230,24 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         return null
     }
 
+    private fun getAbsolutePathFromUri(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = applicationContext.contentResolver.query(uri, projection, null, null, null)
+        cursor?.use {
+            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            if (it.moveToFirst()) {
+                return it.getString(columnIndex)
+            }
+        }
+        return null
+    }
+
+    private fun shortToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
     private fun isFormValid(): Boolean {
-        return (isEmptyPhoto() || isEmptyTitle() || isEmptyCoordinate() || isEmptyDescription()).not()
-    }
-
-    private fun isEmptyPhoto(): Boolean {
-        return viewModel.hasUri().not()
-    }
-
-    private fun isEmptyTitle(): Boolean {
-        return viewModel.title.value == null
-    }
-
-    private fun isEmptyCoordinate(): Boolean {
-        return viewModel.hasCoordinate().not()
-    }
-
-    private fun isEmptyDescription(): Boolean {
-        return viewModel.description.value == null
-    }
-
-    private fun Coordinate.toText(): String {
-        return "$latitude, $longitude"
+        return viewModel.isFormValid()
     }
 
     companion object {
@@ -216,6 +261,8 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
+
+        const val PRIORITY_HIGH_ACCURACY = 100
 
         fun getIntent(context: Context): Intent {
             return Intent(context, UploadActivity::class.java)

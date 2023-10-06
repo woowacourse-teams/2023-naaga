@@ -3,8 +3,7 @@ package com.now.domain.repository
 import com.now.domain.model.PlatformAuth
 
 interface AuthRepository {
-    fun getToken(
-        platformAuth: PlatformAuth,
-        callback: (Result<Boolean>) -> Unit,
-    )
+    suspend fun getToken(platformAuth: PlatformAuth): Boolean
+    suspend fun withdrawalMember()
+    suspend fun logout()
 }

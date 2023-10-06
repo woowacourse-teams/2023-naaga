@@ -3,16 +3,20 @@ package com.now.naaga.presentation.adventurehistory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.now.domain.model.AdventureResult
 import com.now.domain.model.OrderType
 import com.now.domain.model.SortType
 import com.now.domain.repository.AdventureRepository
-import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AdventureHistoryViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
+@HiltViewModel
+class AdventureHistoryViewModel @Inject constructor(private val adventureRepository: AdventureRepository) :
+    ViewModel() {
     private val _adventureResults = MutableLiveData<List<AdventureResult>>()
     val adventureResults: LiveData<List<AdventureResult>> = _adventureResults
 
@@ -20,28 +24,24 @@ class AdventureHistoryViewModel(private val adventureRepository: AdventureReposi
     val errorMessage: LiveData<String> = _errorMessage
 
     fun fetchHistories() {
-        adventureRepository.fetchMyAdventureResults(SortType.TIME, OrderType.DESCENDING) { result ->
-            result
-                .onSuccess { _adventureResults.value = it }
-                .onFailure { setErrorMessage(it as DataThrowable) }
+        viewModelScope.launch {
+            runCatching {
+                adventureRepository.fetchMyAdventureResults(SortType.TIME, OrderType.DESCENDING)
+            }.onSuccess { results: List<AdventureResult> ->
+                _adventureResults.value = results
+            }.onFailure {
+                setErrorMessage(it as DataThrowable)
+            }
         }
     }
 
     private fun setErrorMessage(throwable: DataThrowable) {
         when (throwable) {
-            is PlayerThrowable -> { _errorMessage.value = throwable.message }
-            else -> {}
-        }
-    }
-
-    companion object {
-        val Factory = AdventureHistoryFactory(DefaultAdventureRepository())
-
-        class AdventureHistoryFactory(private val adventureRepository: AdventureRepository) :
-            ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return AdventureHistoryViewModel(adventureRepository) as T
+            is PlayerThrowable -> {
+                _errorMessage.value = throwable.message
             }
+
+            else -> {}
         }
     }
 }

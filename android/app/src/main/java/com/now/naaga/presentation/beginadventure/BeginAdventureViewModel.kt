@@ -3,14 +3,17 @@ package com.now.naaga.presentation.beginadventure
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.repository.AdventureRepository
-import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.throwable.DataThrowable
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BeginAdventureViewModel(private val adventureRepository: AdventureRepository) : ViewModel() {
+@HiltViewModel
+class BeginAdventureViewModel @Inject constructor(private val adventureRepository: AdventureRepository) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
     val adventure: LiveData<Adventure> = _adventure
 
@@ -22,26 +25,14 @@ class BeginAdventureViewModel(private val adventureRepository: AdventureReposito
 
     fun fetchAdventure(adventureStatus: AdventureStatus) {
         _loading.value = true
-        adventureRepository.fetchAdventureByStatus(adventureStatus) { result ->
-            _loading.value = false
-            result
-                .onSuccess {
-                    _adventure.value = it.firstOrNull()
-                }
-                .onFailure {
-                    _error.value = it as DataThrowable
-                }
-        }
-    }
-
-    companion object {
-        val Factory = BeginAdventureViewModelFactory(DefaultAdventureRepository())
-
-        class BeginAdventureViewModelFactory(
-            private val adventureRepository: AdventureRepository,
-        ) : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return BeginAdventureViewModel(adventureRepository) as T
+        viewModelScope.launch {
+            runCatching {
+                adventureRepository.fetchAdventureByStatus(adventureStatus)
+            }.onSuccess {
+                _loading.value = false
+                _adventure.value = it.firstOrNull()
+            }.onFailure {
+                _error.value = it as DataThrowable
             }
         }
     }
