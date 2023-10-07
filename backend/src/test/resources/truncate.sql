@@ -1,6 +1,8 @@
 SET
 FOREIGN_KEY_CHECKS = 0;
 
+TRUNCATE TABLE place_statistics;
+TRUNCATE TABLE place_like;
 TRUNCATE TABLE place;
 TRUNCATE TABLE member;
 TRUNCATE TABLE player;
