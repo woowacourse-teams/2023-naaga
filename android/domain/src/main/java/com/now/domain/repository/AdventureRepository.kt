@@ -10,38 +10,31 @@ import com.now.domain.model.OrderType
 import com.now.domain.model.SortType
 
 interface AdventureRepository {
-    fun fetchMyAdventures(callback: (Result<List<Adventure>>) -> Unit)
+    suspend fun fetchMyAdventures(): List<Adventure>
+    suspend fun fetchAdventure(adventureId: Long): Adventure
+    suspend fun fetchAdventureByStatus(status: AdventureStatus): List<Adventure>
+    suspend fun beginAdventure(coordinate: Coordinate): Adventure
 
-    fun fetchAdventure(adventureId: Long, callback: (Result<Adventure>) -> Unit)
-
-    fun fetchAdventureByStatus(status: AdventureStatus, callback: (Result<List<Adventure>>) -> Unit)
-
-    fun beginAdventure(coordinate: Coordinate, callback: (Result<Adventure>) -> Unit)
-
-    fun endGame(
+    suspend fun endGame(
         adventureId: Long,
         endType: AdventureEndType,
         coordinate: Coordinate,
-        callback: (Result<AdventureStatus>) -> Unit,
-    )
+    ): AdventureStatus
 
-    fun fetchAdventureResult(adventureId: Long, callback: (Result<AdventureResult>) -> Unit)
+    suspend fun fetchAdventureResult(adventureId: Long): AdventureResult
 
-    fun fetchMyAdventureResults(
+    suspend fun fetchMyAdventureResults(
         sortBy: SortType,
         order: OrderType,
-        callback: (Result<List<AdventureResult>>) -> Unit,
-    )
+    ): List<AdventureResult>
 
-    fun fetchHint(
+    suspend fun fetchHint(
         adventureId: Long,
         hintId: Long,
-        callback: (Result<Hint>) -> Unit,
-    )
+    ): Hint
 
-    fun makeHint(
+    suspend fun makeHint(
         adventureId: Long,
         coordinate: Coordinate,
-        callback: (Result<Hint>) -> Unit,
-    )
+    ): Hint
 }

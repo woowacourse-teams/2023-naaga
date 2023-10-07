@@ -5,4 +5,5 @@ interface AuthDataSource {
     fun setAccessToken(newToken: String)
     fun getRefreshToken(): String?
     fun setRefreshToken(newToken: String)
+    fun resetToken()
 }

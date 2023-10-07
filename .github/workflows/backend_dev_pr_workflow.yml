@@ -3,7 +3,7 @@ name: NAAGA BACKEND PULL REQUEST CI
 on:
   pull_request:
     branches: 
-      - dev
+      - dev_backend
     paths:
       - backend/**
       
@@ -52,3 +52,16 @@ jobs:
         
     - name: Test with Gradle
       run: ./gradlew test
+
+    - name: 테스트 결과를 PR에 코멘트로 등록합니다
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: always()
+      with:
+        files: 'backend/build/test-results/test/TEST-*.xml'
+
+    - name: 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록합니다
+      uses: mikepenz/action-junit-report@v3
+      if: always()
+      with:
+        report_paths: '**/build/test-results/test/TEST-*.xml'
+        token: ${{ github.token }}

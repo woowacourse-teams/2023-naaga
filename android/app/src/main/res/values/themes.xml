@@ -1,21 +1,17 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Naaga" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/main_purple</item>
-        <item name="colorPrimaryVariant">@color/light_purple</item>
+        <item name="colorPrimary">@color/main_dark_blue</item>
+        <item name="colorPrimaryVariant">@color/main_dark_blue</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/main_font</item>
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@drawable/rect_main_gradient</item>
-    </style>
-
-    <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
-        <item name="windowSplashScreenBackground">@color/light_purple</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo_splash</item>
-        <item name="postSplashScreenTheme">@style/Theme.Naaga</item>
+        <item name="android:windowBackground">@color/main_dark_blue</item>
     </style>
 </resources>

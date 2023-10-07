@@ -1,9 +1,12 @@
 package com.now.naaga.player.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
+import com.now.naaga.player.application.dto.AddScoreCommand;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
@@ -11,6 +14,8 @@ import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.score.domain.Score;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -35,6 +40,9 @@ class PlayerServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private PlayerBuilder playerBuilder;
 
     private List<Player> playerList = new ArrayList<>();
 
@@ -77,5 +85,21 @@ class PlayerServiceTest {
             softly.assertThat(rank.getPlayer().getNickname()).isEqualTo("채리");
             softly.assertThat(rank.getPercentage()).isEqualTo(33);
         });
+    }
+
+    @Test
+    void 플레이어의_점수를_추가한다() {
+        // given
+        final Player player = playerBuilder.init().build();
+        final Score beforeScore = player.getTotalScore();
+        final Score addedScore = new Score(10);
+        final AddScoreCommand addScoreCommand = new AddScoreCommand(player.getId(), addedScore);
+
+        // when
+        playerService.addScore(addScoreCommand);
+
+        // then
+        final Player afterPlayer = playerRepository.findById(player.getId()).get();
+        assertThat(afterPlayer.getTotalScore()).isEqualTo(beforeScore.plus(addedScore));
     }
 }

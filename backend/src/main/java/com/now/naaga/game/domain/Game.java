@@ -1,39 +1,24 @@
 package com.now.naaga.game.domain;
 
-import static com.now.naaga.game.domain.EndType.GIVE_UP;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.game.domain.ResultType.FAIL;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_DONE;
-import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
-import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
-
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.exception.GameNotArrivalException;
+import com.now.naaga.game.exception.GameExceptionType;
+import com.now.naaga.game.exception.GameNotFinishedException;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import java.math.BigDecimal;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.data.geo.Distance;
+
+import static com.now.naaga.game.domain.EndType.ARRIVED;
+import static com.now.naaga.game.domain.EndType.GIVE_UP;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.*;
 
 @Entity
 public class Game extends BaseEntity {
@@ -76,7 +61,9 @@ public class Game extends BaseEntity {
     protected Game() {
     }
 
-    public Game(final Player player, final Place place, final Position startPosition) {
+    public Game(final Player player,
+                final Place place,
+                final Position startPosition) {
         this(null, IN_PROGRESS, player, place, startPosition, MAX_ATTEMPT_COUNT, new ArrayList<>(), LocalDateTime.now(), null);
     }
 
@@ -121,56 +108,62 @@ public class Game extends BaseEntity {
         return hints.size() < MAX_HINT_COUNT;
     }
 
-    public ResultType endGame(final EndType endType, final Position position) {
-        if (isDone()) {
-            throw new GameException(ALREADY_DONE);
-        }
-        if (endType == GIVE_UP) {
-            return giveUpGame();
-        }
-        return endGameByArrival(position);
-    }
-
-    private boolean isDone() {
-        return gameStatus == DONE;
-    }
-
-    private ResultType giveUpGame() {
-        gameStatus = DONE;
-        endTime = LocalDateTime.now();
-        return FAIL;
-    }
-
-    private ResultType endGameByArrival(final Position position) {
-        remainingAttempts--;
-        if (isPlayerArrived(position)) {
-            return endGameWithSuccess();
-        }
-        return endGameWithFailure();
-    }
-
-    private boolean isPlayerArrived(final Position position) {
-        return place.isCoordinateInsideBounds(position);
-    }
-
-    private ResultType endGameWithSuccess() {
-        gameStatus = DONE;
-        endTime = LocalDateTime.now();
-        return SUCCESS;
-    }
-
-    private ResultType endGameWithFailure() {
-        if (remainingAttempts == 0) {
-            gameStatus = DONE;
-            endTime = LocalDateTime.now();
-            return FAIL;
-        }
-        throw new GameNotArrivalException(NOT_ARRIVED);
-    }
-    
     public double findDistance() {
         final Position destinationPosition = place.getPosition();
         return startPosition.calculateDistance(destinationPosition);
+    }
+
+    public void endGame(final Position position,
+                        final EndType endType) {
+        validateInProgressing();
+
+        if (endType == ARRIVED) {
+            subtractAttempts();
+        }
+
+        setGameStatusDone(position, endType);
+    }
+
+    private void validateInProgressing() {
+        if (gameStatus == DONE) {
+            throw new GameException(ALREADY_DONE);
+        }
+    }
+
+    private void subtractAttempts() {
+        validateAvailableAttempts();
+        remainingAttempts--;
+    }
+
+    private void validateAvailableAttempts() {
+        if (remainingAttempts <= 0) {
+            throw new GameException(GameExceptionType.NOT_REMAIN_ATTEMPTS);
+        }
+    }
+
+    private void setGameStatusDone(final Position position,
+                                   final EndType endType) {
+        validateForEnd(position, endType);
+
+        this.endTime = LocalDateTime.now();
+        this.gameStatus = DONE;
+    }
+
+    private void validateForEnd(final Position position,
+                                final EndType endType) {
+        final boolean isUnfinishedCondition = remainingAttempts > 0
+                && !place.isCoordinateInsideBounds(position)
+                && endType != GIVE_UP;
+
+        if (isUnfinishedCondition) {
+            throw new GameNotFinishedException(NOT_ARRIVED);
+        }
+    }
+
+    public void validateDoneGame() {
+        if(gameStatus == IN_PROGRESS) {
+            throw new GameException(NOT_DONE);
+        }
     }
 
     public Long getId() {

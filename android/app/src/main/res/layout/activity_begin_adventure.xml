@@ -26,79 +26,82 @@
             app:lottie_autoPlay="true"
             android:elevation="8dp" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_beginAdventure_begin"
-            style="@style/BeginActivity.Button"
+        <ImageView
+            android:id="@+id/iv_beginAdventure_setting"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="16dp"
+            android:padding="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_setting" />
+
+        <ImageView
+            android:id="@+id/iv_beginAdventure_logo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.4"
+            android:layout_marginTop="100dp"
+            android:layout_marginHorizontal="40dp"
+            android:src="@drawable/ic_logo_white"
+            app:layout_constraintDimensionRatio="1:1.1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_beginAdventure_begin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginTop="100dp"
-            android:paddingVertical="32dp"
+            style="@style/BeginActivity.Text"
+            android:textSize="44sp"
+            tools:text="모험 시작"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:text="@{viewModel.adventure == null ? @string/beginAdventure_do_adventure : @string/beginAdventure_continue_adventure}"
+            android:background="@drawable/bg_yellow_button"
+            android:paddingVertical="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/iv_beginAdventure_logo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageView
-                android:id="@+id/iv_beginAdventure_logo"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginHorizontal="40dp"
-                android:src="@drawable/ic_logo_white"
-                app:layout_constraintDimensionRatio="1:1.1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_beginAdventure_upload"
+            android:layout_width="0dp"
+            style="@style/BeginActivity.Text"
+            android:layout_marginTop="20dp"
+            android:textSize="24sp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_button"
+            android:layout_marginEnd="10dp"
+            android:text="@string/beginAdventure_upload_place"
+            app:layout_constraintEnd_toStartOf="@id/btn_beginAdventure_myPage"
+            app:layout_constraintStart_toStartOf="@id/btn_beginAdventure_begin"
+            app:layout_constraintTop_toBottomOf="@id/btn_beginAdventure_begin" />
 
-            <TextView
-                android:id="@+id/tv_beginAdventure_begin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_default_medium"
-                android:fontFamily="@font/pretendard_bold"
-                android:text="@{viewModel.adventure == null ? @string/beginAdventure_do_adventure : @string/beginAdventure_continue_adventure}"
-                android:textColor="@color/white"
-                android:textSize="32sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_beginAdventure_logo" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_beginAdventure_myPage"
+            android:layout_width="0dp"
+            style="@style/BeginActivity.Text"
+            android:textSize="24sp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_button"
+            android:text="@string/beginAdventure_my_page"
+            app:layout_constraintStart_toEndOf="@id/btn_beginAdventure_upload"
+            app:layout_constraintEnd_toEndOf="@id/btn_beginAdventure_begin"
+            app:layout_constraintTop_toTopOf="@id/btn_beginAdventure_upload"
+            app:layout_constraintBottom_toBottomOf="@id/btn_beginAdventure_upload" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ImageButton
-            android:id="@+id/iv_beginAdventure_mypage"
-            style="@style/BeginActivity.Button"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_mypage"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_beginAdventure_upload"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_beginAdventure_upload"
-            app:layout_constraintTop_toTopOf="@+id/iv_beginAdventure_upload" />
-
-        <ImageButton
-            android:id="@+id/iv_beginAdventure_rank"
-            style="@style/BeginActivity.Button"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_rank"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_beginAdventure_upload"
-            app:layout_constraintEnd_toStartOf="@+id/iv_beginAdventure_upload"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_beginAdventure_upload" />
-
-        <ImageButton
-            android:id="@+id/iv_beginAdventure_upload"
-            style="@style/BeginActivity.Button"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/ic_upload"
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_building"
+            android:scaleType="fitXY"
+            app:layout_constraintDimensionRatio="1.7:1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_beginAdventure_mypage"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/iv_beginAdventure_rank" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

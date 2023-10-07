@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
@@ -26,17 +26,21 @@ import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
+import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
+import com.now.naaga.presentation.common.dialog.PolaroidDialog
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
-import com.now.naaga.util.getParcelableCompat
+import com.now.naaga.util.extension.getParcelableCompat
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OnAdventureActivity :
     AppCompatActivity(),
     NaverMapSettingDelegate by DefaultNaverMapSettingDelegate(),
     AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityOnAdventureBinding
-    private lateinit var viewModel: OnAdventureViewModel
+    private val viewModel: OnAdventureViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setNaverMap(this, R.id.fcv_onAdventure_map)
@@ -69,15 +73,15 @@ class OnAdventureActivity :
     }
 
     private fun setClickListeners() {
-        binding.ivOnAdventureGiveUp.setOnClickListener {
+        binding.clOnAdventureStop.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_GIVE_UP)
             showGiveUpDialog()
         }
-        binding.ivOnAdventurePhoto.setOnClickListener {
+        binding.clOnAdventureShowPhoto.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_POLAROID)
             showPolaroidDialog()
         }
-        binding.ivOnAdventureHint.setOnClickListener {
+        binding.clOnAdventureSearchDirection.setOnClickListener {
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_SHOW_HINT)
             showHintDialog()
         }
@@ -97,12 +101,13 @@ class OnAdventureActivity :
         viewModel.hints.observe(this) { hints ->
             drawHintMarkers(hints)
             binding.lottieOnAdventureLoading.visibility = View.GONE
+            showPolaroidDialog()
         }
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
         }
         viewModel.remainingHintCount.observe(this) {
-            binding.tvOnAdventureHintCount.text = it.toString()
+            // binding.tvOnAdventureHintCount.text = it.toString()
         }
         viewModel.error.observe(this) { error: DataThrowable ->
             logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
@@ -124,7 +129,6 @@ class OnAdventureActivity :
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, OnAdventureViewModel.Factory)[OnAdventureViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
