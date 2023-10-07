@@ -1,9 +1,10 @@
-package com.now.naaga.statistics.application;
+package com.now.naaga.placestatistics.application;
 
-import com.now.naaga.placestatistics.PlaceStatistics;
+import com.now.naaga.placestatistics.domain.PlaceStatistics;
+import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
+import com.now.naaga.placestatistics.exception.PlaceStatisticsExceptionType;
 import com.now.naaga.placestatistics.repository.PlaceStatisticsRepository;
-import com.now.naaga.statistics.application.dto.SubtractLikeCommand;
-import com.now.naaga.statistics.exception.PlaceStatisticsExceptionType;
+import com.now.naaga.placestatistics.exception.PlaceStatisticsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

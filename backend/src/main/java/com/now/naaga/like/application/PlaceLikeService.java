@@ -7,8 +7,8 @@ import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.statistics.application.PlaceStatisticsService;
-import com.now.naaga.statistics.application.dto.SubtractLikeCommand;
+import com.now.naaga.placestatistics.application.PlaceStatisticsService;
+import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

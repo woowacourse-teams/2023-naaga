@@ -1,4 +1,4 @@
-package com.now.naaga.placestatistics;
+package com.now.naaga.placestatistics.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.place.domain.Place;

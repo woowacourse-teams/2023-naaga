@@ -1,8 +1,7 @@
-package com.now.naaga.statistics.application;
+package com.now.naaga.placestatistics.exception;
 
 import com.now.naaga.common.exception.BaseException;
 import com.now.naaga.common.exception.BaseExceptionType;
-import com.now.naaga.statistics.exception.PlaceStatisticsExceptionType;
 
 public class PlaceStatisticsException extends BaseException {
 
