@@ -8,11 +8,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import org.springframework.data.jpa.domain.AbstractAuditable_;
+
 import java.util.Objects;
 
 @Entity
 public class PlaceStatistics extends BaseEntity {
 
+    public static final long LIKE_COUNT_DEFAULT_VALUE = 0L;
+    
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -39,6 +43,17 @@ public class PlaceStatistics extends BaseEntity {
         this.id = id;
         this.place = place;
         this.likeCount = likeCount;
+    }
+
+    public void subtractLike() {
+        likeCount--;
+        resetIfUnderZeroValue();
+    }
+
+    private void resetIfUnderZeroValue() {
+        if (likeCount < 0) {
+            likeCount = LIKE_COUNT_DEFAULT_VALUE;
+        }
     }
 
     public Long getId() {
