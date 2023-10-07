@@ -17,6 +17,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import okhttp3.internal.closeQuietly
 import org.json.JSONObject
 
 class AuthInterceptor : Interceptor {
@@ -31,6 +32,7 @@ class AuthInterceptor : Interceptor {
 
         if (response.code == 401) {
             val newAccessToken = getRefreshedToken(accessToken).getOrElse { return response }
+            response.closeQuietly()
             return chain.proceed(chain.request().newBuilder().addHeader(AUTH_KEY, newAccessToken).build())
         }
         return response
@@ -98,8 +100,7 @@ class AuthInterceptor : Interceptor {
         const val AUTH_KEY = "Authorization"
         const val AUTH_REFRESH_KEY = "refreshToken"
 
-        const val AUTH_PATH = "auth"
-        const val AUTH_REFRESH_PATH = "auth/refresh"
+        const val AUTH_REFRESH_PATH = "/auth/refresh"
 
         const val NO_REFRESH_TOKEN = "리프레시 토큰이 없습니다"
         const val REFRESH_FAILURE = "토큰 리프레시 실패"
