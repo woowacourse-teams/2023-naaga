@@ -1,20 +1,13 @@
 package com.now.naaga.like.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
-import com.now.naaga.game.exception.GameException;
+import com.now.naaga.like.exception.PlaceLikeException;
+import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.util.Objects;
+import jakarta.persistence.*;
 
-import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+import java.util.Objects;
 
 @Entity
 public class PlaceLike extends BaseEntity {
@@ -55,7 +48,7 @@ public class PlaceLike extends BaseEntity {
 
     public void validateOwner(final Player player) {
         if (!this.player.equals(player)) {
-            throw new GameException(INACCESSIBLE_AUTHENTICATION);
+            throw new PlaceLikeException(PlaceLikeExceptionType.INACCESSIBLE_AUTHENTICATION);
         }
     }
 
