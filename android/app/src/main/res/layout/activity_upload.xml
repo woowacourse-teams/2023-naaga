@@ -18,17 +18,55 @@
         android:layout_marginTop="@dimen/space_default_large"
         tools:context=".presentation.upload.UploadActivity">
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_upload_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_gray_opacity_medium"
+            android:elevation="4dp"
+            android:padding="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/simple_loading" />
+
+        <ImageView
+            android:id="@+id/iv_upload_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="@dimen/space_default_medium"
+            android:src="@drawable/ic_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_upload_activity_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upload_title"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_upload_back"
+            app:layout_constraintStart_toEndOf="@id/iv_upload_back"
+            app:layout_constraintTop_toTopOf="@id/iv_upload_back" />
+
         <ImageView
             android:id="@+id/iv_upload_photo"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
             android:layout_marginTop="@dimen/space_default_large"
             android:background="@drawable/rect_radius_small"
             android:backgroundTint="@color/white"
             android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/tv_upload_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_activity_title" />
 
         <ImageView
             android:id="@+id/iv_upload_camera_icon"
@@ -40,129 +78,61 @@
             app:layout_constraintStart_toStartOf="@id/iv_upload_photo"
             app:layout_constraintTop_toTopOf="@id/iv_upload_photo" />
 
-        <EditText
-            android:id="@+id/et_upload_photo_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/space_default_large"
-            android:layout_marginTop="@dimen/space_default_medium"
-            android:afterTextChanged="@{viewModel::setTitle}"
-            android:autofillHints="no"
-            android:ellipsize="end"
-            android:hint="@string/upload_photo_title"
-            android:inputType="text"
-            android:maxLines="1"
-            android:text="@{viewModel.title}"
-            android:textAlignment="textStart"
-            android:textSize="28sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_upload_photo"
-            tools:text="선정릉 돌담길" />
-
-        <ImageView
-            android:id="@+id/iv_upload_photo_coordinate"
+        <TextView
+            android:id="@+id/tv_upload_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_default_medium"
-            android:src="@drawable/ic_coordinate"
-            app:layout_constraintEnd_toStartOf="@id/tv_upload_photo_coordinate"
-            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/et_upload_photo_title" />
-
-        <TextView
-            android:id="@+id/tv_upload_photo_coordinate"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/rect_radius_small"
-            android:backgroundTint="@color/white"
-            android:fontFamily="@font/pretendard_medium"
-            android:gravity="center"
+            android:layout_marginHorizontal="@dimen/space_default_large"
+            android:layout_marginTop="@dimen/space_default_large"
+            android:text="@string/upload_photo_title"
             android:textSize="28sp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_upload_photo_coordinate"
-            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
-            app:layout_constraintStart_toEndOf="@id/iv_upload_photo_coordinate"
-            app:layout_constraintTop_toTopOf="@id/iv_upload_photo_coordinate"
-            tools:text="35.123, 127.345" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_upload_photo" />
 
         <View
             android:id="@+id/v_upload_divide_line_1"
             android:layout_width="0dp"
             android:layout_height="3dp"
-            android:layout_marginTop="@dimen/space_default_large"
-            android:background="@color/black"
-            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
-            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_upload_photo_coordinate" />
+            android:layout_marginHorizontal="@dimen/space_default_large"
+            android:layout_marginTop="@dimen/space_default_medium"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_title" />
 
-        <TextView
-            android:id="@+id/tv_upload_description"
+        <EditText
+            android:id="@+id/et_upload_place_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_default_large"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="@string/upload_description"
-            android:textSize="28sp"
-            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
-            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/v_upload_divide_line_1" />
-
-        <EditText
-            android:id="@+id/et_upload_photo_description"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/space_default_medium"
-            android:afterTextChanged="@{viewModel::setDescription}"
             android:autofillHints="no"
-            android:background="@drawable/rect_radius_small"
-            android:backgroundTint="@color/white"
-            android:fontFamily="@font/pretendard_medium"
-            android:gravity="top"
-            android:hint="@string/upload_photo_description"
+            android:ellipsize="end"
+            android:hint="@string/upload_photo_title_hint"
+            android:textColorHint="@color/white"
             android:inputType="text"
-            android:padding="@dimen/space_default_medium"
-            android:text="@{viewModel.description}"
-            app:layout_constraintBottom_toTopOf="@id/v_upload_divide_line_2"
-            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
-            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_upload_description"
-            app:layout_constraintVertical_chainStyle="spread" />
+            android:maxLines="1"
+            android:text="@={viewModel.name}"
+            android:textAlignment="textEnd"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@id/v_upload_divide_line_1"
+            app:layout_constraintStart_toStartOf="@id/v_upload_divide_line_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_title"/>
 
-        <View
-            android:id="@+id/v_upload_divide_line_2"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:layout_marginTop="@dimen/space_default_large"
-            android:background="@color/black"
-            app:layout_constraintBottom_toTopOf="@id/btn_upload_submit"
-            app:layout_constraintEnd_toEndOf="@id/et_upload_photo_title"
-            app:layout_constraintStart_toStartOf="@id/et_upload_photo_title"
-            app:layout_constraintTop_toBottomOf="@id/et_upload_photo_description" />
-
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_upload_submit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_default_large"
             android:layout_marginTop="@dimen/space_default_large"
             android:layout_marginBottom="@dimen/space_default_large"
-            android:fontFamily="@font/pretendard_bold"
+            android:background="@drawable/bg_yellow_button"
+            android:paddingVertical="@dimen/space_default_medium"
             android:text="@string/upload_submit"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/v_upload_divide_line_2" />
-
-        <ImageView
-            android:id="@+id/iv_upload_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_close" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

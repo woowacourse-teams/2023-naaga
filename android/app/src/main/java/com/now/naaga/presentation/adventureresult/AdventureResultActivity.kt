@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureResultType
@@ -15,10 +15,12 @@ import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.RESULT_RESULT_RETURN
 import com.now.naaga.databinding.ActivityAdventureResultBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityAdventureResultBinding
-    private lateinit var viewModel: AdventureResultViewModel
+    private val viewModel: AdventureResultViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,6 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, AdventureResultViewModel.Factory)[AdventureResultViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
@@ -70,12 +71,12 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     }
 
     private fun setSuccessTypeView(destinationName: String) {
-        binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_success)
+        binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_success_label)
         binding.tvAdventureResultDestination.text = destinationName
     }
 
     private fun setFailTypeView() {
-        binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_fail)
+        binding.ivAdventureResultStamp.setImageResource(R.drawable.ic_fail_label)
         binding.tvAdventureResultDestination.text = getString(R.string.adventureResult_fail_destination_name)
     }
 

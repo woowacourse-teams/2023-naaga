@@ -4,22 +4,42 @@ import com.now.domain.model.PlatformAuth
 import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.mapper.toDto
-import com.now.naaga.data.remote.retrofit.ServicePool
-import com.now.naaga.data.remote.retrofit.fetchResponse
+import com.now.naaga.data.remote.retrofit.service.AuthService
+import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.unlinkWithKakao
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class DefaultAuthRepository(private val authDataSource: AuthDataSource) : AuthRepository {
-    override fun getToken(
-        platformAuth: PlatformAuth,
-        callback: (Result<Boolean>) -> Unit,
-    ) {
-        val call = ServicePool.authService.requestAuth(platformAuth.toDto())
-        call.fetchResponse(
-            onSuccess = { naagaAuthDto ->
+class DefaultAuthRepository(
+    private val authDataSource: AuthDataSource,
+    private val authService: AuthService,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : AuthRepository {
+
+    override suspend fun getToken(platformAuth: PlatformAuth): Boolean {
+        return withContext(dispatcher) {
+            val response = authService.requestAuth(platformAuth.toDto())
+            runCatching {
+                val naagaAuthDto = response.getValueOrThrow()
                 authDataSource.setAccessToken(naagaAuthDto.accessToken)
                 authDataSource.setRefreshToken(naagaAuthDto.refreshToken)
-                callback(Result.success(true))
-            },
-            onFailure = { callback(Result.failure(it)) },
-        )
+                return@withContext true
+            }
+            return@withContext false
+        }
+    }
+
+    override suspend fun logout() {
+        withContext(dispatcher) {
+            val response = authService.requestLogout()
+            authDataSource.resetToken()
+            response.getValueOrThrow()
+        }
+    }
+
+    override suspend fun withdrawalMember() {
+        authService.withdrawalMember()
+        unlinkWithKakao()
     }
 }

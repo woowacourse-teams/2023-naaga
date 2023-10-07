@@ -3,36 +3,22 @@ package com.now.naaga.data.repository
 import com.now.domain.model.Rank
 import com.now.domain.repository.RankRepository
 import com.now.naaga.data.mapper.toDomain
-import com.now.naaga.data.remote.dto.RankDto
-import com.now.naaga.data.remote.retrofit.ServicePool.rankService
-import com.now.naaga.data.remote.retrofit.fetchResponse
+import com.now.naaga.data.remote.retrofit.service.RankService
+import com.now.naaga.util.getValueOrThrow
 
-class DefaultRankRepository : RankRepository {
-    override fun getAllRanks(
+class DefaultRankRepository(
+    private val rankService: RankService,
+) : RankRepository {
+    override suspend fun getAllRanks(
         sortBy: String,
         order: String,
-        callback: (Result<List<Rank>>) -> Unit,
-    ) {
-        val call = rankService.getAllRanks(sortBy, order)
-        call.fetchResponse(
-            onSuccess = { rankDtos: List<RankDto> ->
-                callback(Result.success(rankDtos.map { it.toDomain() }))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    ): List<Rank> {
+        val response = rankService.getAllRanks(sortBy, order)
+        return response.getValueOrThrow().map { it.toDomain() }
     }
 
-    override fun getMyRank(callback: (Result<Rank>) -> Unit) {
-        val call = rankService.getMyRank()
-        call.fetchResponse(
-            onSuccess = { rankDto ->
-                callback(Result.success(rankDto.toDomain()))
-            },
-            onFailure = {
-                callback(Result.failure(it))
-            },
-        )
+    override suspend fun getMyRank(): Rank {
+        val response = rankService.getMyRank()
+        return response.getValueOrThrow().toDomain()
     }
 }

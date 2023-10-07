@@ -3,15 +3,17 @@ package com.now.naaga.presentation.adventurehistory
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.AdventureResult
 import com.now.naaga.databinding.ActivityAdventureHistoryBinding
 import com.now.naaga.presentation.adventurehistory.recyclerview.AdventureHistoryAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AdventureHistoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdventureHistoryBinding
-    private lateinit var viewModel: AdventureHistoryViewModel
+    private val viewModel: AdventureHistoryViewModel by viewModels()
     private val historyAdapter = AdventureHistoryAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,16 +21,10 @@ class AdventureHistoryActivity : AppCompatActivity() {
         binding = ActivityAdventureHistoryBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-        initViewModel()
         initRecyclerView()
         viewModel.fetchHistories()
         subscribe()
         setClickListeners()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, AdventureHistoryViewModel.Factory)[AdventureHistoryViewModel::class.java]
-        binding.lifecycleOwner = this
     }
 
     private fun initRecyclerView() {

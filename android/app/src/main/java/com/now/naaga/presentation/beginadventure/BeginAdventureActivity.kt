@@ -10,26 +10,30 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.now.domain.model.AdventureStatus
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.BEGIN_BEGIN_ADVENTURE
 import com.now.naaga.data.firebase.analytics.BEGIN_GO_MYPAGE
-import com.now.naaga.data.firebase.analytics.BEGIN_GO_RANK
+import com.now.naaga.data.firebase.analytics.BEGIN_GO_SETTING
 import com.now.naaga.data.firebase.analytics.BEGIN_GO_UPLOAD
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
+import com.now.naaga.presentation.common.dialog.DialogType
+import com.now.naaga.presentation.common.dialog.PermissionDialog
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
-import com.now.naaga.presentation.rank.RankActivity
+import com.now.naaga.presentation.setting.SettingActivity
+import com.now.naaga.presentation.upload.UploadActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityBeginAdventureBinding
-    private lateinit var viewModel: BeginAdventureViewModel
+    private val viewModel: BeginAdventureViewModel by viewModels()
 
     private val onAdventureActivityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
@@ -62,7 +66,6 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
         startLoading()
         registerAnalytics(this.lifecycle)
-        initViewModel()
         fetchInProgressAdventure()
         requestLocationPermission()
         setClickListeners()
@@ -70,10 +73,6 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, BeginAdventureViewModel.Factory)[BeginAdventureViewModel::class.java]
     }
 
     private fun fetchInProgressAdventure() {
@@ -115,28 +114,27 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
     }
 
     private fun setClickListeners() {
-        binding.clBeginAdventureBegin.setOnClickListener {
+        binding.btnBeginAdventureBegin.setOnClickListener {
             logClickEvent(getViewEntryName(it), BEGIN_BEGIN_ADVENTURE)
             checkPermissionAndBeginAdventure()
         }
-        binding.ivBeginAdventureRank.setOnClickListener {
-            logClickEvent(getViewEntryName(it), BEGIN_GO_RANK)
-            startActivity(RankActivity.getIntent(this))
-        }
-        binding.ivBeginAdventureUpload.setOnClickListener {
+        binding.btnBeginAdventureUpload.setOnClickListener {
             logClickEvent(getViewEntryName(it), BEGIN_GO_UPLOAD)
-            Toast.makeText(this, getString(R.string.beginAdventure_features_not_ready), Toast.LENGTH_SHORT).show()
-//            startActivity(UploadActivity.getIntent(this))
+            startActivity(UploadActivity.getIntent(this))
         }
-        binding.ivBeginAdventureMypage.setOnClickListener {
+        binding.btnBeginAdventureMyPage.setOnClickListener {
             logClickEvent(getViewEntryName(it), BEGIN_GO_MYPAGE)
             startActivity(MyPageActivity.getIntent(this))
+        }
+        binding.ivBeginAdventureSetting.setOnClickListener {
+            logClickEvent(getViewEntryName(it), BEGIN_GO_SETTING)
+            startActivity(SettingActivity.getIntent(this))
         }
     }
 
     private fun checkPermissionAndBeginAdventure() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
+            PermissionDialog(DialogType.LOCATION).show(supportFragmentManager)
         } else {
             checkLocationPermissionInStatusBar()
         }

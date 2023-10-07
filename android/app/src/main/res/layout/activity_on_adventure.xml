@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.now.naaga.presentation.onadventure.OnAdventureViewModel" />
@@ -30,20 +32,78 @@
             app:lottie_loop="true"
             app:lottie_autoPlay="true" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_onAdventure_top"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_onAdventure_destination_is_nearby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/onAdventure_nearby"
+                android:textSize="36sp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="30dp"
+                android:visibility="@{viewModel.isNearby() ? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_onAdventure_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.isNearby() ? View.GONE : View.VISIBLE}"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_onAdventure_to_destination"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:text="@string/onAdventure_to_destination" />
+
+                <TextView
+                    android:id="@+id/tv_onAdventure_left_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="64sp"
+                    android:layout_marginStart="24dp"
+                    android:text="@{viewModel.distance == null ? String.valueOf(0) : String.valueOf(viewModel.distance)}"
+                    tools:text="172" />
+
+                <TextView
+                    android:id="@+id/tv_onAdventure_meter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="36sp"
+                    android:text="@string/onAdventure_meter" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fcv_onAdventure_map"
             android:name="com.naver.maps.map.MapFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/cl_onAdventure_distance"
+            app:layout_constraintBottom_toTopOf="@id/ll_onAdventure_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/cl_onAdventure_top" />
 
         <com.naver.maps.map.widget.LocationButtonView
             android:id="@+id/btn_onAdventure_navermap_location"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_onAdventure_arrived"
+            app:layout_constraintBottom_toTopOf="@id/ll_onAdventure_bottom"
             android:layout_marginBottom="@dimen/space_default_medium"
             android:layout_marginStart="@dimen/space_default_medium"
             android:layout_width="wrap_content"
@@ -55,119 +115,164 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_default_medium"
             android:layout_marginTop="@dimen/space_default_medium"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/fcv_onAdventure_map"
+            app:layout_constraintStart_toStartOf="@id/fcv_onAdventure_map" />
 
-        <Button
-            android:id="@+id/btn_onAdventure_arrived"
+        <LinearLayout
+            android:id="@+id/ll_onAdventure_bottom"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="@dimen/space_default_medium"
-            android:background="@drawable/rect_white_radius_small"
-            android:backgroundTint="@color/selector_main_gray_purple"
-            android:elevation="4dp"
-            android:enabled="@{viewModel.isNearby()}"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="@{viewModel.isNearby() ? @string/onAdventure_end_adventure : @string/onAdventure_on_adventure}"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_onAdventure_photo"
-            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_give_up"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/iv_onAdventure_photo"
-            tools:text="모험 종료" />
-
-        <ImageView
-            android:id="@+id/iv_onAdventure_give_up"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:layout_marginEnd="@dimen/space_default_medium"
-            android:background="@drawable/rect_white_radius_small"
-            android:backgroundTint="@color/main_red"
-            android:elevation="4dp"
-            android:padding="@dimen/space_default_medium"
-            app:layout_constraintBottom_toBottomOf="@id/iv_onAdventure_photo"
-            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_hint"
-            app:srcCompat="@drawable/ic_drop" />
-
-        <ImageView
-            android:id="@+id/iv_onAdventure_hint"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:layout_marginEnd="@dimen/space_default_medium"
-            android:background="@drawable/rect_white_radius_small"
-            android:backgroundTint="@color/main_mint"
-            android:elevation="4dp"
-            android:padding="@dimen/space_default_medium"
-            app:layout_constraintBottom_toBottomOf="@id/iv_onAdventure_photo"
-            app:layout_constraintEnd_toStartOf="@id/iv_onAdventure_photo"
-            app:srcCompat="@drawable/ic_hint" />
-
-        <ImageView
-            android:id="@+id/iv_onAdventure_photo"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:layout_marginEnd="@dimen/space_default_medium"
-            android:layout_marginBottom="@dimen/space_default_medium"
-            android:background="@drawable/rect_white_radius_small"
-            android:backgroundTint="@color/main_mint"
-            android:elevation="4dp"
-            android:padding="@dimen/space_default_medium"
-            app:layout_constraintBottom_toTopOf="@id/cl_onAdventure_distance"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_photo" />
-
-        <TextView
-            android:id="@+id/tv_onAdventure_hint_count"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:background="@drawable/oval_radius_midium"
-            android:backgroundTint="@color/red"
-            android:elevation="4dp"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:layout_marginBottom="-12dp"
-            android:layout_marginEnd="-12dp"
-            app:layout_constraintBottom_toTopOf="@id/iv_onAdventure_hint"
-            app:layout_constraintEnd_toEndOf="@id/iv_onAdventure_hint"
-            tools:text="1" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_onAdventure_distance"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/main_purple"
-            android:paddingVertical="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <TextView
-                android:id="@+id/tv_onAdventure_left_distance_description"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_onAdventure_show_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/pretendard_semibold"
-                android:text="@string/onAdventure_left_distance_description"
-                android:textColor="@color/white"
-                android:textSize="16sp"
+                android:paddingTop="40dp"
+                android:paddingBottom="24dp"
+                android:paddingHorizontal="20dp"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_onAdventure_left_distance"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:id="@+id/tv_onAdventure_left_distance"
+                <ImageView
+                    android:id="@+id/iv_onAdventure_show_photo"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_photo"
+                    android:layout_marginBottom="12dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/tv_onAdventure_show_photo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_onAdventure_show_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@string/onAdventure_show_photo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_onAdventure_show_photo" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/view_onAdventure_divider_show_photo"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:layout_marginVertical="12dp" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_onAdventure_search_direction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:background="@color/main_purple"
-                android:fontFamily="@font/pretendard_semibold"
-                android:text="@{viewModel.isNearby() ? @string/onAdventure_nearby : @string/onAdventure_left_distance(viewModel.distance)}"
-                android:textColor="@color/main_mint"
-                android:textSize="16sp"
+                android:paddingTop="40dp"
+                android:paddingBottom="24dp"
+                android:paddingHorizontal="20dp"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toEndOf="@id/tv_onAdventure_left_distance_description" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/iv_onAdventure_search_direction"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_compass"
+                    android:layout_marginBottom="12dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/tv_onAdventure_search_direction"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_onAdventure_search_direction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@string/onAdventure_search_direction"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_onAdventure_search_direction" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/view_onAdventure_divider_search_direction"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:layout_marginVertical="12dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_onAdventure_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="40dp"
+                android:paddingBottom="24dp"
+                android:paddingHorizontal="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_onAdventure_stop"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_stop"
+                    android:layout_marginBottom="12dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/tv_onAdventure_stop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_onAdventure_stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@string/onAdventure_stop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_onAdventure_stop" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/onAdventure_on_adventure"
+                    android:visibility="@{viewModel.isNearby() ? View.GONE : View.VISIBLE}"
+                    android:gravity="center"
+                    android:textSize="20sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_onAdventure_arrived"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/onAdventure_end_adventure"
+                    android:background="@drawable/bg_yellow_button_thick"
+                    android:layout_margin="8dp"
+                    android:visibility="@{viewModel.isNearby() ? View.VISIBLE : View.GONE}"
+                    android:textSize="20sp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
