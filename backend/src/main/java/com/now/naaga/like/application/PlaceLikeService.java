@@ -7,6 +7,8 @@ import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
+import com.now.naaga.statistics.application.PlaceStatisticsService;
+import com.now.naaga.statistics.application.dto.SubtractLikeCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +18,15 @@ public class PlaceLikeService {
 
     private final PlaceLikeRepository placeLikeRepository;
 
+    private final PlaceStatisticsService placeStatisticsService;
+
     private final PlayerService playerService;
 
     public PlaceLikeService(final PlaceLikeRepository placeLikeRepository,
+                            final PlaceStatisticsService placeStatisticsService,
                             final PlayerService playerService) {
         this.placeLikeRepository = placeLikeRepository;
+        this.placeStatisticsService = placeStatisticsService;
         this.playerService = playerService;
     }
 
@@ -34,5 +40,8 @@ public class PlaceLikeService {
 
         placeLike.validateOwner(player);
         placeLikeRepository.delete(placeLike);
+
+        final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
+        placeStatisticsService.subtractLike(subtractLikeCommand);
     }
 }
