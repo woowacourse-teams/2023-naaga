@@ -6,11 +6,13 @@ import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceLikeBuilder;
+import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
+import com.now.naaga.placestatistics.domain.PlaceStatistics;
 import com.now.naaga.player.domain.Player;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -32,36 +34,45 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class PlaceLikeControllerTest extends CommonControllerTest {
 
-    PlayerBuilder playerBuilder;
+    private final PlayerBuilder playerBuilder;
 
-    PlaceBuilder placeBuilder;
+    private final PlaceBuilder placeBuilder;
 
-    PlaceLikeBuilder placeLikeBuilder;
+    private final PlaceLikeBuilder placeLikeBuilder;
 
-    AuthTokenGenerator authTokenGenerator;
+    private final PlaceStatisticsBuilder placeStatisticsBuilder;
+
+    private final AuthTokenGenerator authTokenGenerator;
+
+    @Autowired
+    public PlaceLikeControllerTest(final PlayerBuilder playerBuilder,
+                                   final PlaceBuilder placeBuilder,
+                                   final PlaceLikeBuilder placeLikeBuilder,
+                                   final PlaceStatisticsBuilder placeStatisticsBuilder,
+                                   final AuthTokenGenerator authTokenGenerator) {
+        this.playerBuilder = playerBuilder;
+        this.placeBuilder = placeBuilder;
+        this.placeLikeBuilder = placeLikeBuilder;
+        this.placeStatisticsBuilder = placeStatisticsBuilder;
+        this.authTokenGenerator = authTokenGenerator;
+    }
 
     @BeforeEach
     void setup() {
         super.setUp();
     }
 
-    @Autowired
-    public PlaceLikeControllerTest(final PlayerBuilder playerBuilder,
-                                   final PlaceBuilder placeBuilder,
-                                   final PlaceLikeBuilder placeLikeBuilder,
-                                   final AuthTokenGenerator authTokenGenerator) {
-        this.playerBuilder = playerBuilder;
-        this.placeBuilder = placeBuilder;
-        this.placeLikeBuilder = placeLikeBuilder;
-        this.authTokenGenerator = authTokenGenerator;
-    }
-
     @Test
     void 좋아요_삭제를_성공하면_204응답을_한다() {
         //given
-        final PlaceLike placeLike = placeLikeBuilder.init()
+        final Place place = placeBuilder.init()
                 .build();
-        final Place place = placeLike.getPlace();
+        final PlaceLike placeLike = placeLikeBuilder.init()
+                .place(place)
+                .build();
+        final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
+                .place(place)
+                .build();
         final Member member = placeLike.getPlayer().getMember();
         final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
