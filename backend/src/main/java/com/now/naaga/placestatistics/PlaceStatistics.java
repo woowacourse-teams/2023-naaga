@@ -2,13 +2,7 @@ package com.now.naaga.placestatistics;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.place.domain.Place;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import org.springframework.data.jpa.domain.AbstractAuditable_;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -16,7 +10,7 @@ import java.util.Objects;
 public class PlaceStatistics extends BaseEntity {
 
     public static final long LIKE_COUNT_DEFAULT_VALUE = 0L;
-    
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
