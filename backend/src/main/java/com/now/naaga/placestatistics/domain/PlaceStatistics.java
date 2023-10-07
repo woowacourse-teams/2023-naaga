@@ -15,7 +15,7 @@ public class PlaceStatistics extends BaseEntity {
     @Id
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
 
