@@ -1,6 +1,7 @@
 package com.now.naaga.like.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
+import com.now.naaga.game.exception.GameException;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
 import jakarta.persistence.Entity;
@@ -13,7 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
-// 아직 미구역 영역입니다. 사실 백엔드 디렉토리 변경을 위한 변경사항입니다.
+import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+
 @Entity
 public class PlaceLike extends BaseEntity {
 
@@ -49,6 +51,12 @@ public class PlaceLike extends BaseEntity {
         this.place = place;
         this.player = player;
         this.placeLikeType = placeLikeType;
+    }
+
+    public void validateOwner(final Player player) {
+        if (!this.player.equals(player)) {
+            throw new GameException(INACCESSIBLE_AUTHENTICATION);
+        }
     }
 
     public Long getId() {
