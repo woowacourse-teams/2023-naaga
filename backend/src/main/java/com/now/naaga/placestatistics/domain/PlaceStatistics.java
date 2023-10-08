@@ -3,6 +3,7 @@ package com.now.naaga.placestatistics.domain;
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.place.domain.Place;
 import jakarta.persistence.*;
+import org.hibernate.annotations.DialectOverride;
 
 import java.util.Objects;
 
@@ -20,6 +21,9 @@ public class PlaceStatistics extends BaseEntity {
     private Place place;
 
     private Long likeCount;
+
+    @Version
+    private Long version;
 
     protected PlaceStatistics() {
 
