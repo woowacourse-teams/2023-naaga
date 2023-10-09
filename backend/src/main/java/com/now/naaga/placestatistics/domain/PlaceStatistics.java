@@ -44,14 +44,14 @@ public class PlaceStatistics extends BaseEntity {
     }
 
     public void subtractLike() {
+        if(isDefaultValue()) {
+            return;
+        }
         likeCount--;
-        resetIfUnderZeroValue();
     }
 
-    private void resetIfUnderZeroValue() {
-        if (likeCount < 0) {
-            likeCount = LIKE_COUNT_DEFAULT_VALUE;
-        }
+    private boolean isDefaultValue() {
+        return likeCount == LIKE_COUNT_DEFAULT_VALUE;
     }
 
     public Long getId() {
