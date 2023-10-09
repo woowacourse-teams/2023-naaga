@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-      
+    paths:
+      - backend/**
+
 jobs:
   deploy:
     runs-on: naaga
@@ -38,3 +40,22 @@ jobs:
           cd /home/ubuntu/prod
           chmod +x ./deploy_prod.sh
           sudo ./deploy_prod.sh
+
+  sync-dev_backend:
+    needs: deploy
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: merge main -> dev_backend
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: main
+          target_branch: dev_backend
+          github_token: ${{ secrets.GITHUB_TOKEN }}
