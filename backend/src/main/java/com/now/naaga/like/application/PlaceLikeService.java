@@ -32,13 +32,10 @@ public class PlaceLikeService {
 
     public void cancelLike(final CancelLikeCommand cancelLikeCommand) {
         final Long playerId = cancelLikeCommand.playerId();
-        final Player player = playerService.findPlayerById(playerId);
-
         final Long placeId = cancelLikeCommand.placeId();
+
         final PlaceLike placeLike = placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId)
                 .orElseThrow(() -> new PlaceLikeException(PlaceLikeExceptionType.NOT_EXIST));
-
-        placeLike.validateOwner(player);
         placeLikeRepository.delete(placeLike);
 
         final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
