@@ -28,8 +28,7 @@ class DefaultAuthDataSource(context: Context) : AuthDataSource {
     }
 
     override fun getRefreshToken(): String? {
-        val refreshToken = authPreference.getString(REFRESH_TOKEN, null) ?: return null
-        return BEARER + refreshToken
+        return authPreference.getString(REFRESH_TOKEN, null)
     }
 
     override fun setRefreshToken(newToken: String) {

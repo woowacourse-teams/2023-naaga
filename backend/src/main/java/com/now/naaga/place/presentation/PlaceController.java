@@ -14,9 +14,9 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,14 +54,13 @@ public class PlaceController {
     }
 
     @PostMapping
-    public ResponseEntity<PlaceResponse> createPlace(@Auth final PlayerRequest playerRequest,
-                                                     @ModelAttribute final CreatePlaceRequest createPlaceRequest) {
-        CreatePlaceCommand createPlaceCommand = CreatePlaceCommand.of(playerRequest, createPlaceRequest);
-        final Place savedPlace = placeService.createPlace(createPlaceCommand);
-        final PlaceResponse response = PlaceResponse.from(savedPlace);
+    public ResponseEntity<PlaceResponse> createPlace(@RequestBody final CreatePlaceRequest createPlaceRequest) {
+        final CreatePlaceCommand createPlaceCommand = CreatePlaceCommand.from(createPlaceRequest);
+        final Place place = placeService.createPlace(createPlaceCommand);
+        final PlaceResponse response = PlaceResponse.from(place);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .location(URI.create("/places/" + savedPlace.getId()))
+                .location(URI.create("/places/" + place.getId()))
                 .body(response);
     }
 }

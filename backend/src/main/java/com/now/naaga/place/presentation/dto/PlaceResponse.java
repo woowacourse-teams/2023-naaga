@@ -2,7 +2,6 @@ package com.now.naaga.place.presentation.dto;
 
 import com.now.naaga.place.domain.Place;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public record PlaceResponse(Long id,
                             String name,
@@ -22,7 +21,7 @@ public record PlaceResponse(Long id,
 
     public static List<PlaceResponse> convertToPlaceResponses(final List<Place> places) {
         return places.stream()
-                .map(PlaceResponse::from)
-                .collect(Collectors.toList());
+                     .map(PlaceResponse::from)
+                     .toList();
     }
 }

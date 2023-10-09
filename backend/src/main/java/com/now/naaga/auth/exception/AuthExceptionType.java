@@ -44,7 +44,12 @@ public enum AuthExceptionType implements BaseExceptionType {
     //todo : 고쳐줘
     INVALID_KAKAO_DELETE(101,
             HttpStatus.UNAUTHORIZED,
-            "카카오에서 정보를 삭제할 수 없습니다.");
+            "카카오에서 정보를 삭제할 수 없습니다."),
+
+    INVALID_MANAGER(103,
+            HttpStatus.UNAUTHORIZED,
+            "관리자 정보가 옳지 않습니다.")
+    ;
 
     private final int errorCode;
     private final HttpStatus httpStatus;
