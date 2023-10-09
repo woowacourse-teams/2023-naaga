@@ -70,7 +70,7 @@ class PlaceLikeControllerTest extends CommonControllerTest {
         final PlaceLike placeLike = placeLikeBuilder.init()
                 .place(place)
                 .build();
-        final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
+        placeStatisticsBuilder.init()
                 .place(place)
                 .build();
         final Member member = placeLike.getPlayer().getMember();

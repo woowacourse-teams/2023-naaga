@@ -76,7 +76,7 @@ class PlaceLikeServiceTest {
                 .player(player)
                 .build();
         final long beforeLikeCount = 10L;
-        final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
+        placeStatisticsBuilder.init()
                 .place(place)
                 .likeCount(beforeLikeCount)
                 .build();
