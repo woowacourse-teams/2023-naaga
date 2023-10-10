@@ -22,9 +22,6 @@ public class PlaceStatistics extends BaseEntity {
 
     private Long likeCount;
 
-    @Version
-    private Long version;
-
     protected PlaceStatistics() {
 
     }

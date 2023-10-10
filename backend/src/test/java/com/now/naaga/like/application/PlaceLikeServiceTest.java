@@ -95,6 +95,36 @@ class PlaceLikeServiceTest {
     }
 
     @Test
+    void 좋아요가_0개일_때_좋아요를_삭제하면_통계에서_좋아요를_0개로_유지한다() {
+        // given
+        final Place place = placeBuilder.init()
+                .build();
+        final Player player = playerBuilder.init()
+                .build();
+        final PlaceLike placeLike = placeLikeBuilder.init()
+                .place(place)
+                .player(player)
+                .build();
+        final long beforeLikeCount = 0L;
+        placeStatisticsBuilder.init()
+                .place(place)
+                .likeCount(beforeLikeCount)
+                .build();
+        final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
+
+        // when
+        placeLikeService.cancelLike(cancelLikeCommand);
+
+        // then
+        final Optional<PlaceLike> findPlaceLike = placeLikeRepository.findById(placeLike.getId());
+        final PlaceStatistics findPlaceStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
+        assertSoftly(softAssertions -> {
+            assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount);
+            assertThat(findPlaceLike).isEmpty();
+        });
+    }
+
+    @Test
     void 좋아요를_삭제할_때_좋아요가_존재하지_않으면_예외를_발생한다() {
         // given
         final Place place = placeBuilder.init()

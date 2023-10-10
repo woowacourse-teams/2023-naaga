@@ -20,14 +20,10 @@ public class PlaceLikeService {
 
     private final PlaceStatisticsService placeStatisticsService;
 
-    private final PlayerService playerService;
-
     public PlaceLikeService(final PlaceLikeRepository placeLikeRepository,
-                            final PlaceStatisticsService placeStatisticsService,
-                            final PlayerService playerService) {
+                            final PlaceStatisticsService placeStatisticsService) {
         this.placeLikeRepository = placeLikeRepository;
         this.placeStatisticsService = placeStatisticsService;
-        this.playerService = playerService;
     }
 
     public void cancelLike(final CancelLikeCommand cancelLikeCommand) {
