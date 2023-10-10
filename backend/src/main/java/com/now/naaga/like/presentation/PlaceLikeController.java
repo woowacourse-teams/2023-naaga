@@ -22,7 +22,7 @@ public class PlaceLikeController {
     }
 
     @DeleteMapping("/my")
-    public ResponseEntity<Void> deletePlaceLike(@Auth PlayerRequest playerRequest,
+    public ResponseEntity<Void> cancelPlaceLike(@Auth PlayerRequest playerRequest,
                                                 @PathVariable Long placeId) {
         final CancelLikeCommand cancelLikeCommand = CancelLikeCommand.of(playerRequest, placeId);
         placeLikeService.cancelLike(cancelLikeCommand);
