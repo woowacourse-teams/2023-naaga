@@ -10,7 +10,8 @@ public enum PlaceLikeExceptionType implements BaseExceptionType {
     INACCESSIBLE_AUTHENTICATION(
             703,
             HttpStatus.FORBIDDEN,
-            "접근 권한이 없는 좋아요/싫어요입니다."),
+            "접근 권한이 없는 좋아요/싫어요입니다."
+    ),
 
     NOT_EXIST(
             704,

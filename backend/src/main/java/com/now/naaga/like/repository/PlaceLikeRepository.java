@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface PlaceLikeRepository extends JpaRepository<PlaceLike, Long> {
 
-    Optional<PlaceLike> findByPlaceIdAndPlayerId(Long placeId,
-                                                Long playerId);
+    Optional<PlaceLike> findByPlaceIdAndPlayerId(final Long placeId,
+                                                final Long playerId);
 }
