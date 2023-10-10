@@ -12,6 +12,8 @@ import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Transactional
 @Service
 public class PlaceLikeService {
@@ -30,8 +32,12 @@ public class PlaceLikeService {
         final Long playerId = cancelLikeCommand.playerId();
         final Long placeId = cancelLikeCommand.placeId();
 
-        final PlaceLike placeLike = placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId)
-                .orElseThrow(() -> new PlaceLikeException(PlaceLikeExceptionType.NOT_EXIST));
+        final Optional<PlaceLike> maybePlaceLike = placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId);
+        if (maybePlaceLike.isEmpty()) {
+            return;
+        }
+
+        final PlaceLike placeLike = maybePlaceLike.get();
         placeLikeRepository.delete(placeLike);
 
         final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
