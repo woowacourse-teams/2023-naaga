@@ -20,20 +20,21 @@ public class LetterLog {
     @JoinColumn(name = "letter_id")
     private Letter letter;
 
+    @Enumerated
+    private LetterLogType letterLogType;
+
     public LetterLog() {
     }
 
-    public LetterLog(final Game game,
-                     final Letter letter) {
-        this(null, game, letter);
+    public LetterLog(final Game game, final Letter letter, final LetterLogType letterLogType) {
+        this(null, game, letter, letterLogType);
     }
 
-    public LetterLog(final Long id,
-                     final Game game,
-                     final Letter letter) {
+    public LetterLog(final Long id, final Game game, final Letter letter, final LetterLogType letterLogType) {
         this.id = id;
         this.game = game;
         this.letter = letter;
+        this.letterLogType = letterLogType;
     }
 
     public Long getId() {
