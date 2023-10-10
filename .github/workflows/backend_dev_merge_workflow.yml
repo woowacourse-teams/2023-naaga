@@ -2,7 +2,8 @@ name: NAAGA BACKEND MERGE CI
 on:
   push:
     branches:
-      - dev
+      - dev_backend
+
 jobs:
   deploy:
     runs-on: naaga

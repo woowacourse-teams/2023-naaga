@@ -27,9 +27,8 @@ import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog
-import com.now.naaga.presentation.beginadventure.LocationPermissionDialog.Companion.TAG_LOCATION_DIALOG
-import com.now.naaga.presentation.upload.CameraPermissionDialog.Companion.TAG_CAMERA_DIALOG
+import com.now.naaga.presentation.common.dialog.DialogType
+import com.now.naaga.presentation.common.dialog.PermissionDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,11 +52,11 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             if (isGranted.not()) {
                 when (entry.key) {
                     Manifest.permission.CAMERA -> {
-                        CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+                        PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
                     }
 
                     Manifest.permission.ACCESS_FINE_LOCATION -> {
-                        LocationPermissionDialog().show(supportFragmentManager, TAG_LOCATION_DIALOG)
+                        PermissionDialog(DialogType.LOCATION).show(supportFragmentManager)
                     }
                 }
             }
@@ -91,9 +90,14 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             when (uploadStatus) {
                 UploadStatus.SUCCESS -> {
                     changeVisibility(binding.lottieUploadLoading, View.GONE)
+                    shortToast(getString(R.string.upload_success_submit))
                     finish()
                 }
-                UploadStatus.PENDING -> { changeVisibility(binding.lottieUploadLoading, View.VISIBLE) }
+
+                UploadStatus.PENDING -> {
+                    changeVisibility(binding.lottieUploadLoading, View.VISIBLE)
+                }
+
                 UploadStatus.FAIL -> {
                     changeVisibility(binding.lottieUploadLoading, View.GONE)
                     shortToast(getString(R.string.upload_fail_submit))
@@ -105,18 +109,27 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 UploadViewModel.ERROR_STORE_PHOTO -> {
                     shortToast(getString(R.string.upload_error_store_photo_message))
                 }
+
                 UploadViewModel.ALREADY_EXISTS_NEARBY -> {
                     shortToast(getString(R.string.upload_error_already_exists_nearby_message))
                 }
-                UploadViewModel.ERROR_POST_BODY -> { shortToast(getString(R.string.upload_error_post_message)) }
+
+                UploadViewModel.ERROR_POST_BODY -> {
+                    shortToast(getString(R.string.upload_error_post_message))
+                }
             }
         }
     }
 
     private fun changeVisibility(view: View, status: Int) {
         when (status) {
-            View.VISIBLE -> { view.visibility = status }
-            View.GONE -> { view.visibility = status }
+            View.VISIBLE -> {
+                view.visibility = status
+            }
+
+            View.GONE -> {
+                view.visibility = status
+            }
         }
     }
 
@@ -187,7 +200,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun checkCameraPermission() {
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            CameraPermissionDialog().show(supportFragmentManager, TAG_CAMERA_DIALOG)
+            PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
         } else {
             openCamera()
         }

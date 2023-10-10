@@ -3,8 +3,8 @@ package com.now.naaga.game.domain;
 import java.time.Duration;
 import java.util.List;
 
-import static com.now.naaga.game.domain.ResultType.FAIL;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 
 public class Statistic {
 
@@ -42,33 +42,33 @@ public class Statistic {
 
     private static int countGameResultsSuccess(final List<GameRecord> gameRecords) {
         return (int) gameRecords.stream()
-                .filter(gameRecord -> gameRecord.getGameResult().getResultType() == SUCCESS)
+                .filter(gameRecord -> gameRecord.gameResult().getResultType() == SUCCESS)
                 .count();
     }
 
     private static int countGameResultsFail(final List<GameRecord> gameRecords) {
         return (int) gameRecords.stream()
-                .filter(gameRecord -> gameRecord.getGameResult().getResultType() == FAIL)
+                .filter(gameRecord -> gameRecord.gameResult().getResultType() == FAIL)
                 .count();
     }
 
     private static int sumTotalDistance(final List<GameRecord> gameRecords) {
         return gameRecords.stream()
-                .mapToInt(GameRecord::getDistance)
+                .mapToInt(GameRecord::distance)
                 .sum();
     }
 
     public static Duration sumTotalPlayTime(List<GameRecord> gameRecords) {
         Duration playTime = Duration.ZERO;
         for (GameRecord gameRecord : gameRecords) {
-            playTime = playTime.plus(gameRecord.getTotalPlayTime());
+            playTime = playTime.plus(gameRecord.totalPlayTime());
         }
         return playTime;
     }
 
     private static int countUsedHits(final List<GameRecord> gameRecords) {
         return gameRecords.stream()
-                .mapToInt(GameRecord::getHintUses)
+                .mapToInt(GameRecord::hintUses)
                 .sum();
     }
 
