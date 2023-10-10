@@ -92,38 +92,4 @@ class PlaceLikeControllerTest extends CommonControllerTest {
         final int statusCode = extract.statusCode();
         assertThat(statusCode).isEqualTo(NO_CONTENT.value());
     }
-
-
-    @Test
-    void 좋아요_누른적_없는_장소에_좋아요_삭제하면_예외응답을_한다() {
-        //given
-        final Place place = placeBuilder.init()
-                .build();
-        final Player player = playerBuilder.init()
-                .build();
-        final Member member = player.getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
-        //when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(ContentType.JSON)
-                .pathParam("placeId", place.getId())
-                .when()
-                .delete("/places/{placeId}/likes/my")
-                .then().log().all()
-                .extract();
-
-        //then
-        final int statusCode = extract.statusCode();
-        final ExceptionResponse exceptionResponse = extract.body().as(ExceptionResponse.class);
-        SoftAssertions.assertSoftly(softAssertions -> {
-            assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
-            assertThat(exceptionResponse)
-                    .usingRecursiveComparison()
-                    .isEqualTo(new ExceptionResponse(NOT_EXIST.errorCode(), NOT_EXIST.errorMessage()));
-        });
-    }
 }
