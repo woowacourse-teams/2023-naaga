@@ -1,12 +1,13 @@
 package com.now.naaga.letterlog.domain;
 
+import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.letter.domain.Letter;
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
-public class LetterLog {
+public class LetterLog extends BaseEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -49,6 +50,10 @@ public class LetterLog {
         return letter;
     }
 
+    public LetterLogType getLetterLogType() {
+        return letterLogType;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -72,6 +77,7 @@ public class LetterLog {
                 "id=" + id +
                 ", gameId=" + game.getId() +
                 ", letterId=" + letter.getId() +
+                ", letterLogType=" + letterLogType +
                 '}';
     }
 }
