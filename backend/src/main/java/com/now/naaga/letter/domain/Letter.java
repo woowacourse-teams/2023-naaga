@@ -5,6 +5,7 @@ import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -56,6 +57,10 @@ public class Letter extends BaseEntity {
 
     public String getMessage() {
         return message;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return super.getCreatedAt();
     }
 
     @Override
