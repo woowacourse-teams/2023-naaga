@@ -33,8 +33,30 @@ public class TemporaryPlaceController {
                 .body(response);
     }
 
+//    @PostMapping
+//    public ResponseEntity<TemporaryPlaceResponse> createTemporaryPlace(@Auth final PlayerRequest playerRequest,
+//                                                                       @ModelAttribute final CreateTemporaryPlaceRequest createTemporaryPlaceRequest) {
+//        final CreateTemporaryPlaceCommand createTemporaryPlaceCommand = CreateTemporaryPlaceCommand.of(playerRequest, createTemporaryPlaceRequest);
+//        final TemporaryPlace temporaryPlace = temporaryPlaceService.createTemporaryPlace(createTemporaryPlaceCommand);
+//        final TemporaryPlaceResponse response = TemporaryPlaceResponse.from(temporaryPlace);
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .location(URI.create("/temporary-places/" + temporaryPlace.getId()))
+//                .body(response);
+//    }
+
+    @DeleteMapping("/{temporaryPlaceId}")
+    public ResponseEntity<Void> deleteTemporaryPlace(@PathVariable final Long temporaryPlaceId) {
+        temporaryPlaceService.deleteById(temporaryPlaceId);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    /* S3사용
+     */
     @PostMapping
-    public ResponseEntity<TemporaryPlaceResponse> createTemporaryPlace(@Auth final PlayerRequest playerRequest,
+    public ResponseEntity<TemporaryPlaceResponse> createTemporaryPlaceAndSendImageToS3(@Auth final PlayerRequest playerRequest,
                                                                        @ModelAttribute final CreateTemporaryPlaceRequest createTemporaryPlaceRequest) {
         final CreateTemporaryPlaceCommand createTemporaryPlaceCommand = CreateTemporaryPlaceCommand.of(playerRequest, createTemporaryPlaceRequest);
         final TemporaryPlace temporaryPlace = temporaryPlaceService.createTemporaryPlace(createTemporaryPlaceCommand);
@@ -43,13 +65,5 @@ public class TemporaryPlaceController {
                 .status(HttpStatus.CREATED)
                 .location(URI.create("/temporary-places/" + temporaryPlace.getId()))
                 .body(response);
-    }
-
-    @DeleteMapping("/{temporaryPlaceId}")
-    public ResponseEntity<Void> deleteTemporaryPlace(@PathVariable final Long temporaryPlaceId) {
-        temporaryPlaceService.deleteById(temporaryPlaceId);
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
     }
 }
