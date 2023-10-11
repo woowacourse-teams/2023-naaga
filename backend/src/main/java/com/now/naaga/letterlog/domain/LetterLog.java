@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
+@Entity
 public class LetterLog extends BaseEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +25,19 @@ public class LetterLog extends BaseEntity {
     @Enumerated
     private LetterLogType letterLogType;
 
-    public LetterLog() {
+    protected LetterLog() {
     }
 
-    public LetterLog(final Game game, final Letter letter, final LetterLogType letterLogType) {
+    public LetterLog(final Game game,
+                     final Letter letter,
+                     final LetterLogType letterLogType) {
         this(null, game, letter, letterLogType);
     }
 
-    public LetterLog(final Long id, final Game game, final Letter letter, final LetterLogType letterLogType) {
+    public LetterLog(final Long id,
+                     final Game game,
+                     final Letter letter,
+                     final LetterLogType letterLogType) {
         this.id = id;
         this.game = game;
         this.letter = letter;

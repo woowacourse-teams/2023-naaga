@@ -65,6 +65,4 @@ public class LetterLogBuilder {
         return letterBuilder.init()
                 .build();
     }
-
-
 }

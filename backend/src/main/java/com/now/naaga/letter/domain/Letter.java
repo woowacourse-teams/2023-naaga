@@ -24,7 +24,7 @@ public class Letter extends BaseEntity {
 
     private String message;
 
-    public Letter() {
+    protected Letter() {
     }
 
     public Letter(final Player registeredPlayer,
