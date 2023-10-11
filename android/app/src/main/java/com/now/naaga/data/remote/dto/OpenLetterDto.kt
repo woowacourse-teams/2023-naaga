@@ -1,0 +1,18 @@
+package com.now.naaga.data.remote.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class OpenLetterDto(
+    @SerialName("id")
+    val id: Long,
+    @SerialName("writer")
+    val writer: PlayerDto,
+    @SerialName("coordinate")
+    val coordinateDto: CoordinateDto,
+    @SerialName("message")
+    val message: String,
+    @SerialName("registerDate")
+    val registerDate: String,
+)
