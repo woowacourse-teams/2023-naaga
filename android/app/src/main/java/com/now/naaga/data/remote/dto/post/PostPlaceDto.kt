@@ -1,5 +1,6 @@
-package com.now.naaga.data.remote.dto
+package com.now.naaga.data.remote.dto.post
 
+import com.now.naaga.data.remote.dto.CoordinateDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

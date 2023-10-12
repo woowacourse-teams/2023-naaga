@@ -1,13 +1,13 @@
 package com.now.domain.repository
 
 import com.now.domain.model.Adventure
-import com.now.domain.model.AdventureEndType
 import com.now.domain.model.AdventureResult
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
-import com.now.domain.model.OrderType
-import com.now.domain.model.SortType
+import com.now.domain.model.type.AdventureEndType
+import com.now.domain.model.type.OrderType
+import com.now.domain.model.type.SortType
 
 interface AdventureRepository {
     suspend fun fetchMyAdventures(): List<Adventure>

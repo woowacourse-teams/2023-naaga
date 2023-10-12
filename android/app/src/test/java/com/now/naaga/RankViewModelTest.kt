@@ -1,10 +1,10 @@
 package com.now.naaga
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.now.domain.model.OrderType
 import com.now.domain.model.Player
 import com.now.domain.model.Rank
-import com.now.domain.model.SortType
+import com.now.domain.model.type.OrderType
+import com.now.domain.model.type.SortType
 import com.now.domain.repository.RankRepository
 import com.now.naaga.presentation.rank.RankViewModel
 import io.mockk.coEvery

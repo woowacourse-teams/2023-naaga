@@ -2,11 +2,11 @@ package com.now.naaga
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.now.domain.model.AdventureResult
-import com.now.domain.model.AdventureResultType
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
 import com.now.domain.model.Player
 import com.now.domain.model.Rank
+import com.now.domain.model.type.AdventureResultType
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.RankRepository
 import com.now.naaga.presentation.adventureresult.AdventureResultViewModel

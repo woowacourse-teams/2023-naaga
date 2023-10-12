@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.now.domain.model.OrderType
 import com.now.domain.model.Place
 import com.now.domain.model.Rank
-import com.now.domain.model.SortType
 import com.now.domain.model.Statistics
+import com.now.domain.model.type.OrderType
+import com.now.domain.model.type.SortType
 import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
