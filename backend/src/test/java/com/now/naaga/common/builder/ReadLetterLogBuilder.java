@@ -2,19 +2,18 @@ package com.now.naaga.common.builder;
 
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.letter.domain.Letter;
-import com.now.naaga.letterlog.domain.LetterLog;
-import com.now.naaga.letterlog.domain.LetterLogType;
-import com.now.naaga.letterlog.repository.LetterLogRepository;
+import com.now.naaga.letterlog.domain.ReadLetterLog;
+import com.now.naaga.letterlog.repository.ReadLetterLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class LetterLogBuilder {
+public class ReadLetterLogBuilder {
 
     @Autowired
-    private LetterLogRepository letterLogRepository;
+    private ReadLetterLogRepository readLetterLogRepository;
 
     @Autowired
     private GameBuilder gameBuilder;
@@ -26,34 +25,27 @@ public class LetterLogBuilder {
 
     private Optional<Letter> registeredLetter;
 
-    private LetterLogType letterLogType;
-
-    public LetterLogBuilder init() {
+    public ReadLetterLogBuilder init() {
         this.registeredGame = Optional.empty();
         this.registeredLetter = Optional.empty();
         return this;
     }
 
-    public LetterLogBuilder game(final Game registeredGame) {
+    public ReadLetterLogBuilder game(final Game registeredGame) {
         this.registeredGame = Optional.ofNullable(registeredGame);
         return this;
     }
 
-    public LetterLogBuilder letter(final Letter registerdLetter) {
+    public ReadLetterLogBuilder letter(final Letter registerdLetter) {
         this.registeredLetter = Optional.ofNullable(registerdLetter);
         return this;
     }
 
-    public LetterLogBuilder letterLogType(final LetterLogType letterLogType) {
-        this.letterLogType = letterLogType;
-        return this;
-    }
-
-    public LetterLog build() {
+    public ReadLetterLog build() {
         final Game persistedgame = registeredGame.orElseGet(this::getPersitedGame);
         final Letter persistedLetter = registeredLetter.orElseGet(this::getPersistedLetter);
-        final LetterLog letterLog = new LetterLog(persistedgame, persistedLetter, letterLogType);
-        return letterLogRepository.save(letterLog);
+        final ReadLetterLog letterLog = new ReadLetterLog(persistedgame, persistedLetter);
+        return readLetterLogRepository.save(letterLog);
     }
 
     public Game getPersitedGame() {

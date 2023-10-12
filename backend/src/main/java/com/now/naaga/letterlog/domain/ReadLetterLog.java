@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class LetterLog extends BaseEntity {
+public class ReadLetterLog extends BaseEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -22,26 +22,20 @@ public class LetterLog extends BaseEntity {
     @JoinColumn(name = "letter_id")
     private Letter letter;
 
-    @Enumerated
-    private LetterLogType letterLogType;
-
-    protected LetterLog() {
+    protected ReadLetterLog() {
     }
 
-    public LetterLog(final Game game,
-                     final Letter letter,
-                     final LetterLogType letterLogType) {
-        this(null, game, letter, letterLogType);
+    public ReadLetterLog(final Game game,
+                         final Letter letter) {
+        this(null, game, letter);
     }
 
-    public LetterLog(final Long id,
-                     final Game game,
-                     final Letter letter,
-                     final LetterLogType letterLogType) {
+    public ReadLetterLog(final Long id,
+                         final Game game,
+                         final Letter letter) {
         this.id = id;
         this.game = game;
         this.letter = letter;
-        this.letterLogType = letterLogType;
     }
 
     public Long getId() {
@@ -56,10 +50,6 @@ public class LetterLog extends BaseEntity {
         return letter;
     }
 
-    public LetterLogType getLetterLogType() {
-        return letterLogType;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -68,7 +58,7 @@ public class LetterLog extends BaseEntity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        LetterLog letterLog = (LetterLog) o;
+        ReadLetterLog letterLog = (ReadLetterLog) o;
         return Objects.equals(id, letterLog.id);
     }
 
@@ -83,7 +73,6 @@ public class LetterLog extends BaseEntity {
                 "id=" + id +
                 ", gameId=" + game.getId() +
                 ", letterId=" + letter.getId() +
-                ", letterLogType=" + letterLogType +
                 '}';
     }
 }
