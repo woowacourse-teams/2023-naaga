@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 data class OpenLetterDto(
     @SerialName("id")
     val id: Long,
-    @SerialName("writer")
-    val writer: PlayerDto,
+    @SerialName("player")
+    val player: PlayerDto,
     @SerialName("coordinate")
     val coordinateDto: CoordinateDto,
     @SerialName("message")

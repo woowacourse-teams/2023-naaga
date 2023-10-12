@@ -16,13 +16,5 @@ interface LetterRepository {
 
     suspend fun fetchLetter(letterId: Long): OpenLetter
 
-    suspend fun postInGameLetter(
-        gameId: Long,
-        letterId: Long,
-        logType: LogType,
-    )
-
-    suspend fun fetchReadLetter(gameId: Long, logType: LogType): List<OpenLetter>
-
-    suspend fun fetchWriteLetter(gameId: Long, logType: LogType): List<OpenLetter>
+    suspend fun fetchLetterLogs(gameId: Long, logType: LogType): List<OpenLetter>
 }
