@@ -18,8 +18,8 @@ interface LetterService {
 
     @GET("/letters/nearby")
     suspend fun getNearbyLetters(
-        @Query("latitude") latitude: String,
-        @Query("longitude") longitude: String,
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
     ): Response<List<ClosedLetterDto>>
 
     @GET("/letters/{letterId}")
