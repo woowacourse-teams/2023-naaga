@@ -22,15 +22,7 @@ class DefaultLetterRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun postInGameLetter(gameId: Long, letterId: Long, logType: LogType) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun fetchReadLetter(gameId: Long, logType: LogType): List<OpenLetter> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun fetchWriteLetter(gameId: Long, logType: LogType): List<OpenLetter> {
+    override suspend fun fetchLetterLogs(gameId: Long, logType: LogType): List<OpenLetter> {
         TODO("Not yet implemented")
     }
 }
