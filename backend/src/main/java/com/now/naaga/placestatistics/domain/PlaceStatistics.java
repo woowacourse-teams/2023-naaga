@@ -1,23 +1,22 @@
-package com.now.naaga.placestatistics;
+package com.now.naaga.placestatistics.domain;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.place.domain.Place;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+import org.hibernate.annotations.DialectOverride;
+
 import java.util.Objects;
 
 @Entity
 public class PlaceStatistics extends BaseEntity {
 
+    public static final long LIKE_COUNT_DEFAULT_VALUE = 0L;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
 
@@ -39,6 +38,17 @@ public class PlaceStatistics extends BaseEntity {
         this.id = id;
         this.place = place;
         this.likeCount = likeCount;
+    }
+
+    public void subtractLike() {
+        if(isDefaultValue()) {
+            return;
+        }
+        likeCount--;
+    }
+
+    private boolean isDefaultValue() {
+        return likeCount == LIKE_COUNT_DEFAULT_VALUE;
     }
 
     public Long getId() {
