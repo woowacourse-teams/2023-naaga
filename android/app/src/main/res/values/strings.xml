@@ -137,4 +137,8 @@
     <string name="confirm_dialog_description">새로운 버전이 출시되었어요!\n업데이트가 필요해요!</string>
     <string name="confirm_dialog_positive_text">업데이트</string>
     <string name="confirm_dialog_negative_text">취소</string>
+
+
+    <string name="send_letter_dialog_hint">이 곳에 내용을 작성해주세요!</string>
+    <string name="send_letter_dialog_submit">전송하기</string>
 </resources>
