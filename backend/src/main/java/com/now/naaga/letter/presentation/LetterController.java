@@ -7,7 +7,6 @@ import com.now.naaga.letter.application.dto.FindNearByLetterCommand;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.presentation.dto.NearByLetterResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
-import io.micrometer.common.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,11 +33,8 @@ public class LetterController {
     public ResponseEntity<List<NearByLetterResponse>> findLetterNearBy(@Auth final PlayerRequest playerRequest,
                                                                        @RequestParam(name = "latitude") final String latitude,
                                                                        @RequestParam(name = "longitude") final String longitude) {
-        if (StringUtils.isEmpty(latitude) || StringUtils.isEmpty(longitude)) {
-            throw new CommonException(INVALID_REQUEST_PARAMETERS);
-        }
 
-        final FindNearByLetterCommand findNearByLetterCommand = FindNearByLetterCommand.from(latitude, longitude);
+        final FindNearByLetterCommand findNearByLetterCommand = parseCoordinates(latitude, longitude);
 
         final List<Letter> letters = letterService.findNearByLetters(findNearByLetterCommand);
         final List<NearByLetterResponse> nearByLetterResponses = letters.stream()
@@ -47,5 +43,14 @@ public class LetterController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(nearByLetterResponses);
+    }
+
+    private FindNearByLetterCommand parseCoordinates(final String latitude,
+                                                     final String longitude) {
+        try {
+            return FindNearByLetterCommand.from(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        } catch (NumberFormatException e) {
+            throw new CommonException(INVALID_REQUEST_PARAMETERS);
+        }
     }
 }

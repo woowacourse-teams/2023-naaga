@@ -154,7 +154,7 @@ class LetterControllerTest extends CommonControllerTest {
     }
 
     @Test
-    void 주변_쪽지를_모두_조회시_요청_파라미터에_빈값이_존재하면_예외를_발생시킨다() {
+    void 주변_쪽지를_모두_조회시_요청_파라미터에_double이아니면_존재하면_예외를_발생시킨다() {
         // given
         final Place destination = placeBuilder.init()
                 .position(역삼역_좌표)
@@ -168,7 +168,7 @@ class LetterControllerTest extends CommonControllerTest {
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + accessToken)
-                .param("latitude", "")
+                .param("latitude", "문자")
                 .param("longitude", "127.036953")
                 .when()
                 .get("/letters/nearby")

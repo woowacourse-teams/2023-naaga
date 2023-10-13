@@ -6,8 +6,8 @@ import java.math.BigDecimal;
 
 public record FindNearByLetterCommand(Position position) {
 
-    public static FindNearByLetterCommand from(final String latitude,
-                                               final String longitude) {
+    public static FindNearByLetterCommand from(final Double latitude,
+                                               final Double longitude) {
         return new FindNearByLetterCommand(new Position(new BigDecimal(latitude), new BigDecimal(longitude)));
     }
 }
