@@ -1,4 +1,4 @@
-package com.now.domain.model
+package com.now.domain.model.type
 
 enum class SortType {
     TIME,

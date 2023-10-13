@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.now.domain.model.AuthPlatformType
 import com.now.domain.model.PlatformAuth
+import com.now.domain.model.type.AuthPlatformType
 import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.throwable.DataThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel

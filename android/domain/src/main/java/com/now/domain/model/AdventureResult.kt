@@ -1,5 +1,6 @@
 package com.now.domain.model
 
+import com.now.domain.model.type.AdventureResultType
 import java.time.LocalDateTime
 
 data class AdventureResult(
