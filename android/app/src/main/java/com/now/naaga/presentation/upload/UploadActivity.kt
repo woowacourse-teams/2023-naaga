@@ -34,6 +34,7 @@ import com.now.naaga.util.extension.showSnackbarWithEvent
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
@@ -53,9 +54,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     ) { permission: Map<String, Boolean> ->
 
         val keys = permission.entries.map { it.key }
-        val isStorageRequest = storagePermissions.any {
-            keys.contains(it)
-        }
+        val isStorageRequest = storagePermissions.any { keys.contains(it) }
         if (isStorageRequest) {
             if (permission.entries.map { it.value }.contains(false)) {
                 showPermissionSnackbar(getString(R.string.upload_snackbar_storage_message))
@@ -208,9 +207,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             return openCamera()
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            permissionToRequest.remove(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
         requestPermissionLauncher.launch(permissionToRequest.toTypedArray())
     }
 
@@ -261,7 +257,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     companion object {
         private val storagePermissions = arrayOf(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
 
@@ -271,7 +266,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         )
 
         val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle ${LocalDateTime.now()}")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
 
