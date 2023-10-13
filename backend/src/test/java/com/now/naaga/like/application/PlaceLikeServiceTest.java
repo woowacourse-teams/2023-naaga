@@ -3,15 +3,19 @@ package com.now.naaga.like.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceLikeBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.like.application.dto.ApplyLikeCommand;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
+import com.now.naaga.like.exception.PlaceLikeException;
+import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.placestatistics.domain.PlaceStatistics;
@@ -211,6 +215,37 @@ class PlaceLikeServiceTest {
         // then
         final PlaceStatistics placeStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
         assertThat(placeStatistics.getLikeCount()).isEqualTo(beforeLikeCount);
+    }
+
+    @Test
+    void 기존의_좋아요_타입과_같은_타입으로_좋아요_등록을_요청하면_예외가_발생한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        placeStatisticsBuilder.init()
+                              .place(place)
+                              .build();
+
+        placeLikeBuilder.init()
+                        .player(player)
+                        .place(place)
+                        .placeLikeType(PlaceLikeType.LIKE)
+                        .build();
+
+        // when
+        final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(),
+                                                              place.getId(),
+                                                              PlaceLikeType.LIKE);
+        final BaseExceptionType baseExceptionType = assertThrows(PlaceLikeException.class, () ->
+                                                                         placeLikeService.applyLike(command)
+                                                                ).exceptionType();
+
+        // then
+        assertThat(baseExceptionType).isEqualTo(PlaceLikeExceptionType.ALREADY_APPLIED_TYPE);
     }
 
     @Test
