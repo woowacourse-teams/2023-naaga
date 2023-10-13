@@ -2,8 +2,8 @@ package com.now.naaga.common.builder;
 
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.letter.domain.Letter;
-import com.now.naaga.letterlog.domain.WriteLetterLog;
-import com.now.naaga.letterlog.repository.WriteLetterLogRepository;
+import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
+import com.now.naaga.letter.repository.letterlog.WriteLetterLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

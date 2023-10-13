@@ -1,6 +1,6 @@
-package com.now.naaga.letterlog.repository;
+package com.now.naaga.letter.repository.letterlog;
 
-import com.now.naaga.letterlog.domain.ReadLetterLog;
+import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReadLetterLogRepository extends JpaRepository<ReadLetterLog, Long> {

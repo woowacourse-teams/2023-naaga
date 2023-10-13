@@ -1,6 +1,6 @@
 package com.now.naaga.common.fixture;
 
-import com.now.naaga.letterlog.domain.ReadLetterLog;
+import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 
 import static com.now.naaga.common.fixture.GameFixture.GAME;
 import static com.now.naaga.common.fixture.LetterFixture.LETTER;

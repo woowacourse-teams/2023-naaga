@@ -1,4 +1,4 @@
-package com.now.naaga.letterlog.domain;
+package com.now.naaga.letter.domain.letterlog;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.domain.Game;
@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class ReadLetterLog extends BaseEntity {
+public class WriteLetterLog extends BaseEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -18,21 +18,21 @@ public class ReadLetterLog extends BaseEntity {
     @JoinColumn(name = "game_id")
     private Game game;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "letter_id")
     private Letter letter;
 
-    protected ReadLetterLog() {
+    protected WriteLetterLog() {
     }
 
-    public ReadLetterLog(final Game game,
-                         final Letter letter) {
+    public WriteLetterLog(final Game game,
+                          final Letter letter) {
         this(null, game, letter);
     }
 
-    public ReadLetterLog(final Long id,
-                         final Game game,
-                         final Letter letter) {
+    public WriteLetterLog(final Long id,
+                          final Game game,
+                          final Letter letter) {
         this.id = id;
         this.game = game;
         this.letter = letter;
@@ -52,14 +52,10 @@ public class ReadLetterLog extends BaseEntity {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ReadLetterLog letterLog = (ReadLetterLog) o;
-        return Objects.equals(id, letterLog.id);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WriteLetterLog that = (WriteLetterLog) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override
@@ -69,7 +65,7 @@ public class ReadLetterLog extends BaseEntity {
 
     @Override
     public String toString() {
-        return "LetterLog{" +
+        return "WriteLetterLog{" +
                 "id=" + id +
                 ", gameId=" + game.getId() +
                 ", letterId=" + letter.getId() +
