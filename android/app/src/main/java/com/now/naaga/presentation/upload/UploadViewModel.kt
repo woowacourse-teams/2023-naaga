@@ -9,8 +9,8 @@ import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
-import com.now.naaga.util.MutableSingleLiveData
-import com.now.naaga.util.SingleLiveData
+import com.now.naaga.util.singleliveevent.MutableSingleLiveData
+import com.now.naaga.util.singleliveevent.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File

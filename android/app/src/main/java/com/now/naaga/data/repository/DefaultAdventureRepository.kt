@@ -13,7 +13,7 @@ import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.dto.FinishGameDto
 import com.now.naaga.data.remote.retrofit.service.AdventureService
-import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.extension.getValueOrThrow
 
 class DefaultAdventureRepository(
     private val adventureService: AdventureService,

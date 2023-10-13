@@ -1,4 +1,4 @@
-package com.now.naaga.util
+package com.now.naaga.util.singleliveevent
 
 class MutableSingleLiveData<T> : SingleLiveData<T> {
 

@@ -1,4 +1,4 @@
-package com.now.naaga.util
+package com.now.naaga.util.extension
 
 import android.view.View
 import com.google.android.material.snackbar.BaseTransientBottomBar.ANIMATION_MODE_SLIDE
