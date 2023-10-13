@@ -35,7 +35,6 @@ public class LetterController {
                                                                        @RequestParam(name = "latitude") final String latitude,
                                                                        @RequestParam(name = "longitude") final String longitude) {
         if (StringUtils.isEmpty(latitude) || StringUtils.isEmpty(longitude)) {
-            System.out.println("여기 잡혔니?");
             throw new CommonException(INVALID_REQUEST_PARAMETERS);
         }
 
