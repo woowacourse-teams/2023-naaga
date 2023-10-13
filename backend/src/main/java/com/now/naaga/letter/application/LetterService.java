@@ -20,6 +20,6 @@ public class LetterService {
 
     @Transactional(readOnly = true)
     public List<Letter> findNearByLetters(final FindNearByLetterCommand findNearByLetterCommand) {
-        return letterRepository.findLetterByPositionAndDistance(findNearByLetterCommand.position(), 0.02);
+        return letterRepository.findLetterByPositionAndDistance(findNearByLetterCommand.position(), 0.01);
     }
 }
