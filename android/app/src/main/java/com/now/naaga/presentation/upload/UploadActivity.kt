@@ -57,13 +57,13 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         val isStorageRequest = storagePermissions.any { keys.contains(it) }
         if (isStorageRequest) {
             if (permission.entries.map { it.value }.contains(false)) {
-                showPermissionSnackbar(getString(R.string.upload_snackbar_storage_message))
+                showPermissionSnackbar(getString(R.string.snackbar_storage_message))
             } else {
                 openCamera()
             }
             return@registerForActivityResult
         }
-        showPermissionSnackbar(getString(R.string.upload_snackbar_location_message))
+        showPermissionSnackbar(getString(R.string.snackbar_location_message))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,7 +138,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private fun showPermissionSnackbar(message: String) {
         binding.root.showSnackbarWithEvent(
             message = message,
-            actionTitle = getString(R.string.upload_snackbar_action_title),
+            actionTitle = getString(R.string.snackbar_action_title),
             action = { openSetting() },
         )
     }
