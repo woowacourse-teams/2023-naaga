@@ -3,7 +3,7 @@ package com.now.naaga.letter.presentation;
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.letter.application.LetterService;
 import com.now.naaga.letter.domain.Letter;
-import com.now.naaga.letter.presentation.dto.LetterCreateCommand;
+import com.now.naaga.letter.application.letterlog.dto.LetterCreateCommand;
 import com.now.naaga.letter.presentation.dto.LetterRequest;
 import com.now.naaga.letter.presentation.dto.LetterResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;

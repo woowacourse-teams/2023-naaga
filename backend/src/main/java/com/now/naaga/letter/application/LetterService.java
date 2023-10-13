@@ -8,7 +8,7 @@ import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.letter.application.letterlog.WriteLetterLogService;
 import com.now.naaga.letter.application.letterlog.dto.WriteLetterLogCreateCommand;
 import com.now.naaga.letter.domain.Letter;
-import com.now.naaga.letter.presentation.dto.LetterCreateCommand;
+import com.now.naaga.letter.application.letterlog.dto.LetterCreateCommand;
 import com.now.naaga.letter.repository.LetterRepository;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;

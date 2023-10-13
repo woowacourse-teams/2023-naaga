@@ -1,5 +1,6 @@
-package com.now.naaga.letter.presentation.dto;
+package com.now.naaga.letter.application.letterlog.dto;
 
+import com.now.naaga.letter.presentation.dto.LetterRequest;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 
