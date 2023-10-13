@@ -10,12 +10,6 @@
     <string name="beginAdventure_my_page">나의 모험</string>
     <string name="beginAdventure_continue_adventure">이어 하기</string>
 
-    <!-- PermissionDialog-->
-    <string name="permissionDialog_setting">설정으로 이동해요</string>
-    <string name="permissionDialog_location_description">나아가 서비스를 이용하기 위해서는\n위치 권한을 부여해주셔야 해요</string>
-    <string name="permissionDialog_approximate_description">대략적인 위치 권한만 허용되었어요\n나아가 서비스를 이용하기 위해서는\n정확한 위치 권한을\n부여해주셔야 해요</string>
-    <string name="permissionDialog_camera_description">장소를 올리기 위해서는\n카메라 접근 권한이 필요해요!</string>
-
     <!--OnAdventureActivity-->
     <string name="onAdventure_loading_photo">사진을 로딩 중이에요</string>
     <string name="onAdventure_fail_load_description">목적지를 받아오는데 실패했어요!</string>
