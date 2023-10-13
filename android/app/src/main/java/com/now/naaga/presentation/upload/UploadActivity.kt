@@ -6,8 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
@@ -15,7 +17,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -27,9 +28,12 @@ import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
-import com.now.naaga.presentation.common.dialog.DialogType
-import com.now.naaga.presentation.common.dialog.PermissionDialog
+import com.now.naaga.presentation.upload.UploadViewModel.Companion.FILE_EMPTY
+import com.now.naaga.util.extension.openSetting
+import com.now.naaga.util.extension.showSnackbarWithEvent
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
@@ -49,16 +53,10 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     ) { permission: Map<String, Boolean> ->
         permission.entries.forEach { entry ->
             val isGranted = entry.value
-            if (isGranted.not()) {
-                when (entry.key) {
-                    Manifest.permission.CAMERA -> {
-                        PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
-                    }
-
-                    Manifest.permission.ACCESS_FINE_LOCATION -> {
-                        PermissionDialog(DialogType.LOCATION).show(supportFragmentManager)
-                    }
-                }
+            if (!isGranted) {
+                showPermissionSnackbar()
+            } else {
+                openCamera()
             }
         }
     }
@@ -72,7 +70,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         initViewModel()
         subscribe()
         registerAnalytics(this.lifecycle)
-        requestPermission()
         setCoordinate()
         setClickListeners()
     }
@@ -133,14 +130,12 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
     }
 
-    private fun requestPermission() {
-        val permissionsToRequest = mutableListOf<String>()
-        requestPermissions.forEach { permission ->
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(permission)
-            }
-        }
-        requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())
+    private fun showPermissionSnackbar() {
+        binding.root.showSnackbarWithEvent(
+            message = getString(R.string.upload_snackbar_message),
+            actionTitle = getString(R.string.upload_snackbar_action_title),
+            action = { openSetting() },
+        )
     }
 
     private fun setCoordinate() {
@@ -180,11 +175,11 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private fun setClickListeners() {
         binding.ivUploadCameraIcon.setOnClickListener {
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
-            checkCameraPermission()
+            requestPermission()
         }
         binding.ivUploadPhoto.setOnClickListener {
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
-            checkCameraPermission()
+            requestPermission()
         }
         binding.ivUploadBack.setOnClickListener {
             finish()
@@ -198,12 +193,17 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
     }
 
-    private fun checkCameraPermission() {
-        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            PermissionDialog(DialogType.CAMERA).show(supportFragmentManager)
-        } else {
-            openCamera()
+    private fun requestPermission() {
+        val permissionToRequest = requestPermissions.toMutableList()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return openCamera()
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            permissionToRequest.remove(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        requestPermissionLauncher.launch(permissionToRequest.toTypedArray())
     }
 
     private fun openCamera() {
@@ -213,8 +213,21 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private fun setImage(bitmap: Bitmap) {
         binding.ivUploadCameraIcon.visibility = View.GONE
         binding.ivUploadPhoto.setImageBitmap(bitmap)
-        val uri = getAbsolutePathFromUri(getImageUri(bitmap) ?: Uri.EMPTY) ?: ""
-        viewModel.setUri(uri)
+        val uri = getImageUri(bitmap) ?: Uri.EMPTY
+        val file = makeImageFile(uri)
+        viewModel.setFile(file)
+    }
+
+    private fun makeImageFile(uri: Uri): File {
+        val bitmap = contentResolver.openInputStream(uri).use {
+            BitmapFactory.decodeStream(it)
+        }
+        val tempFile = File.createTempFile("image", ".jpeg", cacheDir) ?: FILE_EMPTY
+
+        FileOutputStream(tempFile).use {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+        }
+        return tempFile
     }
 
     private fun getImageUri(bitmap: Bitmap): Uri? {
@@ -230,18 +243,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         return null
     }
 
-    private fun getAbsolutePathFromUri(uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = applicationContext.contentResolver.query(uri, projection, null, null, null)
-        cursor?.use {
-            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            if (it.moveToFirst()) {
-                return it.getString(columnIndex)
-            }
-        }
-        return null
-    }
-
     private fun shortToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
@@ -251,10 +252,14 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     companion object {
-        private val requestPermissions = listOf(
+        private val requestPermissions = arrayOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+        )
+
+        private val locationPermissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.CAMERA,
         )
 
         val contentValues = ContentValues().apply {
