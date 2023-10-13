@@ -27,7 +27,7 @@ public class LetterController {
     public ResponseEntity<LetterResponse> findLetterById(@Auth final PlayerRequest playerRequest,
                                                          @PathVariable final Long letterId) {
         final LetterReadCommand letterReadCommand = LetterReadCommand.of(playerRequest, letterId);
-        final Letter letter = letterService.findLetterById(letterReadCommand);
+        final Letter letter = letterService.findLetter(letterReadCommand);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(LetterResponse.from(letter));

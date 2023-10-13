@@ -40,10 +40,9 @@ public class LetterService {
     }
 
     @Transactional(readOnly = true)
-    public Letter findLetterById(final LetterReadCommand letterReadCommand) {
+    public Letter findLetter(final LetterReadCommand letterReadCommand) {
         final Player player = playerService.findPlayerById(letterReadCommand.playerId());
-        final Letter foundLetter = findLetterById2(letterReadCommand.letterId());
-
+        final Letter foundLetter = findLetterById(letterReadCommand.letterId());
         final Game gameInProgress = getGameInProgress(player);
         final LetterLogCreateCommand letterLogCreateCommand = new LetterLogCreateCommand(gameInProgress, foundLetter);
         readLetterLogService.log(letterLogCreateCommand);
@@ -51,7 +50,7 @@ public class LetterService {
     }
 
     @Transactional(readOnly = true)
-    public Letter findLetterById2(final Long id) {
+    public Letter findLetterById(final Long id) {
         return letterRepository.findById(id)
                 .orElseThrow(() -> new LetterException(NO_EXIST));
     }
