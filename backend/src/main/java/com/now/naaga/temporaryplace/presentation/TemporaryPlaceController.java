@@ -52,4 +52,6 @@ public class TemporaryPlaceController {
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
+    /* S3사용
+     */
 }

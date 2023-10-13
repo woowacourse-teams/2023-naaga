@@ -48,6 +48,11 @@ public class AwsS3FileManager {
         }
     }
 
+    private String buildFileName(final String originalFileName) {
+        final String extension = originalFileName.substring(originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR));
+        return UUID.randomUUID() + extension;
+    }
+
     private ObjectMetadata initializeObjectMetadata(final MultipartFile multipartFile) {
         final ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getSize());
@@ -55,8 +60,7 @@ public class AwsS3FileManager {
         return objectMetadata;
     }
 
-    private String buildFileName(final String originalFileName) {
-        final String extension = originalFileName.substring(originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR));
-        return UUID.randomUUID() + extension;
+    public void deleteFile() {
+
     }
 }
