@@ -8,11 +8,13 @@ import com.now.domain.repository.StatisticsRepository
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.remote.retrofit.service.AdventureService
 import com.now.naaga.data.remote.retrofit.service.AuthService
+import com.now.naaga.data.remote.retrofit.service.LetterService
 import com.now.naaga.data.remote.retrofit.service.PlaceService
 import com.now.naaga.data.remote.retrofit.service.RankService
 import com.now.naaga.data.remote.retrofit.service.StatisticsService
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.repository.DefaultAuthRepository
+import com.now.naaga.data.repository.DefaultLetterRepository
 import com.now.naaga.data.repository.DefaultPlaceRepository
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.repository.DefaultStatisticsRepository
@@ -47,4 +49,9 @@ class RepositoryModule {
     @Provides
     fun provideStatisticsRepository(statisticsService: StatisticsService): StatisticsRepository =
         DefaultStatisticsRepository(statisticsService)
+
+    @Singleton
+    @Provides
+    fun provideLetterRepository(letterService: LetterService): DefaultLetterRepository =
+        DefaultLetterRepository(letterService)
 }

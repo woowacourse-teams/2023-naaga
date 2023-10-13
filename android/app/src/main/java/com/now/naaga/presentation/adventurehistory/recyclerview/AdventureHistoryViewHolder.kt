@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.now.domain.model.AdventureResult
-import com.now.domain.model.AdventureResultType
+import com.now.domain.model.type.AdventureResultType
 import com.now.naaga.R
 import com.now.naaga.databinding.ItemHistoryBinding
 

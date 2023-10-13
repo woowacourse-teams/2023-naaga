@@ -4,7 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RefreshTokenDto(
-    @SerialName("refreshToken")
-    val refreshToken: String,
+data class ClosedLetterDto(
+    @SerialName("id")
+    val id: Long,
+    @SerialName("coordinate")
+    val coordinateDto: CoordinateDto,
 )

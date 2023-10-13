@@ -1,7 +1,7 @@
 package com.now.naaga.data.remote.retrofit.service
 
 import com.now.naaga.data.remote.dto.PlaceDto
-import com.now.naaga.data.remote.dto.PostPlaceDto
+import com.now.naaga.data.remote.dto.post.PostPlaceDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
