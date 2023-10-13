@@ -33,9 +33,8 @@ class DefaultPlaceRepository(
         name: String,
         description: String,
         coordinate: Coordinate,
-        image: String,
+        file: File,
     ): Place {
-        val file = File(image)
         val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val imagePart = MultipartBody.Part.createFormData(
             KEY_IMAGE_FILE,

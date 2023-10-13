@@ -2,6 +2,7 @@ package com.now.domain.repository
 
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
+import java.io.File
 
 interface PlaceRepository {
     suspend fun fetchMyPlaces(
@@ -17,6 +18,6 @@ interface PlaceRepository {
         name: String,
         description: String,
         coordinate: Coordinate,
-        image: String,
+        file: File,
     ): Place
 }
