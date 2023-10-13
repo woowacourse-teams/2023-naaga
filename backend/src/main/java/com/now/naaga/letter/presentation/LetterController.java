@@ -7,6 +7,7 @@ import com.now.naaga.letter.application.dto.FindNearByLetterCommand;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.presentation.dto.NearByLetterResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,9 +34,11 @@ public class LetterController {
     public ResponseEntity<List<NearByLetterResponse>> findLetterNearBy(@Auth final PlayerRequest playerRequest,
                                                                        @RequestParam(name = "latitude") final String latitude,
                                                                        @RequestParam(name = "longitude") final String longitude) {
-        if (latitude == null || longitude == null) {
+        if (StringUtils.isEmpty(latitude) || StringUtils.isEmpty(longitude)) {
+            System.out.println("여기 잡혔니?");
             throw new CommonException(INVALID_REQUEST_PARAMETERS);
         }
+
         final FindNearByLetterCommand findNearByLetterCommand = FindNearByLetterCommand.from(latitude, longitude);
 
         final List<Letter> letters = letterService.findNearByLetters(findNearByLetterCommand);
