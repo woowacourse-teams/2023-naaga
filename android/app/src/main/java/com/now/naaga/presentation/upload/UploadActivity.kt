@@ -51,14 +51,20 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
     ) { permission: Map<String, Boolean> ->
-        permission.entries.forEach { entry ->
-            val isGranted = entry.value
-            if (!isGranted) {
-                showPermissionSnackbar()
+
+        val keys = permission.entries.map { it.key }
+        val isStorageRequest = storagePermissions.any {
+            keys.contains(it)
+        }
+        if (isStorageRequest) {
+            if (permission.entries.map { it.value }.contains(false)) {
+                showPermissionSnackbar(getString(R.string.upload_snackbar_storage_message))
             } else {
                 openCamera()
             }
+            return@registerForActivityResult
         }
+        showPermissionSnackbar(getString(R.string.upload_snackbar_location_message))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,9 +136,9 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
     }
 
-    private fun showPermissionSnackbar() {
+    private fun showPermissionSnackbar(message: String) {
         binding.root.showSnackbarWithEvent(
-            message = getString(R.string.upload_snackbar_message),
+            message = message,
             actionTitle = getString(R.string.upload_snackbar_action_title),
             action = { openSetting() },
         )
@@ -146,6 +152,8 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                     location.let { viewModel.setCoordinate(getCoordinate(location)) }
                 }
                 .addOnFailureListener { }
+        } else {
+            requestPermissionLauncher.launch(locationPermissions)
         }
     }
 
@@ -175,11 +183,11 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private fun setClickListeners() {
         binding.ivUploadCameraIcon.setOnClickListener {
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
-            requestPermission()
+            requestStoragePermission()
         }
         binding.ivUploadPhoto.setOnClickListener {
             logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
-            requestPermission()
+            requestStoragePermission()
         }
         binding.ivUploadBack.setOnClickListener {
             finish()
@@ -193,8 +201,8 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
     }
 
-    private fun requestPermission() {
-        val permissionToRequest = requestPermissions.toMutableList()
+    private fun requestStoragePermission() {
+        val permissionToRequest = storagePermissions.toMutableList()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return openCamera()
@@ -252,7 +260,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     companion object {
-        private val requestPermissions = arrayOf(
+        private val storagePermissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
