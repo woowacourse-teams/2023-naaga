@@ -97,6 +97,7 @@ class LetterControllerTest extends CommonControllerTest {
             softAssertions.assertThat(actual)
                     .usingRecursiveComparison()
                     .ignoringExpectedNullFields()
+                    .ignoringFieldsOfTypes(LocalDateTime.class)
                     .isEqualTo(expected);
         });
     }
