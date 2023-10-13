@@ -1,4 +1,4 @@
-package com.now.naaga.letter.application.dto;
+package com.now.naaga.letter.presentation.dto;
 
 import com.now.naaga.place.domain.Position;
 

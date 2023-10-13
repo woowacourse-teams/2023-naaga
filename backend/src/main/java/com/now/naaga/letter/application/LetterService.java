@@ -1,6 +1,6 @@
 package com.now.naaga.letter.application;
 
-import com.now.naaga.letter.application.dto.FindNearByLetterCommand;
+import com.now.naaga.letter.presentation.dto.FindNearByLetterCommand;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.repository.LetterRepository;
 import org.springframework.stereotype.Service;

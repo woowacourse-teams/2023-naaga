@@ -3,7 +3,7 @@ package com.now.naaga.letter.presentation;
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.letter.application.LetterService;
-import com.now.naaga.letter.application.dto.FindNearByLetterCommand;
+import com.now.naaga.letter.presentation.dto.FindNearByLetterCommand;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.presentation.dto.NearByLetterResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
