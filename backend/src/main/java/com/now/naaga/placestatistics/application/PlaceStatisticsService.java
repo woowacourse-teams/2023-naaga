@@ -1,10 +1,11 @@
 package com.now.naaga.placestatistics.application;
 
-import com.now.naaga.placestatistics.domain.PlaceStatistics;
+import com.now.naaga.placestatistics.application.dto.FindPlaceStatisticsByPlaceIdCommand;
 import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
+import com.now.naaga.placestatistics.domain.PlaceStatistics;
+import com.now.naaga.placestatistics.exception.PlaceStatisticsException;
 import com.now.naaga.placestatistics.exception.PlaceStatisticsExceptionType;
 import com.now.naaga.placestatistics.repository.PlaceStatisticsRepository;
-import com.now.naaga.placestatistics.exception.PlaceStatisticsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,5 +26,12 @@ public class PlaceStatisticsService {
                 .orElseThrow(() -> new PlaceStatisticsException(PlaceStatisticsExceptionType.NOT_FOUND));
 
         placeStatistics.subtractLike();
+    }
+
+    public PlaceStatistics findPlaceStatisticsByPlaceId(final FindPlaceStatisticsByPlaceIdCommand findPlaceStatisticsByPlaceIdCommand) {
+        final Long placeId = findPlaceStatisticsByPlaceIdCommand.placeId();
+
+        return placeStatisticsRepository.findByPlaceId(placeId)
+                .orElseThrow(() -> new PlaceStatisticsException(PlaceStatisticsExceptionType.NOT_FOUND));
     }
 }
