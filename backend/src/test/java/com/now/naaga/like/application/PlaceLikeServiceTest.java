@@ -6,6 +6,7 @@ import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
+import com.now.naaga.like.application.dto.CountPlaceLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.exception.PlaceLikeException;
 import com.now.naaga.like.repository.PlaceLikeRepository;
@@ -137,5 +138,22 @@ class PlaceLikeServiceTest {
 
         // when & then`
         assertDoesNotThrow(() -> placeLikeService.cancelLike(cancelLikeCommand));
+    }
+
+    @Test
+    void 장소에_대한_좋아요_수를_반환한다() {
+        //given
+        final Long expected = 123L;
+        final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
+                .likeCount(expected)
+                .build();
+        final Long placeId = placeStatistics.getPlace().getId();
+
+        // when
+        final CountPlaceLikeCommand countPlaceLikeCommand = new CountPlaceLikeCommand(placeId);
+        final Long actual = placeLikeService.countPlaceLike(countPlaceLikeCommand);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
     }
 }
