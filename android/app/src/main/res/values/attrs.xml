@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GameButton">
+        <attr name="radius" format="dimension" />
+        <attr name="buttonColor" format="enum">
+            <enum name="yellow" value="0" />
+            <enum name="blue" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>
