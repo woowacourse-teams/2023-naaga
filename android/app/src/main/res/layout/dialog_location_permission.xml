@@ -35,18 +35,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_dialog_location" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.now.naaga.presentation.custom.GameButton
             android:id="@+id/btn_dialog_location_setting"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
             android:layout_marginBottom="28dp"
-            android:background="@drawable/bg_yellow_button"
             android:fontFamily="@font/main_font"
             android:text="@string/locationDialog_setting"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:radius="8dp"
+            app:buttonColor="yellow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

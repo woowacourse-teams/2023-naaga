@@ -50,44 +50,49 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.now.naaga.presentation.custom.GameButton
             android:id="@+id/btn_beginAdventure_begin"
+            style="@style/BeginActivity.Text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/BeginActivity.Text"
+            android:text="@{viewModel.adventure == null ? @string/beginAdventure_do_adventure : @string/beginAdventure_continue_adventure}"
             android:textSize="44sp"
-            tools:text="모험 시작"
             android:layout_marginTop="20dp"
             android:layout_marginHorizontal="20dp"
-            android:text="@{viewModel.adventure == null ? @string/beginAdventure_do_adventure : @string/beginAdventure_continue_adventure}"
-            android:background="@drawable/bg_yellow_button"
-            android:paddingVertical="20dp"
+            android:paddingVertical="24dp"
+            app:radius="12dp"
+            app:buttonColor="yellow"
             app:layout_constraintTop_toBottomOf="@+id/iv_beginAdventure_logo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="모험 시작" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.now.naaga.presentation.custom.GameButton
             android:id="@+id/btn_beginAdventure_upload"
-            android:layout_width="0dp"
             style="@style/BeginActivity.Text"
-            android:layout_marginTop="20dp"
-            android:textSize="24sp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_blue_button"
-            android:layout_marginEnd="10dp"
             android:text="@string/beginAdventure_upload_place"
+            android:textSize="24sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:paddingVertical="20dp"
+            app:radius="8dp"
+            app:buttonColor="blue"
             app:layout_constraintEnd_toStartOf="@id/btn_beginAdventure_myPage"
             app:layout_constraintStart_toStartOf="@id/btn_beginAdventure_begin"
             app:layout_constraintTop_toBottomOf="@id/btn_beginAdventure_begin" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.now.naaga.presentation.custom.GameButton
             android:id="@+id/btn_beginAdventure_myPage"
-            android:layout_width="0dp"
             style="@style/BeginActivity.Text"
-            android:textSize="24sp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_blue_button"
             android:text="@string/beginAdventure_my_page"
+            android:textSize="24sp"
+            app:radius="8dp"
+            app:buttonColor="blue"
+            android:paddingVertical="20dp"
             app:layout_constraintStart_toEndOf="@id/btn_beginAdventure_upload"
             app:layout_constraintEnd_toEndOf="@id/btn_beginAdventure_begin"
             app:layout_constraintTop_toTopOf="@id/btn_beginAdventure_upload"
