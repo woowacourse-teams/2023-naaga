@@ -4,5 +4,6 @@ public enum PlaceLikeType {
 
     LIKE,
     DISLIKE,
+    NONE,
     ;
 }
