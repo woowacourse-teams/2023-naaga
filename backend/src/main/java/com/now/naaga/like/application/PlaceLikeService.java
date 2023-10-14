@@ -46,35 +46,38 @@ public class PlaceLikeService {
         final Long placeId = applyLikeCommand.placeId();
         final PlaceLikeType placeLikeType = applyLikeCommand.placeLikeType();
 
-        placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId)
-                           .ifPresentOrElse(placeLike -> updatePlaceLike(placeLike, placeLikeType),
-                                            () -> createPlaceLike(playerId, placeId, placeLikeType));
-
-        return placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId).get();
-    }
-
-    private void updatePlaceLike(final PlaceLike placeLike,
-                                 final PlaceLikeType placeLikeType) {
-        if (placeLike.getType() == placeLikeType) {
-            throw new PlaceLikeException(PlaceLikeExceptionType.ALREADY_APPLIED_TYPE);
-        }
-        placeLike.switchType();
-        if (placeLikeType == PlaceLikeType.LIKE) {
-            placeStatisticsService.plusLike(new PlusLikeCommand(placeLike.getPlace().getId()));
-        } else {
-            placeStatisticsService.subtractLike(new SubtractLikeCommand(placeLike.getPlace().getId()));
-        }
-    }
-
-    private void createPlaceLike(final Long playerId,
-                                 final Long placeId,
-                                 final PlaceLikeType placeLikeType) {
-        final Player player = playerService.findPlayerById(playerId);
-        final Place place = placeService.findPlaceById(new FindPlaceByIdCommand(placeId));
-        placeLikeRepository.save(new PlaceLike(place, player, placeLikeType));
         if (placeLikeType == PlaceLikeType.LIKE) {
             placeStatisticsService.plusLike(new PlusLikeCommand(placeId));
         }
+
+        final Optional<PlaceLike> placeLikeOptional = placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId);
+
+        if (placeLikeOptional.isPresent()) {
+            final PlaceLike placeLike = placeLikeOptional.get();
+            return updatePlaceLike(placeLike, placeLikeType);
+        }
+
+        return createPlaceLike(playerId, placeId, placeLikeType);
+    }
+
+    private PlaceLike updatePlaceLike(final PlaceLike placeLike,
+                                      final PlaceLikeType placeLikeType) {
+        if (placeLike.getType() == placeLikeType) {
+            throw new PlaceLikeException(PlaceLikeExceptionType.ALREADY_APPLIED_TYPE);
+        }
+        if (placeLikeType == PlaceLikeType.DISLIKE) {
+            placeStatisticsService.subtractLike(new SubtractLikeCommand(placeLike.getPlace().getId()));
+        }
+        placeLike.switchType();
+        return placeLike;
+    }
+
+    private PlaceLike createPlaceLike(final Long playerId,
+                                      final Long placeId,
+                                      final PlaceLikeType placeLikeType) {
+        final Player player = playerService.findPlayerById(playerId);
+        final Place place = placeService.findPlaceById(new FindPlaceByIdCommand(placeId));
+        return placeLikeRepository.save(new PlaceLike(place, player, placeLikeType));
     }
 
     public void cancelLike(final CancelLikeCommand cancelLikeCommand) {
