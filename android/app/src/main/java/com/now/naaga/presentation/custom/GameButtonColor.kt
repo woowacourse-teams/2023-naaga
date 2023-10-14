@@ -20,5 +20,11 @@ enum class GameButtonColor(
         "#0CB4F9",
         "#AFEDFF",
         "#0D3A85",
-    ),
+    ), ;
+
+    companion object {
+        fun getColor(ordinal: Int): GameButtonColor {
+            return values().find { it.ordinal == ordinal } ?: YELLOW
+        }
+    }
 }

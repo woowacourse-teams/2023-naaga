@@ -29,10 +29,7 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
             0,
         ).apply {
             radius = getDimensionPixelSize(R.styleable.GameButton_radius, 0).toFloat()
-            val gameButtonColor = when (getInteger(R.styleable.GameButton_buttonColor, 0)) {
-                1 -> GameButtonColor.BLUE
-                else -> GameButtonColor.YELLOW
-            }
+            val gameButtonColor = GameButtonColor.getColor((getInteger(R.styleable.GameButton_buttonColor, 0)))
             mainColor = Color.parseColor(gameButtonColor.mainColor)
             firstShadowColor = Color.parseColor(gameButtonColor.firstShadowColor)
             middleColor = Color.parseColor(gameButtonColor.middleColor)
