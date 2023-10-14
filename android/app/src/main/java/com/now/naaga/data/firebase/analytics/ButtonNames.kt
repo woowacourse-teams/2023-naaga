@@ -6,9 +6,6 @@ const val BEGIN_GO_SETTING = "GO_SETTING"
 const val BEGIN_GO_UPLOAD = "GO_UPLOAD"
 const val BEGIN_GO_MYPAGE = "GO_MYPAGE"
 
-// LocationPermissionDialog
-const val LOCATION_PERMISSION_OPEN_SETTING = "OPEN_SETTING"
-
 // AdventureResultActivity
 const val RESULT_RESULT_RETURN = "RESULT_RETURN"
 
@@ -23,7 +20,6 @@ const val ON_ADVENTURE_END_ADVENTURE = "END_ADVENTURE"
 
 // UploadActivity
 const val UPLOAD_OPEN_CAMERA = "OPEN_CAMERA"
-const val UPLOAD_SET_COORDINATE = "SET_COORDINATE"
 
 // CameraPermissionDialog
 const val CAMERA_PERMISSION_OPEN_SETTING = "OPEN_SETTING"

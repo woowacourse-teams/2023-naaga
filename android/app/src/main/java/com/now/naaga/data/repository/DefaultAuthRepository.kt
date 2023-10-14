@@ -5,7 +5,7 @@ import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.mapper.toDto
 import com.now.naaga.data.remote.retrofit.service.AuthService
-import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.extension.getValueOrThrow
 import com.now.naaga.util.unlinkWithKakao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

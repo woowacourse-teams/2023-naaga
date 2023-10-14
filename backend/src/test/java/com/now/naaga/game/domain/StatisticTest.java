@@ -1,5 +1,6 @@
 package com.now.naaga.game.domain;
 
+import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
@@ -20,7 +21,7 @@ import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
 import static com.now.naaga.common.fixture.PositionFixture.던킨도너츠_올림픽공원점_좌표;
 import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
 import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.ResultType.SUCCESS;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @ActiveProfiles("test")

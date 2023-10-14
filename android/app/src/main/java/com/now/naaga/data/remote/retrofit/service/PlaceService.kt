@@ -1,6 +1,7 @@
 package com.now.naaga.data.remote.retrofit.service
 
 import com.now.naaga.data.remote.dto.PlaceDto
+import com.now.naaga.data.remote.dto.post.PostPlaceDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -25,9 +26,9 @@ interface PlaceService {
     ): Response<PlaceDto>
 
     @Multipart
-    @POST("/places")
+    @POST("/temporary-places")
     suspend fun registerPlace(
         @PartMap postData: HashMap<String, RequestBody>,
         @Part imageFile: MultipartBody.Part,
-    ): Response<PlaceDto>
+    ): Response<PostPlaceDto>
 }

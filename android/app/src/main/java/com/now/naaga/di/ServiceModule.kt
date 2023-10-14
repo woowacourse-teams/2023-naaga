@@ -5,6 +5,7 @@ import com.now.naaga.BuildConfig
 import com.now.naaga.data.remote.retrofit.AuthInterceptor
 import com.now.naaga.data.remote.retrofit.service.AdventureService
 import com.now.naaga.data.remote.retrofit.service.AuthService
+import com.now.naaga.data.remote.retrofit.service.LetterService
 import com.now.naaga.data.remote.retrofit.service.PlaceService
 import com.now.naaga.data.remote.retrofit.service.RankService
 import com.now.naaga.data.remote.retrofit.service.StatisticsService
@@ -56,4 +57,8 @@ class ServiceModule {
     @Singleton
     @Provides
     fun provideAuthService(retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideLetterService(retrofit: Retrofit): LetterService = retrofit.create(LetterService::class.java)
 }

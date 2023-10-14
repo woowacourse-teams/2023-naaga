@@ -4,7 +4,7 @@ import com.now.domain.model.Rank
 import com.now.domain.repository.RankRepository
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.remote.retrofit.service.RankService
-import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.extension.getValueOrThrow
 
 class DefaultRankRepository(
     private val rankService: RankService,

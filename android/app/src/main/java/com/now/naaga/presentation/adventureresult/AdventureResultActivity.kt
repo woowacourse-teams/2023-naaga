@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.now.domain.model.AdventureResult
-import com.now.domain.model.AdventureResultType
+import com.now.domain.model.type.AdventureResultType
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.ADVENTURE_RESULT
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate

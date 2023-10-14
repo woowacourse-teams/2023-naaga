@@ -26,6 +26,8 @@ import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
+import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
+import com.now.naaga.presentation.common.dialog.PolaroidDialog
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
