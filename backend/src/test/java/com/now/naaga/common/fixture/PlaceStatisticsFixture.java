@@ -1,6 +1,6 @@
 package com.now.naaga.common.fixture;
 
-import com.now.naaga.placestatistics.PlaceStatistics;
+import com.now.naaga.placestatistics.domain.PlaceStatistics;
 
 public class PlaceStatisticsFixture {
 
