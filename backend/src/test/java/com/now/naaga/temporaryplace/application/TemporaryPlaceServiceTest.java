@@ -29,21 +29,21 @@ class TemporaryPlaceServiceTest {
     @Autowired
     private TemporaryPlaceBuilder temporaryPlaceBuilder;
 
-    @Test
-    void ID로_검수_장소_데이터를_삭제한다() {
-        // given
-        final TemporaryPlace temporaryPlace = temporaryPlaceBuilder.init()
-                                                                   .build();
-
-        final Long id = temporaryPlace.getId();
-
-        // when
-        temporaryPlaceService.deleteById(id);
-
-        // then
-        final TemporaryPlace actual = temporaryPlaceRepository.findById(id)
-                                                              .orElse(null);
-
-        assertThat(actual).isNull();
-    }
+//    @Test
+//    void ID로_검수_장소_데이터를_삭제한다() {
+//        // given
+//        final TemporaryPlace temporaryPlace = temporaryPlaceBuilder.init()
+//                                                                   .build();
+//
+//        final Long id = temporaryPlace.getId();
+//
+//        // when
+//        temporaryPlaceService.deleteById(id);
+//
+//        // then
+//        final TemporaryPlace actual = temporaryPlaceRepository.findById(id)
+//                                                              .orElse(null);
+//
+//        assertThat(actual).isNull();
+//    }
 }

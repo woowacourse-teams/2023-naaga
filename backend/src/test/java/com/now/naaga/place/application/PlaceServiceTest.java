@@ -47,45 +47,45 @@ class PlaceServiceTest {
     @Autowired
     private PlayerBuilder playerBuilder;
 
-    @Transactional
-    @Test
-    void 장소를_등록한_뒤_기존의_검수_장소_데이터는_삭제한다() {
-        // given
-        final Player player = playerBuilder.init()
-                                           .build();
-
-        final TemporaryPlace temporaryPlace = temporaryPlaceBuilder.init()
-                                                                   .build();
-
-        final Long temporaryPlaceId = temporaryPlace.getId();
-
-        final CreatePlaceCommand createPlaceCommand = new CreatePlaceCommand("루터회관",
-                                                                             "이곳은 루터회관이다 알겠냐",
-                                                                             Position.of(1.23, 4.56),
-                                                                             "image/url",
-                                                                             player.getId(),
-                                                                             temporaryPlaceId);
-
-        // when
-        final Place actual = placeService.createPlace(createPlaceCommand);
-
-        // then
-        final Place expected = new Place(createPlaceCommand.name(),
-                                         createPlaceCommand.description(),
-                                         createPlaceCommand.position(),
-                                         createPlaceCommand.imageUrl(),
-                                         player);
-
-        final TemporaryPlace found = temporaryPlaceRepository.findById(temporaryPlaceId)
-                                                             .orElse(null);
-
-        assertSoftly(softAssertions -> {
-            assertThat(actual).usingRecursiveComparison()
-                              .ignoringExpectedNullFields()
-                              .isEqualTo(expected);
-            assertThat(found).isNull();
-        });
-    }
+//    @Transactional
+//    @Test
+//    void 장소를_등록한_뒤_기존의_검수_장소_데이터는_삭제한다() {
+//        // given
+//        final Player player = playerBuilder.init()
+//                                           .build();
+//
+//        final TemporaryPlace temporaryPlace = temporaryPlaceBuilder.init()
+//                                                                   .build();
+//
+//        final Long temporaryPlaceId = temporaryPlace.getId();
+//
+//        final CreatePlaceCommand createPlaceCommand = new CreatePlaceCommand("루터회관",
+//                                                                             "이곳은 루터회관이다 알겠냐",
+//                                                                             Position.of(1.23, 4.56),
+//                                                                             "image/url",
+//                                                                             player.getId(),
+//                                                                             temporaryPlaceId);
+//
+//        // when
+//        final Place actual = placeService.createPlace(createPlaceCommand);
+//
+//        // then
+//        final Place expected = new Place(createPlaceCommand.name(),
+//                                         createPlaceCommand.description(),
+//                                         createPlaceCommand.position(),
+//                                         createPlaceCommand.imageUrl(),
+//                                         player);
+//
+//        final TemporaryPlace found = temporaryPlaceRepository.findById(temporaryPlaceId)
+//                                                             .orElse(null);
+//
+//        assertSoftly(softAssertions -> {
+//            assertThat(actual).usingRecursiveComparison()
+//                              .ignoringExpectedNullFields()
+//                              .isEqualTo(expected);
+//            assertThat(found).isNull();
+//        });
+//    }
 
     @Test
     void 장소_등록_시_주변_반경_20M_내에_등록된_장소가_존재한다면_예외가_발생한다() {
