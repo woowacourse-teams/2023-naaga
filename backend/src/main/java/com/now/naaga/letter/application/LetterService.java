@@ -39,7 +39,7 @@ public class LetterService {
         this.playerService = playerService;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Letter findLetter(final LetterReadCommand letterReadCommand) {
         final Player player = playerService.findPlayerById(letterReadCommand.playerId());
         final Letter foundLetter = findLetterById(letterReadCommand.letterId());
