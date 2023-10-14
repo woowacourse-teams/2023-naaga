@@ -1,35 +1,33 @@
 package com.now.naaga.like.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceLikeBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
-import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
+import com.now.naaga.like.application.dto.CheckMyPlaceLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
-import com.now.naaga.like.exception.PlaceLikeException;
+import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.placestatistics.domain.PlaceStatistics;
 import com.now.naaga.placestatistics.repository.PlaceStatisticsRepository;
 import com.now.naaga.player.domain.Player;
-import org.junit.jupiter.api.Assertions;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.Optional;
-
-import static com.now.naaga.like.exception.PlaceLikeExceptionType.NOT_EXIST;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
+@DisplayNameGeneration(ReplaceUnderscores.class)
 @Sql("/truncate.sql")
 @ActiveProfiles("test")
 @SpringBootTest
@@ -70,18 +68,18 @@ class PlaceLikeServiceTest {
     void 좋아요를_삭제하고_통계에서_좋아요를_1개_뺸다() {
         // given
         final Place place = placeBuilder.init()
-                .build();
+                                        .build();
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final PlaceLike placeLike = placeLikeBuilder.init()
-                .place(place)
-                .player(player)
-                .build();
+                                                    .place(place)
+                                                    .player(player)
+                                                    .build();
         final long beforeLikeCount = 10L;
         placeStatisticsBuilder.init()
-                .place(place)
-                .likeCount(beforeLikeCount)
-                .build();
+                              .place(place)
+                              .likeCount(beforeLikeCount)
+                              .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when
@@ -100,18 +98,18 @@ class PlaceLikeServiceTest {
     void 좋아요가_0개일_때_좋아요를_삭제하면_통계에서_좋아요를_0개로_유지한다() {
         // given
         final Place place = placeBuilder.init()
-                .build();
+                                        .build();
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final PlaceLike placeLike = placeLikeBuilder.init()
-                .place(place)
-                .player(player)
-                .build();
+                                                    .place(place)
+                                                    .player(player)
+                                                    .build();
         final long beforeLikeCount = 0L;
         placeStatisticsBuilder.init()
-                .place(place)
-                .likeCount(beforeLikeCount)
-                .build();
+                              .place(place)
+                              .likeCount(beforeLikeCount)
+                              .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when
@@ -130,12 +128,61 @@ class PlaceLikeServiceTest {
     void 좋아요를_삭제할_때_좋아요가_존재하지_않으면_아무_일도_일어나지_않는다() {
         // given
         final Place place = placeBuilder.init()
-                .build();
+                                        .build();
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when & then`
         assertDoesNotThrow(() -> placeLikeService.cancelLike(cancelLikeCommand));
+    }
+
+    @Test
+    void 특정_장소에_대한_나의_좋아요_여부_조회시_내가_누른_좋아요가_존재한다면_해당_좋아요_타입을_반환한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        placeLikeBuilder.init()
+                        .player(player)
+                        .place(place)
+                        .placeLikeType(PlaceLikeType.LIKE)
+                        .build();
+
+        // when
+        final CheckMyPlaceLikeCommand command = new CheckMyPlaceLikeCommand(player.getId(), place.getId());
+        final PlaceLikeType actual = placeLikeService.checkMyLike(command);
+
+        // then
+        assertThat(actual).isEqualTo(PlaceLikeType.LIKE);
+    }
+
+    @Test
+    void 특정_장소에_대한_나의_좋아요_여부_조회시_내가_누른_좋아요가_없다면_NONE_타입을_반환한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place applied = placeBuilder.init()
+                                          .build();
+
+        final Place notApplied = placeBuilder.init()
+                                             .build();
+
+        placeLikeBuilder.init()
+                        .player(player)
+                        .place(applied)
+                        .placeLikeType(PlaceLikeType.LIKE)
+                        .build();
+
+        // when
+        final CheckMyPlaceLikeCommand command = new CheckMyPlaceLikeCommand(player.getId(), notApplied.getId());
+        final PlaceLikeType actual = placeLikeService.checkMyLike(command);
+
+        // then
+        assertThat(actual).isEqualTo(PlaceLikeType.NONE);
     }
 }

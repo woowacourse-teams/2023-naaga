@@ -1,18 +1,15 @@
 package com.now.naaga.like.application;
 
 import com.now.naaga.like.application.dto.CancelLikeCommand;
+import com.now.naaga.like.application.dto.CheckMyPlaceLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
-import com.now.naaga.like.exception.PlaceLikeException;
-import com.now.naaga.like.exception.PlaceLikeExceptionType;
+import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
-import com.now.naaga.player.application.PlayerService;
-import com.now.naaga.player.domain.Player;
 import com.now.naaga.placestatistics.application.PlaceStatisticsService;
 import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -42,5 +39,14 @@ public class PlaceLikeService {
 
         final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
         placeStatisticsService.subtractLike(subtractLikeCommand);
+    }
+
+    public PlaceLikeType checkMyLike(final CheckMyPlaceLikeCommand checkMyPlaceLikeCommand) {
+        final Long playerId = checkMyPlaceLikeCommand.playerId();
+        final Long placeId = checkMyPlaceLikeCommand.placeId();
+
+        return placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId)
+                                  .map(PlaceLike::getType)
+                                  .orElse(PlaceLikeType.NONE);
     }
 }
