@@ -3,13 +3,12 @@ package com.now.naaga.like.presentation;
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.like.application.PlaceLikeService;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
+import com.now.naaga.like.application.dto.CountPlaceLikeCommand;
+import com.now.naaga.like.presentation.dto.PlaceLikeCountResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/places/{placeId}/likes")
 @RestController
@@ -29,5 +28,16 @@ public class PlaceLikeController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<PlaceLikeCountResponse> countPlaceLike(@PathVariable Long placeId) {
+        final CountPlaceLikeCommand countPlaceLikeCommand = new CountPlaceLikeCommand(placeId);
+        final Long placeLikeCount = placeLikeService.countPlaceLike(countPlaceLikeCommand);
+
+        final PlaceLikeCountResponse placeLikeCountResponse = new PlaceLikeCountResponse(placeLikeCount);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(placeLikeCountResponse);
     }
 }
