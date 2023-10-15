@@ -13,6 +13,7 @@ import java.util.List;
 public class LetterService {
 
     private static final double LETTER_RADIUS = 0.1;
+
     private final LetterRepository letterRepository;
 
     public LetterService(final LetterRepository letterRepository) {
