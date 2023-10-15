@@ -39,7 +39,7 @@ public class LetterLogController {
     public ResponseEntity<List<LetterResponse>> findLetterInGame(@Auth final PlayerRequest playerRequest,
                                                                  @RequestParam(name = "gameId") final Long gameId,
                                                                  @RequestParam(name = "logType") final String logType) {
-        if (READ.name().equalsIgnoreCase(logType) || WRITE.name().equalsIgnoreCase(logType)) {
+        if (!(READ.name().equalsIgnoreCase(logType) || WRITE.name().equalsIgnoreCase(logType))) {
             throw new CommonException(INVALID_REQUEST_PARAMETERS);
         }
         final LetterByGameCommand letterByGameCommand = LetterByGameCommand.of(playerRequest, gameId);

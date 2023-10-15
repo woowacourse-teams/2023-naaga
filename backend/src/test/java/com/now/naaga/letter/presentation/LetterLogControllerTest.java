@@ -41,9 +41,6 @@ class LetterLogControllerTest extends CommonControllerTest {
     private AuthTokenGenerator authTokenGenerator;
 
     @Autowired
-    private GameRepository gameRepository;
-
-    @Autowired
     private WriteLetterLogRepository writeLetterLogRepository;
 
     @Autowired
@@ -155,8 +152,6 @@ class LetterLogControllerTest extends CommonControllerTest {
         final Letter letter = letterBuilder.init()
                 .position(잠실_루터회관_정문_좌표)
                 .build();
-
-        System.out.println("뭐지무저ㅣ: "+ writeLetterLogRepository.findAll().size());
 
         final WriteLetterLog writeLetterLog1 = writeLetterLogBuilder.init()
                 .game(game)
