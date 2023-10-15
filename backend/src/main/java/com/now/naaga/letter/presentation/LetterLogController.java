@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
 import static com.now.naaga.letter.presentation.LogType.READ;
