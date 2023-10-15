@@ -7,7 +7,6 @@ import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.*;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.domain.Game;
-import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
