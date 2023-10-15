@@ -1,6 +1,8 @@
 package com.now.naaga.like.presentation;
 
+import static com.now.naaga.like.exception.PlaceLikeExceptionType.ALREADY_APPLIED_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import com.now.naaga.auth.domain.AuthToken;
@@ -11,6 +13,7 @@ import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceLikeBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.presentation.dto.ApplyPlaceLikeRequest;
@@ -22,7 +25,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -100,10 +102,58 @@ class PlaceLikeControllerTest extends CommonControllerTest {
                                                                  player.getId(),
                                                                  place.getId(),
                                                                  PlaceLikeType.LIKE);
-        SoftAssertions.assertSoftly(softAssertions -> {
+        assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.CREATED.value());
             softAssertions.assertThat(actual).usingRecursiveComparison()
                           .ignoringExpectedNullFields()
+                          .isEqualTo(expected);
+        });
+    }
+
+    @Test
+    void 좋아요_등록_요청시_중복되는_좋아요_타입에_대한_입력이_들어오면_예외_응답과_400_응답을_반환한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        placeStatisticsBuilder.init()
+                              .place(place)
+                              .build();
+
+        placeLikeBuilder.init()
+                        .player(player)
+                        .place(place)
+                        .placeLikeType(PlaceLikeType.LIKE)
+                        .build();
+
+        final ApplyPlaceLikeRequest applyPlaceLikeRequest = new ApplyPlaceLikeRequest(PlaceLikeType.LIKE);
+
+        final Member member = player.getMember();
+        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(applyPlaceLikeRequest)
+                .when()
+                .post("/places/{placeId}/likes", place.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        final int statusCode = extract.statusCode();
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+        final ExceptionResponse expected = new ExceptionResponse(ALREADY_APPLIED_TYPE.errorCode(),
+                                                                 ALREADY_APPLIED_TYPE.errorMessage());
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            softAssertions.assertThat(actual).usingRecursiveComparison()
                           .isEqualTo(expected);
         });
     }
