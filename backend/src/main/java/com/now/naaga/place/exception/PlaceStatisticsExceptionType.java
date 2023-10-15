@@ -1,4 +1,4 @@
-package com.now.naaga.placestatistics.exception;
+package com.now.naaga.place.exception;
 
 import com.now.naaga.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;

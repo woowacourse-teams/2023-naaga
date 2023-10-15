@@ -14,7 +14,7 @@ import com.now.naaga.place.domain.PlaceRecommendService;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.domain.SortType;
 import com.now.naaga.place.exception.PlaceException;
-import com.now.naaga.place.persistence.repository.PlaceRepository;
+import com.now.naaga.place.repository.PlaceRepository;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import java.util.List;

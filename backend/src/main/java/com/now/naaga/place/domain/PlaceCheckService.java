@@ -2,11 +2,10 @@ package com.now.naaga.place.domain;
 
 import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.exception.PlaceExceptionType;
-import com.now.naaga.place.persistence.repository.PlaceRepository;
+import com.now.naaga.place.repository.PlaceRepository;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Transactional
 @Service

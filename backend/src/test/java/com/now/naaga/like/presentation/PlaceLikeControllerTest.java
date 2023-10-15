@@ -8,25 +8,19 @@ import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceLikeBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
-import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.placestatistics.domain.PlaceStatistics;
-import com.now.naaga.player.domain.Player;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 
-import static com.now.naaga.like.exception.PlaceLikeExceptionType.NOT_EXIST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 

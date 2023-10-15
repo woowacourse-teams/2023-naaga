@@ -1,14 +1,14 @@
-package com.now.naaga.placestatistics.application;
+package com.now.naaga.place.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
+import com.now.naaga.place.application.dto.CreatePlaceStatisticsCommand;
+import com.now.naaga.place.application.dto.SubtractLikeCommand;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.placestatistics.application.dto.CreatePlaceStatisticsCommand;
-import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
-import com.now.naaga.placestatistics.domain.PlaceStatistics;
-import com.now.naaga.placestatistics.repository.PlaceStatisticsRepository;
+import com.now.naaga.place.domain.PlaceStatistics;
+import com.now.naaga.place.repository.PlaceStatisticsRepository;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;

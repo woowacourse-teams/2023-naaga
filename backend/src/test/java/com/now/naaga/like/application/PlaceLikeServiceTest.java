@@ -4,16 +4,13 @@ import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceLikeBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
-import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
-import com.now.naaga.like.exception.PlaceLikeException;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.placestatistics.domain.PlaceStatistics;
-import com.now.naaga.placestatistics.repository.PlaceStatisticsRepository;
+import com.now.naaga.place.domain.PlaceStatistics;
+import com.now.naaga.place.repository.PlaceStatisticsRepository;
 import com.now.naaga.player.domain.Player;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -24,7 +21,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Optional;
 
-import static com.now.naaga.like.exception.PlaceLikeExceptionType.NOT_EXIST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

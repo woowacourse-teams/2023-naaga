@@ -1,16 +1,15 @@
-package com.now.naaga.placestatistics.application;
+package com.now.naaga.place.application;
 
-import static com.now.naaga.placestatistics.domain.PlaceStatistics.LIKE_COUNT_DEFAULT_VALUE;
+import static com.now.naaga.place.domain.PlaceStatistics.LIKE_COUNT_DEFAULT_VALUE;
 
-import com.now.naaga.place.application.PlaceService;
+import com.now.naaga.place.application.dto.CreatePlaceStatisticsCommand;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
+import com.now.naaga.place.application.dto.SubtractLikeCommand;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.placestatistics.application.dto.CreatePlaceStatisticsCommand;
-import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
-import com.now.naaga.placestatistics.domain.PlaceStatistics;
-import com.now.naaga.placestatistics.exception.PlaceStatisticsException;
-import com.now.naaga.placestatistics.exception.PlaceStatisticsExceptionType;
-import com.now.naaga.placestatistics.repository.PlaceStatisticsRepository;
+import com.now.naaga.place.domain.PlaceStatistics;
+import com.now.naaga.place.exception.PlaceStatisticsException;
+import com.now.naaga.place.exception.PlaceStatisticsExceptionType;
+import com.now.naaga.place.repository.PlaceStatisticsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

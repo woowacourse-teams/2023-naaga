@@ -1,7 +1,7 @@
-package com.now.naaga.placestatistics.application;
+package com.now.naaga.place.application;
 
+import com.now.naaga.place.application.dto.CreatePlaceStatisticsCommand;
 import com.now.naaga.place.domain.PlaceCreateEvent;
-import com.now.naaga.placestatistics.application.dto.CreatePlaceStatisticsCommand;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 

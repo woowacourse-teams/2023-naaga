@@ -1,13 +1,12 @@
-package com.now.naaga.placestatistics.domain;
+package com.now.naaga.place.domain;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.now.naaga.common.fixture.PlaceFixture;
-import com.now.naaga.place.domain.Place;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)

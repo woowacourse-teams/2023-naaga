@@ -1,4 +1,4 @@
-package com.now.naaga.place.persistence.repository;
+package com.now.naaga.place.repository;
 
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
