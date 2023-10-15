@@ -55,7 +55,7 @@ public class LetterLogController {
         final List<ReadLetterLog> readLetterLogs = readLetterLogService.findReadLetterByGameId(letterByGameCommand);
         final List<LetterResponse> readLetterResponses = readLetterLogs.stream()
                 .map(readLetterLog -> LetterResponse.from(readLetterLog.getLetter()))
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(readLetterResponses);
