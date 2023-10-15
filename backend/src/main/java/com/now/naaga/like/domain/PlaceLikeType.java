@@ -7,6 +7,9 @@ public enum PlaceLikeType {
     ;
 
     public PlaceLikeType switchType() {
-        return this == LIKE ? DISLIKE : LIKE;
+        if (this == LIKE) {
+            return DISLIKE;
+        }
+        return LIKE;
     }
 }
