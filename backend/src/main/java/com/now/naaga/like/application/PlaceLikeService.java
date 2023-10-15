@@ -2,13 +2,13 @@ package com.now.naaga.like.application;
 
 import com.now.naaga.like.application.dto.CancelLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
+import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.application.PlaceStatisticsService;
 import com.now.naaga.place.application.dto.SubtractLikeCommand;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -36,7 +36,13 @@ public class PlaceLikeService {
         final PlaceLike placeLike = maybePlaceLike.get();
         placeLikeRepository.delete(placeLike);
 
-        final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
-        placeStatisticsService.subtractLike(subtractLikeCommand);
+        subtractPlaceLikeCount(placeId, placeLike);
+    }
+
+    private void subtractPlaceLikeCount(final Long placeId, final PlaceLike placeLike) {
+        if (placeLike.getType() == PlaceLikeType.LIKE) {
+            final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
+            placeStatisticsService.subtractLike(subtractLikeCommand);
+        }
     }
 }

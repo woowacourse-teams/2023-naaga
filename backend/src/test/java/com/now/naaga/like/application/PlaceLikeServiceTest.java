@@ -1,16 +1,22 @@
 package com.now.naaga.like.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceLikeBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
+import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.PlaceStatistics;
 import com.now.naaga.place.repository.PlaceStatisticsRepository;
 import com.now.naaga.player.domain.Player;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -18,12 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Sql("/truncate.sql")
@@ -72,6 +72,7 @@ class PlaceLikeServiceTest {
         final PlaceLike placeLike = placeLikeBuilder.init()
                 .place(place)
                 .player(player)
+                .placeLikeType(PlaceLikeType.LIKE)
                 .build();
         final long beforeLikeCount = 10L;
         placeStatisticsBuilder.init()
@@ -93,6 +94,37 @@ class PlaceLikeServiceTest {
     }
 
     @Test
+    void 싫어요를_삭제하면_통계가_줄어들지_않는다() {
+        // given
+        final Place place = placeBuilder.init()
+                .build();
+        final Player player = playerBuilder.init()
+                .build();
+        final PlaceLike placeLike = placeLikeBuilder.init()
+                .place(place)
+                .player(player)
+                .placeLikeType(PlaceLikeType.DISLIKE)
+                .build();
+        final long beforeLikeCount = 10L;
+        placeStatisticsBuilder.init()
+                .place(place)
+                .likeCount(beforeLikeCount)
+                .build();
+        final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
+
+        // when
+        placeLikeService.cancelLike(cancelLikeCommand);
+
+        // then
+        final Optional<PlaceLike> findPlaceLike = placeLikeRepository.findById(placeLike.getId());
+        final PlaceStatistics findPlaceStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
+        assertSoftly(softAssertions -> {
+            assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount);
+            assertThat(findPlaceLike).isEmpty();
+        });
+    }
+
+    @Test
     void 좋아요가_0개일_때_좋아요를_삭제하면_통계에서_좋아요를_0개로_유지한다() {
         // given
         final Place place = placeBuilder.init()
@@ -102,6 +134,7 @@ class PlaceLikeServiceTest {
         final PlaceLike placeLike = placeLikeBuilder.init()
                 .place(place)
                 .player(player)
+                .placeLikeType(PlaceLikeType.LIKE)
                 .build();
         final long beforeLikeCount = 0L;
         placeStatisticsBuilder.init()
@@ -131,7 +164,7 @@ class PlaceLikeServiceTest {
                 .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
-        // when & then`
+        // when & then
         assertDoesNotThrow(() -> placeLikeService.cancelLike(cancelLikeCommand));
     }
 }
