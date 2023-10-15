@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("/letters")
 @RestController
@@ -33,9 +32,7 @@ public class LetterController {
         final FindNearByLetterCommand findNearByLetterCommand = FindNearByLetterCommand.from(latitude, longitude);
 
         final List<Letter> letters = letterService.findNearByLetters(findNearByLetterCommand);
-        final List<NearByLetterResponse> nearByLetterResponses = letters.stream()
-                .map(NearByLetterResponse::from)
-                .collect(Collectors.toList());
+        final List<NearByLetterResponse> nearByLetterResponses = NearByLetterResponse.convertToLetterResponses(letters);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(nearByLetterResponses);
