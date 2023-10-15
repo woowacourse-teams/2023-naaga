@@ -53,6 +53,12 @@ public enum GameExceptionType implements BaseExceptionType {
             "아직 종료되지 않은 게임입니다."
     ),
 
+    NOT_REMAIN_ATTEMPTS(
+            418,
+            HttpStatus.BAD_REQUEST,
+            "시도 횟수를 이미 다 사용한 게임입니다"
+    ),
+
     HINT_NOT_EXIST_IN_GAME(
             454,
             HttpStatus.NOT_FOUND,
@@ -63,12 +69,6 @@ public enum GameExceptionType implements BaseExceptionType {
             455,
             HttpStatus.BAD_REQUEST,
             "사용할 수 있는 힌트를 모두 소진했습니다."
-    ),
-
-    NOT_REMAIN_ATTEMPTS(
-            418,
-            HttpStatus.BAD_REQUEST,
-            "시도 횟수를 이미 다 사용한 게임입니다"
     ),
     ;
 
