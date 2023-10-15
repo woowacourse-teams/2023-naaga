@@ -12,6 +12,7 @@ import com.now.domain.model.Hint
 import com.now.domain.model.RemainingTryCount
 import com.now.domain.model.type.AdventureEndType
 import com.now.domain.repository.AdventureRepository
+import com.now.domain.repository.LetterRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
@@ -21,7 +22,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnAdventureViewModel @Inject constructor(private val adventureRepository: AdventureRepository) : ViewModel() {
+class OnAdventureViewModel @Inject constructor(
+    private val adventureRepository: AdventureRepository,
+    private val letterRepository: LetterRepository,
+) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
     val adventure: LiveData<Adventure> = _adventure
     val hints = DisposableLiveData<List<Hint>>(_adventure.map { it.hints })
@@ -119,6 +123,14 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
                     }
                 }
                 setError(it)
+            }
+        }
+    }
+
+    fun sendLetter(message: String) {
+        viewModelScope.launch {
+            runCatching {
+                myCoordinate.value?.let { letterRepository.postLetter(message, it.latitude, it.longitude) }
             }
         }
     }

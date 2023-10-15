@@ -11,8 +11,11 @@ import com.now.naaga.databinding.DialogSendLetterBinding
 import com.now.naaga.util.dpToPx
 import com.now.naaga.util.getWidthProportionalToDevice
 
-class LetterSendDialog : DialogFragment() {
+class LetterSendDialog(
+    private val onClick: (String) -> Unit,
+) : DialogFragment() {
     private lateinit var binding: DialogSendLetterBinding
+    var message: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,6 +24,7 @@ class LetterSendDialog : DialogFragment() {
     ): View {
         binding = DialogSendLetterBinding.inflate(layoutInflater)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        binding.dialog = this
         return binding.root
     }
 
@@ -28,12 +32,17 @@ class LetterSendDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         dialog?.setCanceledOnTouchOutside(true)
         setSize()
+        setClickListener()
     }
 
     private fun setSize() {
         val dialogWidth = getWidthProportionalToDevice(requireContext(), WIDTH_RATE)
         val dialogHeight = dpToPx(requireContext(), HEIGHT)
         dialog?.window?.setLayout(dialogWidth, dialogHeight)
+    }
+
+    private fun setClickListener() {
+        binding.btnDialogLetterSubmit.setOnClickListener { onClick(message) }
     }
 
     companion object {
