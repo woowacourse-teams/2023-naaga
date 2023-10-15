@@ -1,13 +1,14 @@
 package com.now.naaga.like.application;
 
 import com.now.naaga.like.application.dto.CancelLikeCommand;
-import com.now.naaga.like.application.dto.CountPlaceLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
+import com.now.naaga.like.exception.PlaceLikeException;
+import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
-import com.now.naaga.placestatistics.application.dto.FindPlaceStatisticsByPlaceIdCommand;
+import com.now.naaga.player.application.PlayerService;
+import com.now.naaga.player.domain.Player;
 import com.now.naaga.placestatistics.application.PlaceStatisticsService;
 import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
-import com.now.naaga.placestatistics.domain.PlaceStatistics;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +40,14 @@ public class PlaceLikeService {
         final PlaceLike placeLike = maybePlaceLike.get();
         placeLikeRepository.delete(placeLike);
 
-        final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
-        placeStatisticsService.subtractLike(subtractLikeCommand);
+        subtractPlaceLikeCount(placeId, placeLike);
+    }
+
+    private void subtractPlaceLikeCount(final Long placeId, final PlaceLike placeLike) {
+        if(placeLike.getType() == PlaceLikeType.LIKE) {
+            final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
+            placeStatisticsService.subtractLike(subtractLikeCommand);
+        }
     }
 
     @Transactional(readOnly = true)
