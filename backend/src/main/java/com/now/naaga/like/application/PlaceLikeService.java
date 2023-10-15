@@ -2,6 +2,7 @@ package com.now.naaga.like.application;
 
 import com.now.naaga.like.application.dto.CancelLikeCommand;
 import com.now.naaga.like.application.dto.CheckMyPlaceLikeCommand;
+import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
@@ -42,12 +43,13 @@ public class PlaceLikeService {
     }
 
     @Transactional(readOnly = true)
-    public PlaceLikeType checkMyLike(final CheckMyPlaceLikeCommand checkMyPlaceLikeCommand) {
+    public MyPlaceLikeType checkMyLike(final CheckMyPlaceLikeCommand checkMyPlaceLikeCommand) {
         final Long playerId = checkMyPlaceLikeCommand.playerId();
         final Long placeId = checkMyPlaceLikeCommand.placeId();
 
         return placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId)
                                   .map(PlaceLike::getType)
-                                  .orElse(PlaceLikeType.NONE);
+                                  .map(MyPlaceLikeType::from)
+                                  .orElse(MyPlaceLikeType.NONE);
     }
 }

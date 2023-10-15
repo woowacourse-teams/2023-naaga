@@ -12,6 +12,7 @@ import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceLikeBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.presentation.dto.CheckMyPlaceLikeResponse;
@@ -128,7 +129,7 @@ class PlaceLikeControllerTest extends CommonControllerTest {
         // then
         final int statusCode = extract.statusCode();
         final CheckMyPlaceLikeResponse actual = extract.as(CheckMyPlaceLikeResponse.class);
-        final CheckMyPlaceLikeResponse expected = new CheckMyPlaceLikeResponse(myType);
+        final CheckMyPlaceLikeResponse expected = new CheckMyPlaceLikeResponse(MyPlaceLikeType.from(myType));
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(actual).usingRecursiveComparison()
@@ -162,7 +163,7 @@ class PlaceLikeControllerTest extends CommonControllerTest {
         // then
         final int statusCode = extract.statusCode();
         final CheckMyPlaceLikeResponse actual = extract.as(CheckMyPlaceLikeResponse.class);
-        final CheckMyPlaceLikeResponse expected = new CheckMyPlaceLikeResponse(PlaceLikeType.NONE);
+        final CheckMyPlaceLikeResponse expected = new CheckMyPlaceLikeResponse(MyPlaceLikeType.NONE);
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(actual).usingRecursiveComparison()

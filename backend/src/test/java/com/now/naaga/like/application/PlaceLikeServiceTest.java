@@ -10,6 +10,7 @@ import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
 import com.now.naaga.like.application.dto.CheckMyPlaceLikeCommand;
+import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
@@ -154,10 +155,10 @@ class PlaceLikeServiceTest {
 
         // when
         final CheckMyPlaceLikeCommand command = new CheckMyPlaceLikeCommand(player.getId(), place.getId());
-        final PlaceLikeType actual = placeLikeService.checkMyLike(command);
+        final MyPlaceLikeType actual = placeLikeService.checkMyLike(command);
 
         // then
-        assertThat(actual).isEqualTo(PlaceLikeType.LIKE);
+        assertThat(actual).isEqualTo(MyPlaceLikeType.LIKE);
     }
 
     @Test
@@ -180,9 +181,9 @@ class PlaceLikeServiceTest {
 
         // when
         final CheckMyPlaceLikeCommand command = new CheckMyPlaceLikeCommand(player.getId(), notApplied.getId());
-        final PlaceLikeType actual = placeLikeService.checkMyLike(command);
+        final MyPlaceLikeType actual = placeLikeService.checkMyLike(command);
 
         // then
-        assertThat(actual).isEqualTo(PlaceLikeType.NONE);
+        assertThat(actual).isEqualTo(MyPlaceLikeType.NONE);
     }
 }
