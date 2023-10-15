@@ -7,6 +7,7 @@ import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
+import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.exception.PlaceLikeException;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.domain.Place;
@@ -76,6 +77,7 @@ class PlaceLikeServiceTest {
         final PlaceLike placeLike = placeLikeBuilder.init()
                 .place(place)
                 .player(player)
+                .placeLikeType(PlaceLikeType.LIKE)
                 .build();
         final long beforeLikeCount = 10L;
         placeStatisticsBuilder.init()
@@ -97,6 +99,37 @@ class PlaceLikeServiceTest {
     }
 
     @Test
+    void 싫어요를_삭제하면_통계가_줄어들지_않는다() {
+        // given
+        final Place place = placeBuilder.init()
+                .build();
+        final Player player = playerBuilder.init()
+                .build();
+        final PlaceLike placeLike = placeLikeBuilder.init()
+                .place(place)
+                .player(player)
+                .placeLikeType(PlaceLikeType.DISLIKE)
+                .build();
+        final long beforeLikeCount = 10L;
+        placeStatisticsBuilder.init()
+                .place(place)
+                .likeCount(beforeLikeCount)
+                .build();
+        final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
+
+        // when
+        placeLikeService.cancelLike(cancelLikeCommand);
+
+        // then
+        final Optional<PlaceLike> findPlaceLike = placeLikeRepository.findById(placeLike.getId());
+        final PlaceStatistics findPlaceStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
+        assertSoftly(softAssertions -> {
+            assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount);
+            assertThat(findPlaceLike).isEmpty();
+        });
+    }
+
+    @Test
     void 좋아요가_0개일_때_좋아요를_삭제하면_통계에서_좋아요를_0개로_유지한다() {
         // given
         final Place place = placeBuilder.init()
@@ -106,6 +139,7 @@ class PlaceLikeServiceTest {
         final PlaceLike placeLike = placeLikeBuilder.init()
                 .place(place)
                 .player(player)
+                .placeLikeType(PlaceLikeType.LIKE)
                 .build();
         final long beforeLikeCount = 0L;
         placeStatisticsBuilder.init()

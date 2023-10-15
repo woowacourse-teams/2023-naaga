@@ -2,6 +2,7 @@ package com.now.naaga.like.application;
 
 import com.now.naaga.like.application.dto.CancelLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
+import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.exception.PlaceLikeException;
 import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
@@ -40,7 +41,13 @@ public class PlaceLikeService {
         final PlaceLike placeLike = maybePlaceLike.get();
         placeLikeRepository.delete(placeLike);
 
-        final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
-        placeStatisticsService.subtractLike(subtractLikeCommand);
+        subtractPlaceLikeCount(placeId, placeLike);
+    }
+
+    private void subtractPlaceLikeCount(final Long placeId, final PlaceLike placeLike) {
+        if(placeLike.getType() == PlaceLikeType.LIKE) {
+            final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
+            placeStatisticsService.subtractLike(subtractLikeCommand);
+        }
     }
 }
