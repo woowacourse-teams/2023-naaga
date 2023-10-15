@@ -41,6 +41,7 @@ public class PlaceLikeService {
         placeStatisticsService.subtractLike(subtractLikeCommand);
     }
 
+    @Transactional(readOnly = true)
     public PlaceLikeType checkMyLike(final CheckMyPlaceLikeCommand checkMyPlaceLikeCommand) {
         final Long playerId = checkMyPlaceLikeCommand.playerId();
         final Long placeId = checkMyPlaceLikeCommand.placeId();
