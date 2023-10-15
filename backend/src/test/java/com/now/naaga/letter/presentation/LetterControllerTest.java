@@ -7,7 +7,6 @@ import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.LetterBuilder;
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
-import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.letter.application.LetterService;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.presentation.dto.NearByLetterResponse;
@@ -26,12 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
-import static com.now.naaga.common.fixture.PositionFixture.*;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_110미터_앞_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 
