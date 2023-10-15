@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -87,7 +88,7 @@ class PlaceStatisticsServiceTest {
         final FindPlaceStatisticsByPlaceIdCommand findPlaceStatisticsByPlaceIdCommand = new FindPlaceStatisticsByPlaceIdCommand(1L);
 
         // then
-        SoftAssertions.assertSoftly(softAssertions -> {
+        assertAll(() -> {
             final BaseExceptionType baseExceptionType = assertThrows(PlaceStatisticsException.class, () -> placeStatisticsService.findPlaceStatisticsByPlaceId(findPlaceStatisticsByPlaceIdCommand))
                     .exceptionType();
             assertThat(baseExceptionType).isEqualTo(PlaceStatisticsExceptionType.NOT_FOUND);

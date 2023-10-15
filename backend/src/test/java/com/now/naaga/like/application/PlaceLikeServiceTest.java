@@ -92,8 +92,8 @@ class PlaceLikeServiceTest {
         final Optional<PlaceLike> findPlaceLike = placeLikeRepository.findById(placeLike.getId());
         final PlaceStatistics findPlaceStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
         assertSoftly(softAssertions -> {
-            assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount - 1);
-            assertThat(findPlaceLike).isEmpty();
+            softAssertions.assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount - 1);
+            softAssertions.assertThat(findPlaceLike).isEmpty();
         });
     }
 
@@ -122,8 +122,8 @@ class PlaceLikeServiceTest {
         final Optional<PlaceLike> findPlaceLike = placeLikeRepository.findById(placeLike.getId());
         final PlaceStatistics findPlaceStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
         assertSoftly(softAssertions -> {
-            assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount);
-            assertThat(findPlaceLike).isEmpty();
+            softAssertions.assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount);
+            softAssertions.assertThat(findPlaceLike).isEmpty();
         });
     }
 
