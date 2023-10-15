@@ -50,11 +50,11 @@ public class PlaceLikeService {
             placeStatisticsService.plusLike(new PlusLikeCommand(placeId));
         }
 
-        final Optional<PlaceLike> placeLikeOptional = placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId);
+        final Optional<PlaceLike> maybePlaceLike = placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId);
 
-        if (placeLikeOptional.isPresent()) {
-            final PlaceLike placeLike = placeLikeOptional.get();
-            return updatePlaceLike(placeLike, placeLikeType);
+        if (maybePlaceLike.isPresent()) {
+            final PlaceLike exsistingPlaceLike = maybePlaceLike.get();
+            return updatePlaceLike(exsistingPlaceLike, placeLikeType);
         }
 
         return createPlaceLike(playerId, placeId, placeLikeType);
