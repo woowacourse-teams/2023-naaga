@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 public class LetterService {
 
+    private static final double LETTER_RADIUS = 0.1;
     private final LetterRepository letterRepository;
 
     public LetterService(final LetterRepository letterRepository) {
@@ -20,6 +21,6 @@ public class LetterService {
 
     @Transactional(readOnly = true)
     public List<Letter> findNearByLetters(final FindNearByLetterCommand findNearByLetterCommand) {
-        return letterRepository.findLetterByPositionAndDistance(findNearByLetterCommand.position(), 0.01);
+        return letterRepository.findLetterByPositionAndDistance(findNearByLetterCommand.position(), LETTER_RADIUS);
     }
 }
