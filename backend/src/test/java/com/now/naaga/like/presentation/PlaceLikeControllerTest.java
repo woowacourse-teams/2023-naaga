@@ -31,6 +31,7 @@ import org.springframework.http.HttpStatus;
 
 import static com.now.naaga.like.exception.PlaceLikeExceptionType.NOT_EXIST;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.springframework.http.HttpStatus.*;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -101,14 +102,9 @@ class PlaceLikeControllerTest extends CommonControllerTest {
                 .build();
         final Long placeId = placeStatistics.getPlace().getId();
 
-        final Member member = new Member(100L, "무명", false);
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         //when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
                 .pathParam("placeId", placeId)
                 .when()
                 .get("/places/{placeId}/likes/count")
@@ -118,7 +114,7 @@ class PlaceLikeControllerTest extends CommonControllerTest {
         //then
         final int statusCode = extract.statusCode();
         final PlaceLikeCountResponse actual = extract.as(PlaceLikeCountResponse.class);
-        SoftAssertions.assertSoftly(softAssertions -> {
+        assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(OK.value());
             softAssertions.assertThat(actual.placeLikeCount()).isEqualTo(expected);
         });
@@ -126,15 +122,9 @@ class PlaceLikeControllerTest extends CommonControllerTest {
 
     @Test
     void 좋아요_수를_조회할_때_장소_통계가_없으면_400_예외를_발생한다() {
-        //given
-        final Member member = new Member(100L, "무명", false);
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
-        //when
+        //given & when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
                 .pathParam("placeId", 100)
                 .when()
                 .get("/places/{placeId}/likes/count")
@@ -144,7 +134,7 @@ class PlaceLikeControllerTest extends CommonControllerTest {
         //then
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
-        SoftAssertions.assertSoftly(softAssertions -> {
+        assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(NOT_FOUND.value());
             softAssertions.assertThat(actual.getCode()).isEqualTo(PlaceStatisticsExceptionType.NOT_FOUND.errorCode());
             softAssertions.assertThat(actual.getMessage()).isEqualTo(PlaceStatisticsExceptionType.NOT_FOUND.errorMessage());
