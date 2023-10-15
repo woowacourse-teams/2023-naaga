@@ -60,16 +60,16 @@ public class PlaceLikeService {
         return createPlaceLike(playerId, placeId, placeLikeType);
     }
 
-    private PlaceLike updatePlaceLike(final PlaceLike placeLike,
-                                      final PlaceLikeType placeLikeType) {
-        if (placeLike.getType() == placeLikeType) {
+    private PlaceLike updatePlaceLike(final PlaceLike target,
+                                      final PlaceLikeType toBeChanged) {
+        if (target.getType() == toBeChanged) {
             throw new PlaceLikeException(PlaceLikeExceptionType.ALREADY_APPLIED_TYPE);
         }
-        if (placeLikeType == PlaceLikeType.DISLIKE) {
-            placeStatisticsService.subtractLike(new SubtractLikeCommand(placeLike.getPlace().getId()));
+        if (toBeChanged == PlaceLikeType.DISLIKE) {
+            placeStatisticsService.subtractLike(new SubtractLikeCommand(target.getPlace().getId()));
         }
-        placeLike.switchType();
-        return placeLike;
+        target.switchType();
+        return target;
     }
 
     private PlaceLike createPlaceLike(final Long playerId,
