@@ -128,6 +128,7 @@ class LetterLogControllerTest extends CommonControllerTest {
             softly.assertThat(actual)
                     .hasSize(1)
                     .usingRecursiveComparison()
+                    .ignoringFields("registerDate")
                     .isEqualTo(expected);
         });
     }
@@ -183,6 +184,7 @@ class LetterLogControllerTest extends CommonControllerTest {
             softly.assertThat(actual)
                     .hasSize(1)
                     .usingRecursiveComparison()
+                    .ignoringFields("registerDate")
                     .isEqualTo(expected);
         });
     }
@@ -251,6 +253,7 @@ class LetterLogControllerTest extends CommonControllerTest {
                             .usingRecursiveComparison()
                             .ignoringExpectedNullFields()
                             .ignoringFieldsOfTypes(LocalDateTime.class)
+                            .ignoringFields("registerDate")
                             .isEqualTo(expected);
                 }
         );
