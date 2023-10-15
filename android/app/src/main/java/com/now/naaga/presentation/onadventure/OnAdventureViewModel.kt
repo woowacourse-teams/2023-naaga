@@ -43,6 +43,9 @@ class OnAdventureViewModel @Inject constructor(
     private val _error = MutableLiveData<DataThrowable>()
     val error: LiveData<DataThrowable> = _error
 
+    private val _isSuccess = MutableLiveData<Boolean>()
+    val isSuccess: LiveData<Boolean> = _isSuccess
+
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
     }
@@ -131,6 +134,9 @@ class OnAdventureViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 myCoordinate.value?.let { letterRepository.postLetter(message, it.latitude, it.longitude) }
+            }.onSuccess {
+                _isSuccess.value = true
+            }.onFailure {
             }
         }
     }

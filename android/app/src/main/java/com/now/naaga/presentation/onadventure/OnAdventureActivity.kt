@@ -33,6 +33,7 @@ import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.extension.getParcelableCompat
+import com.now.naaga.util.extension.showSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -110,8 +111,11 @@ class OnAdventureActivity :
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
         }
-        viewModel.remainingHintCount.observe(this) {
-            // binding.tvOnAdventureHintCount.text = it.toString()
+        viewModel.isSuccess.observe(this) {
+            when (it) {
+                true -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_success)) }
+                false -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail)) }
+            }
         }
         viewModel.error.observe(this) { error: DataThrowable ->
             logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
