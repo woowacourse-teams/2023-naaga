@@ -93,7 +93,7 @@ class PlaceLikeControllerTest extends CommonControllerTest {
     }
 
     @Test
-    void 특정_장소의_좋아요_수를_200으로_응답한다() {
+    void 특정_장소의_좋아요_수를_응답하고_응답의_상태코드는_200이다() {
         //given
         final Long expected = 123L;
         final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
