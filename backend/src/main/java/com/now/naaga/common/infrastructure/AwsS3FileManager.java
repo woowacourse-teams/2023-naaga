@@ -88,11 +88,20 @@ public class AwsS3FileManager {
 //        }
     
         //코드날린 방법
-        VersionListing versionListing = amazonS3.listVersions(bucketName, fileName);
-        S3VersionSummary s3VersionSummary = versionListing.getVersionSummaries().stream()
-                                                          .max(Comparator.comparing(S3VersionSummary::getLastModified))
-                                                          .orElse(null);
-        String versionId = s3VersionSummary.getVersionId();
-        amazonS3.deleteVersion(new DeleteVersionRequest(bucketName, fileName, versionId));
+//        VersionListing versionListing = amazonS3.listVersions(bucketName, fileName);
+//        S3VersionSummary s3VersionSummary = versionListing.getVersionSummaries().stream()
+//                                                          .max(Comparator.comparing(S3VersionSummary::getLastModified))
+//                                                          .orElse(null);
+//        String versionId = s3VersionSummary.getVersionId();
+//        amazonS3.deleteVersion(new DeleteVersionRequest(bucketName, fileName, versionId));
+    
+        S3ObjectSummary s3ObjectSummary = amazonS3.listObjectsV2(bucketName, fileName)
+                                                  .getObjectSummaries().stream()
+                                                  .max(Comparator.comparing(S3ObjectSummary::getLastModified))
+                                                  .orElse(null);
+        String key = s3ObjectSummary.getKey();
+        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
+        //이것도 안되면 부순다
+    
     }
 }
