@@ -5,12 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public enum LetterExceptionType implements BaseExceptionType {
 
-    INACCESSIBLE_AUTHENTICATION(
-            603,
-            HttpStatus.FORBIDDEN,
-            "쪽지에 접근할 수 있는 권한이 없습니다."
-    ),
-
     NO_EXIST(
             604,
             HttpStatus.NOT_FOUND,

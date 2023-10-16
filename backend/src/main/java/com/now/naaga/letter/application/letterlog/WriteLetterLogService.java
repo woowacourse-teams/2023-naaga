@@ -27,11 +27,6 @@ public class WriteLetterLogService {
     public List<WriteLetterLog> findWriteLetterByGameId(final LetterByGameCommand letterByGameCommand) {
         final FindGameByIdCommand findGameByIdCommand = new FindGameByIdCommand(letterByGameCommand.gameId(), letterByGameCommand.playerId());
         final Game game = gameService.findGameById(findGameByIdCommand);
-        final List<WriteLetterLog> writeLetterLogs = writeLetterLogRepository.findByGameId(game.getId());
-
-        for (final WriteLetterLog writeLetterLog : writeLetterLogs) {
-            writeLetterLog.validateOwner(letterByGameCommand.playerId());
-        }
-        return writeLetterLogs;
+        return writeLetterLogRepository.findByGameId(game.getId());
     }
 }

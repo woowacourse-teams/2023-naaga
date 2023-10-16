@@ -2,13 +2,10 @@ package com.now.naaga.letter.domain.letterlog;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.game.domain.Game;
-import com.now.naaga.letter.exception.LetterException;
 import com.now.naaga.letter.domain.Letter;
 import jakarta.persistence.*;
 
 import java.util.Objects;
-
-import static com.now.naaga.letter.exception.LetterExceptionType.INACCESSIBLE_AUTHENTICATION;
 
 
 @Entity
@@ -40,12 +37,6 @@ public class ReadLetterLog extends BaseEntity {
         this.id = id;
         this.game = game;
         this.letter = letter;
-    }
-
-    public void validateOwner(final long playerId) {
-        if (this.letter.getRegisteredPlayer().getId() == playerId) {
-            throw new LetterException(INACCESSIBLE_AUTHENTICATION);
-        }
     }
 
     public Long getId() {

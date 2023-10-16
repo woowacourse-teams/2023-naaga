@@ -33,12 +33,7 @@ public class ReadLetterLogService {
     public List<ReadLetterLog> findReadLettersByGameId(final LetterByGameCommand letterByGameCommand) {
         final FindGameByIdCommand findGameByIdCommand = new FindGameByIdCommand(letterByGameCommand.gameId(), letterByGameCommand.playerId());
         final Game game = gameService.findGameById(findGameByIdCommand);
-        final List<ReadLetterLog> readLetterLogs = readLetterLogRepository.findByGameId(game.getId());
-
-        for (final ReadLetterLog readLetterLog : readLetterLogs) {
-            readLetterLog.validateOwner(letterByGameCommand.playerId());
-        }
-        return readLetterLogs;
+        return readLetterLogRepository.findByGameId(game.getId());
     }
 
     public void log(final LetterLogCreateCommand letterLogCreateCommand) {

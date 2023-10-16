@@ -40,12 +40,6 @@ public class WriteLetterLog extends BaseEntity {
         this.letter = letter;
     }
 
-    public void validateOwner(final long playerId) {
-        if (this.letter.getRegisteredPlayer().getId() == playerId) {
-            throw new LetterException(LetterExceptionType.INACCESSIBLE_AUTHENTICATION);
-        }
-    }
-
     public Long getId() {
         return id;
     }
