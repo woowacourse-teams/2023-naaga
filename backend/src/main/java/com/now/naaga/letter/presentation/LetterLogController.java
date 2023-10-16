@@ -37,8 +37,8 @@ public class LetterLogController {
 
     @GetMapping
     public ResponseEntity<List<LetterResponse>> findLetterInGame(@Auth final PlayerRequest playerRequest,
-                                                                 @RequestParam(name = "gameId") final Long gameId,
-                                                                 @RequestParam(name = "logType") final String logType) {
+                                                                 @RequestParam final Long gameId,
+                                                                 @RequestParam final String logType) {
         if (!(READ.name().equalsIgnoreCase(logType) || WRITE.name().equalsIgnoreCase(logType))) {
             throw new CommonException(INVALID_REQUEST_PARAMETERS);
         }
