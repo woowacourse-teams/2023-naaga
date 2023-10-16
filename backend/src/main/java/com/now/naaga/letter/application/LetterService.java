@@ -39,10 +39,10 @@ public class LetterService {
     public Letter writeLetter(final LetterCreateCommand letterCreateCommand) {
         final Player player = playerService.findPlayerById(letterCreateCommand.playerId());
         final Letter letter = new Letter(player, letterCreateCommand.position(), letterCreateCommand.message());
-        final Letter savedLetter = letterRepository.save(letter);
+        letterRepository.save(letter);
         
         final WriteLetterLogCreateCommand writeLetterLogCreateCommand = new WriteLetterLogCreateCommand(letter.getId());
         writeLetterLogCreateService.log(writeLetterLogCreateCommand);
-        return savedLetter;
+        return letter;
     }
 }
