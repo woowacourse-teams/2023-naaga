@@ -1,6 +1,5 @@
 package com.now.naaga.letter.application;
 
-import com.now.naaga.game.application.GameService;
 import com.now.naaga.letter.application.letterlog.ReadLetterLogService;
 import com.now.naaga.letter.application.letterlog.dto.LetterLogCreateCommand;
 import com.now.naaga.letter.domain.Letter;
@@ -19,7 +18,9 @@ import static com.now.naaga.letter.exception.LetterExceptionType.NO_EXIST;
 public class LetterService {
 
     private final LetterRepository letterRepository;
+
     private final ReadLetterLogService readLetterLogService;
+
     private final PlayerService playerService;
 
     public LetterService(final LetterRepository letterRepository,

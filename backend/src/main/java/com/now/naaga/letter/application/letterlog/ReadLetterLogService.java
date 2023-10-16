@@ -20,6 +20,7 @@ import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 public class ReadLetterLogService {
 
     private final GameService gameService;
+
     private final ReadLetterLogRepository readLetterLogRepository;
 
     public ReadLetterLogService(final GameService gameService,
