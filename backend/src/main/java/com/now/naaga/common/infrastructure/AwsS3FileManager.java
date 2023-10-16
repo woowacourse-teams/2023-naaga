@@ -1,7 +1,9 @@
 package com.now.naaga.common.infrastructure;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.common.exception.CommonExceptionType;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Comparator;
 import java.util.UUID;
 
 @Component
@@ -64,44 +65,5 @@ public class AwsS3FileManager {
     public void deleteFile(String imageUrl) {
         String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
         amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileName));
-
-//        String bucketVersionStatus = amazonS3.getBucketVersioningConfiguration(bucketName).getStatus();
-//        if (!bucketVersionStatus.equals(BucketVersioningConfiguration.ENABLED)) {
-//            System.out.printf("Bucket %s is not versioning-enabled.", bucketName);
-//        } else {
-//            // Add an object.
-//            PutObjectResult putResult = amazonS3.putObject(bucketName, keyName, "Sample content for deletion example.");
-//            System.out.printf("Object %s added to bucket %s\n", keyName, bucketName);
-//
-//            // Delete the version of the object that we just created.
-//            System.out.println("Deleting versioned object " + keyName);
-//            s3Client.deleteVersion(new DeleteVersionRequest(bucketName, keyName, putResult.getVersionId()));
-//            System.out.printf("Object %s, version %s deleted\n", keyName, putResult.getVersionId());
-//        }
-//        S3ObjectSummary lastObjectSummary = amazonS3.listObjectsV2(bucketName, fileName)
-//                                                  .getObjectSummaries().stream()
-//                                                  .max(Comparator.comparing(S3ObjectSummary::getLastModified))
-//                                                  .orElse(null);
-//        if(lastObjectSummary != null) {
-//            lastObjectSummary.getKey();
-////            String latestVersionId = lastObjectSummary.get
-//        }
-    
-        //코드날린 방법
-//        VersionListing versionListing = amazonS3.listVersions(bucketName, fileName);
-//        S3VersionSummary s3VersionSummary = versionListing.getVersionSummaries().stream()
-//                                                          .max(Comparator.comparing(S3VersionSummary::getLastModified))
-//                                                          .orElse(null);
-//        String versionId = s3VersionSummary.getVersionId();
-//        amazonS3.deleteVersion(new DeleteVersionRequest(bucketName, fileName, versionId));
-    
-//        S3ObjectSummary s3ObjectSummary = amazonS3.listObjectsV2(bucketName, fileName)
-//                                                  .getObjectSummaries().stream()
-//                                                  .max(Comparator.comparing(S3ObjectSummary::getLastModified))
-//                                                  .orElse(null);
-//        String key = s3ObjectSummary.getKey();
-//        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
-        //이것도 안되면 부순다
-    
     }
 }
