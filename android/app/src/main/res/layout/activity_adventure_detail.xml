@@ -53,6 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="@dimen/space_default_medium"
             android:background="@drawable/rect_red_white_radius_small"
             app:layout_constraintBottom_toTopOf="@id/vp_adventure_detail"
             app:layout_constraintEnd_toEndOf="parent"
