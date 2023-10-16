@@ -5,4 +5,11 @@ public enum PlaceLikeType {
     LIKE,
     DISLIKE,
     ;
+
+    public PlaceLikeType switchType() {
+        if (this == LIKE) {
+            return DISLIKE;
+        }
+        return LIKE;
+    }
 }
