@@ -62,8 +62,8 @@ public class AwsS3FileManager {
     
     //버전이 지정된 버킷 객체 삭제
     public void deleteFile(String imageUrl) {
-        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/" + 1));
-//        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileName));
+        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileName));
 
 //        String bucketVersionStatus = amazonS3.getBucketVersioningConfiguration(bucketName).getStatus();
 //        if (!bucketVersionStatus.equals(BucketVersioningConfiguration.ENABLED)) {
@@ -95,12 +95,12 @@ public class AwsS3FileManager {
 //        String versionId = s3VersionSummary.getVersionId();
 //        amazonS3.deleteVersion(new DeleteVersionRequest(bucketName, fileName, versionId));
     
-        S3ObjectSummary s3ObjectSummary = amazonS3.listObjectsV2(bucketName, fileName)
-                                                  .getObjectSummaries().stream()
-                                                  .max(Comparator.comparing(S3ObjectSummary::getLastModified))
-                                                  .orElse(null);
-        String key = s3ObjectSummary.getKey();
-        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
+//        S3ObjectSummary s3ObjectSummary = amazonS3.listObjectsV2(bucketName, fileName)
+//                                                  .getObjectSummaries().stream()
+//                                                  .max(Comparator.comparing(S3ObjectSummary::getLastModified))
+//                                                  .orElse(null);
+//        String key = s3ObjectSummary.getKey();
+//        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
         //이것도 안되면 부순다
     
     }
