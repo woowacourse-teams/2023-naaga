@@ -42,16 +42,18 @@
             android:layout_marginTop="@dimen/space_default_large"
             android:background="@drawable/rect_radius_small"
             android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/tl_adventure_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_adventure_detail_place_title"
-            app:layout_constraintBottom_toTopOf="@id/tl_adventure_detail"
             tools:srcCompat="@tools:sample/avatars" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_adventure_detail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:background="@drawable/rect_red_white_radius_small"
             app:layout_constraintBottom_toTopOf="@id/vp_adventure_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
