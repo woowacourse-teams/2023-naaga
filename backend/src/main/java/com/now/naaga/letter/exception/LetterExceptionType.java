@@ -10,6 +10,12 @@ public enum LetterExceptionType implements BaseExceptionType {
             HttpStatus.FORBIDDEN,
             "쪽지에 접근할 수 있는 권한이 없습니다."
     ),
+
+    NO_EXIST(
+            604,
+            HttpStatus.NOT_FOUND,
+            "해당 쪽지가 존재하지 않습니다."
+    ),
     ;
 
     private final int errorCode;

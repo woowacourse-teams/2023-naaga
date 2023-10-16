@@ -86,30 +86,4 @@ class PlaceServiceTest {
             assertThat(found).isNull();
         });
     }
-
-    @Test
-    void 장소_등록_시_주변_반경_20M_내에_등록된_장소가_존재한다면_예외가_발생한다() {
-        // given
-        final Player player = playerBuilder.init()
-                                           .build();
-
-        placeBuilder.init()
-                    .position(Position.of(1.234567, 1.234567))
-                    .build();
-
-        final CreatePlaceCommand createPlaceCommand = new CreatePlaceCommand("루터회관",
-                                                                             "이곳은 루터회관이다 알겠냐",
-                                                                             Position.of(1.23456, 1.23456),
-                                                                             "image/url",
-                                                                             player.getId(),
-                                                                             1L);
-
-        // when
-        final BaseExceptionType baseExceptionType = assertThrows(PlaceException.class,
-                                                                 () -> placeService.createPlace(createPlaceCommand)
-                                                                ).exceptionType();
-
-        // then
-        assertThat(baseExceptionType).isEqualTo(PlaceExceptionType.ALREADY_EXIST_NEARBY);
-    }
 }

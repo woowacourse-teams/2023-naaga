@@ -8,7 +8,6 @@ import com.now.naaga.place.application.dto.FindAllPlaceCommand;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
 import com.now.naaga.place.application.dto.RecommendPlaceCommand;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.place.domain.PlaceCheckService;
 import com.now.naaga.place.domain.PlaceRecommendService;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.domain.SortType;
@@ -31,19 +30,15 @@ public class PlaceService {
 
     private final TemporaryPlaceService temporaryPlaceService;
 
-    private final PlaceCheckService placeCheckService;
-
     private final PlaceRecommendService placeRecommendService;
 
     public PlaceService(final PlaceRepository placeRepository,
                         final PlayerService playerService,
                         final TemporaryPlaceService temporaryPlaceService,
-                        final PlaceCheckService placeCheckService,
                         final PlaceRecommendService placeRecommendService) {
         this.placeRepository = placeRepository;
         this.playerService = playerService;
         this.temporaryPlaceService = temporaryPlaceService;
-        this.placeCheckService = placeCheckService;
         this.placeRecommendService = placeRecommendService;
     }
 
@@ -69,8 +64,6 @@ public class PlaceService {
     }
 
     public Place createPlace(final CreatePlaceCommand createPlaceCommand) {
-        placeCheckService.checkOtherPlaceNearby(createPlaceCommand.position());
-
         final Long registeredPlayerId = createPlaceCommand.registeredPlayerId();
         final Player registeredPlayer = playerService.findPlayerById(registeredPlayerId);
         final Place place = new Place(createPlaceCommand.name(),

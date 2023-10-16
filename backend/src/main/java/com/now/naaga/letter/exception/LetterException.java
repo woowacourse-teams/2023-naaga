@@ -1,6 +1,5 @@
 package com.now.naaga.letter.exception;
 
-
 import com.now.naaga.common.exception.BaseException;
 import com.now.naaga.common.exception.BaseExceptionType;
 
