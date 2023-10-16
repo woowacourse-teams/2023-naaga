@@ -21,7 +21,8 @@ class DefaultLetterRepository(
     }
 
     override suspend fun fetchLetter(letterId: Long): OpenLetter {
-        TODO("Not yet implemented")
+        val response = letterService.getLetter(letterId).getValueOrThrow()
+        return response.toDomain()
     }
 
     override suspend fun fetchLetterLogs(gameId: Long, logType: LogType): List<OpenLetter> {
