@@ -33,7 +33,7 @@ interface NaverMapSettingDelegate : OnMapReadyCallback {
     fun setNaverMap(activity: AppCompatActivity, @IdRes mapLayoutId: Int)
     fun addHintMarker(hint: Hint)
     fun addDestinationMarker(coordinate: Coordinate)
-    fun addLetter(letter: ClosedLetter)
+    fun addLetter(letter: ClosedLetter, action: (id: Long) -> Unit)
     fun setOnMapReady(action: () -> Unit)
 }
 
@@ -123,13 +123,17 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
         }
     }
 
-    override fun addLetter(letter: ClosedLetter) {
+    override fun addLetter(letter: ClosedLetter, action: (id: Long) -> Unit) {
         Marker().apply {
             position = LatLng(letter.coordinate.latitude, letter.coordinate.longitude)
             icon =
                 if (letter.isNearBy) OverlayImage.fromResource(R.drawable.ic_open_letter)
                 else OverlayImage.fromResource(R.drawable.ic_closed_letter)
             map = naverMap
+            setOnClickListener {
+                action(letter.id)
+                true
+            }
         }
     }
 

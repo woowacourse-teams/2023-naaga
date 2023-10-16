@@ -112,6 +112,9 @@ class OnAdventureActivity :
         viewModel.letters.observe(this) {
             drawLetters(it)
         }
+        viewModel.letter.observe(this) {
+
+        }
 
         viewModel.error.observe(this) { error: DataThrowable ->
             logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
@@ -173,7 +176,7 @@ class OnAdventureActivity :
 
     private fun drawLetters(letters: List<ClosedLetter>) {
         letters.forEach { letter ->
-            addLetter(letter)
+            addLetter(letter, viewModel::getLetter)
         }
     }
 
