@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +41,7 @@ class LetterServiceTest {
     private GameBuilder gameBuilder;
     
     
+    @Transactional
     @Test
     void 쪽지를_정상적으로_생성하고_게임중_등록한_쪽지를_기록으로_남긴다() {
         //given
@@ -56,13 +58,15 @@ class LetterServiceTest {
                 savedPlayer.getId(),
                 message,
                 position);
-        final Letter expected = new Letter(savedPlayer,position, message);
+        final Letter expected = new Letter(savedPlayer, position, message);
         final Letter actual = letterService.writeLetter(createLetterCommand);
         
         //then
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(actual.getMessage()).isEqualTo(message);
-            softAssertions.assertThat(actual.getRegisteredPlayer()).isEqualTo(savedPlayer);
+            softAssertions.assertThat(actual)
+                          .usingRecursiveComparison()
+                    .ignoringExpectedNullFields()
+                          .isEqualTo(expected);
         });
     }
     
