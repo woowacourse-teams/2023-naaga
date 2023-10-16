@@ -27,6 +27,7 @@ import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
+import com.now.naaga.presentation.common.dialog.LetterReadDialog
 import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.common.dialog.PolaroidDialog
 import com.now.naaga.presentation.uimodel.mapper.toDomain
@@ -113,7 +114,7 @@ class OnAdventureActivity :
             drawLetters(it)
         }
         viewModel.letter.observe(this) {
-
+            showLetterReadDialog(it.message)
         }
 
         viewModel.error.observe(this) { error: DataThrowable ->
@@ -217,6 +218,10 @@ class OnAdventureActivity :
         }
     }
 
+    private fun showLetterReadDialog(content: String) {
+        LetterReadDialog(content).show(supportFragmentManager, LETTER)
+    }
+
     private fun shortSnackbar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
@@ -230,6 +235,7 @@ class OnAdventureActivity :
         private const val GIVE_UP = "GIVE_UP"
         private const val ADVENTURE = "ADVENTURE"
         private const val HINT = "HINT"
+        private const val LETTER = "LETTER"
 
         fun getIntent(context: Context): Intent {
             return Intent(context, OnAdventureActivity::class.java)
