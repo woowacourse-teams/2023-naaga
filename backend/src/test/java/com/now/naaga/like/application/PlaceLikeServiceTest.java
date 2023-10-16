@@ -12,6 +12,7 @@ import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.like.application.dto.ApplyLikeCommand;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
+import com.now.naaga.like.application.dto.CountPlaceLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.exception.PlaceLikeException;
@@ -252,18 +253,19 @@ class PlaceLikeServiceTest {
     void 좋아요를_삭제하고_통계에서_좋아요를_1개_뺸다() {
         // given
         final Place place = placeBuilder.init()
-                                        .build();
+                .build();
         final Player player = playerBuilder.init()
-                                           .build();
+                .build();
         final PlaceLike placeLike = placeLikeBuilder.init()
-                                                    .place(place)
-                                                    .player(player)
-                                                    .build();
+                .place(place)
+                .player(player)
+                .placeLikeType(PlaceLikeType.LIKE)
+                .build();
         final long beforeLikeCount = 10L;
         placeStatisticsBuilder.init()
-                              .place(place)
-                              .likeCount(beforeLikeCount)
-                              .build();
+                .place(place)
+                .likeCount(beforeLikeCount)
+                .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when
@@ -273,27 +275,28 @@ class PlaceLikeServiceTest {
         final Optional<PlaceLike> findPlaceLike = placeLikeRepository.findById(placeLike.getId());
         final PlaceStatistics findPlaceStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
         assertSoftly(softAssertions -> {
-            assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount - 1);
-            assertThat(findPlaceLike).isEmpty();
+            softAssertions.assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount - 1);
+            softAssertions.assertThat(findPlaceLike).isEmpty();
         });
     }
 
     @Test
-    void 좋아요가_0개일_때_좋아요를_삭제하면_통계에서_좋아요를_0개로_유지한다() {
+    void 싫어요를_삭제하면_통계가_줄어들지_않는다() {
         // given
         final Place place = placeBuilder.init()
-                                        .build();
+                .build();
         final Player player = playerBuilder.init()
-                                           .build();
+                .build();
         final PlaceLike placeLike = placeLikeBuilder.init()
-                                                    .place(place)
-                                                    .player(player)
-                                                    .build();
-        final long beforeLikeCount = 0L;
+                .place(place)
+                .player(player)
+                .placeLikeType(PlaceLikeType.DISLIKE)
+                .build();
+        final long beforeLikeCount = 10L;
         placeStatisticsBuilder.init()
-                              .place(place)
-                              .likeCount(beforeLikeCount)
-                              .build();
+                .place(place)
+                .likeCount(beforeLikeCount)
+                .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when
@@ -309,15 +312,63 @@ class PlaceLikeServiceTest {
     }
 
     @Test
+    void 좋아요가_0개일_때_좋아요를_삭제하면_통계에서_좋아요를_0개로_유지한다() {
+        // given
+        final Place place = placeBuilder.init()
+                .build();
+        final Player player = playerBuilder.init()
+                .build();
+        final PlaceLike placeLike = placeLikeBuilder.init()
+                .place(place)
+                .player(player)
+                .placeLikeType(PlaceLikeType.LIKE)
+                .build();
+        final long beforeLikeCount = 0L;
+        placeStatisticsBuilder.init()
+                .place(place)
+                .likeCount(beforeLikeCount)
+                .build();
+        final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
+
+        // when
+        placeLikeService.cancelLike(cancelLikeCommand);
+
+        // then
+        final Optional<PlaceLike> findPlaceLike = placeLikeRepository.findById(placeLike.getId());
+        final PlaceStatistics findPlaceStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(findPlaceStatistics.getLikeCount()).isEqualTo(beforeLikeCount);
+            softAssertions.assertThat(findPlaceLike).isEmpty();
+        });
+    }
+
+    @Test
     void 좋아요를_삭제할_때_좋아요가_존재하지_않으면_아무_일도_일어나지_않는다() {
         // given
         final Place place = placeBuilder.init()
-                                        .build();
+                .build();
         final Player player = playerBuilder.init()
-                                           .build();
+                .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when & then`
         assertDoesNotThrow(() -> placeLikeService.cancelLike(cancelLikeCommand));
+    }
+
+    @Test
+    void 장소에_대한_좋아요_수를_반환한다() {
+        //given
+        final Long expected = 123L;
+        final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
+                .likeCount(expected)
+                .build();
+        final Long placeId = placeStatistics.getPlace().getId();
+
+        // when
+        final CountPlaceLikeCommand countPlaceLikeCommand = new CountPlaceLikeCommand(placeId);
+        final Long actual = placeLikeService.countPlaceLike(countPlaceLikeCommand);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
     }
 }
