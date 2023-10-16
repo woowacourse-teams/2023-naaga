@@ -2,7 +2,7 @@ package com.now.naaga.letter.presentation;
 
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.letter.application.LetterService;
-import com.now.naaga.letter.application.letterlog.dto.LetterCreateCommand;
+import com.now.naaga.letter.application.dto.CreateLetterCommand;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.presentation.dto.LetterRequest;
 import com.now.naaga.letter.presentation.dto.LetterResponse;
@@ -29,8 +29,8 @@ public class LetterController {
     @PostMapping
     public ResponseEntity<LetterResponse> createLetter(@Auth final PlayerRequest playerRequest,
                                                        @RequestBody final LetterRequest letterRequest) {
-        final LetterCreateCommand letterCreateCommand = LetterCreateCommand.of(playerRequest, letterRequest);
-        final Letter letter = letterService.writeLetter(letterCreateCommand);
+        final CreateLetterCommand createLetterCommand = CreateLetterCommand.of(playerRequest, letterRequest);
+        final Letter letter = letterService.writeLetter(createLetterCommand);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .location(URI.create("/letters/" + letter.getId()))

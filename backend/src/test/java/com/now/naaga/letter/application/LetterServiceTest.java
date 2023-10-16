@@ -5,7 +5,7 @@ import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameExceptionType;
-import com.now.naaga.letter.application.letterlog.dto.LetterCreateCommand;
+import com.now.naaga.letter.application.dto.CreateLetterCommand;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
@@ -52,16 +52,17 @@ class LetterServiceTest {
                    .build();
         
         //when
-        final LetterCreateCommand letterCreateCommand = new LetterCreateCommand(
+        final CreateLetterCommand createLetterCommand = new CreateLetterCommand(
                 savedPlayer.getId(),
                 message,
                 position);
-        final Letter expected = letterService.writeLetter(letterCreateCommand);
+        final Letter expected = new Letter(savedPlayer,position, message);
+        final Letter actual = letterService.writeLetter(createLetterCommand);
         
         //then
         assertSoftly(softAssertions -> {
-            softAssertions.assertThat(expected.getMessage()).isEqualTo(message);
-            softAssertions.assertThat(expected.getRegisteredPlayer()).isEqualTo(savedPlayer);
+            softAssertions.assertThat(actual.getMessage()).isEqualTo(message);
+            softAssertions.assertThat(actual.getRegisteredPlayer()).isEqualTo(savedPlayer);
         });
     }
     
@@ -72,16 +73,16 @@ class LetterServiceTest {
                                                 .build();
         final String message = "날씨가 선선해요.";
         final Position position = 잠실_루터회관_정문_좌표;
-        final LetterCreateCommand letterCreateCommand = new LetterCreateCommand(
+        final CreateLetterCommand createLetterCommand = new CreateLetterCommand(
                 savedPlayer.getId(),
                 message,
                 position);
         
         //when&then
-        assertThatThrownBy(() -> letterService.writeLetter(letterCreateCommand))
+        assertThatThrownBy(() -> letterService.writeLetter(createLetterCommand))
                 .isInstanceOf(GameException.class);
         Assertions.assertAll(() -> {
-            final BaseExceptionType baseExceptionType = assertThrows(GameException.class, () -> letterService.writeLetter(letterCreateCommand))
+            final BaseExceptionType baseExceptionType = assertThrows(GameException.class, () -> letterService.writeLetter(createLetterCommand))
                     .exceptionType();
             assertThat(baseExceptionType).isEqualTo(GameExceptionType.NOT_EXIST_IN_PROGRESS);
         });
