@@ -51,7 +51,7 @@ public class LetterLogController {
     }
 
     private ResponseEntity<List<LetterResponse>> findReadLetterByGameId(final LetterByGameCommand letterByGameCommand) {
-        final List<ReadLetterLog> readLetterLogs = readLetterLogService.findReadLetterByGameId(letterByGameCommand);
+        final List<ReadLetterLog> readLetterLogs = readLetterLogService.findReadLettersByGameId(letterByGameCommand);
         final List<LetterResponse> readLetterResponses = readLetterLogs.stream()
                 .map(readLetterLog -> LetterResponse.from(readLetterLog.getLetter()))
                 .toList();

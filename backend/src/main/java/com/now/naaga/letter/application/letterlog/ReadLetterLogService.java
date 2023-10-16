@@ -30,7 +30,7 @@ public class ReadLetterLogService {
         this.gameService = gameService;
     }
 
-    public List<ReadLetterLog> findReadLetterByGameId(final LetterByGameCommand letterByGameCommand) {
+    public List<ReadLetterLog> findReadLettersByGameId(final LetterByGameCommand letterByGameCommand) {
         final FindGameByIdCommand findGameByIdCommand = new FindGameByIdCommand(letterByGameCommand.gameId(), letterByGameCommand.playerId());
         final Game game = gameService.findGameById(findGameByIdCommand);
         final List<ReadLetterLog> readLetterLogs = readLetterLogRepository.findByGameId(game.getId());
