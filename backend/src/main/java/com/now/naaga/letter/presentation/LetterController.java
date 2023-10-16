@@ -34,6 +34,6 @@ public class LetterController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .location(URI.create("/letters/" + letter.getId()))
-                .body(LetterResponse.of(letter));
+                .body(LetterResponse.from(letter));
     }
 }

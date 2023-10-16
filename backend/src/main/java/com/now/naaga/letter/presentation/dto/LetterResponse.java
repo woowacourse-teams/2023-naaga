@@ -10,7 +10,7 @@ public record LetterResponse(Long id,
                              String message,
                              String registerDate) {
 
-    public static LetterResponse of(final Letter letter) {
+    public static LetterResponse from(final Letter letter) {
         Long id = letter.getId();
         PlayerResponse playerResponse = PlayerResponse.from(letter.getRegisteredPlayer());
         CoordinateResponse coordinateResponse = CoordinateResponse.of(letter.getPosition());
