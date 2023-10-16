@@ -1,4 +1,4 @@
-package com.now.naaga.util
+package com.now.naaga.util.singleliveevent
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.

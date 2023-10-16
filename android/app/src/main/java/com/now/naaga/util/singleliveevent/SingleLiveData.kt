@@ -1,4 +1,4 @@
-package com.now.naaga.util
+package com.now.naaga.util.singleliveevent
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
