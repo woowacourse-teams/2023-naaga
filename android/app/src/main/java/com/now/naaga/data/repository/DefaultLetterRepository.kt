@@ -6,7 +6,7 @@ import com.now.domain.model.type.LogType
 import com.now.domain.repository.LetterRepository
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.remote.retrofit.service.LetterService
-import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.extension.getValueOrThrow
 
 class DefaultLetterRepository(
     private val letterService: LetterService,
