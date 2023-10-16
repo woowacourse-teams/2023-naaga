@@ -3,6 +3,7 @@ package com.now.naaga.presentation.onadventure
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Adventure
@@ -10,18 +11,24 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.model.RemainingTryCount
+import com.now.domain.model.letter.ClosedLetter
 import com.now.domain.model.type.AdventureEndType
 import com.now.domain.repository.AdventureRepository
+import com.now.domain.repository.LetterRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnAdventureViewModel @Inject constructor(private val adventureRepository: AdventureRepository) : ViewModel() {
+class OnAdventureViewModel @Inject constructor(
+    private val adventureRepository: AdventureRepository,
+    private val letterRepository: LetterRepository,
+) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
     val adventure: LiveData<Adventure> = _adventure
     val hints = DisposableLiveData<List<Hint>>(_adventure.map { it.hints })
@@ -35,6 +42,20 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
 
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
+
+    val letters: LiveData<List<ClosedLetter>> = liveData {
+        while (true) {
+            val letters = myCoordinate.value.let {
+                letterRepository.fetchNearbyLetters(
+                    latitude = it?.latitude ?: 0.0,
+                    longitude = it?.longitude ?: 0.0,
+                )
+            }
+            isLetterNearBy(letters)
+            emit(letters)
+            delay(15000)
+        }
+    }
 
     private val _error = MutableLiveData<DataThrowable>()
     val error: LiveData<DataThrowable> = _error
@@ -120,6 +141,12 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
                 }
                 setError(it)
             }
+        }
+    }
+
+    private fun isLetterNearBy(letters: List<ClosedLetter>) {
+        letters.forEach { letter ->
+            myCoordinate.value?.let { letter.isNearBy(it) }
         }
     }
 
