@@ -62,9 +62,9 @@ public class AwsS3FileManager {
     
     //버전이 지정된 버킷 객체 삭제
     public void deleteFile(String imageUrl) {
-        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/"+1));
-        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileName));
-    
+        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/" + 1));
+//        amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileName));
+
 //        String bucketVersionStatus = amazonS3.getBucketVersioningConfiguration(bucketName).getStatus();
 //        if (!bucketVersionStatus.equals(BucketVersioningConfiguration.ENABLED)) {
 //            System.out.printf("Bucket %s is not versioning-enabled.", bucketName);
@@ -86,6 +86,8 @@ public class AwsS3FileManager {
 //            lastObjectSummary.getKey();
 ////            String latestVersionId = lastObjectSummary.get
 //        }
+    
+        //코드날린 방법
         VersionListing versionListing = amazonS3.listVersions(bucketName, fileName);
         S3VersionSummary s3VersionSummary = versionListing.getVersionSummaries().stream()
                                                           .max(Comparator.comparing(S3VersionSummary::getLastModified))
