@@ -1,24 +1,40 @@
 package com.now.naaga.game.presentation;
 
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
+
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.HintService;
-import com.now.naaga.game.application.dto.*;
+import com.now.naaga.game.application.dto.CreateGameCommand;
+import com.now.naaga.game.application.dto.CreateHintCommand;
+import com.now.naaga.game.application.dto.EndGameCommand;
+import com.now.naaga.game.application.dto.FindAllGamesCommand;
+import com.now.naaga.game.application.dto.FindGameByIdCommand;
+import com.now.naaga.game.application.dto.FindGameByStatusCommand;
+import com.now.naaga.game.application.dto.FindHintByIdCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameRecord;
 import com.now.naaga.game.domain.Hint;
-import com.now.naaga.game.presentation.dto.*;
+import com.now.naaga.game.presentation.dto.CoordinateRequest;
+import com.now.naaga.game.presentation.dto.EndGameRequest;
+import com.now.naaga.game.presentation.dto.GameResponse;
+import com.now.naaga.game.presentation.dto.GameResultResponse;
+import com.now.naaga.game.presentation.dto.GameStatusResponse;
+import com.now.naaga.game.presentation.dto.HintResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/games")
 @RestController
@@ -76,12 +92,9 @@ public class GameController {
                 .body(GameResponse.from(game));
     }
 
-    @GetMapping
+    @GetMapping(params = "status")
     public ResponseEntity<List<GameResponse>> findGamesByGameStatus(@Auth final PlayerRequest playerRequest,
-                                                                    @RequestParam(required = false) final String status) {
-        if (status == null) {
-            return findAllGames(playerRequest);
-        }
+                                                                    @RequestParam final String status) {
         final FindGameByStatusCommand findGameByStatusCommand = FindGameByStatusCommand.of(playerRequest, status);
         final List<Game> games = gameService.findGamesByStatus(findGameByStatusCommand);
         final List<GameResponse> gameResponses = GameResponse.convertToGameResponses(games);
@@ -90,7 +103,8 @@ public class GameController {
                 .body(gameResponses);
     }
 
-    private ResponseEntity<List<GameResponse>> findAllGames(final PlayerRequest playerRequest) {
+    @GetMapping(params = "!status")
+    public ResponseEntity<List<GameResponse>> findAllGames(@Auth final PlayerRequest playerRequest) {
         final FindAllGamesCommand findALlGamesCommand = FindAllGamesCommand.of(playerRequest);
         final List<Game> games = gameService.findAllGames(findALlGamesCommand);
         final List<GameResponse> gameResponses = GameResponse.convertToGameResponses(games);
@@ -110,16 +124,16 @@ public class GameController {
 
     @GetMapping("/results")
     public ResponseEntity<List<GameResultResponse>> findAllGameResult(@Auth final PlayerRequest playerRequest,
-                                                                      @RequestParam(name = "sort-by") final String sortBy,
-                                                                      @RequestParam(name = "order") final String order) {
+                                                                      @RequestParam(name = "sort-by", defaultValue = "TIME") final String sortBy,
+                                                                      @RequestParam(name = "order", defaultValue = "DESCENDING") final String order) {
         if (!sortBy.equalsIgnoreCase("TIME") || !order.equalsIgnoreCase("DESCENDING")) {
             throw new CommonException(INVALID_REQUEST_PARAMETERS);
         }
 
         final List<GameRecord> gameRecords = gameService.findAllGameResult(playerRequest);
         final List<GameResultResponse> gameResultResponseList = gameRecords.stream()
-                .map(GameResultResponse::from)
-                .collect(Collectors.toList());
+                                                                           .map(GameResultResponse::from)
+                                                                           .toList();
 
         return ResponseEntity
                 .status(HttpStatus.OK)

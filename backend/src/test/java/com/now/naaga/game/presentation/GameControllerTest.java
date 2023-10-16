@@ -1,13 +1,48 @@
 package com.now.naaga.game.presentation;
 
+import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
+import static com.now.naaga.common.fixture.PositionFixture.서울_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.역삼역_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_근처_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.제주_좌표;
+import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_DONE;
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.CAN_NOT_FIND_PLACE;
+import static com.now.naaga.game.exception.GameExceptionType.HINT_NOT_EXIST_IN_GAME;
+import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.*;
+import com.now.naaga.common.builder.GameBuilder;
+import com.now.naaga.common.builder.GameResultBuilder;
+import com.now.naaga.common.builder.MemberBuilder;
+import com.now.naaga.common.builder.PlaceBuilder;
+import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
-import com.now.naaga.game.domain.*;
-import com.now.naaga.game.presentation.dto.*;
+import com.now.naaga.game.domain.Direction;
+import com.now.naaga.game.domain.Game;
+import com.now.naaga.game.domain.GameRecord;
+import com.now.naaga.game.domain.Hint;
+import com.now.naaga.game.presentation.dto.CoordinateRequest;
+import com.now.naaga.game.presentation.dto.EndGameRequest;
+import com.now.naaga.game.presentation.dto.GameResponse;
+import com.now.naaga.game.presentation.dto.GameResultResponse;
+import com.now.naaga.game.presentation.dto.GameStatusResponse;
+import com.now.naaga.game.presentation.dto.HintResponse;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.HintRepository;
 import com.now.naaga.gameresult.domain.GameResult;
@@ -23,6 +58,9 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -30,20 +68,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
-import static com.now.naaga.common.fixture.PositionFixture.*;
-import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.gameresult.domain.ResultType.FAIL;
-import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
-import static com.now.naaga.game.exception.GameExceptionType.*;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -86,7 +110,7 @@ class GameControllerTest extends CommonControllerTest {
                                               .build();
 
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
 
         final AuthToken generate = authTokenGenerator.generate(destination.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
@@ -186,7 +210,7 @@ class GameControllerTest extends CommonControllerTest {
     void 게임_생성_요청시_주변에_추천_장소가_없다면_예외가_발생한다() {
         // given
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
 
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
@@ -234,7 +258,6 @@ class GameControllerTest extends CommonControllerTest {
                                      .player(player)
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
-
 
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
@@ -582,7 +605,8 @@ class GameControllerTest extends CommonControllerTest {
                                      .build();
 
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();;
+        final String accessToken = generate.getAccessToken();
+        ;
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -614,7 +638,8 @@ class GameControllerTest extends CommonControllerTest {
                                            .build();
 
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();;
+        final String accessToken = generate.getAccessToken();
+        ;
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -836,13 +861,13 @@ class GameControllerTest extends CommonControllerTest {
     public void 힌트_id를_통해_힌트를_조회할때_힌트가_존재하지_않으면_예외를_발생시킨다() {
         // given & when
         final Place place = placeBuilder.init()
-                .position(제주_좌표)
-                .build();
+                                        .position(제주_좌표)
+                                        .build();
 
         final Game game = gameBuilder.init()
-                .place(place)
-                .startPosition(서울_좌표)
-                .build();
+                                     .place(place)
+                                     .startPosition(서울_좌표)
+                                     .build();
 
         final Hint hint = hintRepository.save(new Hint(서울_좌표, Direction.SOUTH, game));
 
@@ -868,10 +893,115 @@ class GameControllerTest extends CommonControllerTest {
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
             softAssertions.assertThat(actual)
-                    .usingRecursiveComparison()
-                    .ignoringExpectedNullFields()
-                    .ignoringFieldsOfTypes(LocalDateTime.class)
-                    .isEqualTo(expected);
+                          .usingRecursiveComparison()
+                          .ignoringExpectedNullFields()
+                          .ignoringFieldsOfTypes(LocalDateTime.class)
+                          .isEqualTo(expected);
         });
+    }
+
+    @Test
+    void 상태로_게임_조회시_상태_쿼리_스트링을_명시하지_않는다면_모든_게임을_조회한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        gameBuilder.init()
+                   .player(player)
+                   .gameStatus(IN_PROGRESS)
+                   .build();
+
+        gameBuilder.init()
+                   .player(player)
+                   .gameStatus(DONE)
+                   .build();
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/games")
+                .then().log().all()
+                .extract();
+
+        // then
+        final List<GameResponse> actual = extract.as(new TypeRef<>() {
+        });
+
+        assertThat(actual).hasSize(2);
+    }
+
+    @Test
+    void 상태로_게임_조회시_상태_쿼리_스트링이_명시되어있다면_해당_상태를_가진_게임을_조회한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        gameBuilder.init()
+                   .player(player)
+                   .gameStatus(IN_PROGRESS)
+                   .build();
+
+        gameBuilder.init()
+                   .player(player)
+                   .gameStatus(DONE)
+                   .build();
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .queryParam("status", "done")
+                .when()
+                .get("/games")
+                .then().log().all()
+                .extract();
+
+        // then
+        final List<GameResponse> actual = extract.as(new TypeRef<>() {
+        });
+
+        assertThat(actual).hasSize(1);
+    }
+
+    @Test
+    void 게임_전체_결과를_조회할_때_쿼리_스트링을_명시하지_않아도_디폴트_값을_통해_정상_실행된다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Game game = gameBuilder.init()
+                                     .player(player)
+                                     .gameStatus(DONE)
+                                     .endTime(LocalDateTime.now().plusHours(3L))
+                                     .build();
+
+        gameResultBuilder.init()
+                         .game(game)
+                         .build();
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/games/results")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThrows(RuntimeException.class, () ->
+                               extract.as(new TypeRef<ExceptionResponse>() {
+                               }));
     }
 }
