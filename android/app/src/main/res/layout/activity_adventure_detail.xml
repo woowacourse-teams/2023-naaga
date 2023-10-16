@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.adventuredetail.AdventureDetailActivity">
+
+        <ImageView
+            android:id="@+id/iv_adventure_detail_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="@dimen/space_default_medium"
+            android:src="@drawable/ic_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_adventure_detail_place_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="루터회관"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_adventure_detail_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_adventure_detail_back" />
+
+        <ImageView
+            android:id="@+id/iv_adventure_detail_photo"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="@dimen/space_default_large"
+            android:background="@drawable/rect_radius_small"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_adventure_detail_place_title"
+            app:layout_constraintBottom_toTopOf="@id/vp_adventure_detail"
+            tools:srcCompat="@tools:sample/avatars" />
+
+<!--        <com.google.android.material.tabs.TabLayout-->
+<!--            android:id="@+id/tl_adventure_detail"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/vp_adventure_detail"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/iv_adventure_detail_photo" />-->
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_adventure_detail"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_adventure_detail_photo" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
