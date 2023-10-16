@@ -2,6 +2,7 @@ package com.now.naaga.place.presentation;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,12 +13,15 @@ import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.presentation.dto.CoordinateResponse;
 import com.now.naaga.place.presentation.dto.CreatePlaceRequest;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
 import com.now.naaga.player.domain.Player;
+import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -163,5 +167,37 @@ public class PlaceControllerTest extends CommonControllerTest {
                           .usingRecursiveComparison()
                           .isEqualTo(actual);
         });
+    }
+
+    @Test
+    void 장소_전체_조회시_쿼리_스트링을_명시하지_않아도_디폴트_값을_통해_정상_실행된다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        placeBuilder.init()
+                    .registeredPlayer(player)
+                    .build();
+
+        placeBuilder.init()
+                    .registeredPlayer(player)
+                    .build();
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/places")
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThrows(RuntimeException.class, () ->
+                extract.as(new TypeRef<ExceptionResponse>() {
+                }));
     }
 }

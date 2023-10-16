@@ -33,8 +33,8 @@ public class PlaceController {
 
     @GetMapping
     public ResponseEntity<List<PlaceResponse>> findAllPlace(@Auth final PlayerRequest playerRequest,
-                                                            @RequestParam(name = "sort-by") final String sortBy,
-                                                            @RequestParam(name = "order") final String order) {
+                                                            @RequestParam(name = "sort-by", defaultValue = "TIME") final String sortBy,
+                                                            @RequestParam(name = "order", defaultValue = "DESCENDING") final String order) {
         final FindAllPlaceCommand findAllPlaceCommand = FindAllPlaceCommand.of(playerRequest, sortBy, order);
         final List<Place> places = placeService.findAllPlace(findAllPlaceCommand);
         final List<PlaceResponse> response = PlaceResponse.convertToPlaceResponses(places);
