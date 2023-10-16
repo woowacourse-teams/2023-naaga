@@ -8,8 +8,7 @@ public record LetterResponse(Long id,
                              PlayerResponse player,
                              CoordinateResponse coordinate,
                              String message,
-                             String registerDate
-                             ) {
+                             String registerDate) {
 
     public static LetterResponse of(final Letter letter) {
         Long id = letter.getId();
