@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public enum SortType {
+
     TIME((places, orderType) -> {
         if (orderType == OrderType.ASCENDING) {
             places.sort(Comparator.comparing(Place::getCreatedAt));
