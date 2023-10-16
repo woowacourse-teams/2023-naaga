@@ -3,8 +3,8 @@ package com.now.naaga.letter.application.letterlog;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.dto.FindGameInProgressCommand;
 import com.now.naaga.game.domain.Game;
-import com.now.naaga.letter.application.LetterService;
-import com.now.naaga.letter.application.WriteLetterLogCreateService;
+import com.now.naaga.letter.application.LetterFindService;
+import com.now.naaga.letter.application.dto.FindLetterByIdCommand;
 import com.now.naaga.letter.application.letterlog.dto.WriteLetterLogCreateCommand;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
@@ -14,26 +14,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class WriteLetterLogService implements WriteLetterLogCreateService {
+public class WriteLetterLogService {
     
     private final WriteLetterLogRepository writeLetterLogRepository;
     
-    private final LetterService letterService;
+    private final LetterFindService letterFindService;
     
     private final GameService gameService;
     
     public WriteLetterLogService(final WriteLetterLogRepository writeLetterLogRepository,
-                                 final LetterService letterService,
+                                 final LetterFindService letterFindService,
                                  final GameService gameService) {
         this.writeLetterLogRepository = writeLetterLogRepository;
-        this.letterService = letterService;
+        this.letterFindService = letterFindService;
         this.gameService = gameService;
     }
     
-    @Override
     public void log(final WriteLetterLogCreateCommand writeLetterLogCreateCommand) {
-        Game gameInProgress = getGameInProgress(writeLetterLogCreateCommand.letterId());
-        Letter letter = letterService.findLetterById(writeLetterLogCreateCommand.letterId());
+        FindLetterByIdCommand findLetterByIdCommand = new FindLetterByIdCommand(writeLetterLogCreateCommand.letterId());
+        Letter letter = letterFindService.findById(findLetterByIdCommand);
+        Game gameInProgress = getGameInProgress(letter.getRegisteredPlayer().getId());
         final WriteLetterLog writeLetterLog = new WriteLetterLog(gameInProgress, letter);
         writeLetterLogRepository.save(writeLetterLog);
     }

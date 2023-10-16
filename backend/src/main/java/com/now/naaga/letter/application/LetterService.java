@@ -1,16 +1,14 @@
 package com.now.naaga.letter.application;
 
-import com.now.naaga.letter.application.letterlog.dto.LetterCreateCommand;
+import com.now.naaga.letter.application.dto.CreateLetterCommand;
+import com.now.naaga.letter.application.letterlog.WriteLetterLogService;
 import com.now.naaga.letter.application.letterlog.dto.WriteLetterLogCreateCommand;
 import com.now.naaga.letter.domain.Letter;
-import com.now.naaga.letter.exception.LetterException;
 import com.now.naaga.letter.repository.LetterRepository;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.now.naaga.letter.exception.LetterExceptionType.NOT_EXIST;
 
 @Transactional
 @Service
@@ -20,29 +18,21 @@ public class LetterService {
     
     private final PlayerService playerService;
     
-    private final WriteLetterLogCreateService writeLetterLogCreateService;
+    private final WriteLetterLogService writeLetterLogService;
     
-    public LetterService(final LetterRepository letterRepository,
-                         final PlayerService playerService,
-                         final WriteLetterLogCreateService writeLetterLogCreateService) {
+    public LetterService(final LetterRepository letterRepository, final PlayerService playerService, final WriteLetterLogService writeLetterLogService) {
         this.letterRepository = letterRepository;
         this.playerService = playerService;
-        this.writeLetterLogCreateService = writeLetterLogCreateService;
+        this.writeLetterLogService = writeLetterLogService;
     }
     
-    @Transactional(readOnly = true)
-    public Letter findLetterById(final Long letterId) {
-        return letterRepository.findById(letterId)
-                               .orElseThrow(() -> new LetterException(NOT_EXIST));
-    }
-    
-    public Letter writeLetter(final LetterCreateCommand letterCreateCommand) {
-        final Player player = playerService.findPlayerById(letterCreateCommand.playerId());
-        final Letter letter = new Letter(player, letterCreateCommand.position(), letterCreateCommand.message());
+    public Letter writeLetter(final CreateLetterCommand createLetterCommand) {
+        final Player player = playerService.findPlayerById(createLetterCommand.playerId());
+        final Letter letter = new Letter(player, createLetterCommand.position(), createLetterCommand.message());
         letterRepository.save(letter);
         
         final WriteLetterLogCreateCommand writeLetterLogCreateCommand = new WriteLetterLogCreateCommand(letter.getId());
-        writeLetterLogCreateService.log(writeLetterLogCreateCommand);
+        writeLetterLogService.log(writeLetterLogCreateCommand);
         return letter;
     }
 }
