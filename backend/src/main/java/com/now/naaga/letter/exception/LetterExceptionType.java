@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public enum LetterExceptionType implements BaseExceptionType {
     
-    NOT_EXIST(804,
+    NOT_EXIST(604,
             HttpStatus.NOT_FOUND,
             "쪽지가 존재하지 않습니다."),
     ;
