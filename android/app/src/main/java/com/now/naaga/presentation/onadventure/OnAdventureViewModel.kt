@@ -12,6 +12,7 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.model.RemainingTryCount
 import com.now.domain.model.letter.ClosedLetter
+import com.now.domain.model.letter.OpenLetter
 import com.now.domain.model.type.AdventureEndType
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.LetterRepository
@@ -56,6 +57,9 @@ class OnAdventureViewModel @Inject constructor(
             delay(15000)
         }
     }
+
+    private val _letter = MutableLiveData<OpenLetter>()
+    val letter: LiveData<OpenLetter> = _letter
 
     private val _error = MutableLiveData<DataThrowable>()
     val error: LiveData<DataThrowable> = _error
@@ -147,6 +151,18 @@ class OnAdventureViewModel @Inject constructor(
     private fun isLetterNearBy(letters: List<ClosedLetter>) {
         letters.forEach { letter ->
             myCoordinate.value?.let { letter.isNearBy(it) }
+        }
+    }
+
+    fun getLetter(id: Long) {
+        viewModelScope.launch {
+            runCatching {
+                letterRepository.fetchLetter(id)
+            }.onSuccess { letter ->
+                _letter.value = letter
+            }.onFailure {
+                setError(it as DataThrowable)
+            }
         }
     }
 
