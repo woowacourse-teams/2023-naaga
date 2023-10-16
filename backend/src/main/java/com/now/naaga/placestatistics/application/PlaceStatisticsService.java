@@ -1,6 +1,9 @@
 package com.now.naaga.placestatistics.application;
 
+import com.now.naaga.place.exception.PlaceException;
+import com.now.naaga.place.exception.PlaceExceptionType;
 import com.now.naaga.placestatistics.application.dto.FindPlaceStatisticsByPlaceIdCommand;
+import com.now.naaga.placestatistics.application.dto.PlusLikeCommand;
 import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
 import com.now.naaga.placestatistics.domain.PlaceStatistics;
 import com.now.naaga.placestatistics.exception.PlaceStatisticsException;
@@ -17,6 +20,13 @@ public class PlaceStatisticsService {
 
     public PlaceStatisticsService(final PlaceStatisticsRepository placeStatisticsRepository) {
         this.placeStatisticsRepository = placeStatisticsRepository;
+    }
+
+    public void plusLike(final PlusLikeCommand plusLikeCommand) {
+        final Long placeId = plusLikeCommand.placeId();
+        final PlaceStatistics placeStatistics = placeStatisticsRepository.findByPlaceId(placeId)
+                                                                         .orElseThrow(() -> new PlaceException(PlaceExceptionType.NO_EXIST));
+        placeStatistics.plusLike();
     }
 
     public void subtractLike(final SubtractLikeCommand subtractLikeCommand) {

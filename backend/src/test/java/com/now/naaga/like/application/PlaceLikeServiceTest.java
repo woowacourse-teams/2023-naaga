@@ -1,37 +1,40 @@
 package com.now.naaga.like.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlaceLikeBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.BaseExceptionType;
+import com.now.naaga.like.application.dto.ApplyLikeCommand;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
 import com.now.naaga.like.application.dto.CountPlaceLikeCommand;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.exception.PlaceLikeException;
+import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.placestatistics.domain.PlaceStatistics;
 import com.now.naaga.placestatistics.repository.PlaceStatisticsRepository;
 import com.now.naaga.player.domain.Player;
-import org.junit.jupiter.api.Assertions;
+import java.util.Optional;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static com.now.naaga.like.exception.PlaceLikeExceptionType.NOT_EXIST;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
+@DisplayNameGeneration(ReplaceUnderscores.class)
 @Sql("/truncate.sql")
 @ActiveProfiles("test")
 @SpringBootTest
@@ -66,6 +69,184 @@ class PlaceLikeServiceTest {
         this.placeStatisticsBuilder = placeStatisticsBuilder;
         this.placeLikeRepository = placeLikeRepository;
         this.placeStatisticsRepository = placeStatisticsRepository;
+    }
+
+    @Transactional
+    @Test
+    void 기존의_좋아요_타입과_반대되는_타입을_등록하면_기존의_엔티티에서_좋아요_타입만_수정된다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        placeStatisticsBuilder.init()
+                              .place(place)
+                              .build();
+
+        final PlaceLike placeLike = placeLikeBuilder.init()
+                                                    .player(player)
+                                                    .place(place)
+                                                    .placeLikeType(PlaceLikeType.LIKE)
+                                                    .build();
+
+        // when
+        final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(),
+                                                              place.getId(),
+                                                              PlaceLikeType.DISLIKE);
+        final PlaceLike actual = placeLikeService.applyLike(command);
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual).usingRecursiveComparison()
+                          .ignoringFields("placeLikeType")
+                          .isEqualTo(placeLike);
+            softAssertions.assertThat(actual.getType()).isEqualTo(PlaceLikeType.DISLIKE);
+        });
+    }
+
+    @Test
+    void 기존의_좋아요가_없을_경우에_타입을_등록하면_새로운_좋아요_엔티티가_생성된다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        placeStatisticsBuilder.init()
+                              .place(place)
+                              .build();
+
+        // when
+        final int beforeSize = placeLikeRepository.findAll().size();
+        final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(),
+                                                              place.getId(),
+                                                              PlaceLikeType.LIKE);
+        placeLikeService.applyLike(command);
+        final int afterSize = placeLikeRepository.findAll().size();
+
+        // then
+        assertThat(afterSize).isEqualTo(beforeSize + 1);
+    }
+
+    @Test
+    void 좋아요를_등록하면_좋아요_집계_값에_1_더해진다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        final long beforeLikeCount = 10L;
+
+        placeStatisticsBuilder.init()
+                              .place(place)
+                              .likeCount(beforeLikeCount)
+                              .build();
+
+        // when
+        final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(),
+                                                              place.getId(),
+                                                              PlaceLikeType.LIKE);
+        placeLikeService.applyLike(command);
+        final PlaceStatistics placeStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
+
+        // then
+        assertThat(placeStatistics.getLikeCount()).isEqualTo(beforeLikeCount + 1);
+    }
+
+    @Test
+    void 기존의_좋아요에서_싫어요로_변경하여_등록하면_좋아요_집계_값을_1_뺀다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        final long beforeLikeCount = 10L;
+
+        placeStatisticsBuilder.init()
+                              .place(place)
+                              .likeCount(beforeLikeCount)
+                              .build();
+
+        placeLikeBuilder.init()
+                        .player(player)
+                        .place(place)
+                        .placeLikeType(PlaceLikeType.LIKE)
+                        .build();
+
+        // when
+        final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(),
+                                                              place.getId(),
+                                                              PlaceLikeType.DISLIKE);
+        placeLikeService.applyLike(command);
+        final PlaceStatistics placeStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
+
+        // then
+        assertThat(placeStatistics.getLikeCount()).isEqualTo(beforeLikeCount - 1);
+    }
+
+    @Test
+    void 새롭게_싫어요를_등록했을_때_좋아요_집계_수는_변하지_않는다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        final long beforeLikeCount = 10L;
+
+        placeStatisticsBuilder.init()
+                              .place(place)
+                              .likeCount(beforeLikeCount)
+                              .build();
+
+        // when
+        final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(),
+                                                              place.getId(),
+                                                              PlaceLikeType.DISLIKE);
+        placeLikeService.applyLike(command);
+
+        // then
+        final PlaceStatistics placeStatistics = placeStatisticsRepository.findByPlaceId(place.getId()).get();
+        assertThat(placeStatistics.getLikeCount()).isEqualTo(beforeLikeCount);
+    }
+
+    @Test
+    void 기존의_좋아요_타입과_같은_타입으로_좋아요_등록을_요청하면_예외가_발생한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        placeStatisticsBuilder.init()
+                              .place(place)
+                              .build();
+
+        placeLikeBuilder.init()
+                        .player(player)
+                        .place(place)
+                        .placeLikeType(PlaceLikeType.LIKE)
+                        .build();
+
+        // when
+        final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(),
+                                                              place.getId(),
+                                                              PlaceLikeType.LIKE);
+        final BaseExceptionType baseExceptionType = assertThrows(PlaceLikeException.class, () ->
+                                                                         placeLikeService.applyLike(command)
+                                                                ).exceptionType();
+
+        // then
+        assertThat(baseExceptionType).isEqualTo(PlaceLikeExceptionType.ALREADY_APPLIED_TYPE);
     }
 
     @Test
