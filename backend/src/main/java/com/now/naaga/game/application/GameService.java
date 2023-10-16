@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 import static com.now.naaga.game.exception.GameExceptionType.*;
@@ -151,7 +150,10 @@ public class GameService {
     
     @Transactional(readOnly = true)
     public Game findGameInProgress(final FindGameInProgressCommand findGameByStatusCommand) {
-        Optional<Game> gameInProgress = gameRepository.findByPlayerIdAndInProgress(findGameByStatusCommand.playerId(), IN_PROGRESS);
-        return gameInProgress.orElseThrow(() -> new GameException(NOT_EXIST_IN_PROGRESS));
+        List<Game> gameInProgress = gameRepository.findByPlayerIdAndGameStatus(findGameByStatusCommand.playerId(), IN_PROGRESS);
+        if (gameInProgress.isEmpty()) {
+            throw new GameException(NOT_EXIST_IN_PROGRESS);
+        }
+        return gameInProgress.get(0);
     }
 }
