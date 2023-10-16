@@ -28,12 +28,12 @@
             android:id="@+id/tv_adventure_detail_place_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="루터회관"
             android:textSize="28sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_adventure_detail_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/iv_adventure_detail_back" />
+            app:layout_constraintTop_toTopOf="@id/iv_adventure_detail_back"
+            tools:text="루터회관" />
 
         <ImageView
             android:id="@+id/iv_adventure_detail_photo"
