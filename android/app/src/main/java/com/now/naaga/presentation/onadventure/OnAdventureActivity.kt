@@ -67,8 +67,7 @@ class OnAdventureActivity :
                     this@OnAdventureActivity,
                     getString(R.string.OnAdventure_warning_back_pressed),
                     Toast.LENGTH_SHORT,
-                )
-                    .show()
+                ).show()
             }
         }
     }
