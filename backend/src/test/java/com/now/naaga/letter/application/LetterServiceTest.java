@@ -1,12 +1,20 @@
 package com.now.naaga.letter.application;
 
 import com.now.naaga.common.builder.GameBuilder;
+import com.now.naaga.common.builder.LetterBuilder;
+import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.BaseExceptionType;
+import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.letter.application.dto.CreateLetterCommand;
 import com.now.naaga.letter.domain.Letter;
+import com.now.naaga.letter.exception.LetterException;
+import com.now.naaga.letter.presentation.dto.FindNearByLetterCommand;
+import com.now.naaga.letter.presentation.dto.LetterReadCommand;
+import com.now.naaga.letter.repository.letterlog.ReadLetterLogRepository;
+import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +27,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
+import java.util.List;
+
+import static com.now.naaga.common.fixture.PositionFixture.*;
+import static com.now.naaga.letter.exception.LetterExceptionType.NO_EXIST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -40,6 +51,14 @@ class LetterServiceTest {
     @Autowired
     private GameBuilder gameBuilder;
     
+    @Autowired
+    private ReadLetterLogRepository readLetterLogRepository;
+    
+    @Autowired
+    private PlaceBuilder placeBuilder;
+    
+    @Autowired
+    private LetterBuilder letterBuilder;
     
     @Transactional
     @Test
@@ -65,7 +84,7 @@ class LetterServiceTest {
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(actual)
                           .usingRecursiveComparison()
-                    .ignoringExpectedNullFields()
+                          .ignoringExpectedNullFields()
                           .isEqualTo(expected);
         });
     }
@@ -90,5 +109,107 @@ class LetterServiceTest {
                     .exceptionType();
             assertThat(baseExceptionType).isEqualTo(GameExceptionType.NOT_EXIST_IN_PROGRESS);
         });
+    }
+    
+    @Test
+    void 플레이어주변_100m_내로의_쪽지만_모두_조회한다() {
+        // given
+        final Player registerPlayer = playerBuilder.init()
+                                                   .build();
+        
+        final Letter letter1 = letterBuilder.init()
+                                            .registeredPlayer(registerPlayer)
+                                            .build();
+        
+        final Letter letter2 = letterBuilder.init()
+                                            .registeredPlayer(registerPlayer)
+                                            .position(잠실역_교보문고_110미터_앞_좌표)
+                                            .build();
+        
+        // when
+        final List<Letter> actual = letterService.findNearByLetters(new FindNearByLetterCommand(잠실역_교보문고_좌표));
+        
+        // then
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual.size()).isEqualTo(1);
+            softAssertions.assertThat(actual.get(0).getId()).isEqualTo(letter1.getId());
+        });
+    }
+    
+    @Test
+    void 플레이어주변_100m_내로의_쪽지가_없으면_빈리스트를_반환한다() {
+        // given
+        final Player registerPlayer = playerBuilder.init()
+                                                   .build();
+        
+        final Letter letter = letterBuilder.init()
+                                           .registeredPlayer(registerPlayer)
+                                           .position(잠실역_교보문고_110미터_앞_좌표)
+                                           .build();
+        
+        // when
+        final List<Letter> actual = letterService.findNearByLetters(new FindNearByLetterCommand(잠실_루터회관_정문_좌표));
+        
+        // then
+        assertThat(actual).isEmpty();
+    }
+    
+    @Test
+    void 쪽지를_단건조회_한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+        
+        final Place destination = placeBuilder.init()
+                                              .position(잠실_루터회관_정문_좌표)
+                                              .build();
+        
+        final Game game = gameBuilder.init()
+                                     .place(destination)
+                                     .player(player)
+                                     .startPosition(잠실역_교보문고_좌표)
+                                     .build();
+        
+        final Player letterRegister = playerBuilder.init()
+                                                   .build();
+        
+        final Letter letter = letterBuilder.init()
+                                           .registeredPlayer(letterRegister)
+                                           .build();
+        
+        // when
+        final Letter actual = letterService.findLetter(new LetterReadCommand(player.getId(), letter.getId()));
+        
+        // then
+        assertThat(actual.getId()).isEqualTo(letter.getId());
+    }
+    
+    @Test
+    void 쪽지가_존재하지_않으면_예외가_발생한다() {
+        // given & when
+        final Player player = playerBuilder.init()
+                                           .build();
+        
+        final Place destination = placeBuilder.init()
+                                              .position(잠실_루터회관_정문_좌표)
+                                              .build();
+        
+        final Game game = gameBuilder.init()
+                                     .place(destination)
+                                     .player(player)
+                                     .startPosition(잠실역_교보문고_좌표)
+                                     .build();
+        
+        final Player letterRegister = playerBuilder.init()
+                                                   .build();
+        
+        final Letter letter = letterBuilder.init()
+                                           .registeredPlayer(letterRegister)
+                                           .build();
+        
+        // then
+        final LetterException letterException = assertThrows(
+                LetterException.class, () -> letterService.findLetter(new LetterReadCommand(player.getId(), letter.getId() + 1)));
+        assertThat(letterException.exceptionType()).isEqualTo(NO_EXIST);
     }
 }

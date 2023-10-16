@@ -21,6 +21,6 @@ public class LetterFindService {
     public Letter findById(FindLetterByIdCommand findLetterByIdCommand) {
         Long letterId = findLetterByIdCommand.letterId();
         return letterRepository.findById(letterId)
-                        .orElseThrow(() -> new LetterException(LetterExceptionType.NOT_EXIST));
+                        .orElseThrow(() -> new LetterException(LetterExceptionType.NO_EXIST));
     }
 }

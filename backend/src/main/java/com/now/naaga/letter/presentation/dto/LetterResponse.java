@@ -11,10 +11,10 @@ public record LetterResponse(Long id,
                              String registerDate) {
 
     public static LetterResponse from(final Letter letter) {
-        Long id = letter.getId();
-        PlayerResponse playerResponse = PlayerResponse.from(letter.getRegisteredPlayer());
-        CoordinateResponse coordinateResponse = CoordinateResponse.of(letter.getPosition());
-        String registerDate = letter.getCreatedTime().toString();
+        final Long id = letter.getId();
+        final PlayerResponse playerResponse = PlayerResponse.from(letter.getRegisteredPlayer());
+        final CoordinateResponse coordinateResponse = CoordinateResponse.of(letter.getPosition());
+        final String registerDate = letter.getCreatedTime().toString();
         return new LetterResponse(id, playerResponse, coordinateResponse, letter.getMessage(), registerDate);
     }
 }
