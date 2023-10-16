@@ -62,7 +62,7 @@ public class AwsS3FileManager {
     }
     
     public void deleteFile(String imageUrl) {
-        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/"));
+        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/"+1));
         amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }
 }
