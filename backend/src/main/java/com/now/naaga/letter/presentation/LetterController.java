@@ -30,7 +30,7 @@ public class LetterController {
     public ResponseEntity<LetterResponse> createLetter(@Auth final PlayerRequest playerRequest,
                                                        @RequestBody final LetterRequest letterRequest) {
         final LetterCreateCommand letterCreateCommand = LetterCreateCommand.of(playerRequest, letterRequest);
-        final Letter letter = letterService.createLetter(letterCreateCommand);
+        final Letter letter = letterService.writeLetter(letterCreateCommand);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .location(URI.create("/letters/" + letter.getId()))

@@ -36,7 +36,7 @@ public class LetterService {
                                .orElseThrow(() -> new LetterException(NOT_EXIST));
     }
     
-    public Letter createLetter(final LetterCreateCommand letterCreateCommand) {
+    public Letter writeLetter(final LetterCreateCommand letterCreateCommand) {
         final Player player = playerService.findPlayerById(letterCreateCommand.playerId());
         final Letter letter = new Letter(player, letterCreateCommand.position(), letterCreateCommand.message());
         final Letter savedLetter = letterRepository.save(letter);

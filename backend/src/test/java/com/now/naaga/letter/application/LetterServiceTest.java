@@ -55,7 +55,7 @@ class LetterServiceTest {
                 savedPlayer.getId(),
                 message,
                 position);
-        final Letter expected = letterService.createLetter(letterCreateCommand);
+        final Letter expected = letterService.writeLetter(letterCreateCommand);
         
         //then
         assertSoftly(softAssertions -> {
@@ -77,7 +77,7 @@ class LetterServiceTest {
                 position);
         
         //when&then
-        assertThatThrownBy(() -> letterService.createLetter(letterCreateCommand))
+        assertThatThrownBy(() -> letterService.writeLetter(letterCreateCommand))
                 .isInstanceOf(GameException.class);
     }
     
@@ -97,7 +97,7 @@ class LetterServiceTest {
                 position);
         
         //when&then
-        assertThatThrownBy(() -> letterService.createLetter(letterCreateCommand))
+        assertThatThrownBy(() -> letterService.writeLetter(letterCreateCommand))
                 .isInstanceOf(PlayerException.class);
     }
 }
