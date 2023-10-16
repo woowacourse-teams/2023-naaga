@@ -2,7 +2,9 @@ package com.now.naaga.like.application;
 
 import com.now.naaga.like.application.dto.ApplyLikeCommand;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
+import com.now.naaga.like.application.dto.CheckMyPlaceLikeCommand;
 import com.now.naaga.like.application.dto.CountPlaceLikeCommand;
+import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.exception.PlaceLikeException;
@@ -103,6 +105,17 @@ public class PlaceLikeService {
             final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
             placeStatisticsService.subtractLike(subtractLikeCommand);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public MyPlaceLikeType checkMyLike(final CheckMyPlaceLikeCommand checkMyPlaceLikeCommand) {
+        final Long playerId = checkMyPlaceLikeCommand.playerId();
+        final Long placeId = checkMyPlaceLikeCommand.placeId();
+
+        return placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId)
+                                  .map(PlaceLike::getType)
+                                  .map(MyPlaceLikeType::from)
+                                  .orElse(MyPlaceLikeType.NONE);
     }
 
     @Transactional(readOnly = true)

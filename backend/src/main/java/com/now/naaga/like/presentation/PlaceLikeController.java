@@ -4,9 +4,12 @@ import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.like.application.PlaceLikeService;
 import com.now.naaga.like.application.dto.ApplyLikeCommand;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
+import com.now.naaga.like.application.dto.CheckMyPlaceLikeCommand;
 import com.now.naaga.like.application.dto.CountPlaceLikeCommand;
+import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.presentation.dto.ApplyPlaceLikeRequest;
+import com.now.naaga.like.presentation.dto.CheckMyPlaceLikeResponse;
 import com.now.naaga.like.presentation.dto.PlaceLikeCountResponse;
 import com.now.naaga.like.presentation.dto.PlaceLikeResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
@@ -54,6 +57,17 @@ public class PlaceLikeController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<CheckMyPlaceLikeResponse> checkMyPlaceLike(@Auth final PlayerRequest playerRequest,
+                                                                     @PathVariable final Long placeId) {
+        final CheckMyPlaceLikeCommand command = CheckMyPlaceLikeCommand.of(playerRequest, placeId);
+        final MyPlaceLikeType myPlaceLikeType = placeLikeService.checkMyLike(command);
+        final CheckMyPlaceLikeResponse response = CheckMyPlaceLikeResponse.from(myPlaceLikeType);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
     @GetMapping("/count")

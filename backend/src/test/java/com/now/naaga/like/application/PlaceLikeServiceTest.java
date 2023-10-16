@@ -12,7 +12,9 @@ import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.like.application.dto.ApplyLikeCommand;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
+import com.now.naaga.like.application.dto.CheckMyPlaceLikeCommand;
 import com.now.naaga.like.application.dto.CountPlaceLikeCommand;
+import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.exception.PlaceLikeException;
@@ -351,7 +353,7 @@ class PlaceLikeServiceTest {
                 .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
-        // when & then`
+        // when & then
         assertDoesNotThrow(() -> placeLikeService.cancelLike(cancelLikeCommand));
     }
 
@@ -370,5 +372,54 @@ class PlaceLikeServiceTest {
 
         // then
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void 특정_장소에_대한_나의_좋아요_여부_조회시_내가_누른_좋아요가_존재한다면_해당_좋아요_타입을_반환한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        placeLikeBuilder.init()
+                        .player(player)
+                        .place(place)
+                        .placeLikeType(PlaceLikeType.LIKE)
+                        .build();
+
+        // when
+        final CheckMyPlaceLikeCommand command = new CheckMyPlaceLikeCommand(player.getId(), place.getId());
+        final MyPlaceLikeType actual = placeLikeService.checkMyLike(command);
+
+        // then
+        assertThat(actual).isEqualTo(MyPlaceLikeType.LIKE);
+    }
+
+    @Test
+    void 특정_장소에_대한_나의_좋아요_여부_조회시_내가_누른_좋아요가_없다면_NONE_타입을_반환한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place applied = placeBuilder.init()
+                                          .build();
+
+        final Place notApplied = placeBuilder.init()
+                                             .build();
+
+        placeLikeBuilder.init()
+                        .player(player)
+                        .place(applied)
+                        .placeLikeType(PlaceLikeType.LIKE)
+                        .build();
+
+        // when
+        final CheckMyPlaceLikeCommand command = new CheckMyPlaceLikeCommand(player.getId(), notApplied.getId());
+        final MyPlaceLikeType actual = placeLikeService.checkMyLike(command);
+
+        // then
+        assertThat(actual).isEqualTo(MyPlaceLikeType.NONE);
     }
 }

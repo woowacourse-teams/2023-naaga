@@ -16,9 +16,11 @@ import com.now.naaga.common.builder.PlaceLikeBuilder;
 import com.now.naaga.common.builder.PlaceStatisticsBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
+import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.presentation.dto.ApplyPlaceLikeRequest;
+import com.now.naaga.like.presentation.dto.CheckMyPlaceLikeResponse;
 import com.now.naaga.like.presentation.dto.PlaceLikeCountResponse;
 import com.now.naaga.like.presentation.dto.PlaceLikeResponse;
 import com.now.naaga.member.domain.Member;
@@ -184,6 +186,82 @@ class PlaceLikeControllerTest extends CommonControllerTest {
         //then
         final int statusCode = extract.statusCode();
         assertThat(statusCode).isEqualTo(NO_CONTENT.value());
+    }
+
+    @Test
+    void 좋아요가_눌려있을_때_나의_좋아요_여부를_조회하면_해당_좋아요_타입_응답과_200_상태코드를_반환한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        final PlaceLikeType myType = PlaceLikeType.LIKE;
+
+        placeLikeBuilder.init()
+                        .player(player)
+                        .place(place)
+                        .placeLikeType(myType)
+                        .build();
+
+        final Member member = player.getMember();
+        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/places/{placeId}/likes/my", place.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        final int statusCode = extract.statusCode();
+        final CheckMyPlaceLikeResponse actual = extract.as(CheckMyPlaceLikeResponse.class);
+        final CheckMyPlaceLikeResponse expected = new CheckMyPlaceLikeResponse(MyPlaceLikeType.from(myType));
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(actual).usingRecursiveComparison()
+                          .isEqualTo(expected);
+        });
+    }
+
+    @Test
+    void 아무것도_눌려있지_않을_때_나의_좋아요_여부를_조회하면_NONE_타입_응답과_200_상태코드를_반환한다() {
+        // given
+        final Player player = playerBuilder.init()
+                                           .build();
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        final Member member = player.getMember();
+        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        // when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/places/{placeId}/likes/my", place.getId())
+                .then().log().all()
+                .extract();
+
+        // then
+        final int statusCode = extract.statusCode();
+        final CheckMyPlaceLikeResponse actual = extract.as(CheckMyPlaceLikeResponse.class);
+        final CheckMyPlaceLikeResponse expected = new CheckMyPlaceLikeResponse(MyPlaceLikeType.NONE);
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softAssertions.assertThat(actual).usingRecursiveComparison()
+                          .isEqualTo(expected);
+        });
     }
 
     @Test
