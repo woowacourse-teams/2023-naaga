@@ -6,7 +6,7 @@ import com.now.naaga.letter.domain.Letter;
 import java.util.List;
 
 public record NearByLetterResponse(Long id,
-                                   CoordinateResponse coordinateResponse) {
+                                   CoordinateResponse coordinate) {
 
     public static NearByLetterResponse from(final Letter letter) {
         return new NearByLetterResponse(letter.getId(), CoordinateResponse.of(letter.getPosition()));
