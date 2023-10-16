@@ -11,5 +11,6 @@ TRUNCATE TABLE hint;
 TRUNCATE TABLE auth_token;
 TRUNCATE TABLE letter;
 TRUNCATE TABLE read_letter_log;
+TRUNCATE TABLE write_letter_log;
 
 SET FOREIGN_KEY_CHECKS = 1;

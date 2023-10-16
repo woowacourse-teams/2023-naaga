@@ -6,6 +6,8 @@ import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.letter.application.letterlog.dto.LetterLogCreateCommand;
+import com.now.naaga.game.application.dto.FindGameByIdCommand;
+import com.now.naaga.letter.application.letterlog.dto.LetterByGameCommand;
 import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 import com.now.naaga.letter.repository.letterlog.ReadLetterLogRepository;
 import org.springframework.stereotype.Service;
@@ -19,14 +21,19 @@ import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 @Service
 public class ReadLetterLogService {
 
-    private final GameService gameService;
-
     private final ReadLetterLogRepository readLetterLogRepository;
 
-    public ReadLetterLogService(final GameService gameService,
-                                final ReadLetterLogRepository readLetterLogRepository) {
-        this.gameService = gameService;
+    private final GameService gameService;
+
+    public ReadLetterLogService(final ReadLetterLogRepository readLetterLogRepository, final GameService gameService) {
         this.readLetterLogRepository = readLetterLogRepository;
+        this.gameService = gameService;
+    }
+
+    public List<ReadLetterLog> findReadLettersByGameId(final LetterByGameCommand letterByGameCommand) {
+        final FindGameByIdCommand findGameByIdCommand = new FindGameByIdCommand(letterByGameCommand.gameId(), letterByGameCommand.playerId());
+        final Game game = gameService.findGameById(findGameByIdCommand);
+        return readLetterLogRepository.findByGameId(game.getId());
     }
 
     public void log(final LetterLogCreateCommand letterLogCreateCommand) {
