@@ -12,6 +12,7 @@ import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +38,7 @@ class AdventureHistoryViewModel @Inject constructor(private val adventureReposit
 
     private fun setThrowable(throwable: Throwable) {
         when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
             is PlayerThrowable -> { _throwable.value = throwable }
         }
     }

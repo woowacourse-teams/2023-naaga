@@ -32,6 +32,7 @@ import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.extension.getParcelableCompat
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -109,11 +110,11 @@ class OnAdventureActivity :
         viewModel.remainingHintCount.observe(this) {
             // binding.tvOnAdventureHintCount.text = it.toString()
         }
-        viewModel.error.observe(this) { error: DataThrowable ->
-            logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
-            when (error.code) {
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            logServerError(ON_ADVENTURE_GAME, throwable.code, throwable.message.toString())
+            when (throwable.code) {
                 OnAdventureViewModel.NO_DESTINATION -> {
-                    shortToast(error.message ?: return@observe)
+                    shortToast(throwable.message ?: return@observe)
                     finish()
                 }
 
@@ -123,7 +124,10 @@ class OnAdventureActivity :
                 }
 
                 OnAdventureViewModel.TRY_COUNT_OVER -> shortToast(getString(R.string.onAdventure_try_count_over))
-                else -> shortSnackbar(error.message ?: return@observe)
+
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(throwable.message ?: "") }
+
+                else -> shortSnackbar(throwable.message ?: return@observe)
             }
         }
     }

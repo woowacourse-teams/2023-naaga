@@ -31,6 +31,7 @@ import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.upload.UploadViewModel.Companion.FILE_EMPTY
 import com.now.naaga.util.extension.openSetting
 import com.now.naaga.util.extension.showSnackbarWithEvent
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
@@ -119,6 +120,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 UploadViewModel.ERROR_POST_BODY -> {
                     shortToast(getString(R.string.upload_error_post_message))
                 }
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(throwable.message ?: "") }
             }
         }
     }

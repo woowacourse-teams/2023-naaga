@@ -14,6 +14,7 @@ import com.now.naaga.util.singleliveevent.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,6 +69,7 @@ class UploadViewModel @Inject constructor(
 
     private fun setThrowable(throwable: Throwable) {
         when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
             is UniversalThrowable -> _throwable.value = throwable
             is PlaceThrowable -> _throwable.value = throwable
         }

@@ -28,6 +28,7 @@ import com.now.naaga.presentation.setting.SettingActivity
 import com.now.naaga.presentation.upload.UploadActivity
 import com.now.naaga.util.extension.openSetting
 import com.now.naaga.util.extension.showSnackbarWithEvent
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -75,7 +76,9 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
             setLoadingView(loading)
         }
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
-            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
+            when (throwable.code) {
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(throwable.message ?: "") }
+            }
         }
     }
 

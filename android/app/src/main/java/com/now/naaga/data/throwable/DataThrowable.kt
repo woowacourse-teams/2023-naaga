@@ -26,8 +26,8 @@ sealed class DataThrowable(val code: Int, message: String) : Throwable(message) 
         const val ILLEGAL_STATE_THROWABLE_CODE = 900
         const val ILLEGAL_STATE_THROWABLE_MESSAGE = "잘못된 값입니다."
 
-        private const val NETWORK_THROWABLE_CODE = 1000
-        private const val NETWORK_THROWABLE_MESSAGE = "문제가 발생했어요. 다시 요청해주세요!"
+        const val NETWORK_THROWABLE_CODE = 1000
+        const val NETWORK_THROWABLE_MESSAGE = "문제가 발생했어요. 다시 요청해주세요!"
 
         val hintThrowable = GameThrowable(455, "사용할 수 있는 힌트를 모두 소진했습니다.")
     }

@@ -11,6 +11,7 @@ import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivitySettingBinding
 import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.login.LoginActivity
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,6 +39,7 @@ class SettingActivity : AppCompatActivity() {
             when (throwable.code) {
                 WRONG_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_wrong_error_message))
                 EXPIRATION_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_expiration_error_message))
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(throwable.message ?: "") }
             }
         }
         viewModel.withdrawalStatus.observe(this) { status ->

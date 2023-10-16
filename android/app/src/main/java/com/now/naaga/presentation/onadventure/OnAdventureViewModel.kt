@@ -16,6 +16,7 @@ import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,8 +35,8 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
-    private val _error = MutableLiveData<DataThrowable>()
-    val error: LiveData<DataThrowable> = _error
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
@@ -116,8 +117,9 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
 
     private fun setThrowable(throwable: Throwable) {
         when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
             is DataThrowable.GameThrowable -> { handleGameThrowable(throwable) }
-            is DataThrowable.UniversalThrowable -> _error.value = throwable
+            is DataThrowable.UniversalThrowable -> _throwable.value = throwable
         }
     }
 
@@ -128,7 +130,7 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
                 val currentRemainingTryCount = adventure.value?.remainingTryCount ?: return
                 _adventure.value = adventure.value?.copy(remainingTryCount = currentRemainingTryCount - 1)
             }
-            else -> { _error.value = throwable }
+            else -> { _throwable.value = throwable }
         }
     }
 

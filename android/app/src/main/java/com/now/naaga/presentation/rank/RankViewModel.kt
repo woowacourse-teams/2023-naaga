@@ -11,6 +11,7 @@ import com.now.domain.repository.RankRepository
 import com.now.naaga.data.throwable.DataThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,6 +59,7 @@ class RankViewModel @Inject constructor(private val rankRepository: RankReposito
 
     private fun setThrowable(throwable: Throwable) {
         when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
             is DataThrowable.PlayerThrowable -> { _throwable.value = throwable }
         }
     }

@@ -10,6 +10,7 @@ import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.throwable.DataThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +32,15 @@ class BeginAdventureViewModel @Inject constructor(private val adventureRepositor
             }.onSuccess {
                 _loading.value = false
                 _adventure.value = it.firstOrNull()
+            }.onFailure {
+                setThrowable(it)
             }
+        }
+    }
+
+    private fun setThrowable(throwable: Throwable) {
+        when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
         }
     }
 }

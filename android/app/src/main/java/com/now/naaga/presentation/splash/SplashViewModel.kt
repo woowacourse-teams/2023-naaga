@@ -8,6 +8,7 @@ import com.now.domain.repository.StatisticsRepository
 import com.now.naaga.data.throwable.DataThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,6 +35,7 @@ class SplashViewModel @Inject constructor(private val statisticsRepository: Stat
 
     private fun setThrowable(throwable: Throwable) {
         when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
             is DataThrowable.AuthorizationThrowable -> { _throwable.value = throwable }
         }
     }

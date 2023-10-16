@@ -3,15 +3,15 @@ package com.now.naaga.presentation.rank
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.Rank
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
-import com.now.naaga.data.firebase.analytics.RANK_RANK
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityRankBinding
 import com.now.naaga.presentation.rank.recyclerview.RankAdapter
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,8 +51,9 @@ class RankActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsD
             updateRank(ranks)
         }
         viewModel.throwable.observe(this) { throwable ->
-            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
-            logServerError(RANK_RANK, throwable.code, throwable.message.toString())
+            when (throwable.code) {
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(throwable.message ?: "") }
+            }
         }
     }
 

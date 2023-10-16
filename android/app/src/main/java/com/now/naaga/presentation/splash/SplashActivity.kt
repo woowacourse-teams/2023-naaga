@@ -12,10 +12,12 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.login.LoginActivity
 import com.now.naaga.util.extension.getPackageInfoCompat
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @SuppressLint("CustomSplashScreen")
@@ -79,6 +81,11 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 return@observe
             }
             startLoginActivity()
+        }
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(throwable.message ?: "") }
+            }
         }
     }
 
