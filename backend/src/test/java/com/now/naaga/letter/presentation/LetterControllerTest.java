@@ -105,7 +105,6 @@ class LetterControllerTest extends CommonControllerTest {
         );
     }
     
-    // TODO : 삭제할 주석(질문) 플레이어가 존재하지 않는 경우, AuthInterceptor에서 예외가 발생할 것 같은데 맞나요?
     @Test
     void 쪽지_등록_요청시_쪽지를_등록한_플레이어가_존재하지_않으면_예외가_발생한다() {
         //given
