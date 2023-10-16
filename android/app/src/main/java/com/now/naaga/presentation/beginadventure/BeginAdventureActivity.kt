@@ -74,8 +74,8 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         viewModel.loading.observe(this) { loading ->
             setLoadingView(loading)
         }
-        viewModel.error.observe(this) { error: DataThrowable ->
-            Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
         }
     }
 

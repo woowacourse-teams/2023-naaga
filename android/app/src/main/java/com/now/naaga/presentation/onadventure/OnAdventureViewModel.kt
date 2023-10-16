@@ -14,8 +14,6 @@ import com.now.domain.model.type.AdventureEndType
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
-import com.now.naaga.data.throwable.DataThrowable.GameThrowable
-import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -50,7 +48,7 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
             }.onSuccess {
                 setAdventure(it)
             }.onFailure {
-                setError(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
@@ -66,14 +64,14 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
             }.onSuccess { status: AdventureStatus ->
                 _adventure.value = adventure.value?.copy(adventureStatus = status)
             }.onFailure {
-                setError(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
 
     fun openHint() {
         if (isAllHintsUsed()) {
-            setError(hintThrowable)
+            setThrowable(hintThrowable)
             return
         }
         viewModelScope.launch {
@@ -86,7 +84,7 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
                 _adventure.value = adventure.value?.copy(hints = ((adventure.value?.hints ?: listOf()) + hint))
                 _lastHint.value = hint
             }.onFailure {
-                setError(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
@@ -111,23 +109,26 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
             }.onSuccess {
                 _adventure.value = adventure.value?.copy(adventureStatus = it)
             }.onFailure {
-                when ((it as DataThrowable).code) {
-                    TRY_COUNT_OVER -> _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
-                    NOT_ARRIVED -> {
-                        val currentRemainingTryCount = adventure.value?.remainingTryCount ?: return@onFailure
-                        _adventure.value = adventure.value?.copy(remainingTryCount = currentRemainingTryCount - 1)
-                    }
-                }
-                setError(it)
+                setThrowable(it)
             }
         }
     }
 
-    private fun setError(throwable: DataThrowable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is GameThrowable -> _error.value = throwable
-            is UniversalThrowable -> _error.value = throwable
-            else -> {}
+            is DataThrowable.GameThrowable -> { handleGameThrowable(throwable) }
+            is DataThrowable.UniversalThrowable -> _error.value = throwable
+        }
+    }
+
+    private fun handleGameThrowable(throwable: DataThrowable.GameThrowable) {
+        when (throwable.code) {
+            TRY_COUNT_OVER -> _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
+            NOT_ARRIVED -> {
+                val currentRemainingTryCount = adventure.value?.remainingTryCount ?: return
+                _adventure.value = adventure.value?.copy(remainingTryCount = currentRemainingTryCount - 1)
+            }
+            else -> { _error.value = throwable }
         }
     }
 

@@ -12,7 +12,6 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
-import com.now.naaga.data.firebase.analytics.SPLASH_MY_PAGE_STATISTICS
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.login.LoginActivity
@@ -80,9 +79,6 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 return@observe
             }
             startLoginActivity()
-        }
-        viewModel.error.observe(this) {
-            logServerError(SPLASH_MY_PAGE_STATISTICS, it.code, it.message.toString())
         }
     }
 

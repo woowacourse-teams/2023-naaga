@@ -34,8 +34,8 @@ class SettingActivity : AppCompatActivity() {
                 startActivity(LoginActivity.getIntentWithTop(this))
             }
         }
-        viewModel.throwable.observe(this) { error: DataThrowable ->
-            when (error.code) {
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
                 WRONG_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_wrong_error_message))
                 EXPIRATION_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_expiration_error_message))
             }

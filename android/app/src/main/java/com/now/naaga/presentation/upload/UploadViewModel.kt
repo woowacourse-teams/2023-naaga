@@ -60,17 +60,16 @@ class UploadViewModel @Inject constructor(
                     _successUpload.setValue(UploadStatus.SUCCESS)
                 }.onFailure {
                     _successUpload.setValue(UploadStatus.FAIL)
-                    setError(it as DataThrowable)
+                    setThrowable(it)
                 }
             }
         }
     }
 
-    private fun setError(throwable: DataThrowable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
             is UniversalThrowable -> _throwable.value = throwable
             is PlaceThrowable -> _throwable.value = throwable
-            else -> {}
         }
     }
 

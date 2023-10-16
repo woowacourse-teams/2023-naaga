@@ -17,8 +17,8 @@ class BeginAdventureViewModel @Inject constructor(private val adventureRepositor
     private val _adventure = MutableLiveData<Adventure>()
     val adventure: LiveData<Adventure> = _adventure
 
-    private val _error = MutableLiveData<DataThrowable>()
-    val error: LiveData<DataThrowable> = _error
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     private val _loading = MutableLiveData<Boolean>(false)
     val loading: LiveData<Boolean> = _loading
@@ -31,8 +31,6 @@ class BeginAdventureViewModel @Inject constructor(private val adventureRepositor
             }.onSuccess {
                 _loading.value = false
                 _adventure.value = it.firstOrNull()
-            }.onFailure {
-                _error.value = it as DataThrowable
             }
         }
     }

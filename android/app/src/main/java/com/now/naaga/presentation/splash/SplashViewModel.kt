@@ -16,8 +16,8 @@ class SplashViewModel @Inject constructor(private val statisticsRepository: Stat
     private val _isTokenValid = MutableLiveData<Boolean>()
     val isTokenValid: LiveData<Boolean> = _isTokenValid
 
-    private val _error = MutableLiveData<DataThrowable>()
-    val error: LiveData<DataThrowable> = _error
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     fun testTokenValid() {
         viewModelScope.launch {
@@ -27,8 +27,14 @@ class SplashViewModel @Inject constructor(private val statisticsRepository: Stat
                 _isTokenValid.value = true
             }.onFailure {
                 _isTokenValid.value = false
-                _error.value = it as DataThrowable.AuthorizationThrowable
+                setThrowable(it)
             }
+        }
+    }
+
+    private fun setThrowable(throwable: Throwable) {
+        when (throwable) {
+            is DataThrowable.AuthorizationThrowable -> { _throwable.value = throwable }
         }
     }
 }

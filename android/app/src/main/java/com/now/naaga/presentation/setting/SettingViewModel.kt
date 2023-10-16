@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.throwable.DataThrowable
-import com.now.naaga.data.throwable.DataThrowable.AuthorizationThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +25,7 @@ class SettingViewModel @Inject constructor(private val authRepository: AuthRepos
         viewModelScope.launch {
             runCatching { authRepository.logout() }
                 .onSuccess { _isLoggedIn.value = false }
-                .onFailure { setError(it as DataThrowable) }
+                .onFailure { setThrowable(it) }
         }
     }
 
@@ -34,14 +33,13 @@ class SettingViewModel @Inject constructor(private val authRepository: AuthRepos
         viewModelScope.launch {
             runCatching { authRepository.withdrawalMember() }
                 .onSuccess { _withdrawalStatus.value = true }
-                .onFailure { setError(it as DataThrowable) }
+                .onFailure { setThrowable(it) }
         }
     }
 
-    private fun setError(throwable: DataThrowable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is AuthorizationThrowable -> _throwable.value = throwable
-            else -> {}
+            is DataThrowable.AuthorizationThrowable -> _throwable.value = throwable
         }
     }
 }

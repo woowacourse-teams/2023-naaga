@@ -35,7 +35,7 @@ class AdventureResultViewModel @Inject constructor(
             }.onSuccess { adventureResult ->
                 _adventureResult.value = adventureResult
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
@@ -47,18 +47,14 @@ class AdventureResultViewModel @Inject constructor(
             }.onSuccess { rank ->
                 _myRank.value = rank.rank
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
 
-    private fun setErrorMessage(throwable: DataThrowable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is GameThrowable -> {
-                _throwable.value = throwable
-            }
-
-            else -> {}
+            is GameThrowable -> { _throwable.value = throwable }
         }
     }
 }

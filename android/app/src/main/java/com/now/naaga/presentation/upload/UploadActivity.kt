@@ -106,8 +106,8 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 }
             }
         }
-        viewModel.throwable.observe(this) { error: DataThrowable ->
-            when (error.code) {
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
                 UploadViewModel.ERROR_STORE_PHOTO -> {
                     shortToast(getString(R.string.upload_error_store_photo_message))
                 }
