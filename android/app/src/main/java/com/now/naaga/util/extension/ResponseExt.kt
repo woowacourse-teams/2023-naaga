@@ -1,4 +1,4 @@
-package com.now.naaga.util
+package com.now.naaga.util.extension
 
 import com.now.naaga.data.throwable.DataThrowable
 import org.json.JSONObject
