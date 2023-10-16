@@ -46,6 +46,7 @@ class AdventureDetailViewModel @Inject constructor(private val letterRepository:
     private fun setThrowable(throwable: Throwable) {
         when (throwable) {
             is IOException -> { TODO("_throwable.value = DataThrowable.NetworkThrowable") }
+            is DataThrowable.LetterThrowable -> { _throwable.value = throwable }
         }
     }
 }
