@@ -4,7 +4,6 @@ import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.letter.application.letterlog.dto.LetterByGameCommand;
-import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
 import com.now.naaga.letter.repository.letterlog.WriteLetterLogRepository;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import java.util.List;
 public class WriteLetterLogService {
 
     private final WriteLetterLogRepository writeLetterLogRepository;
+
     private final GameService gameService;
 
     public WriteLetterLogService(final WriteLetterLogRepository writeLetterLogRepository, final GameService gameService) {
