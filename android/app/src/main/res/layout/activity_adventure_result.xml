@@ -31,7 +31,7 @@
             android:id="@+id/tv_adventureResult_destinationDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="20dp"
             android:text="@string/adventureResult_destination_description"
             android:textSize="32sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +46,7 @@
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_adventureResult_photo"
+            app:layout_constraintTop_toBottomOf="@id/iv_adventureResult_photo"
             tools:text="루터회관" />
 
         <ImageView
