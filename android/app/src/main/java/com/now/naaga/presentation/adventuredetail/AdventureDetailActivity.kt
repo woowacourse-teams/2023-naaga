@@ -70,8 +70,8 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
 
         TabLayoutMediator(binding.tlAdventureDetail, binding.vpAdventureDetail) { tab, position ->
             when (position) {
-                0 -> tab.text = "읽은 편지"
-                1 -> tab.text = "등록한 편지"
+                0 -> tab.text = getString(R.string.adventure_detail_read_letter)
+                1 -> tab.text = getString(R.string.adventure_detail_write_letter)
             }
         }.attach()
     }

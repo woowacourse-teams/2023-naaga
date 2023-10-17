@@ -114,6 +114,10 @@
     <string name="setting_question_email">naaganow@gmail.com</string>
     <string name="setting_question_email_title">[나아가에게 문의하기]</string>
 
+    <!-- AdventureDetailActivity -->
+    <string name="adventure_detail_read_letter">읽은 편지</string>
+    <string name="adventure_detail_write_letter">등록한 편지</string>
+
     <!-- WithdrawalDialog -->
     <string name="withdrawal_dialog_title">정말 회원 탈퇴를 하시겠습니까?</string>
     <string name="withdrawal_dialog_description">나아가와 함께 즐거운 모험을 계속해보세요!</string>
