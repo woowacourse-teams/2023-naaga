@@ -115,6 +115,10 @@
     <string name="setting_question_email">naaganow@gmail.com</string>
     <string name="setting_question_email_title">[나아가에게 문의하기]</string>
 
+    <!-- AdventureDetailActivity -->
+    <string name="adventure_detail_read_letter">읽은 쪽지</string>
+    <string name="adventure_detail_write_letter">등록한 쪽지</string>
+
     <!-- WithdrawalDialog -->
     <string name="withdrawal_dialog_title">정말 회원 탈퇴를 하시겠습니까?</string>
     <string name="withdrawal_dialog_description">나아가와 함께 즐거운 모험을 계속해보세요!</string>
@@ -137,6 +141,8 @@
     <string name="snackbar_location_message">위치 권한이 필요해요!</string>
     <string name="snackbar_storage_message">저장소 권한이 필요해요!</string>
     <string name="snackbar_action_title">이동하기</string>
+    <string name="snackbar_action_re_request_message">다시 요청해주세요!</string>
+    <string name="snackbar_action__re_request_title">나가기</string>
 
     <!-- SendLetterDialog -->
     <string name="send_letter_dialog_hint">이 곳에 내용을 작성해주세요!</string>
