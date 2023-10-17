@@ -11,6 +11,7 @@ import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.LetterRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.presentation.uimodel.mapper.toUiModel
+import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,12 +44,17 @@ class AdventureDetailViewModel @Inject constructor(
         viewModelScope.launch {
             combine(readLettersFlow, writeLettersFlow, adventureFlow) { readLetters, writeLetters, adventureResult ->
                 AdventureDetailUiState.Success(
-                    readLetters = readLetters.map { it.toUiModel() },
-                    writeLetters = writeLetters.map { it.toUiModel() },
+                    readLetters = getOpenLetterUiModels(readLetters),
+                    writeLetters = getOpenLetterUiModels(writeLetters),
                     adventureResult = adventureResult,
                 )
             }.collectLatest { _uiState.value = it }
         }
+    }
+
+    private fun getOpenLetterUiModels(letters: List<OpenLetter>): List<OpenLetterUiModel> {
+        if (letters.isEmpty()) return listOf(OpenLetterUiModel.getDefault())
+        return letters.map { it.toUiModel() }
     }
 
     fun fetchReadLetter(gameId: Long) {
