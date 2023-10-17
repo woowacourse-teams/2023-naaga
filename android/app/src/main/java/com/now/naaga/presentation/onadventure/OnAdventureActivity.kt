@@ -33,6 +33,7 @@ import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.extension.getParcelableCompat
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -106,18 +107,14 @@ class OnAdventureActivity :
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
         }
-        viewModel.remainingHintCount.observe(this) {
-            // binding.tvOnAdventureHintCount.text = it.toString()
-        }
         viewModel.letters.observe(this) {
             drawLetters(it)
         }
-
-        viewModel.error.observe(this) { error: DataThrowable ->
-            logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
-            when (error.code) {
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            logServerError(ON_ADVENTURE_GAME, throwable.code, throwable.message.toString())
+            when (throwable.code) {
                 OnAdventureViewModel.NO_DESTINATION -> {
-                    shortToast(error.message ?: return@observe)
+                    showToast(throwable.message ?: return@observe)
                     finish()
                 }
 
@@ -126,8 +123,11 @@ class OnAdventureActivity :
                     shortSnackbar(getString(R.string.onAdventure_retry, remainingTryCount))
                 }
 
-                OnAdventureViewModel.TRY_COUNT_OVER -> shortToast(getString(R.string.onAdventure_try_count_over))
-                else -> shortSnackbar(error.message ?: return@observe)
+                OnAdventureViewModel.TRY_COUNT_OVER -> showToast(getString(R.string.onAdventure_try_count_over))
+
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+
+                else -> shortSnackbar(throwable.message ?: return@observe)
             }
         }
     }
@@ -216,10 +216,6 @@ class OnAdventureActivity :
 
     private fun shortSnackbar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    private fun shortToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

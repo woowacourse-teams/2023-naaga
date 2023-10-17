@@ -10,6 +10,7 @@ import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.throwable.DataThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,8 +30,14 @@ class LoginViewModel @Inject constructor(
             }.onSuccess { status ->
                 _isLoginSucceed.value = status
             }.onFailure {
-                _throwable.value = it as DataThrowable
+                setThrowable(it)
             }
+        }
+    }
+
+    private fun setThrowable(throwable: Throwable) {
+        when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
         }
     }
 }

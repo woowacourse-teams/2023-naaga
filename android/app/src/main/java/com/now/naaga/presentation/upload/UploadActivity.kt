@@ -13,7 +13,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +30,7 @@ import com.now.naaga.databinding.ActivityUploadBinding
 import com.now.naaga.presentation.upload.UploadViewModel.Companion.FILE_EMPTY
 import com.now.naaga.util.extension.openSetting
 import com.now.naaga.util.extension.showSnackbarWithEvent
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
@@ -92,7 +92,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             when (uploadStatus) {
                 UploadStatus.SUCCESS -> {
                     changeVisibility(binding.lottieUploadLoading, View.GONE)
-                    shortToast(getString(R.string.upload_success_submit))
+                    showToast(getString(R.string.upload_success_submit))
                     finish()
                 }
 
@@ -102,37 +102,21 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
                 UploadStatus.FAIL -> {
                     changeVisibility(binding.lottieUploadLoading, View.GONE)
-                    shortToast(getString(R.string.upload_fail_submit))
+                    showToast(getString(R.string.upload_fail_submit))
                 }
             }
         }
-        viewModel.throwable.observe(this) { error: DataThrowable ->
-            when (error.code) {
-                UploadViewModel.ERROR_STORE_PHOTO -> {
-                    shortToast(getString(R.string.upload_error_store_photo_message))
-                }
-
-                UploadViewModel.ALREADY_EXISTS_NEARBY -> {
-                    shortToast(getString(R.string.upload_error_already_exists_nearby_message))
-                }
-
-                UploadViewModel.ERROR_POST_BODY -> {
-                    shortToast(getString(R.string.upload_error_post_message))
-                }
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
+                UploadViewModel.ERROR_STORE_PHOTO -> showToast(getString(R.string.upload_error_store_photo_message))
+                UploadViewModel.ERROR_POST_BODY -> showToast(getString(R.string.upload_error_post_message))
+                DataThrowable.NETWORK_THROWABLE_CODE -> showToast(getString(R.string.network_error_message))
             }
         }
     }
 
     private fun changeVisibility(view: View, status: Int) {
-        when (status) {
-            View.VISIBLE -> {
-                view.visibility = status
-            }
-
-            View.GONE -> {
-                view.visibility = status
-            }
-        }
+        view.visibility = status
     }
 
     private fun showPermissionSnackbar(message: String) {
@@ -193,7 +177,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
         binding.btnUploadSubmit.setOnClickListener {
             if (isFormValid().not()) {
-                shortToast(getString(R.string.upload_error_insufficient_info_message))
+                showToast(getString(R.string.upload_error_insufficient_info_message))
             } else {
                 viewModel.postPlace()
             }
@@ -245,10 +229,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
                 return imageUri
             }
         return null
-    }
-
-    private fun shortToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun isFormValid(): Boolean {

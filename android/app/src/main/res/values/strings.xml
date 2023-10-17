@@ -58,7 +58,6 @@
     <string name="upload_success_submit">장소등록에 성공했어요!\n반영되기까지 약간의 시간이 필요해요!</string>
     <string name="upload_fail_submit">장소등록에 실패했어요!</string>
     <string name="upload_error_store_photo_message">사진을 저장하는데 문제가 생겼어요! 다시 시도해주세요!</string>
-    <string name="upload_error_already_exists_nearby_message">근방에 다른 미션장소가 존재해서 추가할 수 없어요!</string>
     <string name="upload_error_post_message">전송에 실패했어요! 다시 시도해주세요!</string>
     <string name="upload_error_insufficient_info_message">모든 정보를 입력해주세요.</string>
 
@@ -140,4 +139,8 @@
     <!-- SendLetterDialog -->
     <string name="send_letter_dialog_hint">이 곳에 내용을 작성해주세요!</string>
     <string name="send_letter_dialog_submit">전송하기</string>
+
+    <!-- All -->
+    <string name="network_error_message">문제가 발생했어요. 다시 시도해주세요!</string>
+
 </resources>
