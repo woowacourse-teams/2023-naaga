@@ -38,9 +38,7 @@ class AdventureResultViewModel @Inject constructor(
 
     fun changePreference(newState: PreferenceState) {
         _preference.value = preference.value?.select(newState)
-        println("[asdf] changePreference: ${preference.value?.state}")
         if (preference.value?.state == PreferenceState.NONE) {
-            println("[asdf] in if")
             deletePreference()
             return
         }
@@ -72,23 +70,15 @@ class AdventureResultViewModel @Inject constructor(
     }
 
     fun fetchPreference() {
-        println("[asdf] fetchPreference called")
         viewModelScope.launch {
-            kotlin.runCatching {
-                val placeId = (adventureResult.value ?: return@launch).destination.id.toInt()
-                val deferredLikeCount = async { placeRepository.getLikeCount(placeId) }
-                val deferredPreferenceState = async { placeRepository.getMyPreference(placeId) }
+            val placeId = (adventureResult.value ?: return@launch).destination.id.toInt()
+            val deferredLikeCount = async { placeRepository.getLikeCount(placeId) }
+            val deferredPreferenceState = async { placeRepository.getMyPreference(placeId) }
 
-                Preference(
-                    state = deferredPreferenceState.await(),
-                    likeCount = PreferenceCount(deferredLikeCount.await()),
-                )
-            }.onSuccess {
-                _preference.value = it
-                println("[asdf] fetchPreference succeed")
-            }.onFailure {
-                println("[asdf] fetchPreference failed: $it")
-            }
+            _preference.value = Preference(
+                state = deferredPreferenceState.await(),
+                likeCount = PreferenceCount(deferredLikeCount.await()),
+            )
         }
     }
 
@@ -114,12 +104,8 @@ class AdventureResultViewModel @Inject constructor(
         viewModelScope.launch {
             val placeId = (adventureResult.value!!).destination.id.toInt()
             runCatching {
-                println("[asdf] in runCatching")
                 placeRepository.deletePreference(placeId)
-            }.onSuccess {
-                println("[asdf] onSuccess")
             }.onFailure {
-                println("[asdf] onFailure: $it")
                 _preference.value = preference.value?.revert()
             }
         }
