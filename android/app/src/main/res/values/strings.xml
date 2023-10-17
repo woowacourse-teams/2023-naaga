@@ -148,5 +148,7 @@
 
     <!-- All -->
     <string name="network_error_message">문제가 발생했어요. 다시 시도해주세요!</string>
+    <string name="image_error_message">사진 가져오기에 실패했습니다</string>
+    <string name="image_orientation_error">실패했습니다. 사진을 세로로 찍어보세요!</string>
 
 </resources>

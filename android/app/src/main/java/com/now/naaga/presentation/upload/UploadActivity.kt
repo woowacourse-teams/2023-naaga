@@ -41,11 +41,14 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private lateinit var binding: ActivityUploadBinding
     private val viewModel: UploadViewModel by viewModels()
 
-    private val cameraLauncher = registerForActivityResult(
-        ActivityResultContracts.TakePicturePreview(),
-    ) { bitmap ->
-        if (bitmap != null) {
-            setImage(bitmap)
+    private var imageUri: Uri? = null
+    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+        if (it) {
+            if (imageUri == null) {
+                showToast(getString(R.string.image_orientation_error))
+                return@registerForActivityResult
+            }
+            setImage(imageUri!!)
         }
     }
 
@@ -195,40 +198,60 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun openCamera() {
-        cameraLauncher.launch(null)
+        imageUri = createImageUri().getOrElse { return finish() }
+        cameraLauncher.launch(imageUri)
     }
 
-    private fun setImage(bitmap: Bitmap) {
+    private fun setImage(uri: Uri) {
         binding.ivUploadCameraIcon.visibility = View.GONE
-        binding.ivUploadPhoto.setImageBitmap(bitmap)
-        val uri = getImageUri(bitmap) ?: Uri.EMPTY
-        val file = makeImageFile(uri)
+        binding.ivUploadPhoto.setImageURI(uri)
+        val file = makeImageFile(uri).getOrElse {
+            showToast(getString(R.string.image_error_message))
+            return
+        }
         viewModel.setFile(file)
     }
 
-    private fun makeImageFile(uri: Uri): File {
-        val bitmap = contentResolver.openInputStream(uri).use {
-            BitmapFactory.decodeStream(it)
-        }
+    private fun createImageUri(): Result<Uri> {
+        val imageUri: Uri = contentResolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            contentValues,
+        ) ?: return Result.failure(IllegalStateException("이미지 uri를 가져오지 못했습니다."))
+        return Result.success(imageUri)
+    }
+
+    private fun makeImageFile(uri: Uri): Result<File> {
+        val bitmap = getScaledBitmap(uri).getOrElse { return Result.failure(it) }
         val tempFile = File.createTempFile("image", ".jpeg", cacheDir) ?: FILE_EMPTY
 
         FileOutputStream(tempFile).use {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
         }
-        return tempFile
+        return Result.success(tempFile)
     }
 
-    private fun getImageUri(bitmap: Bitmap): Uri? {
-        val resolver = applicationContext.contentResolver
-        resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            ?.let { imageUri ->
-                val outputStream = resolver.openOutputStream(imageUri)
-                outputStream?.use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                }
-                return imageUri
-            }
-        return null
+    private fun getScaledBitmap(uri: Uri): Result<Bitmap> {
+        val options = BitmapFactory.Options()
+        BitmapFactory.decodeStream(contentResolver.openInputStream(uri), null, options)
+
+        var width = options.outWidth
+        var height = options.outHeight
+        var sampleSize = 1
+        while (true) {
+            if (width / 2 < RESIZE || height / 2 < RESIZE) break
+            width /= 2
+            height /= 2
+            sampleSize *= 2
+        }
+
+        options.inSampleSize = sampleSize
+        val bitmap =
+            BitmapFactory.decodeStream(
+                contentResolver.openInputStream(uri),
+                null,
+                options,
+            ) ?: return Result.failure(Throwable("비트맵 생성에 실패했습니다."))
+        return Result.success(bitmap)
     }
 
     private fun isFormValid(): Boolean {
@@ -236,6 +259,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     companion object {
+        private const val RESIZE = 500
         private val storagePermissions = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
