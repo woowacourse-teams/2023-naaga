@@ -15,6 +15,8 @@ import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
+import com.now.domain.model.letter.ClosedLetter
+import com.now.domain.model.letter.ClosedLetter
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
@@ -67,8 +69,7 @@ class OnAdventureActivity :
                     this@OnAdventureActivity,
                     getString(R.string.OnAdventure_warning_back_pressed),
                     Toast.LENGTH_SHORT,
-                )
-                    .show()
+                ).show()
             }
         }
     }
@@ -109,6 +110,9 @@ class OnAdventureActivity :
         }
         viewModel.remainingHintCount.observe(this) {
             // binding.tvOnAdventureHintCount.text = it.toString()
+        }
+        viewModel.letters.observe(this) {
+            drawLetters(it)
         }
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             logServerError(ON_ADVENTURE_GAME, throwable.code, throwable.message.toString())
@@ -168,6 +172,12 @@ class OnAdventureActivity :
     private fun drawHintMarkers(hints: List<Hint>) {
         hints.forEach { hint ->
             addHintMarker(hint)
+        }
+    }
+
+    private fun drawLetters(letters: List<ClosedLetter>) {
+        letters.forEach { letter ->
+            addLetter(letter)
         }
     }
 
