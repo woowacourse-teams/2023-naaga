@@ -26,14 +26,16 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
         binding = ActivityAdventureDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initView()
+        val gameId = intent.getLongExtra(KET_GAME_ID, 0L)
+
+        initView(gameId)
         setClickListeners()
         subscribe()
     }
 
-    private fun initView() {
-        viewModel.fetchReadLetter(1L)
-        viewModel.fetchWriteLetter(1L)
+    private fun initView(gameId: Long) {
+        viewModel.fetchReadLetter(gameId)
+        viewModel.fetchWriteLetter(gameId)
     }
 
     private fun setClickListeners() {
@@ -70,11 +72,11 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     }
 
     companion object {
-        private const val GAME_ID = "GAME_ID"
+        private const val KET_GAME_ID = "GAME_ID"
 
         fun getIntentWithId(context: Context, gameId: Long): Intent {
             return Intent(context, AdventureDetailActivity::class.java).apply {
-                putExtra(GAME_ID, gameId)
+                putExtra(KET_GAME_ID, gameId)
             }
         }
     }
