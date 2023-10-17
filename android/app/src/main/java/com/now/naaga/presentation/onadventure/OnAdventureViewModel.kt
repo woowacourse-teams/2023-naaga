@@ -163,14 +163,6 @@ class OnAdventureViewModel @Inject constructor(
         }
     }
 
-    private fun setError(throwable: DataThrowable) {
-        when (throwable) {
-            is GameThrowable -> _error.value = throwable
-            is UniversalThrowable -> _error.value = throwable
-            else -> {}
-        }
-    }
-
     companion object {
         const val MAX_HINT_COUNT = 5
         const val NO_DESTINATION = 406
