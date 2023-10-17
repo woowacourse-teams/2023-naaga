@@ -12,7 +12,6 @@ import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.model.RemainingTryCount
 import com.now.domain.model.letter.ClosedLetter
-import com.now.domain.model.letter.OpenLetter
 import com.now.domain.model.type.AdventureEndType
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.LetterRepository
@@ -20,6 +19,8 @@ import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
+import com.now.naaga.presentation.uimodel.mapper.toUiModel
+import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -63,8 +64,8 @@ class OnAdventureViewModel @Inject constructor(
         }
     }
 
-    private val _letter = MutableLiveData<OpenLetter>()
-    val letter: LiveData<OpenLetter> = _letter
+    private val _letter = MutableLiveData<OpenLetterUiModel>()
+    val letter: LiveData<OpenLetterUiModel> = _letter
 
     private val _error = MutableLiveData<DataThrowable>()
     val error: LiveData<DataThrowable> = _error
@@ -178,7 +179,7 @@ class OnAdventureViewModel @Inject constructor(
             runCatching {
                 letterRepository.fetchLetter(id)
             }.onSuccess { letter ->
-                _letter.value = letter
+                _letter.value = letter.toUiModel()
             }.onFailure {
                 setError(it as DataThrowable)
             }
