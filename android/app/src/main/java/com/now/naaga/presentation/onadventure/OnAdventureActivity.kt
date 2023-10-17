@@ -34,8 +34,8 @@ import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.extension.getParcelableCompat
-import com.now.naaga.util.extension.showToast
 import com.now.naaga.util.extension.showSnackbar
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
