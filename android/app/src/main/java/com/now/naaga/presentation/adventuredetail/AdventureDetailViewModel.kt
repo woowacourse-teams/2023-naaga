@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.now.domain.model.AdventureResult
 import com.now.domain.model.letter.OpenLetter
 import com.now.domain.model.type.LogType
+import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.LetterRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.presentation.uimodel.mapper.toUiModel
@@ -23,10 +25,13 @@ import javax.inject.Inject
 @HiltViewModel
 class AdventureDetailViewModel @Inject constructor(
     private val letterRepository: LetterRepository,
+    private val adventureRepository: AdventureRepository,
 ) : ViewModel() {
     private val readLettersFlow = MutableSharedFlow<List<OpenLetter>>()
 
     private val writeLettersFlow = MutableSharedFlow<List<OpenLetter>>()
+
+    private val adventureFlow = MutableSharedFlow<AdventureResult>()
 
     private val _uiState: MutableStateFlow<AdventureDetailUiState> = MutableStateFlow(AdventureDetailUiState.Loading)
     val uiState: StateFlow<AdventureDetailUiState> = _uiState.asStateFlow()
@@ -36,10 +41,11 @@ class AdventureDetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            combine(readLettersFlow, writeLettersFlow) { readLetters, writeLetters ->
+            combine(readLettersFlow, writeLettersFlow, adventureFlow) { readLetters, writeLetters, adventureResult ->
                 AdventureDetailUiState.Success(
                     readLetters = readLetters.map { it.toUiModel() },
                     writeLetters = writeLetters.map { it.toUiModel() },
+                    adventureResult = adventureResult,
                 )
             }.collectLatest { _uiState.value = it }
         }
@@ -61,6 +67,16 @@ class AdventureDetailViewModel @Inject constructor(
                 letterRepository.fetchLetterLogs(gameId, LogType.WRITE)
             }.onSuccess {
                 writeLettersFlow.emit(it)
+            }
+        }
+    }
+
+    fun fetchAdventureResult(gameId: Long) {
+        viewModelScope.launch {
+            runCatching {
+                adventureRepository.fetchAdventureResult(gameId)
+            }.onSuccess {
+                adventureFlow.emit(it)
             }
         }
     }

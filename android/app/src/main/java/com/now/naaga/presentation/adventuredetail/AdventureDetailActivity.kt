@@ -8,11 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import com.now.domain.model.AdventureResult
+import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.databinding.ActivityAdventureDetailBinding
 import com.now.naaga.presentation.adventuredetail.viewpager.ViewPagerAdapter
+import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -36,6 +40,7 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     private fun initView(gameId: Long) {
         viewModel.fetchReadLetter(gameId)
         viewModel.fetchWriteLetter(gameId)
+        viewModel.fetchAdventureResult(gameId)
     }
 
     private fun setClickListeners() {
@@ -48,20 +53,20 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
                 viewModel.uiState.collect { adventureDetailUiState ->
                     when (adventureDetailUiState) {
                         is AdventureDetailUiState.Loading, is AdventureDetailUiState.Error -> Unit
-                        is AdventureDetailUiState.Success -> initViewPager(adventureDetailUiState)
+                        is AdventureDetailUiState.Success -> initView(adventureDetailUiState)
                     }
                 }
             }
         }
     }
 
-    private fun initViewPager(adventureDetailUiState: AdventureDetailUiState.Success) {
-        binding.vpAdventureDetail.adapter = ViewPagerAdapter(
-            listOf(
-                adventureDetailUiState.readLetters,
-                adventureDetailUiState.writeLetters,
-            ),
-        )
+    private fun initView(adventureDetailUiState: AdventureDetailUiState.Success) {
+        initViewPager(adventureDetailUiState.readLetters, adventureDetailUiState.writeLetters)
+        initImage(adventureDetailUiState.adventureResult)
+    }
+
+    private fun initViewPager(readLetters: List<OpenLetterUiModel>, writeLetters: List<OpenLetterUiModel>) {
+        binding.vpAdventureDetail.adapter = ViewPagerAdapter(listOf(readLetters, writeLetters))
 
         TabLayoutMediator(binding.tlAdventureDetail, binding.vpAdventureDetail) { tab, position ->
             when (position) {
@@ -69,6 +74,13 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
                 1 -> tab.text = "등록한 편지"
             }
         }.attach()
+    }
+
+    private fun initImage(adventureResult: AdventureResult) {
+        Glide.with(binding.ivAdventureDetailPhoto)
+            .load(adventureResult.destination.image)
+            .error(R.drawable.ic_none_photo)
+            .into(binding.ivAdventureDetailPhoto)
     }
 
     companion object {
