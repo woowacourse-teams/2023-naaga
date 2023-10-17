@@ -28,11 +28,11 @@ public enum GameExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "배정 할 목적지가 존재하지 않습니다."
     ),
-
+    
     NOT_EXIST_IN_PROGRESS(
             414,
             HttpStatus.NOT_FOUND,
-            "진행 중인 게임이 존재하지 않습니다."
+            "진행 중인 게임이 존재하지 않습니다"
     ),
 
     NOT_ARRIVED(

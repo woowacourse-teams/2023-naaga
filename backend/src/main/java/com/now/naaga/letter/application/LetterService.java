@@ -6,6 +6,9 @@ import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.exception.LetterException;
 import com.now.naaga.letter.presentation.dto.FindNearByLetterCommand;
 import com.now.naaga.letter.presentation.dto.LetterReadCommand;
+import com.now.naaga.letter.application.dto.CreateLetterCommand;
+import com.now.naaga.letter.application.letterlog.WriteLetterLogService;
+import com.now.naaga.letter.application.letterlog.dto.WriteLetterLogCreateCommand;
 import com.now.naaga.letter.repository.LetterRepository;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
@@ -25,14 +28,18 @@ public class LetterService {
     private final LetterRepository letterRepository;
 
     private final ReadLetterLogService readLetterLogService;
+    
+    private final WriteLetterLogService writeLetterLogService;
 
     private final PlayerService playerService;
 
     public LetterService(final LetterRepository letterRepository,
                          final ReadLetterLogService readLetterLogService,
+                         final WriteLetterLogService writeLetterLogService,
                          final PlayerService playerService) {
         this.letterRepository = letterRepository;
         this.readLetterLogService = readLetterLogService;
+        this.writeLetterLogService = writeLetterLogService;
         this.playerService = playerService;
     }
 
@@ -48,5 +55,15 @@ public class LetterService {
     @Transactional(readOnly = true)
     public List<Letter> findNearByLetters(final FindNearByLetterCommand findNearByLetterCommand) {
         return letterRepository.findLetterByPositionAndDistance(findNearByLetterCommand.position(), LETTER_RADIUS);
+    }
+    
+    public Letter writeLetter(final CreateLetterCommand createLetterCommand) {
+        final Player player = playerService.findPlayerById(createLetterCommand.playerId());
+        final Letter letter = new Letter(player, createLetterCommand.position(), createLetterCommand.message());
+        letterRepository.save(letter);
+        
+        final WriteLetterLogCreateCommand writeLetterLogCreateCommand = new WriteLetterLogCreateCommand(letter.getId());
+        writeLetterLogService.log(writeLetterLogCreateCommand);
+        return letter;
     }
 }
