@@ -17,6 +17,7 @@ import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.databinding.ActivityAdventureDetailBinding
 import com.now.naaga.presentation.adventuredetail.viewpager.ViewPagerAdapter
 import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
+import com.now.naaga.util.extension.showSnackbarWithEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -58,6 +59,24 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
                 }
             }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.throwableFlow.collect { event ->
+                    when (event) {
+                        is AdventureDetailViewModel.Event.NetworkExceptionEvent -> showReRequestSnackbar()
+                        is AdventureDetailViewModel.Event.LetterExceptionEvent -> showReRequestSnackbar()
+                        is AdventureDetailViewModel.Event.GameExceptionEvent -> showReRequestSnackbar()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showReRequestSnackbar() {
+        binding.root.showSnackbarWithEvent(
+            message = getString(R.string.snackbar_action_re_request_message),
+            actionTitle = getString(R.string.snackbar_action__re_request_title),
+        ) { finish() }
     }
 
     private fun initView(adventureDetailUiState: AdventureDetailUiState.Success) {

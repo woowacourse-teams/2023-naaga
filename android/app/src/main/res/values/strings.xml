@@ -140,6 +140,8 @@
     <string name="snackbar_location_message">위치 권한이 필요해요!</string>
     <string name="snackbar_storage_message">저장소 권한이 필요해요!</string>
     <string name="snackbar_action_title">이동하기</string>
+    <string name="snackbar_action_re_request_message">다시 요청해주세요!</string>
+    <string name="snackbar_action__re_request_title">나가기</string>
 
     <!-- SendLetterDialog -->
     <string name="send_letter_dialog_hint">이 곳에 내용을 작성해주세요!</string>

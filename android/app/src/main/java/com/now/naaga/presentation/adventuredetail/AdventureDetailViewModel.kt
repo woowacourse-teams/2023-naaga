@@ -1,7 +1,5 @@
 package com.now.naaga.presentation.adventuredetail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.AdventureResult
@@ -15,7 +13,9 @@ import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -37,8 +37,8 @@ class AdventureDetailViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<AdventureDetailUiState> = MutableStateFlow(AdventureDetailUiState.Loading)
     val uiState: StateFlow<AdventureDetailUiState> = _uiState.asStateFlow()
 
-    private val _throwable = MutableLiveData<DataThrowable>()
-    val throwable: LiveData<DataThrowable> = _throwable
+    private val _throwableFlow = MutableSharedFlow<Event>()
+    val throwableFlow: SharedFlow<Event> = _throwableFlow.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -63,6 +63,8 @@ class AdventureDetailViewModel @Inject constructor(
                 letterRepository.fetchLetterLogs(gameId, LogType.READ)
             }.onSuccess {
                 readLettersFlow.emit(it)
+            }.onFailure {
+                setThrowable(it)
             }
         }
     }
@@ -73,6 +75,8 @@ class AdventureDetailViewModel @Inject constructor(
                 letterRepository.fetchLetterLogs(gameId, LogType.WRITE)
             }.onSuccess {
                 writeLettersFlow.emit(it)
+            }.onFailure {
+                setThrowable(it)
             }
         }
     }
@@ -83,19 +87,29 @@ class AdventureDetailViewModel @Inject constructor(
                 adventureRepository.fetchAdventureResult(gameId)
             }.onSuccess {
                 adventureFlow.emit(it)
+            }.onFailure {
+                setThrowable(it)
             }
         }
     }
 
     private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is IOException -> {
-                TODO("_throwable.value = DataThrowable.NetworkThrowable")
-            }
-
-            is DataThrowable.LetterThrowable -> {
-                _throwable.value = throwable
-            }
+            is IOException -> throwable(Event.NetworkExceptionEvent(throwable))
+            is DataThrowable.LetterThrowable -> throwable(Event.LetterExceptionEvent(throwable))
+            is DataThrowable.GameThrowable -> throwable(Event.GameExceptionEvent(throwable))
         }
+    }
+
+    private fun throwable(event: Event) {
+        viewModelScope.launch {
+            _throwableFlow.emit(event)
+        }
+    }
+
+    sealed class Event {
+        data class NetworkExceptionEvent(val throwable: Throwable) : Event()
+        data class LetterExceptionEvent(val throwable: Throwable) : Event()
+        data class GameExceptionEvent(val throwable: Throwable) : Event()
     }
 }
