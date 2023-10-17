@@ -132,7 +132,6 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
             icon = selectLetterIcon(letter.isNearBy)
             if (letter.isNearBy) {
                 setOnClickListener {
-                    action(letter.id)
                     true
                 }
             }
@@ -145,7 +144,7 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
         return if (isNearBy) {
             OverlayImage.fromResource(R.drawable.ic_open_letter)
         } else {
-            OverlayImage.fromResource(R.drawable.ic_open_letter)
+            OverlayImage.fromResource(R.drawable.ic_closed_letter)
         }
     }
 
