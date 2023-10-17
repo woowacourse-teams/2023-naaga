@@ -28,7 +28,7 @@
             android:layout_height="56dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_message_send" />
+            app:srcCompat="@drawable/ic_letter_send" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

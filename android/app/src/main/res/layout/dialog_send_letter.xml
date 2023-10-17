@@ -24,7 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_message_send" />
+            app:srcCompat="@drawable/ic_letter_send" />
 
         <View
             android:id="@+id/v_dialog_letter_background"
