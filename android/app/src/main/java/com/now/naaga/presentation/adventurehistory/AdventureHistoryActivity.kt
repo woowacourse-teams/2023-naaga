@@ -6,9 +6,12 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.AdventureResult
+import com.now.naaga.R
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityAdventureHistoryBinding
 import com.now.naaga.presentation.adventuredetail.AdventureDetailActivity
 import com.now.naaga.presentation.adventurehistory.recyclerview.AdventureHistoryAdapter
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,6 +41,11 @@ class AdventureHistoryActivity : AppCompatActivity() {
     private fun subscribe() {
         viewModel.adventureResults.observe(this) { adventureResults ->
             updateHistory(adventureResults)
+        }
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+            }
         }
     }
 
