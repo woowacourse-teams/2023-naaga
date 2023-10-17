@@ -5,9 +5,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.now.domain.model.AdventureResult
 
-class AdventureHistoryAdapter : ListAdapter<AdventureResult, AdventureHistoryViewHolder>(historyDiff) {
+class AdventureHistoryAdapter(
+    private val onClick: (Long) -> Unit,
+) : ListAdapter<AdventureResult, AdventureHistoryViewHolder>(historyDiff) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdventureHistoryViewHolder {
-        return AdventureHistoryViewHolder(AdventureHistoryViewHolder.getView(parent))
+        return AdventureHistoryViewHolder(parent) { position ->
+            onClick(getItem(position).gameId)
+        }
     }
 
     override fun onBindViewHolder(holder: AdventureHistoryViewHolder, position: Int) {
