@@ -118,14 +118,15 @@
             app:layout_constraintStart_toStartOf="@id/fcv_onAdventure_map"
             app:layout_constraintTop_toTopOf="@id/fcv_onAdventure_map" />
 
-        <com.now.naaga.presentation.custom.LetterView
-            android:id="@+id/lv_send_letter"
+        <ImageView
+            android:id="@+id/iv_send_letter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/space_default_medium"
             android:layout_marginBottom="@dimen/space_default_medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_letter_send"
             app:layout_constraintBottom_toTopOf="@id/ll_onAdventure_bottom"/>
 
         <LinearLayout

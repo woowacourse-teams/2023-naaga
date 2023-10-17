@@ -92,7 +92,7 @@ class OnAdventureActivity :
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_END_ADVENTURE)
             viewModel.endAdventure()
         }
-        binding.lvSendLetter.setClickListener {
+        binding.ivSendLetter.setOnClickListener {
             LetterSendDialog(viewModel::sendLetter).show(supportFragmentManager, LetterSendDialog.TAG)
         }
     }
