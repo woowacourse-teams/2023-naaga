@@ -47,10 +47,14 @@ class OnAdventureViewModel @Inject constructor(
     val letters: LiveData<List<ClosedLetter>> = liveData {
         while (true) {
             val letters = myCoordinate.value.let {
-                letterRepository.fetchNearbyLetters(
-                    latitude = it?.latitude ?: 0.0,
-                    longitude = it?.longitude ?: 0.0,
-                )
+                if (it == null) {
+                    emptyList()
+                } else {
+                    letterRepository.fetchNearbyLetters(
+                        latitude = it.latitude,
+                        longitude = it.longitude,
+                    )
+                }
             }
             isLetterNearBy(letters)
             emit(letters)
