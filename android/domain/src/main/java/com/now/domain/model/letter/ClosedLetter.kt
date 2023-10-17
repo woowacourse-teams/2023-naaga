@@ -9,6 +9,6 @@ data class ClosedLetter(
     var isNearBy = false
 
     fun isNearBy(other: Coordinate) {
-        coordinate.isNearBy(other)
+        isNearBy = coordinate.isNearBy(other)
     }
 }
