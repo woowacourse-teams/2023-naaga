@@ -73,7 +73,8 @@ class AdventureResultViewModel @Inject constructor(
     fun fetchPreference() {
         viewModelScope.launch {
             runCatching {
-                val placeId = adventureResult.value!!.destination.id.toInt()
+                val placeId =
+                    requireNotNull(adventureResult.value) { "adventureResult가 null입니다." }.destination.id.toInt()
                 val deferredLikeCount = async { placeRepository.getLikeCount(placeId) }
                 val deferredPreferenceState = async { placeRepository.getMyPreference(placeId) }
 
@@ -93,8 +94,8 @@ class AdventureResultViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 placeRepository.postPreference(
-                    adventureResult.value?.destination?.id?.toInt() ?: return@launch,
-                    preference.value?.state ?: return@launch,
+                    requireNotNull(adventureResult.value) { "adventureResult가 null입니다." }.destination.id.toInt(),
+                    requireNotNull(preference.value) { "preference가 null입니다." }.state,
                 )
             }.onSuccess {
                 // post 응답이 성공적으로 왔는데 내가 보낸 것과 다른게 온 경우. 즉 말이 안되는 경우
@@ -110,7 +111,7 @@ class AdventureResultViewModel @Inject constructor(
 
     private fun deletePreference() {
         viewModelScope.launch {
-            val placeId = (adventureResult.value!!).destination.id.toInt()
+            val placeId = requireNotNull(adventureResult.value) { "adventureResult가 null입니다." }.destination.id.toInt()
             runCatching {
                 placeRepository.deletePreference(placeId)
             }.onFailure {
