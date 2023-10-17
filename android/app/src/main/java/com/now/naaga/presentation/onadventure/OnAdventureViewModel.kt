@@ -67,8 +67,6 @@ class OnAdventureViewModel @Inject constructor(
     private val _letter = MutableLiveData<OpenLetterUiModel>()
     val letter: LiveData<OpenLetterUiModel> = _letter
 
-    private val _error = MutableLiveData<DataThrowable>()
-    val error: LiveData<DataThrowable> = _error
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
 
@@ -181,16 +179,8 @@ class OnAdventureViewModel @Inject constructor(
             }.onSuccess { letter ->
                 _letter.value = letter.toUiModel()
             }.onFailure {
-                setError(it as DataThrowable)
+                setThrowable(it)
             }
-        }
-    }
-
-    private fun setError(throwable: DataThrowable) {
-        when (throwable) {
-            is GameThrowable -> _error.value = throwable
-            is UniversalThrowable -> _error.value = throwable
-            else -> {}
         }
     }
 
