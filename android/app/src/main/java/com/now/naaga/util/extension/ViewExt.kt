@@ -14,7 +14,3 @@ fun View.showSnackbarWithEvent(message: String, actionTitle: String, action: () 
             action()
         }.setAnimationMode(ANIMATION_MODE_SLIDE).show()
 }
-
-fun View.showSnackbar(message: String) {
-    Snackbar.make(this, message, Snackbar.LENGTH_SHORT).setAnimationMode(ANIMATION_MODE_SLIDE).show()
-}
