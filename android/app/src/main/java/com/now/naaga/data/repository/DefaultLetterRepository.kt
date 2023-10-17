@@ -4,7 +4,9 @@ import com.now.domain.model.letter.ClosedLetter
 import com.now.domain.model.letter.OpenLetter
 import com.now.domain.model.type.LogType
 import com.now.domain.repository.LetterRepository
+import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.remote.retrofit.service.LetterService
+import com.now.naaga.util.extension.getValueOrThrow
 
 class DefaultLetterRepository(
     private val letterService: LetterService,
@@ -14,7 +16,8 @@ class DefaultLetterRepository(
     }
 
     override suspend fun fetchNearbyLetters(latitude: Double, longitude: Double): List<ClosedLetter> {
-        TODO("Not yet implemented")
+        val response = letterService.getNearbyLetters(latitude, longitude).getValueOrThrow()
+        return response.map { it.toDomain() }
     }
 
     override suspend fun fetchLetter(letterId: Long): OpenLetter {
@@ -22,6 +25,6 @@ class DefaultLetterRepository(
     }
 
     override suspend fun fetchLetterLogs(gameId: Long, logType: LogType): List<OpenLetter> {
-        TODO("Not yet implemented")
+        return letterService.getInGameLetters(gameId, logType.name).getValueOrThrow().map { it.toDomain() }
     }
 }

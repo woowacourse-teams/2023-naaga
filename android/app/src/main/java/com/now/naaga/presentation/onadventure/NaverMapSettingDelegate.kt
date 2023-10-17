@@ -20,6 +20,7 @@ import com.naver.maps.map.widget.LocationButtonView
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Direction
 import com.now.domain.model.Hint
+import com.now.domain.model.letter.ClosedLetter
 import com.now.naaga.R
 import com.now.naaga.util.dpToPx
 
@@ -32,6 +33,7 @@ interface NaverMapSettingDelegate : OnMapReadyCallback {
     fun setNaverMap(activity: AppCompatActivity, @IdRes mapLayoutId: Int)
     fun addHintMarker(hint: Hint)
     fun addDestinationMarker(coordinate: Coordinate)
+    fun addLetter(letter: ClosedLetter)
     fun setOnMapReady(action: () -> Unit)
 }
 
@@ -117,6 +119,19 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
     override fun addDestinationMarker(coordinate: Coordinate) {
         Marker().apply {
             position = LatLng(coordinate.latitude, coordinate.longitude)
+            map = naverMap
+        }
+    }
+
+    override fun addLetter(letter: ClosedLetter) {
+        Marker().apply {
+            position = LatLng(letter.coordinate.latitude, letter.coordinate.longitude)
+            icon =
+                if (letter.isNearBy) {
+                    OverlayImage.fromResource(R.drawable.ic_open_letter)
+                } else {
+                    OverlayImage.fromResource(R.drawable.ic_closed_letter)
+                }
             map = naverMap
         }
     }

@@ -10,11 +10,12 @@ import com.bumptech.glide.Glide
 import com.now.domain.model.AdventureResult
 import com.now.domain.model.type.AdventureResultType
 import com.now.naaga.R
-import com.now.naaga.data.firebase.analytics.ADVENTURE_RESULT
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.RESULT_RESULT_RETURN
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityAdventureResultBinding
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -55,9 +56,10 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
             viewModel.fetchPreference()
         }
 
-        viewModel.throwable.observe(this) { throwable ->
-            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
-            logServerError(ADVENTURE_RESULT, throwable.code, throwable.message.toString())
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+            }
         }
 
         viewModel.preference.observe(this) {

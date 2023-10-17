@@ -16,6 +16,7 @@ import com.now.naaga.data.throwable.DataThrowable.GameThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +53,7 @@ class AdventureResultViewModel @Inject constructor(
             }.onSuccess { adventureResult ->
                 _adventureResult.value = adventureResult
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
@@ -64,21 +65,27 @@ class AdventureResultViewModel @Inject constructor(
             }.onSuccess { rank ->
                 _myRank.value = rank.rank
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
 
     fun fetchPreference() {
         viewModelScope.launch {
-            val placeId = adventureResult.value!!.destination.id.toInt()
-            val deferredLikeCount = async { placeRepository.getLikeCount(placeId) }
-            val deferredPreferenceState = async { placeRepository.getMyPreference(placeId) }
+            runCatching {
+                val placeId = adventureResult.value!!.destination.id.toInt()
+                val deferredLikeCount = async { placeRepository.getLikeCount(placeId) }
+                val deferredPreferenceState = async { placeRepository.getMyPreference(placeId) }
 
-            _preference.value = Preference(
-                state = deferredPreferenceState.await(),
-                likeCount = PreferenceCount(deferredLikeCount.await()),
-            )
+                Preference(
+                    state = deferredPreferenceState.await(),
+                    likeCount = PreferenceCount(deferredLikeCount.await()),
+                )
+            }.onSuccess {
+                _preference.value = it
+            }.onFailure {
+                setThrowable(it)
+            }
         }
     }
 
@@ -90,12 +97,13 @@ class AdventureResultViewModel @Inject constructor(
                     preference.value?.state ?: return@launch,
                 )
             }.onSuccess {
+                // post 응답이 성공적으로 왔는데 내가 보낸 것과 다른게 온 경우. 즉 말이 안되는 경우
                 if (preference.value?.state != it) {
                     _preference.value = Preference(state = it)
-                    // 에러 로그
                 }
             }.onFailure {
                 _preference.value = preference.value?.revert()
+                setThrowable(it)
             }
         }
     }
@@ -107,17 +115,15 @@ class AdventureResultViewModel @Inject constructor(
                 placeRepository.deletePreference(placeId)
             }.onFailure {
                 _preference.value = preference.value?.revert()
+                setThrowable(it)
             }
         }
     }
 
-    private fun setErrorMessage(throwable: DataThrowable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is GameThrowable -> {
-                _throwable.value = throwable
-            }
-
-            else -> {}
+            is IOException -> _throwable.value = DataThrowable.NetworkThrowable()
+            is GameThrowable -> _throwable.value = throwable
         }
     }
 }

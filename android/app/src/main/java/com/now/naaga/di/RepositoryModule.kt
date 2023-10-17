@@ -2,6 +2,7 @@ package com.now.naaga.di
 
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.AuthRepository
+import com.now.domain.repository.LetterRepository
 import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
@@ -52,6 +53,6 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideLetterRepository(letterService: LetterService): DefaultLetterRepository =
+    fun provideLetterRepository(letterService: LetterService): LetterRepository =
         DefaultLetterRepository(letterService)
 }

@@ -9,7 +9,19 @@ import com.now.domain.model.type.AdventureResultType
 import com.now.naaga.R
 import com.now.naaga.databinding.ItemHistoryBinding
 
-class AdventureHistoryViewHolder(private val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
+class AdventureHistoryViewHolder(
+    parent: ViewGroup,
+    onClick: (Int) -> Unit,
+) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context).inflate(R.layout.item_history, parent, false),
+) {
+
+    private val binding: ItemHistoryBinding = ItemHistoryBinding.bind(itemView)
+
+    init {
+        binding.root.setOnClickListener { onClick(adapterPosition) }
+    }
+
     fun bind(adventureResult: AdventureResult) {
         binding.adventureResult = adventureResult
         Glide.with(binding.ivAdventureHistoryPhoto)
@@ -38,10 +50,5 @@ class AdventureHistoryViewHolder(private val binding: ItemHistoryBinding) : Recy
 
     companion object {
         private const val DESTINATION_NAME_IN_FAILURE_CASE = "????"
-
-        fun getView(parent: ViewGroup): ItemHistoryBinding {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            return ItemHistoryBinding.inflate(layoutInflater, parent, false)
-        }
     }
 }

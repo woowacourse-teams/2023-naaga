@@ -3,18 +3,19 @@ package com.now.naaga.presentation.mypage
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.Statistics
+import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.MYPAGE_GO_RESULTS
-import com.now.naaga.data.firebase.analytics.MY_PAGE_STATISTICS
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityMyPageBinding
 import com.now.naaga.presentation.adventurehistory.AdventureHistoryActivity
 import com.now.naaga.presentation.mypage.statistics.MyPageStatisticsAdapter
 import com.now.naaga.presentation.uimodel.model.StatisticsUiModel
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -63,9 +64,10 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             val placesUiModels = places.map { it.toUiModel() }
             binding.customGridMypagePlaces.initContent(placesUiModels)
         }
-        viewModel.throwable.observe(this) { throwable ->
-            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
-            logServerError(MY_PAGE_STATISTICS, throwable.code, throwable.message.toString())
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+            }
         }
     }
 
