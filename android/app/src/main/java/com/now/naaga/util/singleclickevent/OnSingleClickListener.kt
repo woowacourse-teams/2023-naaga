@@ -13,7 +13,6 @@ class OnSingleClickListener(private val onSingleClick: (overlay: Overlay) -> Uni
         return true
     }
 
-
     private fun isValidate(): Boolean {
         return System.currentTimeMillis() - lastClickTime > CLICK_INTERVAL_TIME
     }
