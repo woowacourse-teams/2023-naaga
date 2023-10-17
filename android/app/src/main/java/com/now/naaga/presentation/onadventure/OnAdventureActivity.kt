@@ -15,6 +15,7 @@ import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
+import com.now.domain.model.letter.ClosedLetter
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
@@ -33,6 +34,7 @@ import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.extension.getParcelableCompat
+import com.now.naaga.util.extension.showToast
 import com.now.naaga.util.extension.showSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -68,8 +70,7 @@ class OnAdventureActivity :
                     this@OnAdventureActivity,
                     getString(R.string.OnAdventure_warning_back_pressed),
                     Toast.LENGTH_SHORT,
-                )
-                    .show()
+                ).show()
             }
         }
     }
@@ -118,11 +119,14 @@ class OnAdventureActivity :
                 false -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail)) }
             }
         }
-        viewModel.error.observe(this) { error: DataThrowable ->
-            logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
-            when (error.code) {
+        viewModel.letters.observe(this) {
+            drawLetters(it)
+        }
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            logServerError(ON_ADVENTURE_GAME, throwable.code, throwable.message.toString())
+            when (throwable.code) {
                 OnAdventureViewModel.NO_DESTINATION -> {
-                    shortToast(error.message ?: return@observe)
+                    showToast(throwable.message ?: return@observe)
                     finish()
                 }
 
@@ -131,8 +135,11 @@ class OnAdventureActivity :
                     shortSnackbar(getString(R.string.onAdventure_retry, remainingTryCount))
                 }
 
-                OnAdventureViewModel.TRY_COUNT_OVER -> shortToast(getString(R.string.onAdventure_try_count_over))
-                else -> shortSnackbar(error.message ?: return@observe)
+                OnAdventureViewModel.TRY_COUNT_OVER -> showToast(getString(R.string.onAdventure_try_count_over))
+
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+
+                else -> shortSnackbar(throwable.message ?: return@observe)
             }
         }
     }
@@ -176,6 +183,12 @@ class OnAdventureActivity :
         }
     }
 
+    private fun drawLetters(letters: List<ClosedLetter>) {
+        letters.forEach { letter ->
+            addLetter(letter)
+        }
+    }
+
     private fun showGiveUpDialog() {
         val fragment: Fragment? = supportFragmentManager.findFragmentByTag(GIVE_UP)
         if (fragment == null) {
@@ -215,10 +228,6 @@ class OnAdventureActivity :
 
     private fun shortSnackbar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    private fun shortToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
