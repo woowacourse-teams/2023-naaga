@@ -100,7 +100,7 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
             finish()
         }
 
-        binding.customAdventureResultPreference.setPreferenceStateListener {
+        binding.customAdventureResultPreference.setPreferenceClickListener {
             viewModel.changePreference(it)
         }
     }

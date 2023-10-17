@@ -12,7 +12,7 @@ import com.now.naaga.databinding.CustomPreferenceViewBinding
 class PreferenceView(context: Context, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
     private val binding: CustomPreferenceViewBinding
     private val layoutInflater = LayoutInflater.from(this.context)
-    private var preferenceStateListener: PreferenceStateListener? = null
+    private var preferenceClickListener: PreferenceClickListener? = null
     var likeCount: Int = 0
         set(value) {
             field = value
@@ -37,10 +37,10 @@ class PreferenceView(context: Context, attrs: AttributeSet? = null) : Constraint
 
     private fun setClickListeners() {
         binding.ivPreferenceLike.setOnClickListener {
-            preferenceStateListener?.onClick(PreferenceState.LIKE)
+            preferenceClickListener?.onClick(PreferenceState.LIKE)
         }
         binding.ivPreferenceDislike.setOnClickListener {
-            preferenceStateListener?.onClick(PreferenceState.DISLIKE)
+            preferenceClickListener?.onClick(PreferenceState.DISLIKE)
         }
     }
 
@@ -55,8 +55,8 @@ class PreferenceView(context: Context, attrs: AttributeSet? = null) : Constraint
         binding.tvPreferenceLikeCount.visibility = setVisibility(isLikeCountVisible)
     }
 
-    fun setPreferenceStateListener(listener: PreferenceStateListener) {
-        preferenceStateListener = listener
+    fun setPreferenceClickListener(listener: PreferenceClickListener) {
+        preferenceClickListener = listener
     }
 
     fun updatePreference(preferenceState: PreferenceState) {
@@ -78,7 +78,7 @@ class PreferenceView(context: Context, attrs: AttributeSet? = null) : Constraint
         }
     }
 
-    fun interface PreferenceStateListener {
+    fun interface PreferenceClickListener {
         fun onClick(preferenceState: PreferenceState)
     }
 }
