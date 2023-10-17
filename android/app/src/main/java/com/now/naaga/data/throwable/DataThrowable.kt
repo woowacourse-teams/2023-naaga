@@ -19,6 +19,9 @@ sealed class DataThrowable(val code: Int, message: String) : Throwable(message) 
     // http 응답코드 500번대, body가 null일 때의 에러
     class IllegalStateThrowable : DataThrowable(ILLEGAL_STATE_THROWABLE_CODE, ILLEGAL_STATE_THROWABLE_MESSAGE)
 
+    // 700번대 쪽지 관련 에러
+    class LetterThrowable(code: Int, message: String) : DataThrowable(code, message)
+
     // IO Exception 일 경우의 예외
     class NetworkThrowable : DataThrowable(NETWORK_THROWABLE_CODE, NETWORK_THROWABLE_MESSAGE)
 

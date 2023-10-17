@@ -39,6 +39,7 @@ fun <T> Response<T>.getValueOrThrow(): T {
             in 300..399 -> { throw DataThrowable.PlayerThrowable(code, message) }
             in 400..499 -> { throw DataThrowable.GameThrowable(code, message) }
             in 500..599 -> { throw DataThrowable.PlaceThrowable(code, message) }
+            in 700..799 -> { throw DataThrowable.LetterThrowable(code, message) }
         }
     }
     throw DataThrowable.IllegalStateThrowable()
