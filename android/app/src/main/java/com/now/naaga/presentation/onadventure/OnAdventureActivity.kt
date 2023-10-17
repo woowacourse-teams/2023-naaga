@@ -111,7 +111,7 @@ class OnAdventureActivity :
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
         }
-        viewModel.isSuccess.observe(this) {
+        viewModel.isSendLetterSuccess.observe(this) {
             supportFragmentManager.findFragmentByTag(LetterSendDialog.TAG)?.onDestroyView()
             when (it) {
                 true -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_success)) }
