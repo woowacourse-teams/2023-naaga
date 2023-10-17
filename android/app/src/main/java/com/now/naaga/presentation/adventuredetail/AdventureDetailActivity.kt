@@ -5,9 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.now.domain.model.AdventureResult
@@ -17,9 +14,9 @@ import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.databinding.ActivityAdventureDetailBinding
 import com.now.naaga.presentation.adventuredetail.viewpager.ViewPagerAdapter
 import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
+import com.now.naaga.util.extension.repeatOnStarted
 import com.now.naaga.util.extension.showSnackbarWithEvent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
@@ -49,24 +46,20 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     }
 
     private fun subscribe() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { adventureDetailUiState ->
-                    when (adventureDetailUiState) {
-                        is AdventureDetailUiState.Loading, is AdventureDetailUiState.Error -> Unit
-                        is AdventureDetailUiState.Success -> initView(adventureDetailUiState)
-                    }
+        repeatOnStarted {
+            viewModel.uiState.collect { adventureDetailUiState ->
+                when (adventureDetailUiState) {
+                    is AdventureDetailUiState.Loading, is AdventureDetailUiState.Error -> Unit
+                    is AdventureDetailUiState.Success -> initView(adventureDetailUiState)
                 }
             }
         }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.throwableFlow.collect { event ->
-                    when (event) {
-                        is AdventureDetailViewModel.Event.NetworkExceptionEvent -> showReRequestSnackbar()
-                        is AdventureDetailViewModel.Event.LetterExceptionEvent -> showReRequestSnackbar()
-                        is AdventureDetailViewModel.Event.GameExceptionEvent -> showReRequestSnackbar()
-                    }
+        repeatOnStarted {
+            viewModel.throwableFlow.collect { event ->
+                when (event) {
+                    is AdventureDetailViewModel.Event.NetworkExceptionEvent -> showReRequestSnackbar()
+                    is AdventureDetailViewModel.Event.LetterExceptionEvent -> showReRequestSnackbar()
+                    is AdventureDetailViewModel.Event.GameExceptionEvent -> showReRequestSnackbar()
                 }
             }
         }
