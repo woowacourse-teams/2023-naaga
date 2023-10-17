@@ -27,12 +27,17 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
         setContentView(binding.root)
 
         initView()
+        setClickListeners()
         subscribe()
     }
 
     private fun initView() {
         viewModel.fetchReadLetter(1L)
         viewModel.fetchWriteLetter(1L)
+    }
+
+    private fun setClickListeners() {
+        binding.ivAdventureDetailBack.setOnClickListener { finish() }
     }
 
     private fun subscribe() {
