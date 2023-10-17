@@ -26,6 +26,6 @@ class DefaultLetterRepository(
     }
 
     override suspend fun fetchLetterLogs(gameId: Long, logType: LogType): List<OpenLetter> {
-        TODO("Not yet implemented")
+        return letterService.getInGameLetters(gameId, logType.name).getValueOrThrow().map { it.toDomain() }
     }
 }

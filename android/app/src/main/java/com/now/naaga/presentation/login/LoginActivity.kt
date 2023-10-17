@@ -5,15 +5,16 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.type.AuthPlatformType
+import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
-import com.now.naaga.data.firebase.analytics.LOGIN_AUTH
+import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityLoginBinding
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
+import com.now.naaga.util.extension.showToast
 import com.now.naaga.util.loginWithKakao
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,9 +40,10 @@ class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytics
             }
         }
 
-        viewModel.throwable.observe(this) { throwable ->
-            Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
-            logServerError(LOGIN_AUTH, throwable.code, throwable.message.toString())
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+            }
         }
     }
 
