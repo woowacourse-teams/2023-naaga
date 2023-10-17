@@ -29,11 +29,13 @@ interface NaverMapSettingDelegate : OnMapReadyCallback {
     val naverMap: NaverMap
     val locationSource: LocationSource
     val hintMarkers: MutableList<Marker>
+    val letterMarkers: MutableList<Marker>
 
     fun setNaverMap(activity: AppCompatActivity, @IdRes mapLayoutId: Int)
     fun addHintMarker(hint: Hint)
     fun addDestinationMarker(coordinate: Coordinate)
     fun addLetter(letter: ClosedLetter, action: (id: Long) -> Unit)
+    fun removeLetters()
     fun setOnMapReady(action: () -> Unit)
 }
 
@@ -46,6 +48,7 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
     override lateinit var naverMap: NaverMap // API를 호출하기 위한 인터페이스
     override lateinit var locationSource: LocationSource // 네이버 지도 SDK에 위치를 제공하는 인터페이스
     override val hintMarkers: MutableList<Marker> = mutableListOf()
+    override val letterMarkers: MutableList<Marker> = mutableListOf()
 
     override fun setNaverMap(activity: AppCompatActivity, @IdRes mapLayoutId: Int) {
         this.activity = activity
@@ -136,7 +139,15 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
                 icon = OverlayImage.fromResource(R.drawable.ic_closed_letter)
             }
             map = naverMap
+            letterMarkers.add(this)
         }
+    }
+
+    override fun removeLetters() {
+        letterMarkers.forEach { letterMarker ->
+            letterMarker.map = null
+        }
+        letterMarkers.clear()
     }
 
     override fun setOnMapReady(action: () -> Unit) {

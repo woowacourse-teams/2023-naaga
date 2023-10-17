@@ -176,6 +176,7 @@ class OnAdventureActivity :
     }
 
     private fun drawLetters(letters: List<ClosedLetter>) {
+        removeLetters()
         letters.forEach { letter ->
             addLetter(letter, viewModel::getLetter)
         }
