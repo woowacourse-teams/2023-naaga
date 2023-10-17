@@ -7,9 +7,6 @@ data class OpenLetterUiModel(
 ) {
     companion object {
         private const val DEFAULT_MESSAGE = "쪽지가 없습니다."
-
-        fun getDefault(): OpenLetterUiModel {
-            return OpenLetterUiModel("", "", DEFAULT_MESSAGE)
-        }
+        val DEFAULT_OPEN_LETTER = OpenLetterUiModel("", "", DEFAULT_MESSAGE)
     }
 }

@@ -53,7 +53,7 @@ class AdventureDetailViewModel @Inject constructor(
     }
 
     private fun getOpenLetterUiModels(letters: List<OpenLetter>): List<OpenLetterUiModel> {
-        if (letters.isEmpty()) return listOf(OpenLetterUiModel.getDefault())
+        if (letters.isEmpty()) return listOf(OpenLetterUiModel.DEFAULT_OPEN_LETTER)
         return letters.map { it.toUiModel() }
     }
 
