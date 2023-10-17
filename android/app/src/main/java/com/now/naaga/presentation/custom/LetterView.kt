@@ -12,8 +12,6 @@ class LetterView(context: Context, attrs: AttributeSet?) : ConstraintLayout(cont
     init {
         val layoutInflater = LayoutInflater.from(context)
         binding = CustomLetterViewBinding.inflate(layoutInflater, this, true)
-        binding.ivLetterIcon.setOnClickListener { }
-        binding.vLetterBackground.setOnClickListener { }
     }
 
     fun setClickListener(listener: OnClickListener) {
