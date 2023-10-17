@@ -55,10 +55,12 @@ class OnAdventureViewModel @Inject constructor(
                     letterRepository.fetchNearbyLetters(
                         latitude = it.latitude,
                         longitude = it.longitude,
-                    )
+                    ).map { letter ->
+                        val isNearBy = it.isNearBy(letter.coordinate)
+                        letter.copy(isNearBy = isNearBy)
+                    }
                 }
             }
-            isLetterNearBy(letters)
             emit(letters)
             delay(15000)
         }
@@ -147,14 +149,6 @@ class OnAdventureViewModel @Inject constructor(
         }
     }
 
-    private fun setThrowable(throwable: Throwable) {
-        when (throwable) {
-            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
-            is GameThrowable -> { handleGameThrowable(throwable) }
-            is UniversalThrowable -> _throwable.value = throwable
-        }
-    }
-
     private fun handleGameThrowable(throwable: GameThrowable) {
         when (throwable.code) {
             TRY_COUNT_OVER -> _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
@@ -163,12 +157,6 @@ class OnAdventureViewModel @Inject constructor(
                 _adventure.value = adventure.value?.copy(remainingTryCount = currentRemainingTryCount - 1)
             }
             else -> { _throwable.value = throwable }
-        }
-    }
-
-    private fun isLetterNearBy(letters: List<ClosedLetter>) {
-        letters.forEach { letter ->
-            myCoordinate.value?.let { letter.isNearBy(it) }
         }
     }
 
@@ -181,6 +169,14 @@ class OnAdventureViewModel @Inject constructor(
             }.onFailure {
                 setThrowable(it)
             }
+        }
+    }
+
+    private fun setThrowable(throwable: Throwable) {
+        when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
+            is GameThrowable -> { handleGameThrowable(throwable) }
+            is UniversalThrowable -> _throwable.value = throwable
         }
     }
 
