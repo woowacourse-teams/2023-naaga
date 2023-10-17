@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.type.AuthPlatformType
+import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.throwable.DataThrowable
@@ -41,7 +42,7 @@ class LoginActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytics
 
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             when (throwable.code) {
-                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(throwable.message ?: "") }
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
             }
         }
     }

@@ -84,7 +84,7 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             when (throwable.code) {
-                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(throwable.message ?: "") }
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
             }
         }
     }

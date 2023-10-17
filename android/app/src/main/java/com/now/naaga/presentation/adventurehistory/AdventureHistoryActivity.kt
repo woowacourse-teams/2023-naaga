@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.AdventureResult
+import com.now.naaga.R
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityAdventureHistoryBinding
 import com.now.naaga.presentation.adventurehistory.recyclerview.AdventureHistoryAdapter
@@ -42,7 +43,7 @@ class AdventureHistoryActivity : AppCompatActivity() {
         }
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             when (throwable.code) {
-                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(throwable.message ?: "") }
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
             }
         }
     }

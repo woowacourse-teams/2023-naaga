@@ -78,7 +78,6 @@ class UploadViewModel @Inject constructor(
     companion object {
         val FILE_EMPTY = File("")
 
-        const val ALREADY_EXISTS_NEARBY = 505
         const val ERROR_STORE_PHOTO = 215
         const val ERROR_POST_BODY = 205
     }
