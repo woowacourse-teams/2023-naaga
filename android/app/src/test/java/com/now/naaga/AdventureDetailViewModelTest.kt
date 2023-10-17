@@ -1,41 +1,45 @@
 package com.now.naaga
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.now.domain.model.AdventureResult
 import com.now.domain.model.Coordinate
+import com.now.domain.model.Place
 import com.now.domain.model.Player
 import com.now.domain.model.letter.OpenLetter
+import com.now.domain.model.type.AdventureResultType
 import com.now.domain.model.type.LogType
+import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.LetterRepository
+import com.now.naaga.presentation.adventuredetail.AdventureDetailUiState
 import com.now.naaga.presentation.adventuredetail.AdventureDetailViewModel
+import com.now.naaga.presentation.uimodel.mapper.toUiModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase.assertSame
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
+import java.time.LocalDateTime
 
 class AdventureDetailViewModelTest {
     private lateinit var vm: AdventureDetailViewModel
     private lateinit var letterRepository: LetterRepository
-
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    private lateinit var adventureRepository: AdventureRepository
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         letterRepository = mockk()
-        vm = AdventureDetailViewModel(letterRepository)
+        adventureRepository = mockk()
+        vm = AdventureDetailViewModel(letterRepository, adventureRepository)
     }
 
     @Test
-    fun `읽은 쪽지를 불러올 때 작성한 쪽지는 불러오지 않는다`() {
+    fun `읽은 쪽지만 불러오면 AdventureDetailUiState는 Loading 상태다`() {
         // given
         coEvery {
             letterRepository.fetchLetterLogs(1L, LogType.READ)
@@ -44,16 +48,14 @@ class AdventureDetailViewModelTest {
         }
 
         // when
-        vm.fetchLetterLogs(1L, LogType.READ)
+        vm.fetchReadLetter(1L)
 
         // then
-        assertTrue(vm.readLetters.isInitialized)
-        assertEquals(vm.readLetters.getOrAwaitValue(), fakeReadLetterLogs)
-        assertEquals(vm.writeLetters.isInitialized, false)
+        assertSame(vm.uiState.value, AdventureDetailUiState.Loading)
     }
 
     @Test
-    fun `작성한 쪽지를 불러올 때 읽은 쪽지는 불러오지 않는다`() {
+    fun `작성한 쪽지만 불러오면 AdventureDetailUiState는 Loading 상태다`() {
         // given
         coEvery {
             letterRepository.fetchLetterLogs(1L, LogType.WRITE)
@@ -62,12 +64,68 @@ class AdventureDetailViewModelTest {
         }
 
         // when
-        vm.fetchLetterLogs(1L, LogType.WRITE)
+        vm.fetchWriteLetter(1L)
 
         // then
-        assertEquals(vm.readLetters.isInitialized, false)
-        assertTrue(vm.writeLetters.isInitialized)
-        assertEquals(vm.writeLetters.getOrAwaitValue(), fakeWriteLetterLogs)
+        assertSame(vm.uiState.value, AdventureDetailUiState.Loading)
+    }
+
+    @Test
+    fun `읽은 쪽지와 작성한 쪽지를 모두 불러와도 AdventureDetailUiState은 Loading 상태다`() {
+        // given
+        coEvery {
+            letterRepository.fetchLetterLogs(1L, LogType.WRITE)
+        } coAnswers {
+            fakeWriteLetterLogs
+        }
+
+        coEvery {
+            letterRepository.fetchLetterLogs(1L, LogType.READ)
+        } coAnswers {
+            fakeReadLetterLogs
+        }
+
+        // when
+        vm.fetchWriteLetter(1L)
+        vm.fetchReadLetter(1L)
+
+        // then
+        assertSame(vm.uiState.value, AdventureDetailUiState.Loading)
+    }
+
+    @Test
+    fun `읽은 쪽지, 작성한 쪽지, 게임 결과를 불러오면 AdventureDetailUiState은 Success 상태다`() {
+        // given
+        coEvery {
+            letterRepository.fetchLetterLogs(1L, LogType.WRITE)
+        } coAnswers {
+            fakeWriteLetterLogs
+        }
+
+        coEvery {
+            letterRepository.fetchLetterLogs(1L, LogType.READ)
+        } coAnswers {
+            fakeReadLetterLogs
+        }
+
+        coEvery {
+            adventureRepository.fetchAdventureResult(1L)
+        } coAnswers {
+            fakeAdventureResult
+        }
+
+        // when
+        vm.fetchWriteLetter(1L)
+        vm.fetchReadLetter(1L)
+        vm.fetchAdventureResult(1L)
+
+        // then
+        val actual = AdventureDetailUiState.Success(
+            readLetters = fakeReadLetterLogs.map { it.toUiModel() },
+            writeLetters = fakeWriteLetterLogs.map { it.toUiModel() },
+            adventureResult = fakeAdventureResult,
+        )
+        assertEquals(vm.uiState.value, actual)
     }
 
     private val fakeReadLetterLogs = listOf(
@@ -88,5 +146,19 @@ class AdventureDetailViewModelTest {
             message = "i was krrong",
             registerDate = "now",
         ),
+    )
+
+    private val fakeAdventureResult = AdventureResult(
+        id = 1L,
+        gameId = 2L,
+        destination = Place(1L, "집", Coordinate(123.0, 37.0), "", ""),
+        resultType = AdventureResultType.FAIL,
+        score = 123,
+        playTime = 123,
+        distance = 123,
+        hintUses = 123,
+        tryCount = 1,
+        beginTime = LocalDateTime.now(),
+        endTime = LocalDateTime.now(),
     )
 }
