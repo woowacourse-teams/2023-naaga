@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.AdventureResult
 import com.now.naaga.databinding.ActivityAdventureHistoryBinding
+import com.now.naaga.presentation.adventuredetail.AdventureDetailActivity
 import com.now.naaga.presentation.adventurehistory.recyclerview.AdventureHistoryAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class AdventureHistoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdventureHistoryBinding
     private val viewModel: AdventureHistoryViewModel by viewModels()
-    private val historyAdapter = AdventureHistoryAdapter()
+    private val historyAdapter = AdventureHistoryAdapter(::navigateDetail)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,11 @@ class AdventureHistoryActivity : AppCompatActivity() {
 
     private fun updateHistory(adventureResults: List<AdventureResult>) {
         historyAdapter.submitList(adventureResults)
+    }
+
+    private fun navigateDetail(gameId: Long) {
+        val intent = AdventureDetailActivity.getIntentWithId(this, gameId)
+        startActivity(intent)
     }
 
     companion object {
