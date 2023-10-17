@@ -23,6 +23,7 @@ import com.now.domain.model.Hint
 import com.now.domain.model.letter.ClosedLetter
 import com.now.naaga.R
 import com.now.naaga.util.dpToPx
+import com.now.naaga.util.extension.setOnSingleClickListener
 
 interface NaverMapSettingDelegate : OnMapReadyCallback {
     val mapFragment: MapFragment
@@ -131,8 +132,8 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
             position = LatLng(letter.coordinate.latitude, letter.coordinate.longitude)
             icon = selectLetterIcon(letter.isNearBy)
             if (letter.isNearBy) {
-                setOnClickListener {
-                    true
+                setOnSingleClickListener {
+                    action(letter.id)
                 }
             }
             map = naverMap
@@ -144,7 +145,7 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
         return if (isNearBy) {
             OverlayImage.fromResource(R.drawable.ic_open_letter)
         } else {
-            OverlayImage.fromResource(R.drawable.ic_closed_letter)
+            OverlayImage.fromResource(R.drawable.ic_closed_letter_new)
         }
     }
 
