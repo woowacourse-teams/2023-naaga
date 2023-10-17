@@ -71,7 +71,7 @@ class AdventureResultViewModel @Inject constructor(
 
     fun fetchPreference() {
         viewModelScope.launch {
-            val placeId = (adventureResult.value ?: return@launch).destination.id.toInt()
+            val placeId = adventureResult.value!!.destination.id.toInt()
             val deferredLikeCount = async { placeRepository.getLikeCount(placeId) }
             val deferredPreferenceState = async { placeRepository.getMyPreference(placeId) }
 
