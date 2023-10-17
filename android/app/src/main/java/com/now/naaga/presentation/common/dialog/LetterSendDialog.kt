@@ -46,6 +46,7 @@ class LetterSendDialog(
     }
 
     companion object {
+        const val TAG = "SEND_LETTER"
         private const val WIDTH_RATE = 0.78f
         private const val HEIGHT = 430
     }

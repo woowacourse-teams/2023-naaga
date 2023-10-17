@@ -92,7 +92,7 @@ class OnAdventureActivity :
             viewModel.endAdventure()
         }
         binding.lvSendLetter.setClickListener {
-            LetterSendDialog(viewModel::sendLetter).show(supportFragmentManager, "LETTER")
+            LetterSendDialog(viewModel::sendLetter).show(supportFragmentManager, LetterSendDialog.TAG)
         }
     }
 
@@ -112,6 +112,7 @@ class OnAdventureActivity :
             drawHintMarkers(listOf(it))
         }
         viewModel.isSuccess.observe(this) {
+            supportFragmentManager.findFragmentByTag(LetterSendDialog.TAG)?.onDestroyView()
             when (it) {
                 true -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_success)) }
                 false -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail)) }
