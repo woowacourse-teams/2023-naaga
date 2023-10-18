@@ -7,7 +7,7 @@ import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문�
 
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
-import com.now.naaga.place.persistence.repository.PlaceRepository;
+import com.now.naaga.place.repository.PlaceRepository;
 import com.now.naaga.player.domain.Player;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;

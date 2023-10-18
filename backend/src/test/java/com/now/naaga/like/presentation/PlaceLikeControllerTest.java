@@ -25,8 +25,8 @@ import com.now.naaga.like.presentation.dto.PlaceLikeCountResponse;
 import com.now.naaga.like.presentation.dto.PlaceLikeResponse;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.placestatistics.domain.PlaceStatistics;
-import com.now.naaga.placestatistics.exception.PlaceStatisticsExceptionType;
+import com.now.naaga.place.domain.PlaceStatistics;
+import com.now.naaga.place.exception.PlaceStatisticsExceptionType;
 import com.now.naaga.player.domain.Player;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -269,8 +270,8 @@ class PlaceLikeControllerTest extends CommonControllerTest {
         //given
         final Long expected = 123L;
         final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
-                .likeCount(expected)
-                .build();
+                                                                      .likeCount(expected)
+                                                                      .build();
         final Long placeId = placeStatistics.getPlace().getId();
 
         //when

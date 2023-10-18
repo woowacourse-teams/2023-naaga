@@ -8,15 +8,16 @@ import com.now.naaga.place.application.dto.FindAllPlaceCommand;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
 import com.now.naaga.place.application.dto.RecommendPlaceCommand;
 import com.now.naaga.place.domain.Place;
+import com.now.naaga.place.domain.PlaceCreateEvent;
 import com.now.naaga.place.domain.PlaceRecommendService;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.domain.SortType;
 import com.now.naaga.place.exception.PlaceException;
-import com.now.naaga.place.persistence.repository.PlaceRepository;
+import com.now.naaga.place.repository.PlaceRepository;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.temporaryplace.application.TemporaryPlaceService;
 import java.util.List;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +29,18 @@ public class PlaceService {
 
     private final PlayerService playerService;
 
-    private final TemporaryPlaceService temporaryPlaceService;
-
     private final PlaceRecommendService placeRecommendService;
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public PlaceService(final PlaceRepository placeRepository,
                         final PlayerService playerService,
-                        final TemporaryPlaceService temporaryPlaceService,
-                        final PlaceRecommendService placeRecommendService) {
+                        final PlaceRecommendService placeRecommendService,
+                        final ApplicationEventPublisher applicationEventPublisher) {
         this.placeRepository = placeRepository;
         this.playerService = playerService;
-        this.temporaryPlaceService = temporaryPlaceService;
         this.placeRecommendService = placeRecommendService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional(readOnly = true)
@@ -73,7 +74,7 @@ public class PlaceService {
                                       registeredPlayer);
 
         placeRepository.save(place);
-        temporaryPlaceService.deleteById(createPlaceCommand.temporaryPlaceId());
+        applicationEventPublisher.publishEvent(new PlaceCreateEvent(createPlaceCommand.temporaryPlaceId(), place.getId()));
         return place;
     }
 }

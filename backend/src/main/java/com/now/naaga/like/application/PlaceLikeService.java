@@ -11,13 +11,13 @@ import com.now.naaga.like.exception.PlaceLikeException;
 import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.application.PlaceService;
+import com.now.naaga.place.application.PlaceStatisticsService;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
+import com.now.naaga.place.application.dto.FindPlaceStatisticsByPlaceIdCommand;
+import com.now.naaga.place.application.dto.PlusLikeCommand;
+import com.now.naaga.place.application.dto.SubtractLikeCommand;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.placestatistics.application.PlaceStatisticsService;
-import com.now.naaga.placestatistics.application.dto.FindPlaceStatisticsByPlaceIdCommand;
-import com.now.naaga.placestatistics.application.dto.PlusLikeCommand;
-import com.now.naaga.placestatistics.application.dto.SubtractLikeCommand;
-import com.now.naaga.placestatistics.domain.PlaceStatistics;
+import com.now.naaga.place.domain.PlaceStatistics;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.domain.Player;
 import java.util.Optional;
@@ -54,6 +54,7 @@ public class PlaceLikeService {
         if (placeLikeType == PlaceLikeType.LIKE) {
             placeStatisticsService.plusLike(new PlusLikeCommand(placeId));
         }
+
         final Optional<PlaceLike> maybePlaceLike = placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId);
 
         if (maybePlaceLike.isPresent()) {
@@ -81,8 +82,6 @@ public class PlaceLikeService {
                                       final PlaceLikeType placeLikeType) {
         final Player player = playerService.findPlayerById(playerId);
         final Place place = placeService.findPlaceById(new FindPlaceByIdCommand(placeId));
-        // 그래서 여기서 좋아요를 올려야하는거아님?
-        placeStatisticsService.plusLike(new PlusLikeCommand(placeId));
         return placeLikeRepository.save(new PlaceLike(place, player, placeLikeType));
     }
 
@@ -102,7 +101,7 @@ public class PlaceLikeService {
     }
 
     private void subtractPlaceLikeCount(final Long placeId, final PlaceLike placeLike) {
-        if(placeLike.getType() == PlaceLikeType.LIKE) {
+        if (placeLike.getType() == PlaceLikeType.LIKE) {
             final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
             placeStatisticsService.subtractLike(subtractLikeCommand);
         }
@@ -114,9 +113,9 @@ public class PlaceLikeService {
         final Long placeId = checkMyPlaceLikeCommand.placeId();
 
         return placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId)
-                                  .map(PlaceLike::getType)
-                                  .map(MyPlaceLikeType::from)
-                                  .orElse(MyPlaceLikeType.NONE);
+                .map(PlaceLike::getType)
+                .map(MyPlaceLikeType::from)
+                .orElse(MyPlaceLikeType.NONE);
     }
 
     @Transactional(readOnly = true)

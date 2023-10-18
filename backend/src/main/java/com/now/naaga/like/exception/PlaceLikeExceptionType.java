@@ -3,8 +3,6 @@ package com.now.naaga.like.exception;
 import com.now.naaga.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
 
-import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
-
 public enum PlaceLikeExceptionType implements BaseExceptionType {
 
     INACCESSIBLE_AUTHENTICATION(

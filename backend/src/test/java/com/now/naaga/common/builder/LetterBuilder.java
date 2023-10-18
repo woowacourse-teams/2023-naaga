@@ -1,16 +1,15 @@
 package com.now.naaga.common.builder;
 
+import static com.now.naaga.common.fixture.LetterFixture.MESSAGE;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
+
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.repository.LetterRepository;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
-
-import static com.now.naaga.common.fixture.LetterFixture.MESSAGE;
-import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
 
 @Component
 public class LetterBuilder {

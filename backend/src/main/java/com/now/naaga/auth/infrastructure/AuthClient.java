@@ -1,8 +1,8 @@
 package com.now.naaga.auth.infrastructure;
 
-import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.exception.AuthExceptionType;
+import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.infrastructure.dto.LogoutInfo;
 import com.now.naaga.auth.infrastructure.dto.UnlinkInfo;
 import org.springframework.beans.factory.annotation.Value;
