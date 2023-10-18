@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -20,6 +21,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
+import com.google.android.material.snackbar.Snackbar
 import com.now.domain.model.Coordinate
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
@@ -60,13 +62,25 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         val isStorageRequest = storagePermissions.any { keys.contains(it) }
         if (isStorageRequest) {
             if (permission.entries.map { it.value }.contains(false)) {
-                showPermissionSnackbar(getString(R.string.snackbar_storage_message))
+                showStoragePermissionSnackBar()
             } else {
                 openCamera()
             }
             return@registerForActivityResult
         }
-        showPermissionSnackbar(getString(R.string.snackbar_location_message))
+
+        val isLocationRequest = locationPermissions.any { keys.contains(it) }
+        if (isLocationRequest) {
+            if (permission.entries.map { it.value }.contains(false)) {
+                showLocationPermissionSnackBar()
+                return@registerForActivityResult
+            }
+            setCoordinate()
+        }
+    }
+
+    private val locationSettingLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        setCoordinate()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,11 +136,27 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         view.visibility = status
     }
 
-    private fun showPermissionSnackbar(message: String) {
+    private fun showStoragePermissionSnackBar() {
         binding.root.showSnackbarWithEvent(
-            message = message,
+            message = getString(R.string.snackbar_storage_message),
             actionTitle = getString(R.string.snackbar_action_title),
+            length = Snackbar.LENGTH_LONG,
             action = { openSetting() },
+        )
+    }
+
+    private fun showLocationPermissionSnackBar() {
+        binding.root.showSnackbarWithEvent(
+            message = getString(R.string.snackbar_location_message),
+            actionTitle = getString(R.string.snackbar_action_title),
+            length = Snackbar.LENGTH_INDEFINITE,
+            action = {
+                val appDetailsIntent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:$packageName"),
+                ).addCategory(Intent.CATEGORY_DEFAULT)
+                locationSettingLauncher.launch(appDetailsIntent)
+            },
         )
     }
 
@@ -188,13 +218,10 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun requestStoragePermission() {
-        val permissionToRequest = storagePermissions.toMutableList()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return openCamera()
         }
-
-        requestPermissionLauncher.launch(permissionToRequest.toTypedArray())
+        requestPermissionLauncher.launch(storagePermissions)
     }
 
     private fun openCamera() {
@@ -261,6 +288,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     companion object {
         private const val RESIZE = 500
         private val storagePermissions = arrayOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
 
