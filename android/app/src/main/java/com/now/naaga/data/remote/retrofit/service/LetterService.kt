@@ -1,7 +1,7 @@
 package com.now.naaga.data.remote.retrofit.service
 
-import com.now.naaga.data.remote.dto.ClosedLetterDto
-import com.now.naaga.data.remote.dto.OpenLetterDto
+import com.now.naaga.data.remote.dto.LetterDto
+import com.now.naaga.data.remote.dto.LetterPreviewDto
 import com.now.naaga.data.remote.dto.post.PostLetterDto
 import retrofit2.Response
 import retrofit2.http.Body
@@ -14,22 +14,22 @@ interface LetterService {
     @POST("/letters")
     suspend fun registerLetter(
         @Body postLetterDto: PostLetterDto,
-    ): Response<OpenLetterDto>
+    ): Response<LetterDto>
 
     @GET("/letters/nearby")
     suspend fun getNearbyLetters(
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double,
-    ): Response<List<ClosedLetterDto>>
+    ): Response<List<LetterPreviewDto>>
 
     @GET("/letters/{letterId}")
     suspend fun getLetter(
         @Path("letterId") letterId: Long,
-    ): Response<OpenLetterDto>
+    ): Response<LetterDto>
 
     @GET("/letterlogs")
     suspend fun getInGameLetters(
         @Query("gameId") gameId: Long,
         @Query("logType") logType: String,
-    ): Response<List<OpenLetterDto>>
+    ): Response<List<LetterDto>>
 }

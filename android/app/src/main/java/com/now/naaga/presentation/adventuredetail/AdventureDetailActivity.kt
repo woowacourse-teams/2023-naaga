@@ -13,7 +13,7 @@ import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.databinding.ActivityAdventureDetailBinding
 import com.now.naaga.presentation.adventuredetail.viewpager.ViewPagerAdapter
-import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
+import com.now.naaga.presentation.uimodel.model.LetterUiModel
 import com.now.naaga.util.extension.repeatOnStarted
 import com.now.naaga.util.extension.showShortSnackbarWithEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,7 +77,7 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
         initImage(adventureDetailUiState.adventureResult)
     }
 
-    private fun initViewPager(readLetters: List<OpenLetterUiModel>, writeLetters: List<OpenLetterUiModel>) {
+    private fun initViewPager(readLetters: List<LetterUiModel>, writeLetters: List<LetterUiModel>) {
         binding.vpAdventureDetail.adapter = ViewPagerAdapter(listOf(readLetters, writeLetters))
 
         TabLayoutMediator(binding.tlAdventureDetail, binding.vpAdventureDetail) { tab, position ->
