@@ -56,8 +56,8 @@ jobs:
     steps:
       - name: 🙏 쉘 스크립트 실행 중 ... 🙏
         run: |
-          cd /home/ubuntu
-          sudo ./deploy_new.sh
+          cd /home/ubuntu/prod
+          sudo ./deploy_prod.sh
 
   sync-dev_backend:
     needs: naaga_dev_ec2_deploy
