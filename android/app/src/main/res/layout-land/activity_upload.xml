@@ -31,7 +31,9 @@
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/simple_loading" />
+            app:lottie_rawRes="@raw/simple_loading"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/iv_upload_back"
@@ -57,16 +59,17 @@
 
         <ImageView
             android:id="@+id/iv_upload_photo"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="@dimen/space_default_large"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@drawable/rect_radius_small"
             android:backgroundTint="@color/white"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@id/tv_upload_title"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="20dp"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_upload_activity_title" />
+            app:layout_constraintEnd_toStartOf="@+id/gl_upload_1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_upload_activity_title" />
 
         <ImageView
             android:id="@+id/iv_upload_camera_icon"
@@ -78,16 +81,22 @@
             app:layout_constraintStart_toStartOf="@id/iv_upload_photo"
             app:layout_constraintTop_toTopOf="@id/iv_upload_photo" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_upload_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
         <TextView
             android:id="@+id/tv_upload_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_default_large"
-            android:layout_marginTop="@dimen/space_default_large"
             android:text="@string/upload_photo_title"
-            android:textSize="28sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_upload_photo" />
+            android:textSize="32sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_upload_photo" />
 
         <View
             android:id="@+id/v_upload_divide_line_1"
@@ -97,7 +106,7 @@
             android:layout_marginTop="@dimen/space_default_medium"
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/gl_upload_1"
             app:layout_constraintTop_toBottomOf="@id/tv_upload_title" />
 
         <EditText
@@ -114,25 +123,24 @@
             android:text="@={viewModel.name}"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
-            android:textSize="24sp"
+            android:textSize="32sp"
             app:layout_constraintEnd_toEndOf="@id/v_upload_divide_line_1"
             app:layout_constraintStart_toStartOf="@id/v_upload_divide_line_1"
-            app:layout_constraintTop_toBottomOf="@id/tv_upload_title"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_title" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_upload_submit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_default_large"
-            android:layout_marginTop="@dimen/space_default_large"
-            android:layout_marginBottom="@dimen/space_default_large"
+            android:layout_marginBottom="40dp"
             android:background="@drawable/bg_yellow_button"
             android:paddingVertical="@dimen/space_default_medium"
             android:text="@string/upload_submit"
-            android:textSize="24sp"
+            android:textSize="32sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/gl_upload_1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

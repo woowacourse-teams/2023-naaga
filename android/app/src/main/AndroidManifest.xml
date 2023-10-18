@@ -36,7 +36,6 @@
         </activity>
         <activity
             android:name=".presentation.beginadventure.BeginAdventureActivity"
-            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".presentation.onadventure.OnAdventureActivity"
@@ -48,7 +47,6 @@
             android:exported="false" />
         <activity
             android:name=".presentation.upload.UploadActivity"
-            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".presentation.rank.RankActivity"
@@ -56,7 +54,6 @@
             android:exported="false" />
         <activity
             android:name=".presentation.adventureresult.AdventureResultActivity"
-            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".presentation.mypage.MyPageActivity"
