@@ -56,7 +56,7 @@ class OnAdventureViewModel @Inject constructor(
                     ).map { it.copy(isNearBy = coordinate.isNearBy(it.coordinate)) },
                 )
             } ?: emit(emptyList())
-            delay(15000)
+            delay(5000)
         }
     }
 
