@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.now.naaga.presentation.upload.UploadViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/space_default_large"
+        tools:context=".presentation.upload.UploadActivity">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_upload_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_gray_opacity_medium"
+            android:elevation="4dp"
+            android:padding="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/simple_loading" />
+
+        <ImageView
+            android:id="@+id/iv_upload_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="@dimen/space_default_medium"
+            android:src="@drawable/ic_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_upload_activity_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upload_title"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_upload_back"
+            app:layout_constraintStart_toEndOf="@id/iv_upload_back"
+            app:layout_constraintTop_toTopOf="@id/iv_upload_back" />
+
+        <ImageView
+            android:id="@+id/iv_upload_photo"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="@dimen/space_default_large"
+            android:background="@drawable/rect_radius_small"
+            android:backgroundTint="@color/white"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/tv_upload_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_activity_title" />
+
+        <ImageView
+            android:id="@+id/iv_upload_camera_icon"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_camera"
+            app:layout_constraintBottom_toBottomOf="@id/iv_upload_photo"
+            app:layout_constraintEnd_toEndOf="@id/iv_upload_photo"
+            app:layout_constraintStart_toStartOf="@id/iv_upload_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_upload_photo" />
+
+        <TextView
+            android:id="@+id/tv_upload_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_default_large"
+            android:layout_marginTop="@dimen/space_default_large"
+            android:text="@string/upload_photo_title"
+            android:textSize="28sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_upload_photo" />
+
+        <View
+            android:id="@+id/v_upload_divide_line_1"
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:layout_marginHorizontal="@dimen/space_default_large"
+            android:layout_marginTop="@dimen/space_default_medium"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_title" />
+
+        <EditText
+            android:id="@+id/et_upload_place_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_default_large"
+            android:autofillHints="no"
+            android:ellipsize="end"
+            android:hint="@string/upload_photo_title_hint"
+            android:textColorHint="@color/white"
+            android:inputType="text"
+            android:maxLines="1"
+            android:text="@={viewModel.name}"
+            android:textAlignment="textEnd"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@id/v_upload_divide_line_1"
+            app:layout_constraintStart_toStartOf="@id/v_upload_divide_line_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_title"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_upload_submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_default_large"
+            android:layout_marginTop="@dimen/space_default_large"
+            android:layout_marginBottom="@dimen/space_default_large"
+            android:background="@drawable/bg_yellow_button"
+            android:paddingVertical="@dimen/space_default_medium"
+            android:text="@string/upload_submit"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
