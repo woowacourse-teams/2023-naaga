@@ -63,7 +63,7 @@ class OnAdventureActivity :
     override fun onPause() {
         super.onPause()
         supportFragmentManager.fragments.forEach { fragment ->
-            if (fragment.tag == GIVE_UP || fragment.tag == HINT || fragment.tag == LETTER) {
+            if (TAGS.contains(fragment.tag)) {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
             }
         }
@@ -254,6 +254,7 @@ class OnAdventureActivity :
         private const val ADVENTURE = "ADVENTURE"
         private const val HINT = "HINT"
         private const val LETTER = "LETTER"
+        private val TAGS = listOf(GIVE_UP, HINT, LETTER)
 
         fun getIntent(context: Context): Intent {
             return Intent(context, OnAdventureActivity::class.java)
