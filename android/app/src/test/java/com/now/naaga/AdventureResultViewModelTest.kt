@@ -8,6 +8,7 @@ import com.now.domain.model.Player
 import com.now.domain.model.Rank
 import com.now.domain.model.type.AdventureResultType
 import com.now.domain.repository.AdventureRepository
+import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.naaga.presentation.adventureresult.AdventureResultViewModel
 import io.mockk.coEvery
@@ -30,6 +31,7 @@ class AdventureResultViewModelTest {
     private lateinit var vm: AdventureResultViewModel
     private lateinit var adventureRepository: AdventureRepository
     private lateinit var rankRepository: RankRepository
+    private lateinit var placeRepository: PlaceRepository
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -104,7 +106,8 @@ class AdventureResultViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         adventureRepository = mockk()
         rankRepository = mockk()
-        vm = AdventureResultViewModel(adventureRepository, rankRepository)
+        placeRepository = mockk()
+        vm = AdventureResultViewModel(adventureRepository, rankRepository, placeRepository)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

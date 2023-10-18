@@ -53,12 +53,18 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
         viewModel.adventureResult.observe(this) { adventureResult ->
             setResultType(adventureResult)
             setPhoto(adventureResult.destination.image)
+            viewModel.fetchPreference()
         }
 
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             when (throwable.code) {
                 DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
             }
+        }
+
+        viewModel.preference.observe(this) {
+            binding.customAdventureResultPreference.updatePreference(it.state)
+            binding.customAdventureResultPreference.likeCount = it.likeCount.value
         }
     }
 
@@ -94,6 +100,10 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
         binding.btnAdventureResultReturn.setOnClickListener {
             logClickEvent(getViewEntryName(it), RESULT_RESULT_RETURN)
             finish()
+        }
+
+        binding.customAdventureResultPreference.setPreferenceClickListener {
+            viewModel.changePreference(it)
         }
     }
 
