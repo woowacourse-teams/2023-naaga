@@ -27,6 +27,7 @@ import static com.now.naaga.letter.presentation.LogType.WRITE;
 public class LetterLogController {
 
     private final ReadLetterLogService readLetterLogService;
+    
     private final WriteLetterLogService writeLetterLogService;
 
     public LetterLogController(final ReadLetterLogService readLetterLogService,
