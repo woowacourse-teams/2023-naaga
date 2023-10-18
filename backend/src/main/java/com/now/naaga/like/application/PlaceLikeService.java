@@ -54,7 +54,6 @@ public class PlaceLikeService {
         if (placeLikeType == PlaceLikeType.LIKE) {
             placeStatisticsService.plusLike(new PlusLikeCommand(placeId));
         }
-
         final Optional<PlaceLike> maybePlaceLike = placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId);
 
         if (maybePlaceLike.isPresent()) {
@@ -82,6 +81,8 @@ public class PlaceLikeService {
                                       final PlaceLikeType placeLikeType) {
         final Player player = playerService.findPlayerById(playerId);
         final Place place = placeService.findPlaceById(new FindPlaceByIdCommand(placeId));
+        // 그래서 여기서 좋아요를 올려야하는거아님?
+        placeStatisticsService.plusLike(new PlusLikeCommand(placeId));
         return placeLikeRepository.save(new PlaceLike(place, player, placeLikeType));
     }
 

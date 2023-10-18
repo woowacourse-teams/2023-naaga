@@ -10,7 +10,7 @@ import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
 import com.now.naaga.letter.exception.LetterException;
-import com.now.naaga.letter.presentation.LogType;
+import com.now.naaga.letter.presentation.LetterLogType;
 import com.now.naaga.letter.presentation.dto.FindLetterLogByGameCommand;
 import com.now.naaga.letter.presentation.dto.FindNearByLetterCommand;
 import com.now.naaga.letter.presentation.dto.LetterReadCommand;
@@ -91,9 +91,10 @@ public class LetterService {
         return letterRepository.findLetterByPositionAndDistance(findNearByLetterCommand.position(), LETTER_RADIUS);
     }
 
+    @Transactional(readOnly = true)
     public List<Letter> findLetterLogInGame(final FindLetterLogByGameCommand findLetterLogByGameCommand) {
         final Game gameInProgress = getGameInProgress(findLetterLogByGameCommand.playerId());
-        if (findLetterLogByGameCommand.logType() == LogType.WRITE) {
+        if (findLetterLogByGameCommand.letterLogType() == LetterLogType.WRITE) {
             final List<WriteLetterLog> writeLetterLogs = writeLetterLogRepository.findByGameId(gameInProgress.getId());
             return writeLetterLogs.stream()
                     .map(WriteLetterLog::getLetter)
