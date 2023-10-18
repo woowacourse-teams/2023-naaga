@@ -1,14 +1,12 @@
 package com.now.naaga.place.domain;
 
-import com.now.naaga.place.exception.PlaceException;
-import com.now.naaga.place.persistence.repository.PlaceRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
 
+import com.now.naaga.place.exception.PlaceException;
+import com.now.naaga.place.repository.PlaceRepository;
 import java.util.List;
 import java.util.Random;
-
-import static com.now.naaga.place.exception.PlaceExceptionType.NO_EXIST;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PlaceRecommendService {

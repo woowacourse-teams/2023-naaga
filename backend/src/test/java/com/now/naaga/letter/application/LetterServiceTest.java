@@ -1,5 +1,14 @@
 package com.now.naaga.letter.application;
 
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_110미터_앞_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
+import static com.now.naaga.letter.exception.LetterExceptionType.NO_EXIST;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.now.naaga.common.builder.GameBuilder;
 import com.now.naaga.common.builder.LetterBuilder;
 import com.now.naaga.common.builder.PlaceBuilder;
@@ -17,6 +26,7 @@ import com.now.naaga.letter.repository.letterlog.ReadLetterLogRepository;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -26,15 +36,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static com.now.naaga.common.fixture.PositionFixture.*;
-import static com.now.naaga.letter.exception.LetterExceptionType.NO_EXIST;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @ActiveProfiles("test")

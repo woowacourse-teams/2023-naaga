@@ -1,9 +1,8 @@
-package com.now.naaga.placestatistics.repository;
+package com.now.naaga.place.repository;
 
-import com.now.naaga.placestatistics.domain.PlaceStatistics;
-import org.springframework.data.jpa.repository.JpaRepository;
-
+import com.now.naaga.place.domain.PlaceStatistics;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PlaceStatisticsRepository extends JpaRepository<PlaceStatistics, Long> {
 

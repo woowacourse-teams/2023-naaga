@@ -2,11 +2,10 @@ package com.now.naaga.letter.repository;
 
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.place.domain.Position;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface LetterRepository extends JpaRepository<Letter, Long> {
 

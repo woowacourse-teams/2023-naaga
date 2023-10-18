@@ -1,12 +1,14 @@
 package com.now.naaga.auth.infrastructure;
 
+import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_HEADER;
+import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN;
+import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
+
+import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
-import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.common.exception.InternalException;
 import org.springframework.stereotype.Component;
-
-import static com.now.naaga.auth.exception.AuthExceptionType.*;
 
 @Component
 public class BearerAuthExtractor implements AuthenticationExtractor<MemberAuth> {

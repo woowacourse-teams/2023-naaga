@@ -1,21 +1,15 @@
 package com.now.naaga.auth.infrastructure.jwt;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN_ACCESS;
+
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.MemberAuthMapper;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
-import com.now.naaga.common.exception.InternalException;
-import com.now.naaga.common.exception.InternalExceptionType;
 import com.now.naaga.member.domain.Member;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.ObjectError;
-
 import java.util.Date;
-
-import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN_ACCESS;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AuthTokenGenerator {

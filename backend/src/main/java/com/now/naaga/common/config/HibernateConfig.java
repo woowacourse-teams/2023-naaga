@@ -1,11 +1,11 @@
 package com.now.naaga.common.config;
 
+import static org.hibernate.cfg.AvailableSettings.STATEMENT_INSPECTOR;
+
 import com.now.naaga.common.presentation.QueryInspector;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import static org.hibernate.cfg.AvailableSettings.STATEMENT_INSPECTOR;
 
 @Configuration
 public class HibernateConfig {

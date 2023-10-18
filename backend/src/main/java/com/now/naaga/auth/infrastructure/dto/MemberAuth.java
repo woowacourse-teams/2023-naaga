@@ -1,7 +1,6 @@
 package com.now.naaga.auth.infrastructure.dto;
 
 import com.now.naaga.auth.infrastructure.AuthType;
-
 import java.util.Objects;
 
 public class MemberAuth {

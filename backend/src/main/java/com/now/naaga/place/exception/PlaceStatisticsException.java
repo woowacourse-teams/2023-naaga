@@ -1,4 +1,4 @@
-package com.now.naaga.placestatistics.exception;
+package com.now.naaga.place.exception;
 
 import com.now.naaga.common.exception.BaseException;
 import com.now.naaga.common.exception.BaseExceptionType;

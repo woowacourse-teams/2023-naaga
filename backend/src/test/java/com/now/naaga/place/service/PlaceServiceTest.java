@@ -1,5 +1,9 @@
 package com.now.naaga.place.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.common.fixture.PositionFixture;
@@ -9,8 +13,6 @@ import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.exception.PlaceExceptionType;
-import io.restassured.internal.common.assertion.Assertion;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("test")
 @Sql("/truncate.sql")

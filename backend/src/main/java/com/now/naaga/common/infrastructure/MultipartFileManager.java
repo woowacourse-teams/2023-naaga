@@ -1,20 +1,18 @@
 package com.now.naaga.common.infrastructure;
 
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_BODY;
+import static com.now.naaga.common.exception.InternalExceptionType.FAIL_MAKE_DIRECTORY;
+
 import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.common.exception.CommonExceptionType;
+import com.now.naaga.common.exception.InternalException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
-
-import com.now.naaga.common.exception.InternalException;
-import com.now.naaga.common.exception.InternalExceptionType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_BODY;
-import static com.now.naaga.common.exception.InternalExceptionType.FAIL_MAKE_DIRECTORY;
 
 @Component
 public class MultipartFileManager implements FileManager<MultipartFile> {
