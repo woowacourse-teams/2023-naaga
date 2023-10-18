@@ -127,8 +127,11 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
         Marker().apply {
             position = LatLng(letter.coordinate.latitude, letter.coordinate.longitude)
             icon =
-                if (letter.isNearBy) OverlayImage.fromResource(R.drawable.ic_open_letter)
-                else OverlayImage.fromResource(R.drawable.ic_closed_letter)
+                if (letter.isNearBy) {
+                    OverlayImage.fromResource(R.drawable.ic_open_letter)
+                } else {
+                    OverlayImage.fromResource(R.drawable.ic_closed_letter)
+                }
             map = naverMap
         }
     }

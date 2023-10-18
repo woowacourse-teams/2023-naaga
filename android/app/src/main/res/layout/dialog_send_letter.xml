@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="dialog"
+            type="com.now.naaga.presentation.common.dialog.LetterSendDialog" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -11,24 +18,24 @@
             android:id="@+id/iv_dialog_send_letter_icon"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginHorizontal="130dp"
             android:layout_marginTop="20dp"
-            android:layout_marginHorizontal="140dp"
-            app:srcCompat="@drawable/ic_message_send"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_letter_send" />
 
         <View
             android:id="@+id/v_dialog_letter_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginVertical="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_dialog_permission_setting"
+            android:background="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/btn_dialog_letter_submit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/iv_dialog_send_letter_icon"/>
+            app:layout_constraintTop_toBottomOf="@id/iv_dialog_send_letter_icon" />
 
         <EditText
             android:id="@+id/et_dialog_letter"
@@ -36,28 +43,29 @@
             android:layout_height="0dp"
             android:layout_marginHorizontal="40dp"
             android:layout_marginVertical="40dp"
+            android:backgroundTint="@android:color/transparent"
             android:fontFamily="@font/pretendard_medium"
             android:gravity="center"
+            android:text="@={dialog.message}"
+            android:hint="@string/send_letter_dialog_hint"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:hint="@string/send_letter_dialog_hint"
-            android:backgroundTint="@android:color/transparent"
-            app:layout_constraintBottom_toTopOf="@+id/btn_dialog_permission_setting"
+            app:layout_constraintBottom_toTopOf="@id/btn_dialog_letter_submit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_dialog_send_letter_icon"/>
+            app:layout_constraintTop_toBottomOf="@id/iv_dialog_send_letter_icon" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_dialog_permission_setting"
+            android:id="@+id/btn_dialog_letter_submit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
             android:layout_marginBottom="28dp"
+            android:background="@android:color/transparent"
             android:text="@string/send_letter_dialog_submit"
+            android:textColor="@color/main_dark_blue"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:textColor="@color/main_dark_blue"
-            android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

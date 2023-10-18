@@ -27,12 +27,14 @@ import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
+import com.now.naaga.presentation.common.dialog.LetterSendDialog
 import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.common.dialog.PolaroidDialog
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.extension.getParcelableCompat
+import com.now.naaga.util.extension.showSnackbar
 import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -90,6 +92,9 @@ class OnAdventureActivity :
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_END_ADVENTURE)
             viewModel.endAdventure()
         }
+        binding.ivSendLetter.setOnClickListener {
+            LetterSendDialog(viewModel::sendLetter).show(supportFragmentManager, LetterSendDialog.TAG)
+        }
     }
 
     private fun subscribe() {
@@ -106,6 +111,13 @@ class OnAdventureActivity :
         }
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
+        }
+        viewModel.isSendLetterSuccess.observe(this) {
+            supportFragmentManager.findFragmentByTag(LetterSendDialog.TAG)?.onDestroyView()
+            when (it) {
+                true -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_success)) }
+                false -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail)) }
+            }
         }
         viewModel.letters.observe(this) {
             drawLetters(it)
