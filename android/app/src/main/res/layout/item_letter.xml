@@ -44,7 +44,7 @@
         <TextView
             android:id="@+id/tv_item_letter"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/space_default_large"
             android:gravity="center"
             android:textColor="@color/main_dark_blue"
