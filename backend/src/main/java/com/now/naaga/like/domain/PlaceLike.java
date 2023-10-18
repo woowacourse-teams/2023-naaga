@@ -5,8 +5,15 @@ import com.now.naaga.like.exception.PlaceLikeException;
 import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
-import jakarta.persistence.*;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity
@@ -50,6 +57,10 @@ public class PlaceLike extends BaseEntity {
         if (!this.player.equals(player)) {
             throw new PlaceLikeException(PlaceLikeExceptionType.INACCESSIBLE_AUTHENTICATION);
         }
+    }
+
+    public void switchType() {
+        this.placeLikeType = this.placeLikeType.switchType();
     }
 
     public Long getId() {

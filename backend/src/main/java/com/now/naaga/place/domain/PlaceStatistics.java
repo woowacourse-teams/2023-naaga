@@ -43,6 +43,10 @@ public class PlaceStatistics extends BaseEntity {
         this.likeCount = likeCount;
     }
 
+    public void plusLike() {
+        likeCount++;
+    }
+
     public void subtractLike() {
         if(isDefaultValue()) {
             return;

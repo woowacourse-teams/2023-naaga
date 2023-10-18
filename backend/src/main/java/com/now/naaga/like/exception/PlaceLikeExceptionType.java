@@ -18,6 +18,12 @@ public enum PlaceLikeExceptionType implements BaseExceptionType {
             HttpStatus.NOT_FOUND,
             "좋아요/싫어요가 존재하지 않습니다."
     ),
+
+    ALREADY_APPLIED_TYPE(
+            705,
+            HttpStatus.BAD_REQUEST,
+            "이미 등록된 좋아요/싫어요 입니다."
+    ),
     ;
 
     private final int errorCode;
