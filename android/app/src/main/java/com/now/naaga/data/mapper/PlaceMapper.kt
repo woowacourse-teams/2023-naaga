@@ -1,7 +1,9 @@
 package com.now.naaga.data.mapper
 
 import com.now.domain.model.Place
+import com.now.domain.model.PreferenceState
 import com.now.naaga.data.remote.dto.PlaceDto
+import com.now.naaga.data.remote.dto.PreferenceStateDto
 import com.now.naaga.data.remote.dto.post.PostPlaceDto
 
 fun Place.toDto(): PlaceDto {
@@ -32,4 +34,8 @@ fun PostPlaceDto.toDomain(): Place {
         image = imageUrl,
         description = description,
     )
+}
+
+fun PreferenceStateDto.toPreferenceState(): PreferenceState {
+    return PreferenceState.valueOf(this.type)
 }

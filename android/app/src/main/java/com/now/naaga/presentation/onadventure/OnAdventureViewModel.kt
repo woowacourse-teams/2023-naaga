@@ -56,10 +56,11 @@ class OnAdventureViewModel @Inject constructor(
         }
     }
 
-    private val _error = MutableLiveData<DataThrowable>()
-    val error: LiveData<DataThrowable> = _error
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
+
+    private val _isSendLetterSuccess = MutableLiveData<Boolean>()
+    val isSendLetterSuccess: LiveData<Boolean> = _isSendLetterSuccess
 
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
@@ -160,6 +161,17 @@ class OnAdventureViewModel @Inject constructor(
     private fun isLetterNearBy(letters: List<ClosedLetter>) {
         letters.forEach { letter ->
             myCoordinate.value?.let { letter.isNearBy(it) }
+        }
+    }
+
+    fun sendLetter(message: String) {
+        viewModelScope.launch {
+            runCatching {
+                myCoordinate.value?.let { letterRepository.postLetter(message, it.latitude, it.longitude) }
+            }.onSuccess {
+                _isSendLetterSuccess.value = true
+            }.onFailure {
+            }
         }
     }
 
