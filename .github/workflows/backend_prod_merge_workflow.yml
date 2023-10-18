@@ -3,7 +3,9 @@ name: NAAGA BACKEND PRODUCT SERVER MERGE CI/CD
 on:
   push:
     branches:
-      - feat/#502
+      - main
+    paths:
+      - backend/**
       
 jobs:
   github_actions_setting:
