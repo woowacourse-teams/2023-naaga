@@ -4,7 +4,7 @@ import com.now.domain.model.AdventureResult
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
 import com.now.domain.model.Player
-import com.now.domain.model.letter.OpenLetter
+import com.now.domain.model.letter.Letter
 import com.now.domain.model.type.AdventureResultType
 import com.now.domain.model.type.LogType
 import com.now.domain.repository.AdventureRepository
@@ -129,7 +129,7 @@ class AdventureDetailViewModelTest {
     }
 
     private val fakeReadLetterLogs = listOf(
-        OpenLetter(
+        Letter(
             id = 1L,
             player = Player(1L, "krrong", 1234),
             coordinate = Coordinate(123.0, 123.0),
@@ -139,7 +139,7 @@ class AdventureDetailViewModelTest {
     )
 
     private val fakeWriteLetterLogs = listOf(
-        OpenLetter(
+        Letter(
             id = 1L,
             player = Player(1L, "notKrrong", 1212),
             coordinate = Coordinate(123.0, 123.0),

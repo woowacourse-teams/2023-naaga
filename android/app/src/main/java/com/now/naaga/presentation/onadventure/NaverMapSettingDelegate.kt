@@ -20,7 +20,7 @@ import com.naver.maps.map.widget.LocationButtonView
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Direction
 import com.now.domain.model.Hint
-import com.now.domain.model.letter.ClosedLetter
+import com.now.domain.model.letter.LetterPreview
 import com.now.naaga.R
 import com.now.naaga.util.dpToPx
 import com.now.naaga.util.extension.setOnSingleClickListener
@@ -35,7 +35,7 @@ interface NaverMapSettingDelegate : OnMapReadyCallback {
     fun setNaverMap(activity: AppCompatActivity, @IdRes mapLayoutId: Int)
     fun addHintMarker(hint: Hint)
     fun addDestinationMarker(coordinate: Coordinate)
-    fun addLetter(letter: ClosedLetter, action: (id: Long) -> Unit)
+    fun addLetter(letter: LetterPreview, action: (id: Long) -> Unit)
     fun removeLetters()
     fun setOnMapReady(action: () -> Unit)
 }
@@ -127,7 +127,7 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
         }
     }
 
-    override fun addLetter(letter: ClosedLetter, action: (id: Long) -> Unit) {
+    override fun addLetter(letter: LetterPreview, action: (id: Long) -> Unit) {
         Marker().apply {
             position = LatLng(letter.coordinate.latitude, letter.coordinate.longitude)
             icon = selectLetterIcon(letter.isNearBy)
@@ -143,9 +143,9 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
 
     private fun selectLetterIcon(isNearBy: Boolean): OverlayImage {
         return if (isNearBy) {
-            OverlayImage.fromResource(R.drawable.ic_open_letter)
+            OverlayImage.fromResource(R.drawable.ic_letter)
         } else {
-            OverlayImage.fromResource(R.drawable.ic_closed_letter_new)
+            OverlayImage.fromResource(R.drawable.ic_letter_preview)
         }
     }
 

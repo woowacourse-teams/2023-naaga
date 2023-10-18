@@ -15,7 +15,7 @@ import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
-import com.now.domain.model.letter.ClosedLetter
+import com.now.domain.model.letter.LetterPreview
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
@@ -187,7 +187,7 @@ class OnAdventureActivity :
         }
     }
 
-    private fun drawLetters(letters: List<ClosedLetter>) {
+    private fun drawLetters(letters: List<LetterPreview>) {
         removeLetters()
         letters.forEach { letter ->
             addLetter(letter, viewModel::getLetter)

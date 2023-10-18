@@ -3,13 +3,13 @@ package com.now.naaga.presentation.adventuredetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.AdventureResult
-import com.now.domain.model.letter.OpenLetter
+import com.now.domain.model.letter.Letter
 import com.now.domain.model.type.LogType
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.LetterRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.presentation.uimodel.mapper.toUiModel
-import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
+import com.now.naaga.presentation.uimodel.model.LetterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,9 +28,9 @@ class AdventureDetailViewModel @Inject constructor(
     private val letterRepository: LetterRepository,
     private val adventureRepository: AdventureRepository,
 ) : ViewModel() {
-    private val readLettersFlow = MutableSharedFlow<List<OpenLetter>>()
+    private val readLettersFlow = MutableSharedFlow<List<Letter>>()
 
-    private val writeLettersFlow = MutableSharedFlow<List<OpenLetter>>()
+    private val writeLettersFlow = MutableSharedFlow<List<Letter>>()
 
     private val adventureFlow = MutableSharedFlow<AdventureResult>()
 
@@ -52,8 +52,8 @@ class AdventureDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getOpenLetterUiModels(letters: List<OpenLetter>): List<OpenLetterUiModel> {
-        if (letters.isEmpty()) return listOf(OpenLetterUiModel.DEFAULT_OPEN_LETTER)
+    private fun getOpenLetterUiModels(letters: List<Letter>): List<LetterUiModel> {
+        if (letters.isEmpty()) return listOf(LetterUiModel.DEFAULT_OPEN_LETTER)
         return letters.map { it.toUiModel() }
     }
 

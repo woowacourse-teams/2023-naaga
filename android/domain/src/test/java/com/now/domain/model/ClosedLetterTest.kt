@@ -1,20 +1,20 @@
 package com.now.domain.model
 
-import com.now.domain.model.letter.ClosedLetter
+import com.now.domain.model.letter.LetterPreview
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class ClosedLetterTest {
     private lateinit var myCoordinate: Coordinate
-    private lateinit var closeLetter: ClosedLetter
-    private lateinit var distantLetter: ClosedLetter
+    private lateinit var closeLetter: LetterPreview
+    private lateinit var distantLetter: LetterPreview
 
     @BeforeEach
     fun setUp() {
         myCoordinate = Coordinate(37.549335, 127.075816)
-        closeLetter = ClosedLetter(1, Coordinate(37.549369, 127.076357))
-        distantLetter = ClosedLetter(2, Coordinate(37.549305, 127.077007))
+        closeLetter = LetterPreview(1, Coordinate(37.549369, 127.076357))
+        distantLetter = LetterPreview(2, Coordinate(37.549305, 127.077007))
     }
 
     @Test
@@ -24,7 +24,7 @@ internal class ClosedLetterTest {
         val letter = distantLetter
 
         // when
-        letter.isNearBy(currentMyCoordinate)
+        letter.coordinate.isNearBy(currentMyCoordinate)
 
         // then
         Assertions.assertThat(letter.isNearBy).isFalse
@@ -37,7 +37,7 @@ internal class ClosedLetterTest {
         val letter = closeLetter
 
         // when
-        letter.isNearBy(currentMyCoordinate)
+        letter.coordinate.isNearBy(currentMyCoordinate)
 
         // then
         Assertions.assertThat(letter.isNearBy).isTrue

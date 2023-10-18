@@ -11,7 +11,7 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.model.RemainingTryCount
-import com.now.domain.model.letter.ClosedLetter
+import com.now.domain.model.letter.LetterPreview
 import com.now.domain.model.type.AdventureEndType
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.LetterRepository
@@ -20,7 +20,7 @@ import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
 import com.now.naaga.presentation.uimodel.mapper.toUiModel
-import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
+import com.now.naaga.presentation.uimodel.model.LetterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,7 +46,7 @@ class OnAdventureViewModel @Inject constructor(
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
-    val letters: LiveData<List<ClosedLetter>> = liveData {
+    val letters: LiveData<List<LetterPreview>> = liveData {
         while (true) {
             myCoordinate.value?.let { coordinate ->
                 emit(
@@ -60,8 +60,8 @@ class OnAdventureViewModel @Inject constructor(
         }
     }
 
-    private val _letter = MutableLiveData<OpenLetterUiModel>()
-    val letter: LiveData<OpenLetterUiModel> = _letter
+    private val _letter = MutableLiveData<LetterUiModel>()
+    val letter: LiveData<LetterUiModel> = _letter
 
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
