@@ -1,7 +1,7 @@
 package com.now.domain.repository
 
-import com.now.domain.model.letter.ClosedLetter
-import com.now.domain.model.letter.OpenLetter
+import com.now.domain.model.letter.Letter
+import com.now.domain.model.letter.LetterPreview
 import com.now.domain.model.type.LogType
 
 interface LetterRepository {
@@ -9,11 +9,11 @@ interface LetterRepository {
         message: String,
         latitude: Double,
         longitude: Double,
-    ): OpenLetter
+    ): Letter
 
-    suspend fun fetchNearbyLetters(latitude: Double, longitude: Double): List<ClosedLetter>
+    suspend fun fetchNearbyLetters(latitude: Double, longitude: Double): List<LetterPreview>
 
-    suspend fun fetchLetter(letterId: Long): OpenLetter
+    suspend fun fetchLetter(letterId: Long): Letter
 
-    suspend fun fetchLetterLogs(gameId: Long, logType: LogType): List<OpenLetter>
+    suspend fun fetchLetterLogs(gameId: Long, logType: LogType): List<Letter>
 }

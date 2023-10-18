@@ -11,12 +11,16 @@ import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.model.RemainingTryCount
-import com.now.domain.model.letter.ClosedLetter
+import com.now.domain.model.letter.LetterPreview
 import com.now.domain.model.type.AdventureEndType
 import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.LetterRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
+import com.now.naaga.data.throwable.DataThrowable.GameThrowable
+import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
+import com.now.naaga.presentation.uimodel.mapper.toUiModel
+import com.now.naaga.presentation.uimodel.model.LetterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -42,19 +46,22 @@ class OnAdventureViewModel @Inject constructor(
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
-    val letters: LiveData<List<ClosedLetter>> = liveData {
+    val letters: LiveData<List<LetterPreview>> = liveData {
         while (true) {
-            val letters = myCoordinate.value.let {
-                letterRepository.fetchNearbyLetters(
-                    latitude = it?.latitude ?: 0.0,
-                    longitude = it?.longitude ?: 0.0,
+            myCoordinate.value?.let { coordinate ->
+                emit(
+                    letterRepository.fetchNearbyLetters(
+                        latitude = coordinate.latitude,
+                        longitude = coordinate.longitude,
+                    ).map { it.copy(isNearBy = coordinate.isNearBy(it.coordinate)) },
                 )
-            }
-            isLetterNearBy(letters)
-            emit(letters)
-            delay(15000)
+            } ?: emit(emptyList())
+            delay(5000)
         }
     }
+
+    private val _letter = MutableLiveData<LetterUiModel>()
+    val letter: LiveData<LetterUiModel> = _letter
 
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
@@ -139,15 +146,7 @@ class OnAdventureViewModel @Inject constructor(
         }
     }
 
-    private fun setThrowable(throwable: Throwable) {
-        when (throwable) {
-            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
-            is DataThrowable.GameThrowable -> { handleGameThrowable(throwable) }
-            is DataThrowable.UniversalThrowable -> _throwable.value = throwable
-        }
-    }
-
-    private fun handleGameThrowable(throwable: DataThrowable.GameThrowable) {
+    private fun handleGameThrowable(throwable: GameThrowable) {
         when (throwable.code) {
             TRY_COUNT_OVER -> _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
             NOT_ARRIVED -> {
@@ -158,9 +157,15 @@ class OnAdventureViewModel @Inject constructor(
         }
     }
 
-    private fun isLetterNearBy(letters: List<ClosedLetter>) {
-        letters.forEach { letter ->
-            myCoordinate.value?.let { letter.isNearBy(it) }
+    fun getLetter(id: Long) {
+        viewModelScope.launch {
+            runCatching {
+                letterRepository.fetchLetter(id)
+            }.onSuccess { letter ->
+                _letter.value = letter.toUiModel()
+            }.onFailure {
+                setThrowable(it)
+            }
         }
     }
 
@@ -172,6 +177,14 @@ class OnAdventureViewModel @Inject constructor(
                 _isSendLetterSuccess.value = true
             }.onFailure {
             }
+        }
+    }
+
+    private fun setThrowable(throwable: Throwable) {
+        when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
+            is GameThrowable -> { handleGameThrowable(throwable) }
+            is UniversalThrowable -> _throwable.value = throwable
         }
     }
 
