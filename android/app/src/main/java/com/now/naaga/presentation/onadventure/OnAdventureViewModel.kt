@@ -56,7 +56,6 @@ class OnAdventureViewModel @Inject constructor(
                     ).map { it.copy(isNearBy = coordinate.isNearBy(it.coordinate)) },
                 )
             } ?: emit(emptyList())
-
             delay(15000)
         }
     }
@@ -66,6 +65,9 @@ class OnAdventureViewModel @Inject constructor(
 
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
+
+    private val _isSendLetterSuccess = MutableLiveData<Boolean>()
+    val isSendLetterSuccess: LiveData<Boolean> = _isSendLetterSuccess
 
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
@@ -163,6 +165,17 @@ class OnAdventureViewModel @Inject constructor(
                 _letter.value = letter.toUiModel()
             }.onFailure {
                 setThrowable(it)
+            }
+        }
+    }
+
+    fun sendLetter(message: String) {
+        viewModelScope.launch {
+            runCatching {
+                myCoordinate.value?.let { letterRepository.postLetter(message, it.latitude, it.longitude) }
+            }.onSuccess {
+                _isSendLetterSuccess.value = true
+            }.onFailure {
             }
         }
     }
