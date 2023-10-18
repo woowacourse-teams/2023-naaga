@@ -15,7 +15,7 @@ import com.now.naaga.databinding.ActivityAdventureDetailBinding
 import com.now.naaga.presentation.adventuredetail.viewpager.ViewPagerAdapter
 import com.now.naaga.presentation.uimodel.model.OpenLetterUiModel
 import com.now.naaga.util.extension.repeatOnStarted
-import com.now.naaga.util.extension.showSnackbarWithEvent
+import com.now.naaga.util.extension.showShortSnackbarWithEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -66,7 +66,7 @@ class AdventureDetailActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     }
 
     private fun showReRequestSnackbar() {
-        binding.root.showSnackbarWithEvent(
+        binding.root.showShortSnackbarWithEvent(
             message = getString(R.string.snackbar_action_re_request_message),
             actionTitle = getString(R.string.snackbar_action__re_request_title),
         ) { finish() }
