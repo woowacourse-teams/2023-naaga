@@ -2,11 +2,10 @@ package com.now.naaga.common.presentation.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 public class RequestMatcherInterceptor implements HandlerInterceptor {
 

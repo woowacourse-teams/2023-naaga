@@ -1,21 +1,20 @@
 package com.now.naaga.letter.application.letterlog;
 
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+
 import com.now.naaga.game.application.GameService;
+import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindGameByStatusCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameExceptionType;
-import com.now.naaga.letter.application.letterlog.dto.LetterLogCreateCommand;
-import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.letter.application.letterlog.dto.LetterByGameCommand;
+import com.now.naaga.letter.application.letterlog.dto.LetterLogCreateCommand;
 import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 import com.now.naaga.letter.repository.letterlog.ReadLetterLogRepository;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 
 @Transactional
 @Service

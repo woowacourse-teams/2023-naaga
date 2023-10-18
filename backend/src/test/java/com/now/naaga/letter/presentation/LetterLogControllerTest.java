@@ -1,10 +1,21 @@
 package com.now.naaga.letter.presentation;
 
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
+import static com.now.naaga.common.fixture.PositionFixture.GS25_방이도곡점_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.역삼역_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.*;
+import com.now.naaga.common.builder.GameBuilder;
+import com.now.naaga.common.builder.LetterBuilder;
+import com.now.naaga.common.builder.PlaceBuilder;
+import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.builder.ReadLetterLogBuilder;
+import com.now.naaga.common.builder.WriteLetterLogBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.letter.domain.Letter;
@@ -18,19 +29,14 @@ import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
-import static com.now.naaga.common.fixture.PositionFixture.*;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)

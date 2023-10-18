@@ -11,10 +11,9 @@ import com.now.naaga.letter.application.letterlog.dto.WriteLetterLogCreateComman
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
 import com.now.naaga.letter.repository.letterlog.WriteLetterLogRepository;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Transactional
 @Service

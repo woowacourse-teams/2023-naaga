@@ -1,12 +1,12 @@
 package com.now.naaga.auth.infrastructure;
 
+import static com.now.naaga.common.exception.InternalExceptionType.FAIL_JSON_TO_OBJECT;
+import static com.now.naaga.common.exception.InternalExceptionType.FAIL_OBJECT_TO_JSON;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.common.exception.InternalException;
-
-import static com.now.naaga.common.exception.InternalExceptionType.FAIL_JSON_TO_OBJECT;
-import static com.now.naaga.common.exception.InternalExceptionType.FAIL_OBJECT_TO_JSON;
 
 public class MemberAuthMapper {
 

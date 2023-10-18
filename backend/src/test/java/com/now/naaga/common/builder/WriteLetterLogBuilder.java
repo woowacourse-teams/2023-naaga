@@ -4,10 +4,9 @@ import com.now.naaga.game.domain.Game;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
 import com.now.naaga.letter.repository.letterlog.WriteLetterLogRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class WriteLetterLogBuilder {

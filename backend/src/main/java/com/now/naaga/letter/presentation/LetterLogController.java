@@ -1,5 +1,9 @@
 package com.now.naaga.letter.presentation;
 
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
+import static com.now.naaga.letter.presentation.LogType.READ;
+import static com.now.naaga.letter.presentation.LogType.WRITE;
+
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.letter.application.letterlog.ReadLetterLogService;
@@ -9,18 +13,13 @@ import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
 import com.now.naaga.letter.presentation.dto.LetterResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-
-import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
-import static com.now.naaga.letter.presentation.LogType.READ;
-import static com.now.naaga.letter.presentation.LogType.WRITE;
 
 @RequestMapping("/letterlogs")
 @RestController

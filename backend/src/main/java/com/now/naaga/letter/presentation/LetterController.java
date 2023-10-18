@@ -4,14 +4,23 @@ import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.letter.application.LetterService;
 import com.now.naaga.letter.application.dto.CreateLetterCommand;
 import com.now.naaga.letter.domain.Letter;
-import com.now.naaga.letter.presentation.dto.*;
+import com.now.naaga.letter.presentation.dto.FindNearByLetterCommand;
+import com.now.naaga.letter.presentation.dto.LetterReadCommand;
+import com.now.naaga.letter.presentation.dto.LetterRequest;
+import com.now.naaga.letter.presentation.dto.LetterResponse;
+import com.now.naaga.letter.presentation.dto.NearByLetterResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/letters")
 @RestController

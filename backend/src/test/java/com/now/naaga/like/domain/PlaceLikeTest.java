@@ -1,5 +1,9 @@
 package com.now.naaga.like.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.common.fixture.PlaceLikeFixture;
 import com.now.naaga.like.exception.PlaceLikeException;
@@ -11,10 +15,6 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
