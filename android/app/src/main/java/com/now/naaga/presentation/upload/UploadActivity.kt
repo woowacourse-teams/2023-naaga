@@ -29,7 +29,6 @@ import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
-import com.now.naaga.presentation.upload.UploadViewModel.Companion.FILE_EMPTY
 import com.now.naaga.util.extension.openSetting
 import com.now.naaga.util.extension.showSnackbarWithEvent
 import com.now.naaga.util.extension.showToast
@@ -249,7 +248,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun makeImageFile(uri: Uri): Result<File> {
         val bitmap = getScaledBitmap(uri).getOrElse { return Result.failure(it) }
-        val tempFile = File.createTempFile("image", ".jpeg", cacheDir) ?: FILE_EMPTY
+        val tempFile = File.createTempFile(System.currentTimeMillis().toString(), ".jpeg", cacheDir)
 
         FileOutputStream(tempFile).use {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)

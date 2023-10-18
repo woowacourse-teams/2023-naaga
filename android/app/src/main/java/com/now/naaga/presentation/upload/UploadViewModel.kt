@@ -21,7 +21,7 @@ import javax.inject.Inject
 class UploadViewModel @Inject constructor(
     private val placeRepository: PlaceRepository,
 ) : ViewModel() {
-    private var file = FILE_EMPTY
+    private var file: File? = null
 
     val name = MutableLiveData<String>()
 
@@ -55,7 +55,7 @@ class UploadViewModel @Inject constructor(
                         name = name.value.toString(),
                         description = "",
                         coordinate = coordinate,
-                        file = file,
+                        file = file!!,
                     )
                 }.onSuccess {
                     _successUpload.setValue(UploadStatus.SUCCESS)
