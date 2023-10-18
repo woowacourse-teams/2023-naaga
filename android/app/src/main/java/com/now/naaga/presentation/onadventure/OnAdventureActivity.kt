@@ -60,6 +60,15 @@ class OnAdventureActivity :
         setClickListeners()
     }
 
+    override fun onPause() {
+        super.onPause()
+        supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment.tag == GIVE_UP || fragment.tag == HINT || fragment.tag == LETTER) {
+                supportFragmentManager.beginTransaction().remove(fragment).commit()
+            }
+        }
+    }
+
     private var backPressedTime = 0L
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
