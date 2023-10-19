@@ -42,7 +42,7 @@ class UploadActivity :
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (!success) return@registerForActivityResult
         if (imageUri == null) {
-            showToast(getString(R.string.image_orientation_error))
+            showToast(getString(R.string.upload_image_orientation_error))
             return@registerForActivityResult
         }
         setImage(requireNotNull(imageUri) { "imageUri가 null입니다" })
@@ -225,7 +225,7 @@ class UploadActivity :
 
     private fun openCamera() {
         imageUri = createImageUri().getOrElse {
-            Snackbar.make(binding.root, "다시 시도해주세요!", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, getString(R.string.upload_retry), Snackbar.LENGTH_SHORT).show()
             return
         }
         cameraLauncher.launch(imageUri)
