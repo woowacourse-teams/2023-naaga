@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,18 +15,14 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.CancellationToken
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.android.material.snackbar.Snackbar
-import com.now.domain.model.Coordinate
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.UPLOAD_OPEN_CAMERA
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityUploadBinding
+import com.now.naaga.util.BitmapBuilder
 import com.now.naaga.util.extension.openSetting
 import com.now.naaga.util.extension.showSnackbarWithEvent
 import com.now.naaga.util.extension.showToast
@@ -38,19 +32,20 @@ import java.io.FileOutputStream
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
-class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
+class UploadActivity :
+    AppCompatActivity(),
+    AnalyticsDelegate by DefaultAnalyticsDelegate(),
+    LocationDelegate by DefaultLocationDelegate() {
     private lateinit var binding: ActivityUploadBinding
     private val viewModel: UploadViewModel by viewModels()
-
     private var imageUri: Uri? = null
-    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
-        if (it) {
-            if (imageUri == null) {
-                showToast(getString(R.string.image_orientation_error))
-                return@registerForActivityResult
-            }
-            setImage(imageUri!!)
+    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (!success) return@registerForActivityResult
+        if (imageUri == null) {
+            showToast(getString(R.string.image_orientation_error))
+            return@registerForActivityResult
         }
+        setImage(requireNotNull(imageUri) { "imageUri가 null입니다" })
     }
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -131,6 +126,27 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
     }
 
+    private fun setClickListeners() {
+        binding.ivUploadCameraIcon.setOnClickListener {
+            logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
+            openCameraWithPermission()
+        }
+        binding.ivUploadPhoto.setOnClickListener {
+            logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
+            openCameraWithPermission()
+        }
+        binding.ivUploadBack.setOnClickListener {
+            finish()
+        }
+        binding.btnUploadSubmit.setOnClickListener {
+            if (isFormValid().not()) {
+                showToast(getString(R.string.upload_error_insufficient_info_message))
+            } else {
+                viewModel.postPlace()
+            }
+        }
+    }
+
     private fun changeVisibility(view: View, status: Int) {
         view.visibility = status
     }
@@ -150,73 +166,49 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             actionTitle = getString(R.string.snackbar_action_title),
             length = Snackbar.LENGTH_INDEFINITE,
             action = {
-                val appDetailsIntent = Intent(
-                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:$packageName"),
-                ).addCategory(Intent.CATEGORY_DEFAULT)
+                val appDetailsIntent = getSettingIntent()
                 locationSettingLauncher.launch(appDetailsIntent)
             },
         )
     }
 
+    private fun getSettingIntent() = Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.parse("package:$packageName"),
+    ).addCategory(Intent.CATEGORY_DEFAULT)
+
+    private fun setImage(uri: Uri) {
+        binding.ivUploadCameraIcon.visibility = View.GONE
+        val bitmap = getBitmap(uri)
+        binding.ivUploadPhoto.setImageBitmap(bitmap)
+        val file = saveFile(bitmap)
+        viewModel.setFile(file)
+    }
+
+    private fun getBitmap(uri: Uri) = BitmapBuilder(uri, contentResolver)
+        .addScaling(RESIZE)
+        .setProperRotate()
+        .build()
+
+    private fun saveFile(bitmap: Bitmap): File {
+        val tempFile = File.createTempFile(System.currentTimeMillis().toString(), ".jpeg", cacheDir)
+        FileOutputStream(tempFile).use {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+        }
+        return tempFile
+    }
+
     private fun setCoordinate() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-            fusedLocationClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, createCancellationToken())
-                .addOnSuccessListener { location ->
-                    location.let { viewModel.setCoordinate(getCoordinate(location)) }
-                }
-                .addOnFailureListener { }
+            setCoordinateListener(this) { location ->
+                viewModel.setCoordinate(location.toCoordinate())
+            }
         } else {
             requestPermissionLauncher.launch(locationPermissions)
         }
     }
 
-    private fun createCancellationToken(): CancellationToken {
-        return object : CancellationToken() {
-            override fun onCanceledRequested(p0: OnTokenCanceledListener): CancellationToken {
-                return CancellationTokenSource().token
-            }
-
-            override fun isCancellationRequested(): Boolean {
-                return false
-            }
-        }
-    }
-
-    private fun getCoordinate(location: Location): Coordinate {
-        val latitude = roundToFourDecimalPlaces(location.latitude)
-        val longitude = roundToFourDecimalPlaces(location.longitude)
-
-        return Coordinate(latitude, longitude)
-    }
-
-    private fun roundToFourDecimalPlaces(number: Double): Double {
-        return (number * 10_000).toLong().toDouble() / 10_000
-    }
-
-    private fun setClickListeners() {
-        binding.ivUploadCameraIcon.setOnClickListener {
-            logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
-            requestStoragePermission()
-        }
-        binding.ivUploadPhoto.setOnClickListener {
-            logClickEvent(getViewEntryName(it), UPLOAD_OPEN_CAMERA)
-            requestStoragePermission()
-        }
-        binding.ivUploadBack.setOnClickListener {
-            finish()
-        }
-        binding.btnUploadSubmit.setOnClickListener {
-            if (isFormValid().not()) {
-                showToast(getString(R.string.upload_error_insufficient_info_message))
-            } else {
-                viewModel.postPlace()
-            }
-        }
-    }
-
-    private fun requestStoragePermission() {
+    private fun openCameraWithPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return openCamera()
         }
@@ -224,18 +216,11 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun openCamera() {
-        imageUri = createImageUri().getOrElse { return finish() }
-        cameraLauncher.launch(imageUri)
-    }
-
-    private fun setImage(uri: Uri) {
-        binding.ivUploadCameraIcon.visibility = View.GONE
-        binding.ivUploadPhoto.setImageURI(uri)
-        val file = makeImageFile(uri).getOrElse {
-            showToast(getString(R.string.image_error_message))
+        imageUri = createImageUri().getOrElse {
+            Snackbar.make(binding.root, "다시 시도해주세요!", Snackbar.LENGTH_SHORT).show()
             return
         }
-        viewModel.setFile(file)
+        cameraLauncher.launch(imageUri)
     }
 
     private fun createImageUri(): Result<Uri> {
@@ -244,40 +229,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             contentValues,
         ) ?: return Result.failure(IllegalStateException("이미지 uri를 가져오지 못했습니다."))
         return Result.success(imageUri)
-    }
-
-    private fun makeImageFile(uri: Uri): Result<File> {
-        val bitmap = getScaledBitmap(uri).getOrElse { return Result.failure(it) }
-        val tempFile = File.createTempFile(System.currentTimeMillis().toString(), ".jpeg", cacheDir)
-
-        FileOutputStream(tempFile).use {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
-        }
-        return Result.success(tempFile)
-    }
-
-    private fun getScaledBitmap(uri: Uri): Result<Bitmap> {
-        val options = BitmapFactory.Options()
-        BitmapFactory.decodeStream(contentResolver.openInputStream(uri), null, options)
-
-        var width = options.outWidth
-        var height = options.outHeight
-        var sampleSize = 1
-        while (true) {
-            if (width / 2 < RESIZE || height / 2 < RESIZE) break
-            width /= 2
-            height /= 2
-            sampleSize *= 2
-        }
-
-        options.inSampleSize = sampleSize
-        val bitmap =
-            BitmapFactory.decodeStream(
-                contentResolver.openInputStream(uri),
-                null,
-                options,
-            ) ?: return Result.failure(Throwable("비트맵 생성에 실패했습니다."))
-        return Result.success(bitmap)
     }
 
     private fun isFormValid(): Boolean {
@@ -300,8 +251,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle ${LocalDateTime.now()}")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
-
-        const val PRIORITY_HIGH_ACCURACY = 100
 
         fun getIntent(context: Context): Intent {
             return Intent(context, UploadActivity::class.java)
