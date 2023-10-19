@@ -4,4 +4,4 @@ WORKDIR /app
 
 COPY build/libs/*.jar /app/naaga-now.jar
 
-CMD ["java", "-jar", "naaga-now.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "naaga-now.jar"]
