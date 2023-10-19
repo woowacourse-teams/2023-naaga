@@ -43,7 +43,7 @@ class UploadViewModel @Inject constructor(
     }
 
     fun isFormValid(): Boolean {
-        return (file != FILE_EMPTY) && (_coordinate.value != null) && (name.value != null)
+        return (file != null) && (_coordinate.value != null) && (name.value != null)
     }
 
     fun postPlace() {
