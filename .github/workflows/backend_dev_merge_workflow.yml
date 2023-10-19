@@ -2,7 +2,7 @@ name: NAAGA BACKEND MERGE CI
 on:
   push:
     branches:
-      - feat/#439
+      - dev_backend
 
 jobs:
   github_actions_setting:
