@@ -52,7 +52,7 @@ public class TemporaryPlaceController {
 
     @DeleteMapping("/{temporaryPlaceId}")
     public ResponseEntity<Void> deleteTemporaryPlace(@PathVariable final Long temporaryPlaceId) {
-        temporaryPlaceService.deleteById(temporaryPlaceId);
+        temporaryPlaceService.deleteByIdWhenTemporaryPlaceDenied(temporaryPlaceId);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

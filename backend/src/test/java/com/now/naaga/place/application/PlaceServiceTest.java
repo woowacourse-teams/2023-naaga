@@ -49,9 +49,6 @@ class PlaceServiceTest {
     @Autowired
     private PlayerBuilder playerBuilder;
     
-    @MockBean
-    private AwsS3FileManager awsS3FileManager;
-    
     @Transactional
     @Test
     void 장소를_등록한_뒤_기존의_검수_장소_데이터는_삭제한다() {
@@ -88,8 +85,7 @@ class PlaceServiceTest {
                 () -> assertThat(actual).usingRecursiveComparison()
                                         .ignoringExpectedNullFields()
                                         .isEqualTo(expected),
-                () -> assertThat(found).isNull(),
-                () -> verify(awsS3FileManager, times(1)).deleteFile(anyString())
+                () -> assertThat(found).isNull()
         );
     }
     
@@ -117,8 +113,7 @@ class PlaceServiceTest {
         // then
         final Optional<PlaceStatistics> placeStatistics = placeStatisticsRepository.findByPlaceId(place.getId());
         assertAll(
-                () -> assertThat(placeStatistics).isNotEmpty(),
-                () -> verify(awsS3FileManager, times(1)).deleteFile(anyString())
+                () -> assertThat(placeStatistics).isNotEmpty()
         );
     }
 }

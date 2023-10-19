@@ -54,7 +54,13 @@ public class TemporaryPlaceService {
         }
     }
     
-    public void deleteById(final Long id) {
+    public void deleteByIdWhenPlaceCreated(final Long id) {
+        TemporaryPlace temporaryPlace = temporaryPlaceRepository.findById(id)
+                                                                .orElseThrow(() -> new TemporaryPlaceException(NOT_EXIST));
+        temporaryPlaceRepository.deleteById(id);
+    }
+    
+    public void deleteByIdWhenTemporaryPlaceDenied(final Long id) {
         TemporaryPlace temporaryPlace = temporaryPlaceRepository.findById(id)
                                                                 .orElseThrow(() -> new TemporaryPlaceException(NOT_EXIST));
         temporaryPlaceRepository.deleteById(id);
