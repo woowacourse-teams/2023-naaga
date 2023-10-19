@@ -213,7 +213,7 @@ class OnAdventureActivity :
     private fun showHintDialog() {
         NaagaAlertDialog.Builder().build(
             title = getString(R.string.hint_using_dialog_title),
-            description = getString(R.string.hint_using_dialog_description, viewModel.remainingHintCount.value),
+            description = getString(R.string.hint_using_dialog_description, viewModel.remainingHintCount),
             positiveText = getString(R.string.hint_using_dialog_continue),
             negativeText = getString(R.string.hint_using_dialog_give_up),
             positiveAction = { viewModel.openHint() },
