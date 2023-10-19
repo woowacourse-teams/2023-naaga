@@ -63,9 +63,9 @@ class BitmapBuilder(
 
         if (orientation == 0) return bitmap
 
-        val m: Matrix = Matrix()
-        m.setRotate(orientation.toFloat(), (bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat())
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, m, true)
+        val matrix = Matrix()
+        matrix.setRotate(orientation.toFloat(), (bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat())
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
     private fun getRealPathFromUri(): String {
@@ -82,7 +82,7 @@ class BitmapBuilder(
     }
 
     private fun getImageOrientation(filePath: String): Int {
-        val exif: ExifInterface = ExifInterface(filePath)
+        val exif = ExifInterface(filePath)
         val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1)
 
         return when (orientation) {
