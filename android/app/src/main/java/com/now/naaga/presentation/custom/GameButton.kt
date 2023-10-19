@@ -90,11 +90,13 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
     }
 
     private fun drawButton(canvas: Canvas) {
-        canvas.drawRoundRect(getBottomRect(), radius, radius, getPaint(bottomColor))
-        canvas.drawRoundRect(getSecondShadowRect(), radius, radius, getPaint(secondShadowColor))
-        canvas.drawRoundRect(getMiddleRect(), radius, radius, getPaint(middleColor))
-        canvas.drawRoundRect(getFirstShadowRect(), radius, radius, getPaint(firstShadowColor))
-        canvas.drawRoundRect(getMainRect(), radius, radius, getPaint(mainColor))
+        with(canvas) {
+            drawRoundRect(getBottomRect(), radius, radius, getPaint(bottomColor))
+            drawRoundRect(getSecondShadowRect(), radius, radius, getPaint(secondShadowColor))
+            drawRoundRect(getMiddleRect(), radius, radius, getPaint(middleColor))
+            drawRoundRect(getFirstShadowRect(), radius, radius, getPaint(firstShadowColor))
+            drawRoundRect(getMainRect(), radius, radius, getPaint(mainColor))
+        }
     }
 
     private fun getMainRect(): RectF {
