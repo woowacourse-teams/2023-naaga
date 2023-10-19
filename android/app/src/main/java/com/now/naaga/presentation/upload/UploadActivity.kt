@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +16,12 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.android.material.snackbar.Snackbar
+import com.now.domain.model.Coordinate
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
@@ -32,10 +38,7 @@ import java.io.FileOutputStream
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
-class UploadActivity :
-    AppCompatActivity(),
-    AnalyticsDelegate by DefaultAnalyticsDelegate(),
-    LocationDelegate by DefaultLocationDelegate() {
+class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityUploadBinding
     private val viewModel: UploadViewModel by viewModels()
     private var imageUri: Uri? = null
@@ -208,12 +211,38 @@ class UploadActivity :
 
     private fun setCoordinate() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            setCoordinateListener(this) { location ->
-                viewModel.setCoordinate(location.toCoordinate())
-            }
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            fusedLocationClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, createCancellationToken())
+                .addOnSuccessListener { location ->
+                    location.let { viewModel.setCoordinate(getCoordinate(location)) }
+                }
+                .addOnFailureListener { }
         } else {
             requestPermissionLauncher.launch(locationPermissions)
         }
+    }
+
+    private fun createCancellationToken(): CancellationToken {
+        return object : CancellationToken() {
+            override fun onCanceledRequested(p0: OnTokenCanceledListener): CancellationToken {
+                return CancellationTokenSource().token
+            }
+
+            override fun isCancellationRequested(): Boolean {
+                return false
+            }
+        }
+    }
+
+    private fun getCoordinate(location: Location): Coordinate {
+        val latitude = roundToFourDecimalPlaces(location.latitude)
+        val longitude = roundToFourDecimalPlaces(location.longitude)
+
+        return Coordinate(latitude, longitude)
+    }
+
+    private fun roundToFourDecimalPlaces(number: Double): Double {
+        return (number * 10_000).toLong().toDouble() / 10_000
     }
 
     private fun openCameraWithPermission() {
@@ -244,6 +273,7 @@ class UploadActivity :
     }
 
     companion object {
+        private const val PRIORITY_HIGH_ACCURACY = 100
         private const val RESIZE = 500
         private val storagePermissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
