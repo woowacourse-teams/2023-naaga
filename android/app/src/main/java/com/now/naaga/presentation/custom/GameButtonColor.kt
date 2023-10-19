@@ -1,25 +1,28 @@
 package com.now.naaga.presentation.custom
 
+import androidx.annotation.ColorRes
+import com.now.naaga.R
+
 enum class GameButtonColor(
-    val mainColor: String,
-    val firstShadowColor: String,
-    val middleColor: String,
-    val secondShadowColor: String,
-    val bottomColor: String,
+    @ColorRes val mainColor: Int,
+    @ColorRes val firstShadowColor: Int,
+    @ColorRes val middleColor: Int,
+    @ColorRes val secondShadowColor: Int,
+    @ColorRes val bottomColor: Int,
 ) {
     YELLOW(
-        "#FFD50C",
-        "#E3A40A",
-        "#FFB70A",
-        "#FFEE9F",
-        "#B68A21",
+        R.color.custom_button_yellow_main,
+        R.color.custom_button_yellow_first_shadow,
+        R.color.custom_button_yellow_middle,
+        R.color.custom_button_yellow_second_shadow,
+        R.color.custom_button_yellow_bottom,
     ),
     BLUE(
-        "#1BCCFF",
-        "#009DDE",
-        "#0CB4F9",
-        "#AFEDFF",
-        "#0D3A85",
+        R.color.custom_button_blue_main,
+        R.color.custom_button_blue_first_shadow,
+        R.color.custom_button_blue_middle,
+        R.color.custom_button_blue_second_shadow,
+        R.color.custom_button_blue_bottom,
     ), ;
 
     companion object {

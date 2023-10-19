@@ -7,7 +7,9 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
+import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import com.now.naaga.R
 
 class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButton(context, attrs) {
@@ -15,10 +17,19 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
     private var clicked: Boolean = false
     private var clickAction: OnClickListener? = null
 
+    @ColorInt
     private val mainColor: Int
-    private val firstShadowColor: Int
-    private val middleColor: Int
-    private val secondShadowColor: Int
+
+    @ColorInt
+    val firstShadowColor: Int
+
+    @ColorInt
+    val middleColor: Int
+
+    @ColorInt
+    val secondShadowColor: Int
+
+    @ColorInt
     private val bottomColor: Int
 
     init {
@@ -29,12 +40,12 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
             0,
         ).apply {
             radius = getDimensionPixelSize(R.styleable.GameButton_radius, 0).toFloat()
-            val gameButtonColor = GameButtonColor.getColor((getInteger(R.styleable.GameButton_buttonColor, 0)))
-            mainColor = Color.parseColor(gameButtonColor.mainColor)
-            firstShadowColor = Color.parseColor(gameButtonColor.firstShadowColor)
-            middleColor = Color.parseColor(gameButtonColor.middleColor)
-            secondShadowColor = Color.parseColor(gameButtonColor.secondShadowColor)
-            bottomColor = Color.parseColor(gameButtonColor.bottomColor)
+            val gameButtonColor = GameButtonColor.getColor(getInteger(R.styleable.GameButton_buttonColor, 0))
+            mainColor = ContextCompat.getColor(context, gameButtonColor.mainColor)
+            firstShadowColor = ContextCompat.getColor(context, gameButtonColor.firstShadowColor)
+            middleColor = ContextCompat.getColor(context, gameButtonColor.middleColor)
+            secondShadowColor = ContextCompat.getColor(context, gameButtonColor.secondShadowColor)
+            bottomColor = ContextCompat.getColor(context, gameButtonColor.bottomColor)
             recycle()
         }
     }
