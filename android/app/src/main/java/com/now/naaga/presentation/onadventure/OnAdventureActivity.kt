@@ -60,6 +60,15 @@ class OnAdventureActivity :
         setClickListeners()
     }
 
+    override fun onPause() {
+        super.onPause()
+        supportFragmentManager.fragments.forEach { fragment ->
+            if (TAGS.contains(fragment.tag)) {
+                supportFragmentManager.beginTransaction().remove(fragment).commit()
+            }
+        }
+    }
+
     private var backPressedTime = 0L
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -213,7 +222,7 @@ class OnAdventureActivity :
     private fun showHintDialog() {
         NaagaAlertDialog.Builder().build(
             title = getString(R.string.hint_using_dialog_title),
-            description = getString(R.string.hint_using_dialog_description, viewModel.remainingHintCount.value),
+            description = getString(R.string.hint_using_dialog_description, viewModel.remainingHintCount),
             positiveText = getString(R.string.hint_using_dialog_continue),
             negativeText = getString(R.string.hint_using_dialog_give_up),
             positiveAction = { viewModel.openHint() },
@@ -245,6 +254,7 @@ class OnAdventureActivity :
         private const val ADVENTURE = "ADVENTURE"
         private const val HINT = "HINT"
         private const val LETTER = "LETTER"
+        private val TAGS = listOf(GIVE_UP, HINT, LETTER)
 
         fun getIntent(context: Context): Intent {
             return Intent(context, OnAdventureActivity::class.java)
