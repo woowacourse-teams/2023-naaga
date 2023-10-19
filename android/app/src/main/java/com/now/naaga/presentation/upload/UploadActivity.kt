@@ -51,26 +51,8 @@ class UploadActivity :
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
     ) { permission: Map<String, Boolean> ->
-
-        val keys = permission.entries.map { it.key }
-        val isStorageRequest = storagePermissions.any { keys.contains(it) }
-        if (isStorageRequest) {
-            if (permission.entries.map { it.value }.contains(false)) {
-                showStoragePermissionSnackBar()
-            } else {
-                openCamera()
-            }
-            return@registerForActivityResult
-        }
-
-        val isLocationRequest = locationPermissions.any { keys.contains(it) }
-        if (isLocationRequest) {
-            if (permission.entries.map { it.value }.contains(false)) {
-                showLocationPermissionSnackBar()
-                return@registerForActivityResult
-            }
-            setCoordinate()
-        }
+        if (checkStorageRequest(permission)) return@registerForActivityResult
+        checkLocationRequest(permission)
     }
 
     private val locationSettingLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -149,6 +131,32 @@ class UploadActivity :
 
     private fun changeVisibility(view: View, status: Int) {
         view.visibility = status
+    }
+
+    private fun checkStorageRequest(permission: Map<String, Boolean>): Boolean {
+        val keys = permission.entries.map { it.key }
+        val isStorageRequest = storagePermissions.any { keys.contains(it) }
+        if (isStorageRequest) {
+            if (permission.entries.map { it.value }.contains(false)) {
+                showStoragePermissionSnackBar()
+            } else {
+                openCamera()
+            }
+            return true
+        }
+        return false
+    }
+
+    private fun checkLocationRequest(permission: Map<String, Boolean>) {
+        val keys = permission.entries.map { it.key }
+        val isLocationRequest = locationPermissions.any { keys.contains(it) }
+        if (isLocationRequest) {
+            if (permission.entries.map { it.value }.contains(false)) {
+                showLocationPermissionSnackBar()
+                return
+            }
+            setCoordinate()
+        }
     }
 
     private fun showStoragePermissionSnackBar() {
