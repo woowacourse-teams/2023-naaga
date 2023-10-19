@@ -14,7 +14,7 @@ import com.now.naaga.R
 
 class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButton(context, attrs) {
     private val radius: Float
-    private var clicked: Boolean = false
+    private var isClicked: Boolean = false
     private var clickAction: OnClickListener? = null
 
     @ColorInt
@@ -61,19 +61,19 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
     override fun onDraw(canvas: Canvas) {
         setBackgroundColor(Color.TRANSPARENT)
         drawButton(canvas)
-        if (clicked) drawRipple(canvas)
+        if (isClicked) drawRipple(canvas)
         super.onDraw(canvas)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                clicked = true
+                isClicked = true
                 invalidate()
             }
 
             MotionEvent.ACTION_UP -> {
-                clicked = false
+                isClicked = false
                 invalidate()
                 clickAction?.onClick(this)
             }
