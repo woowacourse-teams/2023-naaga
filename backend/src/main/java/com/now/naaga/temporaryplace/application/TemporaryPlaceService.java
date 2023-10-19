@@ -8,6 +8,7 @@ import com.now.naaga.temporaryplace.application.dto.CreateTemporaryPlaceCommand;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
 import com.now.naaga.temporaryplace.exception.TemporaryPlaceException;
 import com.now.naaga.temporaryplace.repository.TemporaryPlaceRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +27,23 @@ public class TemporaryPlaceService {
     
     private final AwsS3FileManager awsS3FileManager;
     
+    private final String imageUrlPrefix;
+    
     public TemporaryPlaceService(final TemporaryPlaceRepository temporaryPlaceRepository,
                                  final PlayerService playerService,
-                                 final AwsS3FileManager awsS3FileManager) {
+                                 final AwsS3FileManager awsS3FileManager,
+                                 @Value("${image.path.url.prefix}") final String imageUrlPrefix) {
         this.temporaryPlaceRepository = temporaryPlaceRepository;
         this.playerService = playerService;
         this.awsS3FileManager = awsS3FileManager;
+        this.imageUrlPrefix = imageUrlPrefix;
     }
     
     public TemporaryPlace createTemporaryPlace(final CreateTemporaryPlaceCommand createTemporaryPlaceCommand) {
         final Position position = createTemporaryPlaceCommand.position();
-        String imageUrl = awsS3FileManager.uploadFile(createTemporaryPlaceCommand.imageFile());
-        
+        final String s3Path = awsS3FileManager.uploadFile(createTemporaryPlaceCommand.imageFile());
+        final String fileName = s3Path.substring(s3Path.lastIndexOf("/") + 1);
+        final String imageUrl = imageUrlPrefix + fileName;
         try {
             final Long playerId = createTemporaryPlaceCommand.playerId();
             final Player registeredPlayer = playerService.findPlayerById(playerId);
@@ -49,7 +55,7 @@ public class TemporaryPlaceService {
                     registeredPlayer);
             return temporaryPlaceRepository.save(temporaryPlace);
         } catch (final RuntimeException exception) {
-            awsS3FileManager.deleteFile(imageUrl);
+            awsS3FileManager.deleteFile(s3Path);
             throw exception;
         }
     }

@@ -1,6 +1,5 @@
 package com.now.naaga.temporaryplace.presentation;
 
-import static com.now.naaga.common.fixture.TemporaryPlaceFixture.TEMPORARY_PLACE;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -8,27 +7,19 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlaceBuilder;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.builder.TemporaryPlaceBuilder;
-import com.now.naaga.common.infrastructure.FileManager;
-import com.now.naaga.player.domain.Player;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
 import com.now.naaga.temporaryplace.presentation.dto.TemporaryPlaceResponse;
 import io.restassured.RestAssured;
-import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
-import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -36,10 +27,8 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
