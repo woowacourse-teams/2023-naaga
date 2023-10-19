@@ -21,7 +21,12 @@ public enum CommonExceptionType implements BaseExceptionType {
             HttpStatus.BAD_REQUEST,
             "파일 저장하다 문제가 발생했습니다."
     ),
-    ;
+
+    MULTIPART_FILE_NOT_EXIST(
+            224,
+            HttpStatus.BAD_REQUEST,
+            "전송한 파일이 비어있습니다."
+    );
 
     private final int errorCode;
     private final HttpStatus httpStatus;

@@ -18,6 +18,6 @@ public class DeleteTemporaryPlaceWithPlaceCreateEventHandler {
     @EventListener
     public void handle(final PlaceCreateEvent placeCreateEvent) {
         final Long temporaryPlaceId = placeCreateEvent.temporaryPlaceId();
-        temporaryPlaceService.deleteById(temporaryPlaceId);
+        temporaryPlaceService.deleteByIdWhenPlaceCreated(temporaryPlaceId);
     }
 }
