@@ -123,12 +123,7 @@ class OnAdventureViewModel @Inject constructor(
     }
 
     private fun isAllHintsUsed(): Boolean {
-        return getRemainingHintCount() <= 0
-    }
-
-    private fun getRemainingHintCount(): Int {
-        val usedHintCount = adventure.value?.hints?.size ?: 0
-        return (RemainingTryCount(MAX_HINT_COUNT) - usedHintCount).toInt()
+        return remainingHintCount <= 0
     }
 
     fun endAdventure() {
