@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="space_default_medium">12dp</dimen>
-    <dimen name="space_default_large">24dp</dimen>
-
-    <dimen name="radius_small">12dp</dimen>
-    <dimen name="radius_medium">24dp</dimen>
-    <dimen name="radius_large">32dp</dimen>
-</resources>
