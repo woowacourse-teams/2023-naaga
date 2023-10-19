@@ -1,10 +1,10 @@
 package com.now.naaga.game.domain;
 
-import java.time.Duration;
-import java.util.List;
-
 import static com.now.naaga.gameresult.domain.ResultType.FAIL;
 import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
+
+import java.time.Duration;
+import java.util.List;
 
 public class Statistic {
 

@@ -1,7 +1,6 @@
 package com.now.naaga.common.fixture;
 
 import com.now.naaga.place.domain.Position;
-
 import java.math.BigDecimal;
 
 public class PositionFixture {
@@ -14,6 +13,9 @@ public class PositionFixture {
 
     public static final Position 잠실역_교보문고_좌표 = new Position(BigDecimal.valueOf(37.514258),
                                                             BigDecimal.valueOf(127.100883));
+
+    public static final Position 잠실역_교보문고_110미터_앞_좌표 = new Position(잠실역_교보문고_좌표.getLatitude().add(BigDecimal.valueOf(0.000991)),
+            잠실역_교보문고_좌표.getLongitude());
 
     public static final Position GS25_방이도곡점_좌표 = new Position(BigDecimal.valueOf(37.512184),
                                                               BigDecimal.valueOf(127.112789));

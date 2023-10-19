@@ -1,25 +1,25 @@
 package com.now.naaga.auth.application;
 
+import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN;
+
 import com.now.naaga.auth.application.dto.AuthCommand;
-import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.application.dto.RefreshTokenCommand;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.exception.AuthException;
 import com.now.naaga.auth.infrastructure.AuthClient;
+import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.auth.persistence.AuthRepository;
+import com.now.naaga.member.application.MemberService;
 import com.now.naaga.member.application.dto.CreateMemberCommand;
 import com.now.naaga.member.application.dto.DeleteMemberCommand;
-import com.now.naaga.member.application.MemberService;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.application.dto.CreatePlayerCommand;
 import com.now.naaga.player.application.dto.DeletePlayerCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_TOKEN;
 
 @Transactional
 @Service

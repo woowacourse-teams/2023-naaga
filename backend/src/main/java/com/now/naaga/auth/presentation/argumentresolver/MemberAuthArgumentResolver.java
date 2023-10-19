@@ -1,9 +1,8 @@
 package com.now.naaga.auth.presentation.argumentresolver;
 
-import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.auth.infrastructure.AuthenticationExtractor;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
-import com.now.naaga.auth.presentation.dto.MemberRequest;
+import com.now.naaga.auth.presentation.annotation.Auth;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;

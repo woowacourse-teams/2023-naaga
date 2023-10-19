@@ -3,8 +3,6 @@ package com.now.naaga.like.exception;
 import com.now.naaga.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
 
-import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
-
 public enum PlaceLikeExceptionType implements BaseExceptionType {
 
     INACCESSIBLE_AUTHENTICATION(
@@ -17,6 +15,12 @@ public enum PlaceLikeExceptionType implements BaseExceptionType {
             704,
             HttpStatus.NOT_FOUND,
             "좋아요/싫어요가 존재하지 않습니다."
+    ),
+
+    ALREADY_APPLIED_TYPE(
+            705,
+            HttpStatus.BAD_REQUEST,
+            "이미 등록된 좋아요/싫어요 입니다."
     ),
     ;
 

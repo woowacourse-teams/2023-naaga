@@ -1,6 +1,6 @@
 package com.now.naaga.common.fixture;
 
-import static com.now.naaga.common.fixture.MemberFixture.*;
+import static com.now.naaga.common.fixture.MemberFixture.MEMBER;
 
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;
