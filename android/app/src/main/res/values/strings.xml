@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Naaga</string>
+    <string name="app_name">나아가</string>
 
     <!-- BeginAdventureActivity -->
     <string name="beginAdventure_precise_access">위치 권한 요청이 허용되었습니다</string>
