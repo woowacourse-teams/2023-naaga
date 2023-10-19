@@ -1,0 +1,44 @@
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.2.112:3306/naaga?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: naaga_prod
+    password: naaga1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+      show-sql: true
+    hibernate:
+      ddl-auto: none
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+    defer-datasource-initialization: false
+
+image:
+  path:
+    directory:
+      prefix: /home/ubuntu/naaga/data/images
+    url:
+      prefix: http://naaga.world/images
+
+jwt:
+  secret-key: 7LGE7LGE66Oo7Lm07J2066CI7L2U7L2U64ul672A65iQ67mF7Iqk7YGs66Gx7LGE7LGE66Oo7Lm07J2066CI7L2U7L2U64ul672A65iQ67mF7Iqk7YGs66Gx
+
+oauth:
+  kakao:
+    admin-key: 33d4f9e2b16b6ccc26703983421e9c7a
+    url:
+      auth: https://kauth.kakao.com
+      api: https://kapi.kakao.com
+  
+manager:
+  id: 2023-naaga
+  password: naaga
+  origin-url: https://naaga.shop
+      

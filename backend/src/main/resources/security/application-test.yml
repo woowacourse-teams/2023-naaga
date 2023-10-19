@@ -1,0 +1,42 @@
+spring:
+  # for test
+  h2:
+    console:
+      enabled: true
+  datasource:
+    # for test
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # for test
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        format_sql: true # for test
+    show-sql: true # for test
+
+image:
+  path:
+    directory:
+      prefix: /Users/hwan/naaga/2023-naaga/backend/src/main/resources/static
+    url:
+      prefix: http://localhost:8080
+
+jwt:
+  secret-key: 7LGE7LGE66Oo7Lm07J2066CI7L2U7L2U64ul672A65iQ67mF7Iqk7YGs66Gx7LGE7LGE66Oo7Lm07J2066CI7L2U7L2U64ul672A65iQ67mF7Iqk7YGs66Gx
+
+oauth:
+  kakao:
+    admin-key: 33d4f9e2b16b6ccc26703983421e9c7a
+    url:
+      auth: https://kauth.kakao.com
+      api: https://kapi.kakao.com
+
+manager:
+  id: 2023-naaga
+  password: naaga
+  origin-url: https://naaga.shop
+  
