@@ -99,14 +99,24 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
         }
     }
 
-    // 154 x 70 (2,2)
-    private fun getMainRect(): RectF {
-        val width = (this.width * 0.956).toFloat()
-        val height = (this.height * 0.833).toFloat()
-        val start = (this.width * 0.012).toFloat()
-        val end = start + width
-        val top = (this.height * 0.02).toFloat()
-        val bottom = top + height
+    // 161 x 84 (0,0)
+    private fun getBottomRect(): RectF {
+        return RectF(0f, 0f, width.toFloat(), height.toFloat())
+    }
+
+    // 160 x 79 (0,0)
+    private fun getSecondShadowRect(): RectF {
+        return RectF(0f, 0f, (width * 0.99).toFloat(), (height * 0.94).toFloat())
+    }
+
+    // 158 x 77 (1,1)
+    private fun getMiddleRect(): RectF {
+        val middleWidth = (width * 0.98).toFloat()
+        val middleHeight = (height * 0.916).toFloat()
+        val start = (width * 0.006).toFloat()
+        val end = start + middleWidth
+        val top = (height * 0.01).toFloat()
+        val bottom = top + middleHeight
         return RectF(start, top, end, bottom)
     }
 
@@ -121,24 +131,14 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
         return RectF(start, top, end, bottom)
     }
 
-    // 158 x 77 (1,1)
-    private fun getMiddleRect(): RectF {
-        val middleWidth = (width * 0.98).toFloat()
-        val middleHeight = (height * 0.916).toFloat()
-        val start = (width * 0.006).toFloat()
-        val end = start + middleWidth
-        val top = (height * 0.01).toFloat()
-        val bottom = top + middleHeight
+    // 154 x 70 (2,2)
+    private fun getMainRect(): RectF {
+        val width = (this.width * 0.956).toFloat()
+        val height = (this.height * 0.833).toFloat()
+        val start = (this.width * 0.012).toFloat()
+        val end = start + width
+        val top = (this.height * 0.02).toFloat()
+        val bottom = top + height
         return RectF(start, top, end, bottom)
-    }
-
-    // 160 x 79 (0,0)
-    private fun getSecondShadowRect(): RectF {
-        return RectF(0f, 0f, (width * 0.99).toFloat(), (height * 0.94).toFloat())
-    }
-
-    // 161 x 84 (0,0)
-    private fun getBottomRect(): RectF {
-        return RectF(0f, 0f, width.toFloat(), height.toFloat())
     }
 }
