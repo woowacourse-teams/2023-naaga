@@ -3,7 +3,6 @@ package com.now.naaga.presentation.setting
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.R
@@ -11,6 +10,7 @@ import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivitySettingBinding
 import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.login.LoginActivity
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,19 +30,20 @@ class SettingActivity : AppCompatActivity() {
     private fun subscribe() {
         viewModel.isLoggedIn.observe(this) { isLoggedIn ->
             if (!isLoggedIn) {
-                shortToast(getString(R.string.setting_logout_message))
+                showToast(getString(R.string.setting_logout_message))
                 startActivity(LoginActivity.getIntentWithTop(this))
             }
         }
-        viewModel.throwable.observe(this) { error: DataThrowable ->
-            when (error.code) {
-                WRONG_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_wrong_error_message))
-                EXPIRATION_AUTH_ERROR_CODE -> shortToast(getString(R.string.setting_expiration_error_message))
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
+                WRONG_AUTH_ERROR_CODE -> showToast(getString(R.string.setting_wrong_error_message))
+                EXPIRATION_AUTH_ERROR_CODE -> showToast(getString(R.string.setting_expiration_error_message))
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
             }
         }
         viewModel.withdrawalStatus.observe(this) { status ->
             if (status == true) {
-                shortToast(getString(R.string.setting_withdrawal_success_message))
+                showToast(getString(R.string.setting_withdrawal_success_message))
                 navigateLogin()
             }
         }
@@ -66,10 +67,6 @@ class SettingActivity : AppCompatActivity() {
     private fun navigateLogin() {
         startActivity(LoginActivity.getIntentWithTop(this))
         finish()
-    }
-
-    private fun shortToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun showWithdrawalDialog() {

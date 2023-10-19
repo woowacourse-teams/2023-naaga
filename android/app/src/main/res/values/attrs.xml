@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="PreferenceView">
+        <attr name="isLikeVisible" format="boolean" />
+        <attr name="isDislikeVisible" format="boolean" />
+        <attr name="isLikeCountVisible" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="GameButton">
         <attr name="radius" format="dimension" />
         <attr name="buttonColor" format="enum">

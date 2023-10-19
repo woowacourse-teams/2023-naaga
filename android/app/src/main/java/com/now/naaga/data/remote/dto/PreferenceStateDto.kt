@@ -4,9 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ClosedLetterDto(
-    @SerialName("id")
-    val id: Long,
-    @SerialName("coordinate")
-    val coordinateDto: CoordinateDto,
+data class PreferenceStateDto(
+    @SerialName("type")
+    val type: String,
 )

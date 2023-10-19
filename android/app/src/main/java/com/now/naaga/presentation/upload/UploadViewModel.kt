@@ -14,6 +14,7 @@ import com.now.naaga.util.singleliveevent.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,24 +61,23 @@ class UploadViewModel @Inject constructor(
                     _successUpload.setValue(UploadStatus.SUCCESS)
                 }.onFailure {
                     _successUpload.setValue(UploadStatus.FAIL)
-                    setError(it as DataThrowable)
+                    setThrowable(it)
                 }
             }
         }
     }
 
-    private fun setError(throwable: DataThrowable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
             is UniversalThrowable -> _throwable.value = throwable
             is PlaceThrowable -> _throwable.value = throwable
-            else -> {}
         }
     }
 
     companion object {
         val FILE_EMPTY = File("")
 
-        const val ALREADY_EXISTS_NEARBY = 505
         const val ERROR_STORE_PHOTO = 215
         const val ERROR_POST_BODY = 205
     }

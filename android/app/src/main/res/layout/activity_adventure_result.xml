@@ -11,229 +11,247 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".presentation.adventureresult.AdventureResultActivity">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/iv_adventureResult_photo"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="24dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_adventureResult_destinationDescription"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/tv_adventureResult_destinationDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
-            android:text="@string/adventureResult_destination_description"
-            android:textSize="32sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_adventureResult_destination"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_adventureResult_photo"
-            tools:text="루터회관" />
-
-        <ImageView
-            android:id="@+id/iv_adventureResult_stamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/iv_adventureResult_photo"
-            app:layout_constraintBottom_toBottomOf="@id/iv_adventureResult_photo"
-            tools:src="@drawable/ic_success_label" />
-
-        <LinearLayout
-            android:id="@+id/ll_adventureResult_window"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/rect_radius_small"
-            android:backgroundTint="@color/white"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_adventureResult_destination">
+            android:layout_height="match_parent"
+            tools:context=".presentation.adventureresult.AdventureResultActivity">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_adventureResult_timeSection"
+            <TextView
+                android:id="@+id/tv_adventureResult_destinationDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="@string/adventureResult_destination_description"
+                android:textSize="32sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/iv_adventureResult_photo"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="24dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_adventureResult_destinationDescription"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/tv_adventureResult_destination"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_adventureResult_photo"
+                tools:text="루터회관" />
+
+            <ImageView
+                android:id="@+id/iv_adventureResult_stamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/iv_adventureResult_photo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_adventureResult_photo"
+                tools:src="@drawable/ic_success_label" />
+
+            <com.now.naaga.presentation.adventureresult.PreferenceView
+                android:id="@+id/custom_adventureResult_preference"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                app:layout_constraintBottom_toTopOf="@id/ll_adventureResult_window"
+                app:layout_constraintEnd_toEndOf="@id/tv_adventureResult_destination"
+                app:layout_constraintStart_toStartOf="@id/tv_adventureResult_destination"
+                app:layout_constraintTop_toBottomOf="@id/tv_adventureResult_destination" />
+
+            <LinearLayout
+                android:id="@+id/ll_adventureResult_window"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/space_default_medium">
+                android:layout_marginHorizontal="32dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rect_radius_small"
+                android:backgroundTint="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp"
+                app:layout_constraintBottom_toTopOf="@id/btn_adventureResult_return"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/custom_adventureResult_preference">
 
-                <TextView
-                    android:id="@+id/tv_adventureResult_timeTitle"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_adventureResult_timeSection"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/adventureResult_time_description"
-                    android:textColor="@color/main_gray"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:paddingBottom="@dimen/space_default_medium">
 
-                <TextView
-                    android:id="@+id/tv_adventureResult_playTime"
-                    android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/tv_adventureResult_timeTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/adventureResult_time_description"
+                        android:textColor="@color/main_gray"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_adventureResult_playTime"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="100dp"
+                        android:background="@drawable/bg_blue_gradient"
+                        android:gravity="end"
+                        android:paddingVertical="4dp"
+                        android:paddingEnd="@dimen/space_default_medium"
+                        android:text="@{@string/adventureResult_play_time_value(viewModel.adventureResult.playTime)}"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/tv_adventureResult_timeTitle"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="30분" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="?android:attr/listDivider" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_adventureResult_distanceSection"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="100dp"
-                    android:background="@drawable/bg_blue_gradient"
-                    android:gravity="end"
-                    android:paddingVertical="4dp"
-                    android:paddingEnd="@dimen/space_default_medium"
-                    android:text="@{@string/adventureResult_play_time_value(viewModel.adventureResult.playTime)}"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_adventureResult_timeTitle"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="30분" />
+                    android:paddingVertical="@dimen/space_default_medium">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/adventureResult_distance_description"
+                        android:textColor="@color/main_gray"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/adventureResult_distance_value(viewModel.adventureResult.distance)}"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="+200m" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_adventureResult_distanceSection"
-                android:layout_width="match_parent"
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="?android:attr/listDivider"
+                    android:backgroundTint="#000000" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_adventureResult_hintSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/space_default_medium">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/adventureResult_hint_description"
+                        android:textColor="@color/main_gray"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/adventureResult_hint_value(viewModel.adventureResult.hintUses)}"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="2개" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="?android:attr/listDivider" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_adventureResult_trySection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/space_default_medium">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/adventureResult_try_description"
+                        android:textColor="@color/main_gray"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/adventureResult_try_count_value(viewModel.adventureResult.tryCount)}"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="4회" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <com.now.naaga.presentation.custom.GameButton
+                android:id="@+id/btn_adventureResult_return"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/space_default_medium">
+                android:layout_marginHorizontal="32dp"
+                android:layout_marginTop="@dimen/space_default_large"
+                android:layout_marginBottom="@dimen/space_default_large"
+                android:paddingVertical="@dimen/space_default_medium"
+                android:text="@string/adventureResult_return_main"
+                android:textSize="20sp"
+                app:radius="8dp"
+                app:buttonColor="yellow"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_adventureResult_window" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/adventureResult_distance_description"
-                    android:textColor="@color/main_gray"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{@string/adventureResult_distance_value(viewModel.adventureResult.distance)}"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="+200m" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider"
-                android:backgroundTint="#000000" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_adventureResult_hintSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/space_default_medium">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/adventureResult_hint_description"
-                    android:textColor="@color/main_gray"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{@string/adventureResult_hint_value(viewModel.adventureResult.hintUses)}"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="2개" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <View
-                android:id="@+id/divider3"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_adventureResult_trySection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/space_default_medium">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/adventureResult_try_description"
-                    android:textColor="@color/main_gray"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{@string/adventureResult_try_count_value(viewModel.adventureResult.tryCount)}"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="4회" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
-
-        <com.now.naaga.presentation.custom.GameButton
-            android:id="@+id/btn_adventureResult_return"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="24dp"
-            android:paddingVertical="@dimen/space_default_medium"
-            android:text="@string/adventureResult_return_main"
-            android:textSize="20sp"
-            app:radius="8dp"
-            app:buttonColor="yellow"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
