@@ -8,53 +8,53 @@ on:
       - backend/**
       
 jobs:
-  deploy:
-    runs-on: naaga
+  github_actions_setting:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: change permission
-        run: |
-          sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/naaga/2023-naaga/2023-naaga
-      
-      - name: checkout
+      - name: 📂 프로젝트 파일 가져오는 중... 📂
         uses: actions/checkout@v3
         with:
           submodules: true
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
-      - name: project remove
-        run: |
-          sudo rm -rf /home/ubuntu/prod/2023-naaga
-      
-      - name: project copy
-        run: |
-          sudo cp -r /home/ubuntu/actions-runner/naaga/2023-naaga/2023-naaga /home/ubuntu/prod
 
-      - name: build
-        run: |
-          cd /home/ubuntu/prod/2023-naaga/backend
-          sudo chmod +x ./gradlew
-          sudo ./gradlew clean bootJar
-     
-      - name: transfer & run
-        run: |
-          cd /home/ubuntu/prod
-          chmod +x ./deploy_prod.sh
-          sudo ./deploy_prod.sh
+      - name: ☕️ 깃허브 액션에 JDK 17 적용시키는 중... ☕️
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
 
-  sync-dev_backend:
-    needs: deploy
+      - name: 🐘 Gradle 세팅 중... 🐘
+        uses: gradle/gradle-build-action@v2.6.0
 
-    runs-on: ubuntu-latest
+      - name: ⚙️ Gradle 로 JAR 파일 테스트 및 빌드 중... ⚙️
+        run: |
+          cd backend
+          ./gradlew clean bootJar -Dspring.profiles.active=test
+
+      - name: 🐳 도커 세팅 중... 🐳
+        uses: docker/setup-buildx-action@v2.9.1
+
+      - name: 🐳 도커 허브에 로그인 중... 🐳
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESSTOKEN }}
+
+      - name: 🐳 도커 이미지 빌드 중... 🐳
+        run: |
+          cd backend
+          docker build --platform linux/arm64/v8 -t ${{ secrets.DOCKERHUB_REPOSITORY }}/${{ secrets.DOCKERHUB_APPNAME }} -f Dockerfile-prod .
+
+      - name: 🐳 도커 허브에 Push 중... 🐳
+        run: docker push ${{ secrets.DOCKERHUB_REPOSITORY }}/${{ secrets.DOCKERHUB_APPNAME }}
+
+  naaga_prod_ec2_deploy:
+    needs: github_actions_setting
+    runs-on: naaga
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: main
-          
-      - name: merge release -> dev_backend
-        uses: devmasx/merge-branch@master
-        with:
-          type: now
-          target_branch: dev_backend
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🙏 쉘 스크립트 실행 중 ... 🙏
+        run: |
+          cd /home/ubuntu/prod
+          sudo ./deploy_prod.sh
