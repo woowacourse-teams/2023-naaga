@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Naaga" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/main_dark_blue</item>
+        <item name="colorPrimaryVariant">@color/main_dark_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/main_font</item>
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/main_dark_blue</item>
+    </style>
+</resources>
