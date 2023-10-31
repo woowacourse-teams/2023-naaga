@@ -1,0 +1,54 @@
+package com.now.naaga.common.presentation;
+
+import static com.now.naaga.common.presentation.MdcToken.REQUEST_ID;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+public class LogFilter implements Filter {
+
+    private static final String LOG_FORMAT = "uri: {}, method: {}, time: {}ms, queryCount: {}";
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
+    private final QueryCounter queryCounter;
+
+    public LogFilter(final QueryCounter queryCounter) {
+        this.queryCounter = queryCounter;
+    }
+
+    @Override
+    public void doFilter(final ServletRequest request,
+                         final ServletResponse response,
+                         final FilterChain chain)
+            throws IOException, ServletException {
+        queryCounter.init();
+
+        final long start = System.currentTimeMillis();
+        final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        MDC.put(REQUEST_ID.getKey(), UUID.randomUUID().toString());
+
+        chain.doFilter(request, response);
+
+        final int queryCount = queryCounter.count();
+        log(start, queryCount, httpServletRequest);
+        queryCounter.close();
+        MDC.clear();
+    }
+
+    private void log(final long start,
+                     final int queryCount,
+                     final HttpServletRequest httpServletRequest) {
+        final long end = System.currentTimeMillis();
+        final long time = end - start;
+        log.info(LOG_FORMAT, httpServletRequest.getRequestURI(), httpServletRequest.getMethod(), time, queryCount);
+    }
+}
