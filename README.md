@@ -1,7 +1,5 @@
 ![제목](etc/images/header.png)
 
-<a href="https://play.google.com/store/apps/details?id=com.now.naaga&pcampaignid=web_share"><img src="etc/images/google play store.png" width="50%" /></a>
-
 ## 💌 나아가로부터
 의 초대장이 도착했습니다
 
