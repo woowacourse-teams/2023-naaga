@@ -1,12 +1,9 @@
 package com.now.naaga.common.presentation;
 
+import java.util.Objects;
 import org.hibernate.resource.jdbc.spi.StatementInspector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
-
-import java.util.Objects;
 
 @Component
 public class QueryInspector implements StatementInspector {

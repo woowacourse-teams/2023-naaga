@@ -16,6 +16,7 @@ public abstract class BaseEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    // TODO: 10/19/23 업데이트 시간 어디팅 안되는 것 수정 필요 
     @LastModifiedBy
     private LocalDateTime updatedAt;
 

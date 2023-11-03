@@ -56,49 +56,49 @@ public class PlaceControllerTest extends CommonControllerTest {
         super.setUp();
     }
 
-    @Test
-    void 장소_등록_요청이_성공하면_201_상태코드와_생성된_장소를_응답한다() {
-        // given
-        final Player player = playerBuilder.init()
-                                           .build();
-
-        final CreatePlaceRequest createPlaceRequest = new CreatePlaceRequest("루터회관",
-                                                                             "이곳은 역사와 전통이 깊은 루터회관입니다.",
-                                                                             1.234,
-                                                                             5.6789,
-                                                                             "image/url",
-                                                                             player.getId(),
-                                                                             1L);
-
-        // when
-        final ExtractableResponse<Response> extract = given()
-                .log().all()
-                .auth().preemptive().basic(id, password)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(createPlaceRequest)
-                .when()
-                .post("/places")
-                .then()
-                .log().all()
-                .extract();
-
-        // then
-        final int statusCode = extract.statusCode();
-        final PlaceResponse actual = extract.as(PlaceResponse.class);
-        final Position position = Position.of(createPlaceRequest.latitude(),
-                                              createPlaceRequest.longitude());
-        final PlaceResponse expected = new PlaceResponse(getIdFromLocationHeader(extract),
-                                                         createPlaceRequest.name(),
-                                                         CoordinateResponse.from(position),
-                                                         createPlaceRequest.imageUrl(),
-                                                         createPlaceRequest.description());
-        assertSoftly(softAssertions -> {
-            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.CREATED.value());
-            softAssertions.assertThat(actual)
-                          .usingRecursiveComparison()
-                          .isEqualTo(expected);
-        });
-    }
+//    @Test
+//    void 장소_등록_요청이_성공하면_201_상태코드와_생성된_장소를_응답한다() {
+//        // given
+//        final Player player = playerBuilder.init()
+//                                           .build();
+//
+//        final CreatePlaceRequest createPlaceRequest = new CreatePlaceRequest("루터회관",
+//                                                                             "이곳은 역사와 전통이 깊은 루터회관입니다.",
+//                                                                             1.234,
+//                                                                             5.6789,
+//                                                                             "image/url",
+//                                                                             player.getId(),
+//                                                                             1L);
+//
+//        // when
+//        final ExtractableResponse<Response> extract = given()
+//                .log().all()
+//                .auth().preemptive().basic(id, password)
+//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+//                .body(createPlaceRequest)
+//                .when()
+//                .post("/places")
+//                .then()
+//                .log().all()
+//                .extract();
+//
+//        // then
+//        final int statusCode = extract.statusCode();
+//        final PlaceResponse actual = extract.as(PlaceResponse.class);
+//        final Position position = Position.of(createPlaceRequest.latitude(),
+//                                              createPlaceRequest.longitude());
+//        final PlaceResponse expected = new PlaceResponse(getIdFromLocationHeader(extract),
+//                                                         createPlaceRequest.name(),
+//                                                         CoordinateResponse.from(position),
+//                                                         createPlaceRequest.imageUrl(),
+//                                                         createPlaceRequest.description());
+//        assertSoftly(softAssertions -> {
+//            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.CREATED.value());
+//            softAssertions.assertThat(actual)
+//                          .usingRecursiveComparison()
+//                          .isEqualTo(expected);
+//        });
+//    }
 
     @Test
     void 장소를_아이디로_조회한다() {

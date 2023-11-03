@@ -7,12 +7,17 @@ import com.now.naaga.temporaryplace.application.dto.CreateTemporaryPlaceCommand;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
 import com.now.naaga.temporaryplace.presentation.dto.CreateTemporaryPlaceRequest;
 import com.now.naaga.temporaryplace.presentation.dto.TemporaryPlaceResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/temporary-places")
 @RestController
@@ -47,9 +52,11 @@ public class TemporaryPlaceController {
 
     @DeleteMapping("/{temporaryPlaceId}")
     public ResponseEntity<Void> deleteTemporaryPlace(@PathVariable final Long temporaryPlaceId) {
-        temporaryPlaceService.deleteById(temporaryPlaceId);
+        temporaryPlaceService.deleteByIdWhenTemporaryPlaceDenied(temporaryPlaceId);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
+    /* S3사용
+     */
 }
