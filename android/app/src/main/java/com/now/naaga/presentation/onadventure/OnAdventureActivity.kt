@@ -15,6 +15,7 @@ import com.now.domain.model.Adventure
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
+import com.now.domain.model.letter.LetterPreview
 import com.now.naaga.R
 import com.now.naaga.data.firebase.analytics.AnalyticsDelegate
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
@@ -26,12 +27,16 @@ import com.now.naaga.data.firebase.analytics.ON_ADVENTURE_SHOW_POLAROID
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityOnAdventureBinding
 import com.now.naaga.presentation.adventureresult.AdventureResultActivity
+import com.now.naaga.presentation.common.dialog.LetterReadDialog
+import com.now.naaga.presentation.common.dialog.LetterSendDialog
 import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.common.dialog.PolaroidDialog
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
 import com.now.naaga.util.extension.getParcelableCompat
+import com.now.naaga.util.extension.showSnackbar
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -55,6 +60,15 @@ class OnAdventureActivity :
         setClickListeners()
     }
 
+    override fun onPause() {
+        super.onPause()
+        supportFragmentManager.fragments.forEach { fragment ->
+            if (TAGS.contains(fragment.tag)) {
+                supportFragmentManager.beginTransaction().remove(fragment).commit()
+            }
+        }
+    }
+
     private var backPressedTime = 0L
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -66,8 +80,7 @@ class OnAdventureActivity :
                     this@OnAdventureActivity,
                     getString(R.string.OnAdventure_warning_back_pressed),
                     Toast.LENGTH_SHORT,
-                )
-                    .show()
+                ).show()
             }
         }
     }
@@ -89,6 +102,9 @@ class OnAdventureActivity :
             logClickEvent(getViewEntryName(it), ON_ADVENTURE_END_ADVENTURE)
             viewModel.endAdventure()
         }
+        binding.ivSendLetter.setOnClickListener {
+            LetterSendDialog(viewModel::sendLetter).show(supportFragmentManager, LetterSendDialog.TAG)
+        }
     }
 
     private fun subscribe() {
@@ -106,14 +122,24 @@ class OnAdventureActivity :
         viewModel.lastHint.observe(this) {
             drawHintMarkers(listOf(it))
         }
-        viewModel.remainingHintCount.observe(this) {
-            // binding.tvOnAdventureHintCount.text = it.toString()
+        viewModel.isSendLetterSuccess.observe(this) {
+            supportFragmentManager.findFragmentByTag(LetterSendDialog.TAG)?.onDestroyView()
+            when (it) {
+                true -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_success)) }
+                false -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail)) }
+            }
         }
-        viewModel.error.observe(this) { error: DataThrowable ->
-            logServerError(ON_ADVENTURE_GAME, error.code, error.message.toString())
-            when (error.code) {
+        viewModel.letters.observe(this) {
+            drawLetters(it)
+        }
+        viewModel.letter.observe(this) {
+            showLetterReadDialog(it.message)
+        }
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            logServerError(ON_ADVENTURE_GAME, throwable.code, throwable.message.toString())
+            when (throwable.code) {
                 OnAdventureViewModel.NO_DESTINATION -> {
-                    shortToast(error.message ?: return@observe)
+                    showToast(throwable.message ?: return@observe)
                     finish()
                 }
 
@@ -122,8 +148,11 @@ class OnAdventureActivity :
                     shortSnackbar(getString(R.string.onAdventure_retry, remainingTryCount))
                 }
 
-                OnAdventureViewModel.TRY_COUNT_OVER -> shortToast(getString(R.string.onAdventure_try_count_over))
-                else -> shortSnackbar(error.message ?: return@observe)
+                OnAdventureViewModel.TRY_COUNT_OVER -> showToast(getString(R.string.onAdventure_try_count_over))
+
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+
+                else -> shortSnackbar(throwable.message ?: return@observe)
             }
         }
     }
@@ -167,6 +196,13 @@ class OnAdventureActivity :
         }
     }
 
+    private fun drawLetters(letters: List<LetterPreview>) {
+        removeLetters()
+        letters.forEach { letter ->
+            addLetter(letter, viewModel::getLetter)
+        }
+    }
+
     private fun showGiveUpDialog() {
         val fragment: Fragment? = supportFragmentManager.findFragmentByTag(GIVE_UP)
         if (fragment == null) {
@@ -186,7 +222,7 @@ class OnAdventureActivity :
     private fun showHintDialog() {
         NaagaAlertDialog.Builder().build(
             title = getString(R.string.hint_using_dialog_title),
-            description = getString(R.string.hint_using_dialog_description, viewModel.remainingHintCount.value),
+            description = getString(R.string.hint_using_dialog_description, viewModel.remainingHintCount),
             positiveText = getString(R.string.hint_using_dialog_continue),
             negativeText = getString(R.string.hint_using_dialog_give_up),
             positiveAction = { viewModel.openHint() },
@@ -204,12 +240,12 @@ class OnAdventureActivity :
         }
     }
 
-    private fun shortSnackbar(message: String) {
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    private fun showLetterReadDialog(content: String) {
+        LetterReadDialog(content).show(supportFragmentManager, LETTER)
     }
 
-    private fun shortToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun shortSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     companion object {
@@ -217,6 +253,8 @@ class OnAdventureActivity :
         private const val GIVE_UP = "GIVE_UP"
         private const val ADVENTURE = "ADVENTURE"
         private const val HINT = "HINT"
+        private const val LETTER = "LETTER"
+        private val TAGS = listOf(GIVE_UP, HINT, LETTER)
 
         fun getIntent(context: Context): Intent {
             return Intent(context, OnAdventureActivity::class.java)

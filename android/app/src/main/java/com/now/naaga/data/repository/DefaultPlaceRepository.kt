@@ -2,10 +2,13 @@ package com.now.naaga.data.repository
 
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Place
+import com.now.domain.model.PreferenceState
 import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.mapper.toDomain
+import com.now.naaga.data.mapper.toPreferenceState
+import com.now.naaga.data.remote.dto.PreferenceStateDto
 import com.now.naaga.data.remote.retrofit.service.PlaceService
-import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.extension.getValueOrThrow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -33,9 +36,8 @@ class DefaultPlaceRepository(
         name: String,
         description: String,
         coordinate: Coordinate,
-        image: String,
+        file: File,
     ): Place {
-        val file = File(image)
         val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val imagePart = MultipartBody.Part.createFormData(
             KEY_IMAGE_FILE,
@@ -51,6 +53,25 @@ class DefaultPlaceRepository(
 
         val response = placeService.registerPlace(postData, imagePart)
         return response.getValueOrThrow().toDomain()
+    }
+
+    override suspend fun deletePreference(placeId: Int) {
+        placeService.deletePreference(placeId)
+    }
+
+    override suspend fun getLikeCount(placeId: Int): Int {
+        val response = placeService.getLikeCount(placeId)
+        return response.getValueOrThrow().placeLikeCount
+    }
+
+    override suspend fun getMyPreference(placeId: Int): PreferenceState {
+        val response = placeService.getMyPreference(placeId)
+        return response.getValueOrThrow().toPreferenceState()
+    }
+
+    override suspend fun postPreference(placeId: Int, preferenceState: PreferenceState): PreferenceState {
+        val response = placeService.postPreference(placeId, PreferenceStateDto(preferenceState.name))
+        return PreferenceState.valueOf(response.getValueOrThrow().type)
     }
 
     companion object {

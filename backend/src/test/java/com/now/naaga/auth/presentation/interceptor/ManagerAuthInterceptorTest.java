@@ -1,6 +1,10 @@
 package com.now.naaga.auth.presentation.interceptor;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.now.naaga.auth.exception.AuthException;
+import java.util.Base64;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -12,11 +16,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.servlet.mvc.Controller;
-
-import java.util.Base64;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")

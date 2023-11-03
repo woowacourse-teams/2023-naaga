@@ -17,7 +17,6 @@ import com.now.naaga.game.domain.Direction;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.Hint;
 import com.now.naaga.game.exception.GameException;
-import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayNameGeneration;

@@ -1,15 +1,23 @@
 package com.now.naaga.player.domain;
 
+import static java.lang.Boolean.FALSE;
+
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.score.domain.Score;
-import jakarta.persistence.*;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import java.util.Objects;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-
-import java.util.Objects;
-
-import static java.lang.Boolean.FALSE;
 
 @SQLDelete(sql = "UPDATE player SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")

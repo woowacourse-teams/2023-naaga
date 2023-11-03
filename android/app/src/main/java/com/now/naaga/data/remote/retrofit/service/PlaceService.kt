@@ -1,10 +1,15 @@
 package com.now.naaga.data.remote.retrofit.service
 
+import com.now.naaga.data.remote.dto.LikeCountDto
 import com.now.naaga.data.remote.dto.PlaceDto
-import com.now.naaga.data.remote.dto.PostPlaceDto
+import com.now.naaga.data.remote.dto.PreferenceDto
+import com.now.naaga.data.remote.dto.PreferenceStateDto
+import com.now.naaga.data.remote.dto.post.PostPlaceDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -31,4 +36,25 @@ interface PlaceService {
         @PartMap postData: HashMap<String, RequestBody>,
         @Part imageFile: MultipartBody.Part,
     ): Response<PostPlaceDto>
+
+    @GET("/places/{placeId}/likes/count")
+    suspend fun getLikeCount(
+        @Path("placeId") placedId: Int,
+    ): Response<LikeCountDto>
+
+    @DELETE("/places/{placeId}/likes/my")
+    suspend fun deletePreference(
+        @Path("placeId") placedId: Int,
+    ): Response<Unit>
+
+    @POST("/places/{placeId}/likes")
+    suspend fun postPreference(
+        @Path("placeId") placedId: Int,
+        @Body body: PreferenceStateDto,
+    ): Response<PreferenceDto>
+
+    @GET("/places/{placeId}/likes/my")
+    suspend fun getMyPreference(
+        @Path("placeId") placedId: Int,
+    ): Response<PreferenceStateDto>
 }

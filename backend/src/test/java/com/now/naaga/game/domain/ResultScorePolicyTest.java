@@ -1,22 +1,23 @@
 package com.now.naaga.game.domain;
 
+import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
+import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
+import static com.now.naaga.common.fixture.PositionFixture.던킨도너츠_올림픽공원점_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.now.naaga.gameresult.domain.gamescore.ResultScorePolicy;
 import com.now.naaga.gameresult.domain.gamescore.SuccessResultScorePolicy;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
-import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
-import static com.now.naaga.common.fixture.PositionFixture.*;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")

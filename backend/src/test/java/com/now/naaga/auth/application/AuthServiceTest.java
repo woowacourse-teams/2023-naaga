@@ -1,19 +1,24 @@
 package com.now.naaga.auth.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+
 import com.now.naaga.auth.application.dto.AuthCommand;
-import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.AuthType;
+import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.member.domain.Member;
-import com.now.naaga.member.exception.MemberException;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.player.exception.PlayerException;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.score.domain.Score;
+import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -22,16 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MimeType;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)

@@ -10,3 +10,11 @@ fun PlayerDto.toDomain(): Player {
         score = totalScore,
     )
 }
+
+fun Player.toDto(): PlayerDto {
+    return PlayerDto(
+        id = id,
+        nickname = nickname,
+        totalScore = score,
+    )
+}

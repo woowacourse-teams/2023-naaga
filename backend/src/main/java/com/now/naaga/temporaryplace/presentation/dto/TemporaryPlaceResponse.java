@@ -2,7 +2,6 @@ package com.now.naaga.temporaryplace.presentation.dto;
 
 import com.now.naaga.game.presentation.dto.CoordinateResponse;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

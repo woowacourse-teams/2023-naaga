@@ -44,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
-            android:fontFamily="@font/pretendard_semibold"
             android:text="@string/polaroid_description"
             android:textColor="@color/black"
             android:textSize="28sp"

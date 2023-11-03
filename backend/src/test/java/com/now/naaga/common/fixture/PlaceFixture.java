@@ -1,7 +1,6 @@
 package com.now.naaga.common.fixture;
 
-import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
-import static com.now.naaga.common.fixture.PositionFixture.*;
+import static com.now.naaga.common.fixture.PositionFixture.서울_좌표;
 
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
