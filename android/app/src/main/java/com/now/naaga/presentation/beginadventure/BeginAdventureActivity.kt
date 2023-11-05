@@ -22,12 +22,13 @@ import com.now.naaga.data.firebase.analytics.BEGIN_GO_UPLOAD
 import com.now.naaga.data.firebase.analytics.DefaultAnalyticsDelegate
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityBeginAdventureBinding
-import com.now.naaga.presentation.common.dialog.DialogType
-import com.now.naaga.presentation.common.dialog.PermissionDialog
 import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.setting.SettingActivity
 import com.now.naaga.presentation.upload.UploadActivity
+import com.now.naaga.util.extension.openSetting
+import com.now.naaga.util.extension.showSnackbarWithEvent
+import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,18 +44,10 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            when {
-                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                    Toast.makeText(this, getString(R.string.beginAdventure_precise_access), Toast.LENGTH_SHORT).show()
-                }
-
-                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                    Toast.makeText(this, getString(R.string.beginAdventure_approximate_access), Toast.LENGTH_SHORT)
-                        .show()
-                }
-
-                else -> {
-                    Toast.makeText(this, getString(R.string.beginAdventure_denied_access), Toast.LENGTH_SHORT).show()
+            permissions.entries.forEach {
+                val isGranted = it.value
+                if (isGranted.not()) {
+                    showPermissionSnackbar()
                 }
             }
         }
@@ -67,7 +60,6 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         startLoading()
         registerAnalytics(this.lifecycle)
         fetchInProgressAdventure()
-        requestLocationPermission()
         setClickListeners()
         subscribe()
 
@@ -83,8 +75,10 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         viewModel.loading.observe(this) { loading ->
             setLoadingView(loading)
         }
-        viewModel.error.observe(this) { error: DataThrowable ->
-            Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+        viewModel.throwable.observe(this) { throwable: DataThrowable ->
+            when (throwable.code) {
+                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+            }
         }
     }
 
@@ -100,17 +94,6 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
 
     private fun finishLoading() {
         binding.lottieBeginAdventureLoading.visibility = View.GONE
-    }
-
-    private fun requestLocationPermission() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            locationPermissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                ),
-            )
-        }
     }
 
     private fun setClickListeners() {
@@ -132,9 +115,17 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
         }
     }
 
+    private fun showPermissionSnackbar() {
+        binding.root.showSnackbarWithEvent(
+            message = getString(R.string.snackbar_location_message),
+            actionTitle = getString(R.string.snackbar_action_title),
+            action = { openSetting() },
+        )
+    }
+
     private fun checkPermissionAndBeginAdventure() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            PermissionDialog(DialogType.LOCATION).show(supportFragmentManager)
+            locationPermissionLauncher.launch(locationPermissions)
         } else {
             checkLocationPermissionInStatusBar()
         }
@@ -161,6 +152,11 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
     }
 
     companion object {
+        private val locationPermissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        )
+
         private const val GPS_TURN_ON_MESSAGE = "GPS 설정을 켜주세요"
 
         fun getIntent(context: Context): Intent {

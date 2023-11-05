@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.now.domain.model.OrderType
 import com.now.domain.model.Rank
-import com.now.domain.model.SortType
+import com.now.domain.model.type.OrderType
+import com.now.domain.model.type.SortType
 import com.now.domain.repository.RankRepository
 import com.now.naaga.data.throwable.DataThrowable
-import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,7 +40,7 @@ class RankViewModel @Inject constructor(private val rankRepository: RankReposito
                 _myScore.value = rank.player.score
                 _myRank.value = rank.rank
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
@@ -52,15 +52,15 @@ class RankViewModel @Inject constructor(private val rankRepository: RankReposito
             }.onSuccess { ranks ->
                 _ranks.value = ranks
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
 
-    private fun setErrorMessage(throwable: DataThrowable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is PlayerThrowable -> { _throwable.value = throwable }
-            else -> {}
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
+            is DataThrowable.PlayerThrowable -> { _throwable.value = throwable }
         }
     }
 }

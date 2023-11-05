@@ -2,11 +2,11 @@ package com.now.naaga
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.now.domain.model.AdventureResult
-import com.now.domain.model.AdventureResultType
 import com.now.domain.model.Coordinate
-import com.now.domain.model.OrderType
 import com.now.domain.model.Place
-import com.now.domain.model.SortType
+import com.now.domain.model.type.AdventureResultType
+import com.now.domain.model.type.OrderType
+import com.now.domain.model.type.SortType
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.presentation.adventurehistory.AdventureHistoryViewModel
 import io.mockk.coEvery
