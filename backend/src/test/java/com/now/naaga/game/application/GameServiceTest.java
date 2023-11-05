@@ -1,23 +1,5 @@
 package com.now.naaga.game.application;
 
-import static com.now.naaga.common.fixture.PositionFixture.역삼역_좌표;
-import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_근처_좌표;
-import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
-import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
-import static com.now.naaga.game.domain.EndType.ARRIVED;
-import static com.now.naaga.game.domain.EndType.GIVE_UP;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
-import static com.now.naaga.game.exception.GameExceptionType.CAN_NOT_FIND_PLACE;
-import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
-import static com.now.naaga.gameresult.domain.ResultType.FAIL;
-import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
-import static com.now.naaga.gameresult.exception.GameResultExceptionType.GAME_RESULT_NOT_EXIST;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import com.now.naaga.common.builder.GameBuilder;
 import com.now.naaga.common.builder.GameResultBuilder;
 import com.now.naaga.common.builder.PlaceBuilder;
@@ -36,15 +18,29 @@ import com.now.naaga.gameresult.exception.GameResultException;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.List;
+
+import static com.now.naaga.common.fixture.PositionFixture.*;
+import static com.now.naaga.game.domain.EndType.ARRIVED;
+import static com.now.naaga.game.domain.EndType.GIVE_UP;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.*;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
+import static com.now.naaga.gameresult.exception.GameResultExceptionType.GAME_RESULT_NOT_EXIST;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Sql("/truncate.sql")
@@ -447,7 +443,7 @@ class GameServiceTest {
                 .build();
 
         final Place destination = placeBuilder.init()
-                .position(잠실_루터회관_정문_근처_좌표)
+                .position(장미_상가)
                 .build();
 
         // when
@@ -464,7 +460,7 @@ class GameServiceTest {
                 .build();
 
         final Place destination = placeBuilder.init()
-                .position(잠실_루터회관_정문_근처_좌표)
+                .position(장미_상가)
                 .build();
 
         final Game game = gameBuilder.init()
