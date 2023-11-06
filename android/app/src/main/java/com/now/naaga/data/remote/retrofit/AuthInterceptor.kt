@@ -2,8 +2,8 @@ package com.now.naaga.data.remote.retrofit
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import com.now.domain.repository.AuthRepository
 import com.now.naaga.BuildConfig
-import com.now.naaga.NaagaApplication
 import com.now.naaga.data.remote.dto.FailureDto
 import com.now.naaga.data.remote.dto.NaagaAuthDto
 import com.now.naaga.data.throwable.DataThrowable
@@ -20,12 +20,14 @@ import okhttp3.Response
 import okhttp3.internal.closeQuietly
 import org.json.JSONObject
 
-class AuthInterceptor : Interceptor {
+class AuthInterceptor(
+    private val authRepository: AuthRepository,
+) : Interceptor {
     private val gson = Gson()
     private val client = OkHttpClient.Builder().build()
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val accessToken = getAccessToken() ?: return chain.proceed(chain.request())
+        val accessToken = authRepository.getAccessToken() ?: return chain.proceed(chain.request())
 
         val headerAddedRequest = chain.request().newBuilder().addHeader(AUTH_KEY, accessToken).build()
         val response: Response = chain.proceed(headerAddedRequest)
@@ -45,13 +47,13 @@ class AuthInterceptor : Interceptor {
         val auth: NaagaAuthDto = requestRefresh(request).getOrElse {
             return Result.failure(it)
         }
-        storeToken(auth.accessToken, auth.refreshToken)
+        authRepository.storeToken(auth.accessToken, auth.refreshToken)
         return Result.success(BEARER + auth.accessToken)
     }
 
     private fun createRefreshRequestBody(): RequestBody {
         return JSONObject()
-            .put(AUTH_REFRESH_KEY, getRefreshToken())
+            .put(AUTH_REFRESH_KEY, authRepository.getRefreshToken())
             .toString()
             .toRequestBody(contentType = "application/json".toMediaType())
     }
@@ -78,19 +80,6 @@ class AuthInterceptor : Interceptor {
         return Result.failure(IllegalStateException(REFRESH_FAILURE))
     }
 
-    private fun getAccessToken(): String? {
-        return NaagaApplication.authDataSource.getAccessToken()
-    }
-
-    private fun getRefreshToken(): String {
-        return requireNotNull(NaagaApplication.authDataSource.getRefreshToken()) { NO_REFRESH_TOKEN }
-    }
-
-    private fun storeToken(accessToken: String, refreshToken: String) {
-        NaagaApplication.authDataSource.setAccessToken(accessToken)
-        NaagaApplication.authDataSource.setRefreshToken(refreshToken)
-    }
-
     private inline fun <reified T> Response.getDto(): T {
         val responseObject = JsonParser.parseString(body?.string()).asJsonObject
         return gson.fromJson(responseObject, T::class.java)
@@ -103,8 +92,6 @@ class AuthInterceptor : Interceptor {
         private const val AUTH_REFRESH_PATH = "auth/refresh"
 
         private const val BEARER = "Bearer "
-
-        private const val NO_REFRESH_TOKEN = "리프레시 토큰이 없습니다"
         private const val REFRESH_FAILURE = "토큰 리프레시 실패"
     }
 }

@@ -17,13 +17,12 @@ class DefaultAuthRepository(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AuthRepository {
 
-    override suspend fun getToken(platformAuth: PlatformAuth): Boolean {
+    override suspend fun logIn(platformAuth: PlatformAuth): Boolean {
         return withContext(dispatcher) {
             val response = authService.requestAuth(platformAuth.toDto())
             runCatching {
                 val naagaAuthDto = response.getValueOrThrow()
-                authDataSource.setAccessToken(naagaAuthDto.accessToken)
-                authDataSource.setRefreshToken(naagaAuthDto.refreshToken)
+                storeToken(naagaAuthDto.accessToken, naagaAuthDto.refreshToken)
                 return@withContext true
             }
             return@withContext false
@@ -41,5 +40,22 @@ class DefaultAuthRepository(
     override suspend fun withdrawalMember() {
         authService.withdrawalMember()
         unlinkWithKakao()
+    }
+
+    override fun getAccessToken(): String? {
+        return authDataSource.getAccessToken()
+    }
+
+    override fun getRefreshToken(): String {
+        return requireNotNull(authDataSource.getRefreshToken()) { NO_REFRESH_TOKEN }
+    }
+
+    override fun storeToken(accessToken: String, refreshToken: String) {
+        authDataSource.setAccessToken(accessToken)
+        authDataSource.setRefreshToken(refreshToken)
+    }
+
+    companion object {
+        private const val NO_REFRESH_TOKEN = "리프레시 토큰이 없습니다"
     }
 }

@@ -26,7 +26,7 @@ class LoginViewModel @Inject constructor(
     fun signIn(token: String, platformType: AuthPlatformType) {
         viewModelScope.launch {
             runCatching {
-                authRepository.getToken(PlatformAuth(token, platformType))
+                authRepository.logIn(PlatformAuth(token, platformType))
             }.onSuccess { status ->
                 _isLoginSucceed.value = status
             }.onFailure {
