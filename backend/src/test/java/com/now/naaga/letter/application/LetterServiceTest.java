@@ -11,6 +11,7 @@ import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.letter.application.dto.CreateLetterCommand;
 import com.now.naaga.letter.domain.Letter;
+import com.now.naaga.letter.domain.letterlog.LetterLogType;
 import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 import com.now.naaga.letter.exception.LetterException;
 import com.now.naaga.letter.presentation.dto.FindNearByLetterCommand;
@@ -182,9 +183,14 @@ class LetterServiceTest {
 
         // when
         final Letter actual = letterService.findLetter(new LetterReadCommand(player.getId(), letter.getId()));
+        final List<ReadLetterLog> actualLog = readLetterLogRepository.findAll();
+
 
         // then
-        assertThat(actual.getId()).isEqualTo(letter.getId());
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual.getId()).isEqualTo(letter.getId());
+            softAssertions.assertThat(actualLog).hasSize(1);
+        });
     }
 
     @Test
@@ -214,71 +220,5 @@ class LetterServiceTest {
         final LetterException letterException = assertThrows(
                 LetterException.class, () -> letterService.findLetter(new LetterReadCommand(player.getId(), letter.getId() + 1)));
         assertThat(letterException.exceptionType()).isEqualTo(NO_EXIST);
-    }
-
-    @Test
-    void 읽은쪽지로그에_데이터를_저장한다() {
-        // given
-        final Player player = playerBuilder.init()
-                .build();
-
-        final Place destination = placeBuilder.init()
-                .position(잠실_루터회관_정문_좌표)
-                .build();
-
-        final Game game = gameBuilder.init()
-                .place(destination)
-                .player(player)
-                .startPosition(잠실역_교보문고_좌표)
-                .build();
-
-        final Player letterRegister = playerBuilder.init()
-                .build();
-
-        final Letter letter = letterBuilder.init()
-                .registeredPlayer(letterRegister)
-                .build();
-
-        // when
-        letterService.logReadLetter(player, letter);
-
-        // then
-        final List<ReadLetterLog> actual = readLetterLogRepository.findAll();
-        final long expected = actual.get(0).getLetter().getId();
-
-        assertSoftly(softAssertions -> {
-            softAssertions.assertThat(actual).hasSize(1);
-            softAssertions.assertThat(expected).isEqualTo(letter.getId());
-        });
-    }
-
-    @Test
-    void 읽은쪽지로그에_데이터저장시_진행중인_게임이없으면_예외가_발생한다() {
-        // given && when
-        final Player player = playerBuilder.init()
-                .build();
-
-        final Place destination = placeBuilder.init()
-                .position(잠실_루터회관_정문_좌표)
-                .build();
-
-        final Game game = gameBuilder.init()
-                .place(destination)
-                .player(player)
-                .startPosition(잠실역_교보문고_좌표)
-                .gameStatus(GameStatus.DONE)
-                .build();
-
-        final Player letterRegister = playerBuilder.init()
-                .build();
-
-        final Letter letter = letterBuilder.init()
-                .registeredPlayer(letterRegister)
-                .build();
-
-        //then
-        final GameException gameException = assertThrows(
-                GameException.class, () -> letterService.logReadLetter(player, letter));
-        assertThat(gameException.exceptionType()).isEqualTo(NOT_EXIST_IN_PROGRESS);
     }
 }
