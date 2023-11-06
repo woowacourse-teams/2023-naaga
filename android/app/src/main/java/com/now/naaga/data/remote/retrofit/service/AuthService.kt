@@ -5,6 +5,7 @@ import com.now.naaga.data.remote.dto.PlatformAuthDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthService {
@@ -14,8 +15,12 @@ interface AuthService {
     ): Response<NaagaAuthDto>
 
     @DELETE("/auth/unlink")
-    suspend fun withdrawalMember(): Response<Unit>
+    suspend fun withdrawalMember(
+        @Header("Authorization") accessToken: String,
+    ): Response<Unit>
 
     @DELETE("/auth")
-    suspend fun requestLogout(): Response<Unit>
+    suspend fun requestLogout(
+        @Header("Authorization") accessToken: String,
+    ): Response<Unit>
 }

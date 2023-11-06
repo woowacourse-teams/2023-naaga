@@ -31,14 +31,14 @@ class DefaultAuthRepository(
 
     override suspend fun logout() {
         withContext(dispatcher) {
-            val response = authService.requestLogout()
+            val response = authService.requestLogout(authDataSource.getAccessToken()!!)
             authDataSource.resetToken()
             response.getValueOrThrow()
         }
     }
 
     override suspend fun withdrawalMember() {
-        authService.withdrawalMember()
+        authService.withdrawalMember(authDataSource.getAccessToken()!!)
         unlinkWithKakao()
     }
 
