@@ -1,8 +1,8 @@
 package com.now.naaga.common.builder;
 
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.placestatistics.PlaceStatistics;
-import com.now.naaga.placestatistics.repository.PlaceStatisticsRepository;
+import com.now.naaga.place.domain.PlaceStatistics;
+import com.now.naaga.place.repository.PlaceStatisticsRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

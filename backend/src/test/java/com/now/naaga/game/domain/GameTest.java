@@ -1,10 +1,25 @@
 package com.now.naaga.game.domain;
 
+import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
+import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
+import static com.now.naaga.common.fixture.PositionFixture.GS25_방이도곡점_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.던킨도너츠_올림픽공원점_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_근처_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
+import static com.now.naaga.game.domain.EndType.ARRIVED;
+import static com.now.naaga.game.domain.EndType.GIVE_UP;
+import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.game.exception.GameNotFinishedException;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -12,20 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import static com.now.naaga.common.fixture.PlaceFixture.PLACE;
-import static com.now.naaga.common.fixture.PlayerFixture.PLAYER;
-import static com.now.naaga.common.fixture.PositionFixture.*;
-import static com.now.naaga.game.domain.EndType.ARRIVED;
-import static com.now.naaga.game.domain.EndType.GIVE_UP;
-import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
-import static com.now.naaga.game.domain.Game.MAX_HINT_COUNT;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")

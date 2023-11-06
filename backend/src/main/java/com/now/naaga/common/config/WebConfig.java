@@ -59,7 +59,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludeRequestPattern("/**", HttpMethod.OPTIONS)
                 .excludeRequestPattern("/temporary-places", HttpMethod.GET)
                 .excludeRequestPattern("/places", HttpMethod.POST)
-                .excludeRequestPattern("/temporary-places/**", HttpMethod.DELETE);
+                .excludeRequestPattern("/temporary-places/**", HttpMethod.DELETE)
+                .excludeRequestPattern("/places/{placeId}/likes/count");
     }
 
     private HandlerInterceptor mapManagerAuthInterceptor() {
