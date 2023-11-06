@@ -10,7 +10,6 @@ import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
 import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
 import com.now.naaga.letter.exception.LetterException;
-import com.now.naaga.letter.presentation.LetterLogType;
 import com.now.naaga.letter.presentation.dto.FindLetterLogByGameCommand;
 import com.now.naaga.letter.presentation.dto.FindNearByLetterCommand;
 import com.now.naaga.letter.presentation.dto.LetterReadCommand;
@@ -64,7 +63,7 @@ public class LetterService {
         return letter;
     }
 
-    public void logWriteLetter(final Letter letter) {
+    private void logWriteLetter(final Letter letter) {
         final Game gameInProgress = getGameInProgress(letter.getRegisteredPlayer().getId());
         final WriteLetterLog writeLetterLog = new WriteLetterLog(gameInProgress, letter);
         writeLetterLogRepository.save(writeLetterLog);
@@ -79,7 +78,7 @@ public class LetterService {
         return foundLetter;
     }
 
-    public void logReadLetter(final Player player,
+    private void logReadLetter(final Player player,
                               final Letter letter) {
         final Game gameInProgress = getGameInProgress(player.getId());
         final ReadLetterLog readLetterLog = new ReadLetterLog(gameInProgress, letter);
@@ -94,7 +93,7 @@ public class LetterService {
     @Transactional(readOnly = true)
     public List<Letter> findLetterLogInGame(final FindLetterLogByGameCommand findLetterLogByGameCommand) {
         final Game gameInProgress = getGameInProgress(findLetterLogByGameCommand.playerId());
-        if (findLetterLogByGameCommand.letterLogType() == LetterLogType.WRITE) {
+        if (findLetterLogByGameCommand.letterLogType().isWrite()) {
             final List<WriteLetterLog> writeLetterLogs = writeLetterLogRepository.findByGameId(gameInProgress.getId());
             return writeLetterLogs.stream()
                     .map(WriteLetterLog::getLetter)

@@ -4,6 +4,7 @@ import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.letter.application.LetterService;
 import com.now.naaga.letter.application.dto.CreateLetterCommand;
 import com.now.naaga.letter.domain.Letter;
+import com.now.naaga.letter.domain.letterlog.LetterLogType;
 import com.now.naaga.letter.presentation.dto.*;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import org.springframework.http.HttpStatus;

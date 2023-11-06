@@ -1,6 +1,6 @@
-package com.now.naaga.letter.domain;
+package com.now.naaga.letter.presentation.converter;
 
-import com.now.naaga.letter.presentation.LetterLogType;
+import com.now.naaga.letter.domain.letterlog.LetterLogType;
 import org.springframework.core.convert.converter.Converter;
 
 public class LetterLogTypeConverter implements Converter<String, LetterLogType> {

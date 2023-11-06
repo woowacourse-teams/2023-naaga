@@ -7,10 +7,9 @@ import com.now.naaga.auth.presentation.interceptor.ManagerAuthInterceptor;
 import com.now.naaga.common.presentation.interceptor.RequestMatcherInterceptor;
 import java.util.List;
 
-import com.now.naaga.letter.domain.LetterLogTypeConverter;
+import com.now.naaga.letter.presentation.converter.LetterLogTypeConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

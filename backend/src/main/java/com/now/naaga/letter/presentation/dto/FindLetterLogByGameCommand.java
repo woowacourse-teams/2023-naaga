@@ -1,6 +1,6 @@
 package com.now.naaga.letter.presentation.dto;
 
-import com.now.naaga.letter.presentation.LetterLogType;
+import com.now.naaga.letter.domain.letterlog.LetterLogType;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 
 public record FindLetterLogByGameCommand(Long playerId,
