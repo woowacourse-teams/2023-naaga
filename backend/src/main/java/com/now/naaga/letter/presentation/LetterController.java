@@ -12,6 +12,8 @@ import com.now.naaga.letter.presentation.dto.NearByLetterResponse;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import java.net.URI;
 import java.util.List;
+
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +36,7 @@ public class LetterController {
     
     @PostMapping
     public ResponseEntity<LetterResponse> createLetter(@Auth final PlayerRequest playerRequest,
-                                                       @RequestBody final LetterRequest letterRequest) {
+                                                       @Valid @RequestBody final LetterRequest letterRequest) {
         final CreateLetterCommand createLetterCommand = CreateLetterCommand.of(playerRequest, letterRequest);
         final Letter letter = letterService.writeLetter(createLetterCommand);
         return ResponseEntity
