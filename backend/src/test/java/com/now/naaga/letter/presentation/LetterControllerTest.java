@@ -1,13 +1,5 @@
 package com.now.naaga.letter.presentation;
 
-import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
-import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_110미터_앞_좌표;
-import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST_IN_PROGRESS;
-import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
@@ -33,18 +25,27 @@ import com.now.naaga.player.presentation.dto.PlayerResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
-import io.restassured.parsing.Parser;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_BODY;
+import static com.now.naaga.common.fixture.PositionFixture.*;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST_IN_PROGRESS;
+import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -275,7 +276,6 @@ class LetterControllerTest extends CommonControllerTest {
                 잠실_루터회관_정문_좌표.getLongitude().doubleValue());
         
         //when
-        RestAssured.defaultParser = Parser.JSON;
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
@@ -323,7 +323,6 @@ class LetterControllerTest extends CommonControllerTest {
                 잠실_루터회관_정문_좌표.getLongitude().doubleValue());
         
         //when
-        RestAssured.defaultParser = Parser.JSON;
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
@@ -349,5 +348,53 @@ class LetterControllerTest extends CommonControllerTest {
                                   .isEqualTo(expected);
                 }
         );
+    }
+    
+    
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    void 쪽지_등록_요청시_쪽지의_내용이_blank이면_예외가_발생한다(String message) {
+        //given
+        final Player player = playerBuilder.init()
+                                           .build();
+        final Game game = gameBuilder.init()
+                                     .player(player)
+                                     .build();
+        
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+        
+        final LetterRequest letterRequest = new LetterRequest(message,
+                잠실_루터회관_정문_좌표.getLatitude().doubleValue(),
+                잠실_루터회관_정문_좌표.getLongitude().doubleValue());
+        
+        //when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(letterRequest)
+                .when()
+                .post("/letters")
+                .then().log().all()
+                .extract();
+        
+        //then
+        final int statusCode = extract.statusCode();
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+        final ExceptionResponse expected = new ExceptionResponse(
+                INVALID_REQUEST_BODY.errorCode(),
+                INVALID_REQUEST_BODY.errorMessage()
+        );
+        
+        assertSoftly(softAssertions -> {
+                    softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    softAssertions.assertThat(actual)
+                                  .usingRecursiveComparison()
+                                  .isEqualTo(expected);
+                }
+        );
+        
+        
     }
 }
