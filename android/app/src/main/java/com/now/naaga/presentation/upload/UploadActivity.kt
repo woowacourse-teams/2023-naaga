@@ -51,12 +51,32 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         setImage(requireNotNull(imageUri) { "imageUri가 null입니다" })
     }
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions(),
-    ) { permission: Map<String, Boolean> ->
-        if (checkStorageRequest(permission)) return@registerForActivityResult
-        checkLocationRequest(permission)
-    }
+    private val storagePermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val isGranted: Boolean = permissions.values.all { it }
+            if (!isGranted) {
+                showStoragePermissionSnackBar()
+                return@registerForActivityResult
+            }
+            openCamera()
+        }
+
+    private val locationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val isGranted: Boolean = permissions.values.all { true }
+            if (!isGranted) {
+                showLocationPermissionSnackBar()
+                return@registerForActivityResult
+            }
+            setCoordinate()
+        }
+
+    private val isStoragePermissionGranted: Boolean
+        get() = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            storagePermissionsBelow28.all { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
+        } else {
+            true
+        }
 
     private val locationSettingLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         setCoordinate()
@@ -64,15 +84,14 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityUploadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initViewModel()
         subscribe()
-        registerAnalytics(this.lifecycle)
-        setCoordinate()
         setClickListeners()
+        locationPermissionLauncher.launch(locationPermissions)
+        registerAnalytics(this.lifecycle)
     }
 
     private fun initViewModel() {
@@ -136,32 +155,6 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         view.visibility = status
     }
 
-    private fun checkStorageRequest(permission: Map<String, Boolean>): Boolean {
-        val keys = permission.entries.map { it.key }
-        val isStorageRequest = storagePermissions.any { keys.contains(it) }
-        if (isStorageRequest) {
-            if (permission.entries.map { it.value }.contains(false)) {
-                showStoragePermissionSnackBar()
-            } else {
-                openCamera()
-            }
-            return true
-        }
-        return false
-    }
-
-    private fun checkLocationRequest(permission: Map<String, Boolean>) {
-        val keys = permission.entries.map { it.key }
-        val isLocationRequest = locationPermissions.any { keys.contains(it) }
-        if (isLocationRequest) {
-            if (permission.entries.map { it.value }.contains(false)) {
-                showLocationPermissionSnackBar()
-                return
-            }
-            setCoordinate()
-        }
-    }
-
     private fun showStoragePermissionSnackBar() {
         binding.root.showSnackbarWithEvent(
             message = getString(R.string.snackbar_storage_message),
@@ -210,16 +203,15 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun setCoordinate() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-            fusedLocationClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, createCancellationToken())
-                .addOnSuccessListener { location ->
-                    location.let { viewModel.setCoordinate(getCoordinate(location)) }
-                }
-                .addOnFailureListener { }
-        } else {
-            requestPermissionLauncher.launch(locationPermissions)
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+            showLocationPermissionSnackBar()
+            return
         }
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, createCancellationToken())
+            .addOnSuccessListener { location ->
+                location.let { viewModel.setCoordinate(getCoordinate(location)) }
+            }.addOnFailureListener { }
     }
 
     private fun createCancellationToken(): CancellationToken {
@@ -246,10 +238,11 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun openCameraWithPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return openCamera()
+        if (!isStoragePermissionGranted) {
+            storagePermissionLauncher.launch(storagePermissionsBelow28)
+            return
         }
-        requestPermissionLauncher.launch(storagePermissions)
+        openCamera()
     }
 
     private fun openCamera() {
@@ -275,7 +268,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     companion object {
         private const val PRIORITY_HIGH_ACCURACY = 100
         private const val RESIZE = 500
-        private val storagePermissions = arrayOf(
+        private val storagePermissionsBelow28 = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
