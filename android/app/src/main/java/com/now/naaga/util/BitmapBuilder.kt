@@ -1,13 +1,11 @@
 package com.now.naaga.util
 
 import android.content.ContentResolver
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.BitmapFactory.Options
 import android.graphics.Matrix
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.exifinterface.media.ExifInterface
 
 class BitmapBuilder(
@@ -58,9 +56,7 @@ class BitmapBuilder(
     }
 
     private fun getRotatedBitmap(bitmap: Bitmap): Bitmap {
-        val filePath = getRealPathFromUri()
-        val orientation = getImageOrientation(filePath)
-
+        val orientation = getImageOrientation()
         if (orientation == 0) return bitmap
 
         val matrix = Matrix()
@@ -68,21 +64,9 @@ class BitmapBuilder(
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
-    private fun getRealPathFromUri(): String {
-        val cursor: Cursor? = contentResolver.query(imageUri, null, null, null, null)
-        val result: String = if (cursor == null) {
-            requireNotNull(imageUri.path) { "파일 경로를 찾을 수 없습니다." }
-        } else {
-            cursor.moveToFirst()
-            val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-            cursor.getString(idx)
-        }
-        cursor?.close()
-        return result
-    }
-
-    private fun getImageOrientation(filePath: String): Int {
-        val exif = ExifInterface(filePath)
+    private fun getImageOrientation(): Int {
+        val inputStream = requireNotNull(contentResolver.openInputStream(imageUri)) { "Uri로 InputStream을 여는데 실패했습니다." }
+        val exif = ExifInterface(inputStream)
         val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1)
 
         return when (orientation) {
