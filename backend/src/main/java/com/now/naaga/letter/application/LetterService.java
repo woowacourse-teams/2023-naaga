@@ -92,14 +92,13 @@ public class LetterService {
 
     @Transactional(readOnly = true)
     public List<Letter> findLetterLogInGame(final FindLetterLogByGameCommand findLetterLogByGameCommand) {
-        final Game gameInProgress = getGameInProgress(findLetterLogByGameCommand.playerId());
         if (findLetterLogByGameCommand.letterLogType().isWrite()) {
-            final List<WriteLetterLog> writeLetterLogs = writeLetterLogRepository.findByGameId(gameInProgress.getId());
+            final List<WriteLetterLog> writeLetterLogs = writeLetterLogRepository.findByGameId(findLetterLogByGameCommand.gameId());
             return writeLetterLogs.stream()
                     .map(WriteLetterLog::getLetter)
                     .toList();
         }
-        final List<ReadLetterLog> readLetterLogs = readLetterLogRepository.findByGameId(gameInProgress.getId());
+        final List<ReadLetterLog> readLetterLogs = readLetterLogRepository.findByGameId(findLetterLogByGameCommand.gameId());
         return readLetterLogs.stream()
                 .map(ReadLetterLog::getLetter)
                 .toList();
