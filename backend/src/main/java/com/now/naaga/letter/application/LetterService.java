@@ -106,7 +106,6 @@ public class LetterService {
                 .toList();
     }
 
-    // 여기 private인데 트렌젝셔이 어떻게 걸리지?
     private Game getGameInProgress(final Long playerId) {
         final FindGameByStatusCommand findGameByStatusCommand = new FindGameByStatusCommand(playerId, IN_PROGRESS);
         final List<Game> gamesInProgress = gameService.findGamesByStatus(findGameByStatusCommand);
