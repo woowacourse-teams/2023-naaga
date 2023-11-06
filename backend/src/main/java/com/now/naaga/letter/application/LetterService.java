@@ -1,10 +1,8 @@
 package com.now.naaga.letter.application;
 
 import com.now.naaga.game.application.GameService;
-import com.now.naaga.game.application.dto.FindGameByStatusCommand;
+import com.now.naaga.game.application.dto.FindGameInProgressCommand;
 import com.now.naaga.game.domain.Game;
-import com.now.naaga.game.exception.GameException;
-import com.now.naaga.game.exception.GameExceptionType;
 import com.now.naaga.letter.application.dto.CreateLetterCommand;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
@@ -23,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 import static com.now.naaga.letter.exception.LetterExceptionType.NO_EXIST;
 
 @Transactional
@@ -79,7 +76,7 @@ public class LetterService {
     }
 
     private void logReadLetter(final Player player,
-                              final Letter letter) {
+                               final Letter letter) {
         final Game gameInProgress = getGameInProgress(player.getId());
         final ReadLetterLog readLetterLog = new ReadLetterLog(gameInProgress, letter);
         readLetterLogRepository.save(readLetterLog);
@@ -105,12 +102,8 @@ public class LetterService {
     }
 
     private Game getGameInProgress(final Long playerId) {
-        final FindGameByStatusCommand findGameByStatusCommand = new FindGameByStatusCommand(playerId, IN_PROGRESS);
-        final List<Game> gamesInProgress = gameService.findGamesByStatus(findGameByStatusCommand);
-        if (gamesInProgress.isEmpty()) {
-            throw new GameException(GameExceptionType.NOT_EXIST_IN_PROGRESS);
-        }
-        return gamesInProgress.get(0);
+        final FindGameInProgressCommand findGameByStatusCommand = new FindGameInProgressCommand(playerId);
+        return gameService.findGameInProgress(findGameByStatusCommand);
     }
 }
 
