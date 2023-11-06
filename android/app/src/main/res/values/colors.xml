@@ -23,6 +23,8 @@
     <color name="main_pink">#E93394</color>
 
     <!-- 커스텀 버튼 색상 -->
+    <!-- ripple color -->
+    <color name="custom_button_ripple">#4D000000</color>
     <!-- yellow -->
     <color name="custom_button_yellow_main">#FFD50C</color>
     <color name="custom_button_yellow_first_shadow">#E3A40A</color>
