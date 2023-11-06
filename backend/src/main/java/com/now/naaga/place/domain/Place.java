@@ -6,8 +6,14 @@ import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.exception.PlaceExceptionType;
 import com.now.naaga.player.domain.Player;
-import jakarta.persistence.*;
-
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity

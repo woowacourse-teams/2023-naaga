@@ -1,5 +1,8 @@
 package com.now.naaga.game.application;
 
+import static com.now.naaga.game.exception.GameExceptionType.HINTS_EXHAUSTED;
+import static com.now.naaga.game.exception.GameExceptionType.HINT_NOT_EXIST_IN_GAME;
+
 import com.now.naaga.game.application.dto.CreateHintCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
 import com.now.naaga.game.application.dto.FindHintByIdCommand;
@@ -12,9 +15,6 @@ import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.Position;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.now.naaga.game.exception.GameExceptionType.HINTS_EXHAUSTED;
-import static com.now.naaga.game.exception.GameExceptionType.HINT_NOT_EXIST_IN_GAME;
 
 @Transactional
 @Service
