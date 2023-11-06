@@ -2,10 +2,9 @@ package com.now.naaga.temporaryplace.repository;
 
 
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
 
 public interface TemporaryPlaceRepository extends JpaRepository<TemporaryPlace, Long> {
 

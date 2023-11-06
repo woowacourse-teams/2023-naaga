@@ -1,19 +1,20 @@
 package com.now.naaga.auth.presentation.interceptor;
 
+import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_HEADER;
+import static com.now.naaga.auth.exception.AuthExceptionType.INVALID_MANAGER;
+import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
+
 import com.now.naaga.auth.exception.AuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
-
-import static com.now.naaga.auth.exception.AuthExceptionType.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class ManagerAuthInterceptor implements HandlerInterceptor {

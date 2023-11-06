@@ -1,5 +1,11 @@
 package com.now.naaga.gameresult.application;
 
+import static com.now.naaga.game.domain.EndType.ARRIVED;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.now.naaga.common.builder.GameBuilder;
 import com.now.naaga.common.builder.GameResultBuilder;
 import com.now.naaga.common.builder.PlaceBuilder;
@@ -8,11 +14,11 @@ import com.now.naaga.game.application.dto.CreateGameResultCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.gameresult.domain.GameResult;
-import com.now.naaga.gameresult.exception.GameResultException;
 import com.now.naaga.gameresult.repository.GameResultRepository;
 import com.now.naaga.place.domain.Position;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;
+import java.time.LocalDateTime;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -22,14 +28,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-
-import static com.now.naaga.game.domain.EndType.ARRIVED;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Sql("/truncate.sql")

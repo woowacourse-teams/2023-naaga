@@ -35,7 +35,8 @@ class OnAdventureViewModel @Inject constructor(
     private val _adventure = MutableLiveData<Adventure>()
     val adventure: LiveData<Adventure> = _adventure
     val hints = DisposableLiveData<List<Hint>>(_adventure.map { it.hints })
-    val remainingHintCount = DistinctChildLiveData<Int>(adventure.map { getRemainingHintCount() })
+    val remainingHintCount: Int
+        get() = (RemainingTryCount(MAX_HINT_COUNT) - (adventure.value?.hints?.size ?: 0)).toInt()
 
     val myCoordinate = MutableLiveData<Coordinate>()
     val startCoordinate = DisposableLiveData<Coordinate>(myCoordinate)
@@ -56,7 +57,7 @@ class OnAdventureViewModel @Inject constructor(
                     ).map { it.copy(isNearBy = coordinate.isNearBy(it.coordinate)) },
                 )
             } ?: emit(emptyList())
-            delay(15000)
+            delay(5000)
         }
     }
 
@@ -122,12 +123,7 @@ class OnAdventureViewModel @Inject constructor(
     }
 
     private fun isAllHintsUsed(): Boolean {
-        return getRemainingHintCount() <= 0
-    }
-
-    private fun getRemainingHintCount(): Int {
-        val usedHintCount = adventure.value?.hints?.size ?: 0
-        return (RemainingTryCount(MAX_HINT_COUNT) - usedHintCount).toInt()
+        return remainingHintCount <= 0
     }
 
     fun endAdventure() {

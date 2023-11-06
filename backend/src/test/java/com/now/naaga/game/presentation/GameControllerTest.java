@@ -1,13 +1,46 @@
 package com.now.naaga.game.presentation;
 
+import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
+import static com.now.naaga.common.fixture.PositionFixture.서울_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.역삼역_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_근처_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_정문_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
+import static com.now.naaga.common.fixture.PositionFixture.제주_좌표;
+import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_DONE;
+import static com.now.naaga.game.exception.GameExceptionType.ALREADY_IN_PROGRESS;
+import static com.now.naaga.game.exception.GameExceptionType.CAN_NOT_FIND_PLACE;
+import static com.now.naaga.game.exception.GameExceptionType.HINT_NOT_EXIST_IN_GAME;
+import static com.now.naaga.game.exception.GameExceptionType.INACCESSIBLE_AUTHENTICATION;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_ARRIVED;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST;
+import static com.now.naaga.gameresult.domain.ResultType.FAIL;
+import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.*;
+import com.now.naaga.common.builder.GameBuilder;
+import com.now.naaga.common.builder.GameResultBuilder;
+import com.now.naaga.common.builder.MemberBuilder;
+import com.now.naaga.common.builder.PlaceBuilder;
+import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
-import com.now.naaga.game.domain.*;
-import com.now.naaga.game.presentation.dto.*;
+import com.now.naaga.game.domain.Direction;
+import com.now.naaga.game.domain.Game;
+import com.now.naaga.game.domain.GameRecord;
+import com.now.naaga.game.domain.Hint;
+import com.now.naaga.game.presentation.dto.CoordinateRequest;
+import com.now.naaga.game.presentation.dto.EndGameRequest;
+import com.now.naaga.game.presentation.dto.GameResponse;
+import com.now.naaga.game.presentation.dto.GameResultResponse;
+import com.now.naaga.game.presentation.dto.GameStatusResponse;
+import com.now.naaga.game.presentation.dto.HintResponse;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.HintRepository;
 import com.now.naaga.gameresult.domain.GameResult;
@@ -23,6 +56,9 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -30,20 +66,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.now.naaga.auth.exception.AuthExceptionType.NOT_EXIST_HEADER;
-import static com.now.naaga.common.fixture.PositionFixture.*;
-import static com.now.naaga.game.domain.Game.MAX_ATTEMPT_COUNT;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
-import static com.now.naaga.gameresult.domain.ResultType.FAIL;
-import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
-import static com.now.naaga.game.exception.GameExceptionType.*;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)

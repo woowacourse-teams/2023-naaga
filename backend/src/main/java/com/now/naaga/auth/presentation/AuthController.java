@@ -1,17 +1,21 @@
 package com.now.naaga.auth.presentation;
 
-import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.auth.application.AuthService;
 import com.now.naaga.auth.application.dto.AuthCommand;
 import com.now.naaga.auth.application.dto.RefreshTokenCommand;
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
+import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
 import com.now.naaga.auth.presentation.dto.AuthResponse;
 import com.now.naaga.auth.presentation.dto.RefreshTokenRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/auth")
 @RestController

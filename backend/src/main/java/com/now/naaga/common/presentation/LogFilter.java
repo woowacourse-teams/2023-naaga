@@ -1,15 +1,18 @@
 package com.now.naaga.common.presentation;
 
-import jakarta.servlet.*;
+import static com.now.naaga.common.presentation.MdcToken.REQUEST_ID;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-
-import java.io.IOException;
-import java.util.UUID;
-
-import static com.now.naaga.common.presentation.MdcToken.*;
 
 public class LogFilter implements Filter {
 
