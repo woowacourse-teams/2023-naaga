@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Point
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -55,7 +56,7 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
     }
 
     private val ripplePaint = Paint().apply {
-        this.color = Color.parseColor("#4D000000")
+        this.color = ContextCompat.getColor(this@GameButton.context, R.color.custom_button_ripple)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -75,7 +76,9 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
             MotionEvent.ACTION_UP -> {
                 isClicked = false
                 invalidate()
-                clickAction?.onClick(this)
+                if (isClickInsideButton(Point(event.x.toInt(), event.y.toInt()))) {
+                    clickAction?.onClick(this)
+                }
             }
         }
         return true
@@ -83,6 +86,12 @@ class GameButton(context: Context, attrs: AttributeSet? = null) : AppCompatButto
 
     override fun setOnClickListener(l: OnClickListener?) {
         clickAction = l
+    }
+
+    private fun isClickInsideButton(point: Point): Boolean {
+        val isXInside = point.x in 0..this.width
+        val isYInside = point.y in 0..this.height
+        return isXInside && isYInside
     }
 
     private fun drawRipple(canvas: Canvas) {
