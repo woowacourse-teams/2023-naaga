@@ -6,6 +6,7 @@ interface AuthRepository {
     suspend fun logIn(platformAuth: PlatformAuth): Boolean
     suspend fun withdrawalMember()
     suspend fun logout()
+    suspend fun refreshAccessToken()
 
     fun getAccessToken(): String?
     fun getRefreshToken(): String

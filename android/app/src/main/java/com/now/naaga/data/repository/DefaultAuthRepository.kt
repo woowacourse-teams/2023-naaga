@@ -4,6 +4,7 @@ import com.now.domain.model.PlatformAuth
 import com.now.domain.repository.AuthRepository
 import com.now.naaga.data.local.AuthDataSource
 import com.now.naaga.data.mapper.toDto
+import com.now.naaga.data.remote.dto.post.RefreshTokenDto
 import com.now.naaga.data.remote.retrofit.service.AuthService
 import com.now.naaga.util.extension.getValueOrThrow
 import com.now.naaga.util.unlinkWithKakao
@@ -53,6 +54,12 @@ class DefaultAuthRepository(
     override fun storeToken(accessToken: String, refreshToken: String) {
         authDataSource.setAccessToken(accessToken)
         authDataSource.setRefreshToken(refreshToken)
+    }
+
+    override suspend fun refreshAccessToken() {
+        val response = authService.requestRefresh(RefreshTokenDto(authDataSource.getRefreshToken()!!))
+        val naagaAuthDto = response.getValueOrThrow()
+        storeToken(naagaAuthDto.accessToken, naagaAuthDto.refreshToken)
     }
 
     companion object {

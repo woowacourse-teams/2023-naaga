@@ -2,6 +2,7 @@ package com.now.naaga.data.remote.retrofit.service
 
 import com.now.naaga.data.remote.dto.NaagaAuthDto
 import com.now.naaga.data.remote.dto.PlatformAuthDto
+import com.now.naaga.data.remote.dto.post.RefreshTokenDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -23,4 +24,9 @@ interface AuthService {
     suspend fun requestLogout(
         @Header("Authorization") accessToken: String,
     ): Response<Unit>
+
+    @POST("/auth/refresh")
+    suspend fun requestRefresh(
+        @Body refreshToken: RefreshTokenDto,
+    ): Response<NaagaAuthDto>
 }
