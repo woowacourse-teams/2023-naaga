@@ -63,7 +63,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val isGranted: Boolean = permissions.values.all { true }
+            val isGranted: Boolean = permissions.values.all { it }
             if (!isGranted) {
                 showLocationPermissionSnackBar()
                 return@registerForActivityResult
