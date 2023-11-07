@@ -7,14 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.now.naaga.R
 import com.now.naaga.databinding.DialogSendLetterBinding
 import com.now.naaga.util.dpToPx
 import com.now.naaga.util.getWidthProportionalToDevice
 
 class LetterSendDialog(
     private val onClick: (String) -> Unit,
-    private val showWarning: (String) -> Unit,
 ) : DialogFragment() {
     private lateinit var binding: DialogSendLetterBinding
     var message: String = ""
@@ -44,13 +42,7 @@ class LetterSendDialog(
     }
 
     private fun setClickListener() {
-        binding.btnDialogLetterSubmit.setOnClickListener {
-            if (message.isEmpty()) {
-                showWarning(getString(R.string.send_letter_dialog_warning))
-            } else {
-                onClick(message)
-            }
-        }
+        binding.btnDialogLetterSubmit.setOnClickListener { onClick(message) }
     }
 
     companion object {

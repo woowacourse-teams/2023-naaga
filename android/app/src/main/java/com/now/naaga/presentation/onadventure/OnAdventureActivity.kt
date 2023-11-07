@@ -103,7 +103,7 @@ class OnAdventureActivity :
             viewModel.endAdventure()
         }
         binding.ivSendLetter.setOnClickListener {
-            LetterSendDialog(viewModel::sendLetter, ::showToast).show(supportFragmentManager, LetterSendDialog.TAG)
+            LetterSendDialog(::registerLetter).show(supportFragmentManager, LetterSendDialog.TAG)
         }
     }
 
@@ -200,6 +200,14 @@ class OnAdventureActivity :
         removeLetters()
         letters.forEach { letter ->
             addLetter(letter, viewModel::getLetter)
+        }
+    }
+
+    private fun registerLetter(message: String) {
+        if (message.isNotEmpty()) {
+            viewModel::sendLetter
+        } else {
+            showToast(getString(R.string.send_letter_dialog_warning))
         }
     }
 
