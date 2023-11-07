@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.AdventureResult
-import com.now.domain.model.OrderType
-import com.now.domain.model.SortType
+import com.now.domain.model.type.OrderType
+import com.now.domain.model.type.SortType
 import com.now.domain.repository.AdventureRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,8 +21,8 @@ class AdventureHistoryViewModel @Inject constructor(private val adventureReposit
     private val _adventureResults = MutableLiveData<List<AdventureResult>>()
     val adventureResults: LiveData<List<AdventureResult>> = _adventureResults
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
 
     fun fetchHistories() {
         viewModelScope.launch {
@@ -30,18 +31,15 @@ class AdventureHistoryViewModel @Inject constructor(private val adventureReposit
             }.onSuccess { results: List<AdventureResult> ->
                 _adventureResults.value = results
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
 
-    private fun setErrorMessage(throwable: DataThrowable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is PlayerThrowable -> {
-                _errorMessage.value = throwable.message
-            }
-
-            else -> {}
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
+            is PlayerThrowable -> { _throwable.value = throwable }
         }
     }
 }

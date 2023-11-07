@@ -4,19 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.now.domain.model.OrderType
 import com.now.domain.model.Place
 import com.now.domain.model.Rank
-import com.now.domain.model.SortType
 import com.now.domain.model.Statistics
+import com.now.domain.model.type.OrderType
+import com.now.domain.model.type.SortType
 import com.now.domain.repository.PlaceRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
 import com.now.naaga.data.throwable.DataThrowable
-import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
-import com.now.naaga.data.throwable.DataThrowable.PlayerThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +43,7 @@ class MyPageViewModel @Inject constructor(
             }.onSuccess { rank ->
                 _rank.value = rank
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
@@ -56,7 +55,7 @@ class MyPageViewModel @Inject constructor(
             }.onSuccess { statistics ->
                 _statistics.value = statistics
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
@@ -68,22 +67,16 @@ class MyPageViewModel @Inject constructor(
             }.onSuccess { places ->
                 _places.value = places
             }.onFailure {
-                setErrorMessage(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
 
-    private fun setErrorMessage(throwable: Throwable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is PlayerThrowable -> {
-                _throwable.value = throwable
-            }
-
-            is PlaceThrowable -> {
-                _throwable.value = throwable
-            }
-
-            else -> {}
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
+            is DataThrowable.PlayerThrowable -> { _throwable.value = throwable }
+            is DataThrowable.PlaceThrowable -> { _throwable.value = throwable }
         }
     }
 }

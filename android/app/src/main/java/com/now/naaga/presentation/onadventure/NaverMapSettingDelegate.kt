@@ -20,18 +20,23 @@ import com.naver.maps.map.widget.LocationButtonView
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Direction
 import com.now.domain.model.Hint
+import com.now.domain.model.letter.LetterPreview
 import com.now.naaga.R
 import com.now.naaga.util.dpToPx
+import com.now.naaga.util.extension.setOnSingleClickListener
 
 interface NaverMapSettingDelegate : OnMapReadyCallback {
     val mapFragment: MapFragment
     val naverMap: NaverMap
     val locationSource: LocationSource
     val hintMarkers: MutableList<Marker>
+    val letterMarkers: MutableList<Marker>
 
     fun setNaverMap(activity: AppCompatActivity, @IdRes mapLayoutId: Int)
     fun addHintMarker(hint: Hint)
     fun addDestinationMarker(coordinate: Coordinate)
+    fun addLetter(letter: LetterPreview, action: (id: Long) -> Unit)
+    fun removeLetters()
     fun setOnMapReady(action: () -> Unit)
 }
 
@@ -44,6 +49,7 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
     override lateinit var naverMap: NaverMap // API를 호출하기 위한 인터페이스
     override lateinit var locationSource: LocationSource // 네이버 지도 SDK에 위치를 제공하는 인터페이스
     override val hintMarkers: MutableList<Marker> = mutableListOf()
+    override val letterMarkers: MutableList<Marker> = mutableListOf()
 
     override fun setNaverMap(activity: AppCompatActivity, @IdRes mapLayoutId: Int) {
         this.activity = activity
@@ -119,6 +125,35 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
             position = LatLng(coordinate.latitude, coordinate.longitude)
             map = naverMap
         }
+    }
+
+    override fun addLetter(letter: LetterPreview, action: (id: Long) -> Unit) {
+        Marker().apply {
+            position = LatLng(letter.coordinate.latitude, letter.coordinate.longitude)
+            icon = selectLetterIcon(letter.isNearBy)
+            if (letter.isNearBy) {
+                setOnSingleClickListener {
+                    action(letter.id)
+                }
+            }
+            map = naverMap
+            letterMarkers.add(this)
+        }
+    }
+
+    private fun selectLetterIcon(isNearBy: Boolean): OverlayImage {
+        return if (isNearBy) {
+            OverlayImage.fromResource(R.drawable.ic_letter)
+        } else {
+            OverlayImage.fromResource(R.drawable.ic_letter_preview)
+        }
+    }
+
+    override fun removeLetters() {
+        letterMarkers.forEach { letterMarker ->
+            letterMarker.map = null
+        }
+        letterMarkers.clear()
     }
 
     override fun setOnMapReady(action: () -> Unit) {

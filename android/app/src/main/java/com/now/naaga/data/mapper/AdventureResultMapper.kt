@@ -1,7 +1,7 @@
 package com.now.naaga.data.mapper
 
 import com.now.domain.model.AdventureResult
-import com.now.domain.model.AdventureResultType
+import com.now.domain.model.type.AdventureResultType
 import com.now.naaga.data.remote.dto.AdventureResultDto
 import java.time.LocalDateTime
 

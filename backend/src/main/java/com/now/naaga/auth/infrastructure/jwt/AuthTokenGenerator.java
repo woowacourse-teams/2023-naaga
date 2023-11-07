@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthTokenGenerator {
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 365 * 100;  // 100년
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 365 * 100;  // 100년
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 20;  // 20초
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 10;  // 10분
 
     private final JwtProvider jwtProvider;
 

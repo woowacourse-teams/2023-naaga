@@ -4,7 +4,7 @@ import com.now.domain.model.Statistics
 import com.now.domain.repository.StatisticsRepository
 import com.now.naaga.data.mapper.toDomain
 import com.now.naaga.data.remote.retrofit.service.StatisticsService
-import com.now.naaga.util.getValueOrThrow
+import com.now.naaga.util.extension.getValueOrThrow
 
 class DefaultStatisticsRepository(
     private val statisticsService: StatisticsService,

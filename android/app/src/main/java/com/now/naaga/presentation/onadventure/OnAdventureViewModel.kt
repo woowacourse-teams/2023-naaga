@@ -3,29 +3,40 @@ package com.now.naaga.presentation.onadventure
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Adventure
-import com.now.domain.model.AdventureEndType
 import com.now.domain.model.AdventureStatus
 import com.now.domain.model.Coordinate
 import com.now.domain.model.Hint
 import com.now.domain.model.RemainingTryCount
+import com.now.domain.model.letter.LetterPreview
+import com.now.domain.model.type.AdventureEndType
 import com.now.domain.repository.AdventureRepository
+import com.now.domain.repository.LetterRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.Companion.hintThrowable
 import com.now.naaga.data.throwable.DataThrowable.GameThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
+import com.now.naaga.presentation.uimodel.mapper.toUiModel
+import com.now.naaga.presentation.uimodel.model.LetterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class OnAdventureViewModel @Inject constructor(private val adventureRepository: AdventureRepository) : ViewModel() {
+class OnAdventureViewModel @Inject constructor(
+    private val adventureRepository: AdventureRepository,
+    private val letterRepository: LetterRepository,
+) : ViewModel() {
     private val _adventure = MutableLiveData<Adventure>()
     val adventure: LiveData<Adventure> = _adventure
     val hints = DisposableLiveData<List<Hint>>(_adventure.map { it.hints })
-    val remainingHintCount = DistinctChildLiveData<Int>(adventure.map { getRemainingHintCount() })
+    val remainingHintCount: Int
+        get() = (RemainingTryCount(MAX_HINT_COUNT) - (adventure.value?.hints?.size ?: 0)).toInt()
 
     val myCoordinate = MutableLiveData<Coordinate>()
     val startCoordinate = DisposableLiveData<Coordinate>(myCoordinate)
@@ -36,8 +47,28 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
-    private val _error = MutableLiveData<DataThrowable>()
-    val error: LiveData<DataThrowable> = _error
+    val letters: LiveData<List<LetterPreview>> = liveData {
+        while (true) {
+            myCoordinate.value?.let { coordinate ->
+                emit(
+                    letterRepository.fetchNearbyLetters(
+                        latitude = coordinate.latitude,
+                        longitude = coordinate.longitude,
+                    ).map { it.copy(isNearBy = coordinate.isNearBy(it.coordinate)) },
+                )
+            } ?: emit(emptyList())
+            delay(5000)
+        }
+    }
+
+    private val _letter = MutableLiveData<LetterUiModel>()
+    val letter: LiveData<LetterUiModel> = _letter
+
+    private val _throwable = MutableLiveData<DataThrowable>()
+    val throwable: LiveData<DataThrowable> = _throwable
+
+    private val _isSendLetterSuccess = MutableLiveData<Boolean>()
+    val isSendLetterSuccess: LiveData<Boolean> = _isSendLetterSuccess
 
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
@@ -50,7 +81,7 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
             }.onSuccess {
                 setAdventure(it)
             }.onFailure {
-                setError(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
@@ -66,14 +97,14 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
             }.onSuccess { status: AdventureStatus ->
                 _adventure.value = adventure.value?.copy(adventureStatus = status)
             }.onFailure {
-                setError(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
 
     fun openHint() {
         if (isAllHintsUsed()) {
-            setError(hintThrowable)
+            setThrowable(hintThrowable)
             return
         }
         viewModelScope.launch {
@@ -86,18 +117,13 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
                 _adventure.value = adventure.value?.copy(hints = ((adventure.value?.hints ?: listOf()) + hint))
                 _lastHint.value = hint
             }.onFailure {
-                setError(it as DataThrowable)
+                setThrowable(it)
             }
         }
     }
 
     private fun isAllHintsUsed(): Boolean {
-        return getRemainingHintCount() <= 0
-    }
-
-    private fun getRemainingHintCount(): Int {
-        val usedHintCount = adventure.value?.hints?.size ?: 0
-        return (RemainingTryCount(MAX_HINT_COUNT) - usedHintCount).toInt()
+        return remainingHintCount <= 0
     }
 
     fun endAdventure() {
@@ -111,23 +137,50 @@ class OnAdventureViewModel @Inject constructor(private val adventureRepository: 
             }.onSuccess {
                 _adventure.value = adventure.value?.copy(adventureStatus = it)
             }.onFailure {
-                when ((it as DataThrowable).code) {
-                    TRY_COUNT_OVER -> _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
-                    NOT_ARRIVED -> {
-                        val currentRemainingTryCount = adventure.value?.remainingTryCount ?: return@onFailure
-                        _adventure.value = adventure.value?.copy(remainingTryCount = currentRemainingTryCount - 1)
-                    }
-                }
-                setError(it)
+                setThrowable(it)
             }
         }
     }
 
-    private fun setError(throwable: DataThrowable) {
+    private fun handleGameThrowable(throwable: GameThrowable) {
+        when (throwable.code) {
+            TRY_COUNT_OVER -> _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
+            NOT_ARRIVED -> {
+                val currentRemainingTryCount = adventure.value?.remainingTryCount ?: return
+                _adventure.value = adventure.value?.copy(remainingTryCount = currentRemainingTryCount - 1)
+            }
+            else -> { _throwable.value = throwable }
+        }
+    }
+
+    fun getLetter(id: Long) {
+        viewModelScope.launch {
+            runCatching {
+                letterRepository.fetchLetter(id)
+            }.onSuccess { letter ->
+                _letter.value = letter.toUiModel()
+            }.onFailure {
+                setThrowable(it)
+            }
+        }
+    }
+
+    fun sendLetter(message: String) {
+        viewModelScope.launch {
+            runCatching {
+                myCoordinate.value?.let { letterRepository.postLetter(message, it.latitude, it.longitude) }
+            }.onSuccess {
+                _isSendLetterSuccess.value = true
+            }.onFailure {
+            }
+        }
+    }
+
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is GameThrowable -> _error.value = throwable
-            is UniversalThrowable -> _error.value = throwable
-            else -> {}
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
+            is GameThrowable -> { handleGameThrowable(throwable) }
+            is UniversalThrowable -> _throwable.value = throwable
         }
     }
 

@@ -29,10 +29,6 @@ data class Place(
         return getDistance(coordinate) <= NEARBY_STANDARD
     }
 
-    fun isNearBy(distance: Int): Boolean {
-        return distance <= NEARBY_STANDARD
-    }
-
     companion object {
         const val NEARBY_STANDARD = 70L
     }

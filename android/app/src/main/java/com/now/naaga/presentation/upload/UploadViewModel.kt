@@ -9,17 +9,19 @@ import com.now.domain.repository.PlaceRepository
 import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.data.throwable.DataThrowable.PlaceThrowable
 import com.now.naaga.data.throwable.DataThrowable.UniversalThrowable
-import com.now.naaga.util.MutableSingleLiveData
-import com.now.naaga.util.SingleLiveData
+import com.now.naaga.util.singleliveevent.MutableSingleLiveData
+import com.now.naaga.util.singleliveevent.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
 class UploadViewModel @Inject constructor(
     private val placeRepository: PlaceRepository,
 ) : ViewModel() {
-    private var imageUri: String = URI_EMPTY
+    private var file = FILE_EMPTY
 
     val name = MutableLiveData<String>()
 
@@ -32,8 +34,8 @@ class UploadViewModel @Inject constructor(
     private val _coordinate = MutableLiveData<Coordinate>()
     val coordinate: LiveData<Coordinate> = _coordinate
 
-    fun setUri(uri: String) {
-        imageUri = uri
+    fun setFile(file: File) {
+        this.file = file
     }
 
     fun setCoordinate(coordinate: Coordinate) {
@@ -41,7 +43,7 @@ class UploadViewModel @Inject constructor(
     }
 
     fun isFormValid(): Boolean {
-        return (imageUri != URI_EMPTY) && (_coordinate.value != null) && (name.value != null)
+        return (file != FILE_EMPTY) && (_coordinate.value != null) && (name.value != null)
     }
 
     fun postPlace() {
@@ -53,30 +55,29 @@ class UploadViewModel @Inject constructor(
                         name = name.value.toString(),
                         description = "",
                         coordinate = coordinate,
-                        image = imageUri,
+                        file = file,
                     )
                 }.onSuccess {
                     _successUpload.setValue(UploadStatus.SUCCESS)
                 }.onFailure {
                     _successUpload.setValue(UploadStatus.FAIL)
-                    setError(it as DataThrowable)
+                    setThrowable(it)
                 }
             }
         }
     }
 
-    private fun setError(throwable: DataThrowable) {
+    private fun setThrowable(throwable: Throwable) {
         when (throwable) {
+            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
             is UniversalThrowable -> _throwable.value = throwable
             is PlaceThrowable -> _throwable.value = throwable
-            else -> {}
         }
     }
 
     companion object {
-        const val URI_EMPTY = "EMPTY"
+        val FILE_EMPTY = File("")
 
-        const val ALREADY_EXISTS_NEARBY = 505
         const val ERROR_STORE_PHOTO = 215
         const val ERROR_POST_BODY = 205
     }
