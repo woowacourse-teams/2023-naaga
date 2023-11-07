@@ -51,9 +51,7 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun fetchData() {
-        viewModel.fetchRank()
-        viewModel.fetchStatistics()
-        viewModel.fetchPlaces()
+        viewModel.fetchData()
     }
 
     private fun subscribe() {
