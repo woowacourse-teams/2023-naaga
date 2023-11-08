@@ -272,15 +272,17 @@
                     android:textSize="20sp"
                     android:visibility="@{viewModel.isNearby() ? View.GONE : View.VISIBLE}" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.now.naaga.presentation.custom.GameButton
                     android:id="@+id/btn_onAdventure_arrived"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:background="@drawable/bg_yellow_button_thick"
                     android:text="@string/onAdventure_end_adventure"
                     android:textSize="20sp"
-                    android:visibility="@{viewModel.isNearby() ? View.VISIBLE : View.GONE}" />
+                    android:paddingBottom="20dp"
+                    android:visibility="@{viewModel.isNearby() ? View.VISIBLE : View.GONE}"
+                    app:radius="8dp"
+                    app:buttonColor="yellow" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

@@ -12,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
-
 @Entity
 public class ReadLetterLog extends BaseEntity {
 

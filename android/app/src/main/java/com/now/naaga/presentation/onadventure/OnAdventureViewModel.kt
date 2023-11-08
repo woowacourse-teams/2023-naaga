@@ -144,12 +144,18 @@ class OnAdventureViewModel @Inject constructor(
 
     private fun handleGameThrowable(throwable: GameThrowable) {
         when (throwable.code) {
-            TRY_COUNT_OVER -> _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
+            TRY_COUNT_OVER -> {
+                _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
+                _throwable.value = throwable
+            }
             NOT_ARRIVED -> {
                 val currentRemainingTryCount = adventure.value?.remainingTryCount ?: return
                 _adventure.value = adventure.value?.copy(remainingTryCount = currentRemainingTryCount - 1)
+                _throwable.value = throwable
             }
-            else -> { _throwable.value = throwable }
+            else -> {
+                _throwable.value = throwable
+            }
         }
     }
 
@@ -172,14 +178,15 @@ class OnAdventureViewModel @Inject constructor(
             }.onSuccess {
                 _isSendLetterSuccess.value = true
             }.onFailure {
+                setThrowable(it)
             }
         }
     }
 
     private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
-            is GameThrowable -> { handleGameThrowable(throwable) }
+            is IOException -> _throwable.value = DataThrowable.NetworkThrowable()
+            is GameThrowable -> handleGameThrowable(throwable)
             is UniversalThrowable -> _throwable.value = throwable
         }
     }

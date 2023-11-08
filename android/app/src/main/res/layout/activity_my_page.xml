@@ -49,15 +49,16 @@
                 app:layout_constraintTop_toBottomOf="@id/iv_mypage_back"
                 tools:text="krrrrrrrrrrrrrrrrrong" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.now.naaga.presentation.custom.GameButton
                 android:id="@+id/btn_mypage_adventure_history"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/bg_yellow_button"
                 android:paddingVertical="16dp"
                 android:text="@string/mypage_adventure_record"
                 android:textSize="16sp"
+                app:radius="8dp"
+                app:buttonColor="yellow"
                 app:layout_constraintBottom_toBottomOf="@id/tv_mypage_nickname"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/g_mypage"
@@ -82,7 +83,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/space_default_large"
-                android:background="@drawable/rect_white_radius_small"
+                android:background="@drawable/rect_radius_small"
+                android:backgroundTint="@color/primary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -22,6 +22,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.io.File
 
 class UploadViewModelTest {
     private lateinit var viewModel: UploadViewModel
@@ -65,7 +66,9 @@ class UploadViewModelTest {
     fun `데이터 전송 성공시 successUpload가 UploadStatus SUCCESS다`() {
         // given
         val coordinate = Coordinate(123.4567, 37.890)
+        val emptyFile = File("")
         viewModel.setCoordinate(coordinate)
+        viewModel.setFile(emptyFile)
 
         coEvery {
             placeRepository.postPlace(any(), any(), any(), any())
@@ -90,7 +93,9 @@ class UploadViewModelTest {
     fun `데이터 전송 실패시 successUpload가 UploadStatus Fail이고 반환된 throwable이 저장된다`() {
         // given
         val coordinate = Coordinate(123.4567, 37.890)
+        val emptyFile = File("")
         viewModel.setCoordinate(coordinate)
+        viewModel.setFile(emptyFile)
         val placeThrowable = DataThrowable.PlaceThrowable(505, "Test Failure")
         coEvery { placeRepository.postPlace(any(), any(), any(), any()) } throws placeThrowable
 

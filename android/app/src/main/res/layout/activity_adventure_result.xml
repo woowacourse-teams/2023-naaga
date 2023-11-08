@@ -81,7 +81,7 @@
                 android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rect_radius_small"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/primary"
                 android:orientation="vertical"
                 android:paddingHorizontal="24dp"
                 android:paddingVertical="16dp"
@@ -101,7 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/adventureResult_time_description"
-                        android:textColor="@color/main_gray"
+                        android:textColor="@color/on_secondary"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -131,6 +131,7 @@
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
+                    android:backgroundTint="@color/on_primary"
                     android:background="?android:attr/listDivider" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -143,7 +144,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/adventureResult_distance_description"
-                        android:textColor="@color/main_gray"
+                        android:textColor="@color/on_secondary"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -153,7 +154,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{@string/adventureResult_distance_value(viewModel.adventureResult.distance)}"
-                        android:textColor="@color/black"
+                        android:textColor="@color/on_primary"
                         android:textSize="24sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -167,7 +168,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:background="?android:attr/listDivider"
-                    android:backgroundTint="#000000" />
+                    android:backgroundTint="@color/on_primary" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_adventureResult_hintSection"
@@ -179,7 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/adventureResult_hint_description"
-                        android:textColor="@color/main_gray"
+                        android:textColor="@color/on_secondary"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -189,7 +190,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{@string/adventureResult_hint_value(viewModel.adventureResult.hintUses)}"
-                        android:textColor="@color/black"
+                        android:textColor="@color/on_primary"
                         android:textSize="24sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -202,7 +203,8 @@
                     android:id="@+id/divider3"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="?android:attr/listDivider" />
+                    android:background="?android:attr/listDivider"
+                    android:backgroundTint="@color/on_primary" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_adventureResult_trySection"
@@ -214,7 +216,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/adventureResult_try_description"
-                        android:textColor="@color/main_gray"
+                        android:textColor="@color/on_secondary"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -224,7 +226,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{@string/adventureResult_try_count_value(viewModel.adventureResult.tryCount)}"
-                        android:textColor="@color/black"
+                        android:textColor="@color/on_primary"
                         android:textSize="24sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -235,17 +237,18 @@
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.now.naaga.presentation.custom.GameButton
                 android:id="@+id/btn_adventureResult_return"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="@dimen/space_default_large"
                 android:layout_marginBottom="@dimen/space_default_large"
-                android:background="@drawable/bg_yellow_button"
                 android:paddingVertical="@dimen/space_default_medium"
                 android:text="@string/adventureResult_return_main"
                 android:textSize="20sp"
+                app:radius="8dp"
+                app:buttonColor="yellow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -18,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rect_white_radius_small"
+            android:background="@drawable/rect_radius_small"
             android:backgroundTint="@color/main_pink"
             android:paddingHorizontal="28dp"
             android:paddingTop="16dp"
