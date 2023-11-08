@@ -29,7 +29,8 @@ public class ControllerExceptionHandler {
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             MethodArgumentNotValidException.class,
-            HttpMediaTypeNotSupportedException.class})
+            HttpMediaTypeNotSupportedException.class,
+            MethodArgumentNotValidException.class})
     public ResponseEntity<ExceptionResponse> handleTypeMismatchException(final Exception e) {
         final CommonExceptionType commonExceptionType = CommonExceptionType.INVALID_REQUEST_BODY;
         final ExceptionResponse exceptionResponse = new ExceptionResponse(commonExceptionType.errorCode(), commonExceptionType.errorMessage());
