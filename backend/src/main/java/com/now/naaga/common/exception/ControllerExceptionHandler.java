@@ -9,6 +9,7 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+`import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -28,7 +29,8 @@ public class ControllerExceptionHandler {
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             MethodArgumentNotValidException.class,
-            HttpMediaTypeNotSupportedException.class})
+            HttpMediaTypeNotSupportedException.class,
+            MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ExceptionResponse> handleTypeMismatchException(final Exception e) {
         final CommonExceptionType commonExceptionType = CommonExceptionType.INVALID_REQUEST_BODY;
         final ExceptionResponse exceptionResponse = new ExceptionResponse(commonExceptionType.errorCode(), commonExceptionType.errorMessage());

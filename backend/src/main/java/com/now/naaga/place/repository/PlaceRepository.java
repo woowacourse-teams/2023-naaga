@@ -13,9 +13,14 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "WHERE ACOS(" +
             "SIN(RADIANS(:#{#user_position.latitude})) * SIN(RADIANS(place.position.latitude)) " +
             "+ (COS(RADIANS(:#{#user_position.latitude})) * COS(RADIANS(place.position.latitude)) * COS(RADIANS(:#{#user_position.longitude} - place.position.longitude)))" +
-            ") * 6371.0 <= :distance")
-    List<Place> findPlaceByPositionAndDistance(@Param(value = "user_position") final Position position,
-                                               @Param(value = "distance") final double distance);
+            ") * 6371.0 >= :minimum_distance " +
+            "AND ACOS(" +
+            "SIN(RADIANS(:#{#user_position.latitude})) * SIN(RADIANS(place.position.latitude)) " +
+            "+ (COS(RADIANS(:#{#user_position.latitude})) * COS(RADIANS(place.position.latitude)) * COS(RADIANS(:#{#user_position.longitude} - place.position.longitude)))" +
+            ") * 6371.0 <= :maximum_distance")
+    List<Place> findBetweenRadius(@Param(value = "user_position") final Position position,
+                                  @Param(value = "minimum_distance") final double minimumDistance,
+                                  @Param(value = "maximum_distance") final double maximumDistance);
 
     List<Place> findByRegisteredPlayerId(Long playerId);
 }
