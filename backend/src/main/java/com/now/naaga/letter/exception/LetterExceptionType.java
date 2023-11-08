@@ -10,6 +10,11 @@ public enum LetterExceptionType implements BaseExceptionType {
             HttpStatus.NOT_FOUND,
             "해당 쪽지가 존재하지 않습니다."
     ),
+    INVALID_LOG_TYPE(
+            605,
+            HttpStatus.NOT_FOUND,
+            "로그 타입이 아닙니다."
+    ),
     ;
 
     private final int errorCode;

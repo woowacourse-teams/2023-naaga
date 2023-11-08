@@ -4,16 +4,15 @@ import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.GameBuilder;
-import com.now.naaga.common.builder.LetterBuilder;
-import com.now.naaga.common.builder.PlaceBuilder;
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.builder.*;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.presentation.dto.CoordinateResponse;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.letter.application.LetterService;
 import com.now.naaga.letter.domain.Letter;
+import com.now.naaga.letter.domain.letterlog.ReadLetterLog;
+import com.now.naaga.letter.domain.letterlog.WriteLetterLog;
 import com.now.naaga.letter.presentation.dto.LetterRequest;
 import com.now.naaga.letter.presentation.dto.LetterResponse;
 import com.now.naaga.letter.presentation.dto.NearByLetterResponse;
@@ -47,6 +46,16 @@ import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST_IN_PROGRE
 import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
+import static com.now.naaga.common.fixture.PositionFixture.*;
+import static com.now.naaga.game.domain.GameStatus.DONE;
+import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST_IN_PROGRESS;
+import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class LetterControllerTest extends CommonControllerTest {
@@ -68,7 +77,13 @@ class LetterControllerTest extends CommonControllerTest {
     
     @Autowired
     private LetterBuilder letterBuilder;
-    
+
+    @Autowired
+    private ReadLetterLogBuilder readLetterLogBuilder;
+
+    @Autowired
+    private WriteLetterLogBuilder writeLetterLogBuilder;
+
     @Autowired
     private PlaceBuilder placeBuilder;
     
@@ -344,13 +359,205 @@ class LetterControllerTest extends CommonControllerTest {
         assertSoftly(softAssertions -> {
                     softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
                     softAssertions.assertThat(actual)
-                                  .usingRecursiveComparison()
-                                  .isEqualTo(expected);
+                            .usingRecursiveComparison()
+                            .isEqualTo(expected);
                 }
         );
     }
-    
-    
+
+    @Test
+    void 게임아이디와_회원으로_읽은쪽지로그를_모두_조회한다() {
+        // given & when
+        final Player player = playerBuilder.init()
+                .build();
+
+        final Place destination = placeBuilder.init()
+                .position(잠실_루터회관_정문_좌표)
+                .build();
+
+        final Game game1 = gameBuilder.init()
+                .place(destination)
+                .player(player)
+                .startPosition(잠실_루터회관_정문_좌표)
+                .build();
+
+        final Game game2 = gameBuilder.init()
+                .place(destination)
+                .player(player)
+                .startPosition(역삼역_좌표)
+                .build();
+
+        final Letter letter = letterBuilder.init()
+                .position(잠실_루터회관_정문_좌표)
+                .build();
+
+        final ReadLetterLog readLetterLog1 = readLetterLogBuilder.init()
+                .game(game1)
+                .letter(letter)
+                .build();
+
+        final ReadLetterLog readLetterLog2 = readLetterLogBuilder.init()
+                .game(game2)
+                .letter(letter)
+                .build();
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .param("gameId", game1.getId())
+                .param("logType", "READ")
+                .when()
+                .get("/letterlogs")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        // then
+        final List<LetterResponse> actual = extract.as(new TypeRef<>() {
+        });
+        final int statusCode = extract.statusCode();
+        final List<LetterResponse> expected = List.of(LetterResponse.from(letter));
+
+        assertSoftly(softly -> {
+            softly.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(actual)
+                    .hasSize(1)
+                    .usingRecursiveComparison()
+                    .ignoringFields("registerDate")
+                    .isEqualTo(expected);
+        });
+    }
+
+    @Test
+    void
+    게임아이디와_회원으로_작성한_쪽지로그를_모두_조회한다() {
+        // given & when
+        final Player player = playerBuilder.init()
+                .build();
+
+        final Place destination = placeBuilder.init()
+                .position(잠실_루터회관_정문_좌표)
+                .build();
+
+        final Game game = gameBuilder.init()
+                .place(destination)
+                .player(player)
+                .startPosition(잠실_루터회관_정문_좌표)
+                .build();
+
+        final Letter letter = letterBuilder.init()
+                .position(잠실_루터회관_정문_좌표)
+                .build();
+
+        final WriteLetterLog writeLetterLog1 = writeLetterLogBuilder.init()
+                .game(game)
+                .letter(letter)
+                .build();
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .param("gameId", game.getId())
+                .param("logType", "WRITE")
+                .when()
+                .get("/letterlogs")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        // then
+        final List<LetterResponse> actual = extract.as(new TypeRef<>() {
+        });
+        final int statusCode = extract.statusCode();
+        final List<LetterResponse> expected = List.of(LetterResponse.from(letter));
+
+        assertSoftly(softly -> {
+            softly.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(actual)
+                    .hasSize(1)
+                    .usingRecursiveComparison()
+                    .ignoringFields("registerDate")
+                    .isEqualTo(expected);
+        });
+    }
+
+    @Test
+    void 쪽지로그_조회시_잘못된_파라미터는_예외를_던진다() {
+        // given & when
+        final Player player = playerBuilder.init()
+                .build();
+
+        final Place destination = placeBuilder.init()
+                .position(잠실_루터회관_정문_좌표)
+                .build();
+
+        final Game game1 = gameBuilder.init()
+                .place(destination)
+                .player(player)
+                .startPosition(잠실_루터회관_정문_좌표)
+                .build();
+
+        final Game game2 = gameBuilder.init()
+                .place(destination)
+                .player(player)
+                .startPosition(역삼역_좌표)
+                .build();
+
+        final Letter letter = letterBuilder.init()
+                .position(잠실_루터회관_정문_좌표)
+                .build();
+
+        final Letter letter2 = letterBuilder.init()
+                .position(GS25_방이도곡점_좌표)
+                .build();
+
+        final WriteLetterLog writeLetterLog1 = writeLetterLogBuilder.init()
+                .game(game1)
+                .letter(letter)
+                .build();
+
+        final WriteLetterLog writeLetterLog2 = writeLetterLogBuilder.init()
+                .game(game2)
+                .letter(letter2)
+                .build();
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .param("gameId", game1.getId())
+                .param("logType", "잘못된enum")
+                .when()
+                .get("/letterlogs")
+                .then().log().all()
+                .extract();
+
+        // then
+        final int statusCode = extract.statusCode();
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+        final ExceptionResponse expected = new ExceptionResponse(INVALID_REQUEST_PARAMETERS.errorCode(), INVALID_REQUEST_PARAMETERS.errorMessage());
+
+        assertSoftly(softAssertions -> {
+                    softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    softAssertions.assertThat(actual)
+                            .usingRecursiveComparison()
+                            .ignoringExpectedNullFields()
+                            .ignoringFieldsOfTypes(LocalDateTime.class)
+                            .ignoringFields("registerDate")
+                            .isEqualTo(expected);
+                }
+        );
+    }
+
+
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     void 쪽지_등록_요청시_쪽지의_내용이_blank이면_예외가_발생한다(String message) {
@@ -360,14 +567,14 @@ class LetterControllerTest extends CommonControllerTest {
         final Game game = gameBuilder.init()
                                      .player(player)
                                      .build();
-        
+
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-        
+
         final LetterRequest letterRequest = new LetterRequest(message,
                 잠실_루터회관_정문_좌표.getLatitude().doubleValue(),
                 잠실_루터회관_정문_좌표.getLongitude().doubleValue());
-        
+
         //when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -378,7 +585,7 @@ class LetterControllerTest extends CommonControllerTest {
                 .post("/letters")
                 .then().log().all()
                 .extract();
-        
+
         //then
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
@@ -386,7 +593,7 @@ class LetterControllerTest extends CommonControllerTest {
                 INVALID_REQUEST_BODY.errorCode(),
                 INVALID_REQUEST_BODY.errorMessage()
         );
-        
+
         assertSoftly(softAssertions -> {
                     softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
                     softAssertions.assertThat(actual)
@@ -394,7 +601,7 @@ class LetterControllerTest extends CommonControllerTest {
                                   .isEqualTo(expected);
                 }
         );
-        
-        
+
+
     }
 }
