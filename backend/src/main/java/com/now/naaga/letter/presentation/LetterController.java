@@ -7,6 +7,7 @@ import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.domain.letterlog.LetterLogType;
 import com.now.naaga.letter.presentation.dto.*;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class LetterController {
 
     @PostMapping("/letters")
     public ResponseEntity<LetterResponse> createLetter(@Auth final PlayerRequest playerRequest,
-                                                       @RequestBody final LetterRequest letterRequest) {
+                                                       @Valid @RequestBody final LetterRequest letterRequest) {
         final CreateLetterCommand createLetterCommand = CreateLetterCommand.of(playerRequest, letterRequest);
         final Letter letter = letterService.writeLetter(createLetterCommand);
         return ResponseEntity
@@ -73,4 +74,3 @@ public class LetterController {
                 .body(writeLetterResponses);
     }
 }
-

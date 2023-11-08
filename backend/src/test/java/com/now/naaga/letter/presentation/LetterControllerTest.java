@@ -24,13 +24,14 @@ import com.now.naaga.player.presentation.dto.PlayerResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
-import io.restassured.parsing.Parser;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,6 +39,7 @@ import org.springframework.http.MediaType;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_BODY;
 import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
 import static com.now.naaga.common.fixture.PositionFixture.*;
 import static com.now.naaga.game.domain.GameStatus.DONE;
@@ -48,22 +50,22 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class LetterControllerTest extends CommonControllerTest {
-
+    
     @Autowired
     private AuthTokenGenerator authTokenGenerator;
-
+    
     @Autowired
     private GameRepository gameRepository;
-
+    
     @Autowired
     private LetterService letterService;
-
+    
     @Autowired
     private LetterRepository letterRepository;
-
+    
     @Autowired
     private GameBuilder gameBuilder;
-
+    
     @Autowired
     private LetterBuilder letterBuilder;
 
@@ -75,81 +77,81 @@ class LetterControllerTest extends CommonControllerTest {
 
     @Autowired
     private PlaceBuilder placeBuilder;
-
+    
     @Autowired
     private PlayerBuilder playerBuilder;
-
+    
     @BeforeEach
     protected void setUp() {
         super.setUp();
     }
-
+    
     @Test
     void 주변_쪽지를_모두_조회한다() {
         // given
         final Place destination = placeBuilder.init()
-                .build();
+                                              .build();
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final Letter letter1 = letterBuilder.init()
-                .build();
+                                            .build();
         final Letter letter2 = letterBuilder.init()
-                .position(잠실역_교보문고_110미터_앞_좌표)
-                .build();
-
+                                            .position(잠실역_교보문고_110미터_앞_좌표)
+                                            .build();
+        
         final AuthToken generate = authTokenGenerator.generate(destination.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-
+        
         // when
         final ExtractableResponse<Response> extract = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + accessToken)
-                .param("latitude", 잠실역_교보문고_좌표.getLatitude())
-                .param("longitude", 잠실역_교보문고_좌표.getLongitude())
-                .when()
-                .get("/letters/nearby")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
-
+                                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                                 .header("Authorization", "Bearer " + accessToken)
+                                                                 .param("latitude", 잠실역_교보문고_좌표.getLatitude())
+                                                                 .param("longitude", 잠실역_교보문고_좌표.getLongitude())
+                                                                 .when()
+                                                                 .get("/letters/nearby")
+                                                                 .then().log().all()
+                                                                 .statusCode(HttpStatus.OK.value())
+                                                                 .extract();
+        
         // then
         final List<NearByLetterResponse> actual = extract.as(new TypeRef<>() {
         });
         final int statusCode = extract.statusCode();
         final List<NearByLetterResponse> expected = List.of(NearByLetterResponse.from(letter1));
-
+        
         assertSoftly(softly -> {
             softly.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(actual)
-                    .hasSize(1)
-                    .usingRecursiveComparison()
-                    .isEqualTo(expected);
+                  .hasSize(1)
+                  .usingRecursiveComparison()
+                  .isEqualTo(expected);
         });
     }
-
+    
     @Test
     void 쪽지_식별자로_쪽지를_조회한다() {
         // given & when
         final Player player = playerBuilder.init()
-                .build();
-
+                                           .build();
+        
         final Place destination = placeBuilder.init()
-                .position(잠실_루터회관_정문_좌표)
-                .build();
-
+                                              .position(잠실_루터회관_정문_좌표)
+                                              .build();
+        
         final Game game = gameBuilder.init()
-                .place(destination)
-                .player(player)
-                .startPosition(잠실역_교보문고_좌표)
-                .build();
-
+                                     .place(destination)
+                                     .player(player)
+                                     .startPosition(잠실역_교보문고_좌표)
+                                     .build();
+        
         final Letter letter = letterBuilder.init()
-                .position(잠실_루터회관_정문_좌표)
-                .build();
-
+                                           .position(잠실_루터회관_정문_좌표)
+                                           .build();
+        
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-
+        
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
@@ -157,39 +159,39 @@ class LetterControllerTest extends CommonControllerTest {
                 .get("/letters/{letterId}", letter.getId())
                 .then().log().all()
                 .extract();
-
+        
         // then
         final int statusCode = extract.statusCode();
         final LetterResponse actual = extract.as(LetterResponse.class);
         final LetterResponse expected = LetterResponse.from(letter);
-
+        
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(actual)
-                    .usingRecursiveComparison()
-                    .ignoringExpectedNullFields()
-                    .ignoringFields("registerDate")
-                    .isEqualTo(expected);
+                          .usingRecursiveComparison()
+                          .ignoringExpectedNullFields()
+                          .ignoringFields("registerDate")
+                          .isEqualTo(expected);
         });
     }
-
+    
     @Test
     void 쪽지_식별자로_쪽지를_조회시_잔행중_게임이_없으면_예외가_발생한다() {
         // given & when
         final Player player = playerBuilder.init()
-                .build();
-
+                                           .build();
+        
         final Place destination = placeBuilder.init()
-                .position(잠실_루터회관_정문_좌표)
-                .build();
-
+                                              .position(잠실_루터회관_정문_좌표)
+                                              .build();
+        
         final Letter letter = letterBuilder.init()
-                .position(잠실_루터회관_정문_좌표)
-                .build();
-
+                                           .position(잠실_루터회관_정문_좌표)
+                                           .build();
+        
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-
+        
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
@@ -197,40 +199,40 @@ class LetterControllerTest extends CommonControllerTest {
                 .get("/letters/{letterId}", letter.getId())
                 .then().log().all()
                 .extract();
-
+        
         // then
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
-
+        
         final ExceptionResponse expected = new ExceptionResponse(NOT_EXIST_IN_PROGRESS.errorCode(), NOT_EXIST_IN_PROGRESS.errorMessage());
-
+        
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
             softAssertions.assertThat(actual)
-                    .usingRecursiveComparison()
-                    .ignoringExpectedNullFields()
-                    .ignoringFieldsOfTypes(LocalDateTime.class)
-                    .isEqualTo(expected);
+                          .usingRecursiveComparison()
+                          .ignoringExpectedNullFields()
+                          .ignoringFieldsOfTypes(LocalDateTime.class)
+                          .isEqualTo(expected);
         });
     }
-
+    
     @Test
     void 쪽지_등록_요청시_쪽지를_등록한_플레이어가_존재하고_그_플레이어가_진행중인_게임이_있으면_정상적으로_쪽지를_생성한다() {
         //given
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final Game game = gameBuilder.init()
-                .player(player)
-                .build();
-
+                                     .player(player)
+                                     .build();
+        
         final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-
+        
         String message = "날씨가 선선하네요";
         final LetterRequest letterRequest = new LetterRequest(message,
                 잠실_루터회관_정문_좌표.getLatitude().doubleValue(),
                 잠실_루터회관_정문_좌표.getLongitude().doubleValue());
-
+        
         //when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -241,7 +243,7 @@ class LetterControllerTest extends CommonControllerTest {
                 .post("/letters")
                 .then().log().all()
                 .extract();
-
+        
         //then
         final int statusCode = extract.statusCode();
         final String location = extract.header("Location");
@@ -254,18 +256,18 @@ class LetterControllerTest extends CommonControllerTest {
                 message,
                 null
         );
-
+        
         assertSoftly(softAssertions -> {
                     softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.CREATED.value());
                     softAssertions.assertThat(location).isNotEqualTo("/letters" + letterId);
                     softAssertions.assertThat(actual)
-                            .usingRecursiveComparison()
-                            .ignoringExpectedNullFields()
-                            .isEqualTo(expected);
+                                  .usingRecursiveComparison()
+                                  .ignoringExpectedNullFields()
+                                  .isEqualTo(expected);
                 }
         );
     }
-
+    
     @Test
     void 쪽지_등록_요청시_쪽지를_등록한_플레이어가_존재하지_않으면_예외가_발생한다() {
         //given
@@ -273,14 +275,13 @@ class LetterControllerTest extends CommonControllerTest {
                 1L,
                 AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-
+        
         String message = "날씨가 선선하네요";
         final LetterRequest letterRequest = new LetterRequest(message,
                 잠실_루터회관_정문_좌표.getLatitude().doubleValue(),
                 잠실_루터회관_정문_좌표.getLongitude().doubleValue());
-
+        
         //when
-        RestAssured.defaultParser = Parser.JSON;
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
@@ -290,7 +291,7 @@ class LetterControllerTest extends CommonControllerTest {
                 .post("/letters")
                 .then().log().all()
                 .extract();
-
+        
         //then
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
@@ -298,37 +299,36 @@ class LetterControllerTest extends CommonControllerTest {
                 PLAYER_NOT_FOUND.errorCode(),
                 PLAYER_NOT_FOUND.errorMessage()
         );
-
+        
         assertSoftly(softAssertions -> {
                     softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
                     softAssertions.assertThat(actual)
-                            .usingRecursiveComparison()
-                            .isEqualTo(expected);
+                                  .usingRecursiveComparison()
+                                  .isEqualTo(expected);
                 }
         );
     }
-
+    
     @Test
     void 쪽지_등록_요청시_쪽지를_등록한_진행중인_게임이_존재하지_않으면_예외가_발생한다() {
         //given
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final Game finishedGame = gameBuilder.init()
-                .player(player)
-                .gameStatus(DONE)
-                .build();
+                                             .player(player)
+                                             .gameStatus(DONE)
+                                             .build();
         final AuthToken generate = authTokenGenerator.generate(player.getMember(),
                 1L,
                 AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-
+        
         String message = "날씨가 선선하네요";
         final LetterRequest letterRequest = new LetterRequest(message,
                 잠실_루터회관_정문_좌표.getLatitude().doubleValue(),
                 잠실_루터회관_정문_좌표.getLongitude().doubleValue());
-
+        
         //when
-        RestAssured.defaultParser = Parser.JSON;
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
@@ -338,7 +338,7 @@ class LetterControllerTest extends CommonControllerTest {
                 .post("/letters")
                 .then().log().all()
                 .extract();
-
+        
         //then
         final int statusCode = extract.statusCode();
         final ExceptionResponse actual = extract.as(ExceptionResponse.class);
@@ -346,7 +346,7 @@ class LetterControllerTest extends CommonControllerTest {
                 NOT_EXIST_IN_PROGRESS.errorCode(),
                 NOT_EXIST_IN_PROGRESS.errorMessage()
         );
-
+        
         assertSoftly(softAssertions -> {
                     softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
                     softAssertions.assertThat(actual)
@@ -544,6 +544,52 @@ class LetterControllerTest extends CommonControllerTest {
                             .ignoringFieldsOfTypes(LocalDateTime.class)
                             .ignoringFields("registerDate")
                             .isEqualTo(expected);
+                }
+        );
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    void 쪽지_등록_요청시_쪽지의_내용이_blank이면_예외가_발생한다(String message) {
+        //given
+        final Player player = playerBuilder.init()
+                                           .build();
+        final Game game = gameBuilder.init()
+                                     .player(player)
+                                     .build();
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+
+        final LetterRequest letterRequest = new LetterRequest(message,
+                잠실_루터회관_정문_좌표.getLatitude().doubleValue(),
+                잠실_루터회관_정문_좌표.getLongitude().doubleValue());
+
+        //when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .body(letterRequest)
+                .when()
+                .post("/letters")
+                .then().log().all()
+                .extract();
+
+        //then
+        final int statusCode = extract.statusCode();
+        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+        final ExceptionResponse expected = new ExceptionResponse(
+                INVALID_REQUEST_BODY.errorCode(),
+                INVALID_REQUEST_BODY.errorMessage()
+        );
+
+        assertSoftly(softAssertions -> {
+                    softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    softAssertions.assertThat(actual)
+                                  .usingRecursiveComparison()
+                                  .isEqualTo(expected);
                 }
         );
     }
