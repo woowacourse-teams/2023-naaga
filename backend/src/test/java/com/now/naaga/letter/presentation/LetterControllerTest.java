@@ -40,15 +40,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_BODY;
-import static com.now.naaga.common.fixture.PositionFixture.*;
-import static com.now.naaga.game.domain.GameStatus.DONE;
-import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST_IN_PROGRESS;
-import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
 import static com.now.naaga.common.fixture.PositionFixture.*;
 import static com.now.naaga.game.domain.GameStatus.DONE;
@@ -601,7 +592,5 @@ class LetterControllerTest extends CommonControllerTest {
                                   .isEqualTo(expected);
                 }
         );
-
-
     }
 }
