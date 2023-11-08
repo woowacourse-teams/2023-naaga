@@ -205,7 +205,7 @@ class OnAdventureActivity :
 
     private fun registerLetter(message: String) {
         if (message.isNotEmpty()) {
-            viewModel::sendLetter
+            viewModel.sendLetter(message)
         } else {
             showToast(getString(R.string.send_letter_dialog_warning))
         }
