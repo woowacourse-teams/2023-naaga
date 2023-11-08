@@ -27,7 +27,7 @@ import com.now.naaga.presentation.onadventure.OnAdventureActivity
 import com.now.naaga.presentation.setting.SettingActivity
 import com.now.naaga.presentation.upload.UploadActivity
 import com.now.naaga.util.extension.openSetting
-import com.now.naaga.util.extension.showSnackbarWithEvent
+import com.now.naaga.util.extension.showShortSnackbarWithEvent
 import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -116,7 +116,7 @@ class BeginAdventureActivity : AppCompatActivity(), AnalyticsDelegate by Default
     }
 
     private fun showPermissionSnackbar() {
-        binding.root.showSnackbarWithEvent(
+        binding.root.showShortSnackbarWithEvent(
             message = getString(R.string.snackbar_location_message),
             actionTitle = getString(R.string.snackbar_action_title),
             action = { openSetting() },

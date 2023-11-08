@@ -103,7 +103,7 @@ class OnAdventureActivity :
             viewModel.endAdventure()
         }
         binding.ivSendLetter.setOnClickListener {
-            LetterSendDialog(viewModel::sendLetter).show(supportFragmentManager, LetterSendDialog.TAG)
+            LetterSendDialog(::registerLetter).show(supportFragmentManager, LetterSendDialog.TAG)
         }
     }
 
@@ -145,7 +145,7 @@ class OnAdventureActivity :
 
                 OnAdventureViewModel.NOT_ARRIVED -> {
                     val remainingTryCount: Int = viewModel.adventure.value?.remainingTryCount?.toInt() ?: 0
-                    shortSnackbar(getString(R.string.onAdventure_retry, remainingTryCount))
+                    showToast(getString(R.string.onAdventure_retry, remainingTryCount))
                 }
 
                 OnAdventureViewModel.TRY_COUNT_OVER -> showToast(getString(R.string.onAdventure_try_count_over))
@@ -200,6 +200,14 @@ class OnAdventureActivity :
         removeLetters()
         letters.forEach { letter ->
             addLetter(letter, viewModel::getLetter)
+        }
+    }
+
+    private fun registerLetter(message: String) {
+        if (message.isNotEmpty()) {
+            viewModel.sendLetter(message)
+        } else {
+            showToast(getString(R.string.send_letter_dialog_warning))
         }
     }
 

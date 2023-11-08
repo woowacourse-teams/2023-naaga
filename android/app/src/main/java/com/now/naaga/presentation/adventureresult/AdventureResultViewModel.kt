@@ -97,11 +97,6 @@ class AdventureResultViewModel @Inject constructor(
                     requireNotNull(adventureResult.value) { "adventureResult가 null입니다." }.destination.id.toInt(),
                     requireNotNull(preference.value) { "preference가 null입니다." }.state,
                 )
-            }.onSuccess {
-                // post 응답이 성공적으로 왔는데 내가 보낸 것과 다른게 온 경우. 즉 말이 안되는 경우
-                if (preference.value?.state != it) {
-                    _preference.value = Preference(state = it)
-                }
             }.onFailure {
                 _preference.value = preference.value?.revert()
                 setThrowable(it)
