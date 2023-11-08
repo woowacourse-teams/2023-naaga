@@ -39,17 +39,17 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity.status(commonExceptionType.httpStatus()).body(exceptionResponse);
     }
-
+    
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ExceptionResponse> handleArgumentTypeMismatchException(final Exception e) {
         final CommonExceptionType commonExceptionType = CommonExceptionType.INVALID_REQUEST_PARAMETERS;
         final ExceptionResponse exceptionResponse = new ExceptionResponse(commonExceptionType.errorCode(), commonExceptionType.errorMessage());
-
+        
         log.info("error = {}", exceptionResponse);
-
+        
         return ResponseEntity.status(commonExceptionType.httpStatus()).body(exceptionResponse);
     }
-
+    
     @ExceptionHandler(InternalException.class)
     public ResponseEntity<ExceptionResponse> handleInternalException(final InternalException e) {
         final BaseExceptionType internalExceptionType = e.exceptionType();
