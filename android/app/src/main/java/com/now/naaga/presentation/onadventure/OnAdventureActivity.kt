@@ -145,7 +145,7 @@ class OnAdventureActivity :
 
                 OnAdventureViewModel.NOT_ARRIVED -> {
                     val remainingTryCount: Int = viewModel.adventure.value?.remainingTryCount?.toInt() ?: 0
-                    shortSnackbar(getString(R.string.onAdventure_retry, remainingTryCount))
+                    showToast(getString(R.string.onAdventure_retry, remainingTryCount))
                 }
 
                 OnAdventureViewModel.TRY_COUNT_OVER -> showToast(getString(R.string.onAdventure_try_count_over))
