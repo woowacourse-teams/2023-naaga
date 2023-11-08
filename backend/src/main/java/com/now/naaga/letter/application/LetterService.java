@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.now.naaga.letter.exception.LetterExceptionType.NO_EXIST;
 
@@ -78,8 +79,17 @@ public class LetterService {
     private void logReadLetter(final Player player,
                                final Letter letter) {
         final Game gameInProgress = getGameInProgress(player.getId());
-        final ReadLetterLog readLetterLog = new ReadLetterLog(gameInProgress, letter);
-        readLetterLogRepository.save(readLetterLog);
+        boolean isAlreadyReadLetter = isAlreadyReadLetter(gameInProgress, letter);
+        if(!isAlreadyReadLetter) {
+            final ReadLetterLog readLetterLog = new ReadLetterLog(gameInProgress, letter);
+            readLetterLogRepository.save(readLetterLog);
+        }
+    }
+    private boolean isAlreadyReadLetter(final Game game,
+                                        final Letter letter) {
+        Optional<ReadLetterLog> readLetterInGame = readLetterLogRepository
+                .findByGameIdAndLetterId(game.getId(), letter.getId());
+        return readLetterInGame.isPresent();
     }
 
     @Transactional(readOnly = true)
