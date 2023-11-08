@@ -24,6 +24,9 @@ public class PositionFixture {
     public static final Position 던킨도너츠_올림픽공원점_좌표 = new Position(BigDecimal.valueOf(37.5169677),
                                                                 BigDecimal.valueOf(127.11207));
 
+    public static final Position 장미_상가 = new Position(BigDecimal.valueOf(37.517109),
+                                                    BigDecimal.valueOf(127.100466));
+
     //잠실 루터회관 1km 밖 =>
 
     public static final Position 역삼역_좌표 = new Position(BigDecimal.valueOf(37.500845),

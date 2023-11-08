@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PlaceRecommendService {
 
-    private static final double DISTANCE = 0.3;
+    private static final double MINIMUM_DISTANCE = 0.15;
+    private static final double MAXIMUM_DISTANCE = 0.5;
 
     private final PlaceRepository placeRepository;
 
@@ -20,7 +21,7 @@ public class PlaceRecommendService {
     }
 
     public Place recommendRandomPlaceNearBy(final Position position) {
-        final List<Place> places = placeRepository.findPlaceByPositionAndDistance(position, DISTANCE);
+        final List<Place> places = placeRepository.findBetweenRadius(position, MINIMUM_DISTANCE, MAXIMUM_DISTANCE);
         if (places.isEmpty()) {
             throw new PlaceException(NO_EXIST);
         }
