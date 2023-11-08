@@ -11,10 +11,26 @@
     <color name="main_blue">#10C1FD</color>
     <color name="main_pink">#E93394</color>
 
-
     <!-- variable color -->
     <color name="primary">#FFFFFFFF</color>
     <color name="secondary">#EAE0E0</color>
     <color name="on_secondary">#616161</color>
     <color name="on_primary">#FF000000</color>
+
+    <!-- 커스텀 버튼 색상 -->
+    <!-- ripple color -->
+    <color name="custom_button_ripple">#4D000000</color>
+    <!-- yellow -->
+    <color name="custom_button_yellow_main">#FFD50C</color>
+    <color name="custom_button_yellow_first_shadow">#E3A40A</color>
+    <color name="custom_button_yellow_middle">#FFB70A</color>
+    <color name="custom_button_yellow_second_shadow">#FFEE9F</color>
+    <color name="custom_button_yellow_bottom">#B68A21</color>
+
+    <!-- blue -->
+    <color name="custom_button_blue_main">#1BCCFF</color>
+    <color name="custom_button_blue_first_shadow">#009DDE</color>
+    <color name="custom_button_blue_middle">#0CB4F9</color>
+    <color name="custom_button_blue_second_shadow">#AFEDFF</color>
+    <color name="custom_button_blue_bottom">#0D3A85</color>
 </resources>

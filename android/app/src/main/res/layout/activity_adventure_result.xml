@@ -237,17 +237,18 @@
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.now.naaga.presentation.custom.GameButton
                 android:id="@+id/btn_adventureResult_return"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="@dimen/space_default_large"
                 android:layout_marginBottom="@dimen/space_default_large"
-                android:background="@drawable/bg_yellow_button"
                 android:paddingVertical="@dimen/space_default_medium"
                 android:text="@string/adventureResult_return_main"
                 android:textSize="20sp"
+                app:radius="8dp"
+                app:buttonColor="yellow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
