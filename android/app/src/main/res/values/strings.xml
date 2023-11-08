@@ -146,6 +146,7 @@
 
     <!-- SendLetterDialog -->
     <string name="send_letter_dialog_hint">이 곳에 내용을 작성해주세요!</string>
+    <string name="send_letter_dialog_warning">내용을 1자 이상 입력해주세요!</string>
     <string name="send_letter_dialog_submit">전송하기</string>
 
     <!-- All -->
