@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_default_large"
         android:layout_marginTop="@dimen/space_default_medium"
-        android:background="@drawable/rect_red_white_radius_small">
+        android:background="@drawable/rect_radius_small"
+        android:backgroundTint="@color/secondary" >
 
         <TextView
             android:id="@+id/tv_item_letter_nickname"
@@ -20,7 +21,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="@dimen/space_default_large"
             android:layout_marginTop="@dimen/space_default_medium"
-            android:textColor="@color/main_dark_blue"
+            android:textColor="@color/on_primary"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/tv_item_letter_register_date"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +35,7 @@
             android:layout_marginTop="@dimen/space_default_medium"
             android:layout_marginEnd="@dimen/space_default_large"
             android:gravity="end"
-            android:textColor="@color/main_dark_blue"
+            android:textColor="@color/on_primary"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_item_letter_nickname"
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/space_default_large"
             android:gravity="center"
-            android:textColor="@color/main_dark_blue"
+            android:textColor="@color/on_primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tv_item_letter_register_date"
             app:layout_constraintStart_toStartOf="@id/tv_item_letter_nickname"

@@ -14,7 +14,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="10dp"
             android:text="@string/mypage_place_title"
-            android:textColor="@color/black"
+            android:textColor="@color/on_primary"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

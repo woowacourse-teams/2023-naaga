@@ -61,7 +61,7 @@
             android:layout_height="300dp"
             android:layout_marginTop="@dimen/space_default_large"
             android:background="@drawable/rect_radius_small"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/primary"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/tv_upload_title"
             app:layout_constraintEnd_toEndOf="parent"
@@ -117,19 +117,20 @@
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@id/v_upload_divide_line_1"
             app:layout_constraintStart_toStartOf="@id/v_upload_divide_line_1"
-            app:layout_constraintTop_toBottomOf="@id/tv_upload_title"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_upload_title" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.now.naaga.presentation.custom.GameButton
             android:id="@+id/btn_upload_submit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_default_large"
             android:layout_marginTop="@dimen/space_default_large"
             android:layout_marginBottom="@dimen/space_default_large"
-            android:background="@drawable/bg_yellow_button"
             android:paddingVertical="@dimen/space_default_medium"
             android:text="@string/upload_submit"
             android:textSize="24sp"
+            app:radius="8dp"
+            app:buttonColor="yellow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
