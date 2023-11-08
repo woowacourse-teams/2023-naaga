@@ -58,13 +58,12 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
 
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             when (throwable.code) {
-                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+                DataThrowable.NETWORK_THROWABLE_CODE -> showToast(getString(R.string.network_error_message))
             }
         }
 
         viewModel.preference.observe(this) {
-            binding.customAdventureResultPreference.updatePreference(it.state)
-            binding.customAdventureResultPreference.likeCount = it.likeCount.value
+            binding.customAdventureResultPreference.updatePreference(it)
         }
     }
 
@@ -102,7 +101,7 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
             finish()
         }
 
-        binding.customAdventureResultPreference.setPreferenceClickListener {
+        binding.customAdventureResultPreference.setPreferenceClickListener(CLICK_INTERVAL_TIME) {
             viewModel.changePreference(it)
         }
     }
@@ -110,6 +109,7 @@ class AdventureResultActivity : AppCompatActivity(), AnalyticsDelegate by Defaul
     companion object {
         private const val GAME_ID = "GAME_ID"
         private const val MESSAGE_IN_RESULT_TYPE_NONE = "네트워크에 문제가 생겼습니다."
+        private const val CLICK_INTERVAL_TIME = 500L
 
         fun getIntentWithGameId(context: Context, gameId: Long): Intent {
             return Intent(context, AdventureResultActivity::class.java).apply {

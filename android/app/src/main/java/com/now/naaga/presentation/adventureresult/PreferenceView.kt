@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.now.domain.model.Preference
 import com.now.domain.model.PreferenceState
 import com.now.naaga.R
 import com.now.naaga.databinding.CustomPreferenceViewBinding
@@ -13,10 +14,12 @@ class PreferenceView(context: Context, attrs: AttributeSet? = null) : Constraint
     private val binding: CustomPreferenceViewBinding
     private val layoutInflater = LayoutInflater.from(this.context)
     private var preferenceClickListener: PreferenceClickListener? = null
-    var likeCount: Int = 0
+    private var lastClickTime = 0L
+    private var clickIntervalTime = 0L
+    private var myPreference: Preference = Preference()
         set(value) {
             field = value
-            binding.tvPreferenceLikeCount.text = value.toString()
+            binding.tvPreferenceLikeCount.text = value.likeCount.value.toString()
         }
 
     init {
@@ -37,10 +40,18 @@ class PreferenceView(context: Context, attrs: AttributeSet? = null) : Constraint
 
     private fun setClickListeners() {
         binding.ivPreferenceLike.setOnClickListener {
-            preferenceClickListener?.onClick(PreferenceState.LIKE)
+            singleClick(PreferenceState.LIKE)
         }
         binding.ivPreferenceDislike.setOnClickListener {
-            preferenceClickListener?.onClick(PreferenceState.DISLIKE)
+            singleClick(PreferenceState.DISLIKE)
+        }
+    }
+
+    private fun singleClick(state: PreferenceState) {
+        val current = System.currentTimeMillis()
+        if (current - lastClickTime > clickIntervalTime) {
+            lastClickTime = current
+            preferenceClickListener?.onClick(state)
         }
     }
 
@@ -55,12 +66,14 @@ class PreferenceView(context: Context, attrs: AttributeSet? = null) : Constraint
         binding.tvPreferenceLikeCount.visibility = setVisibility(isLikeCountVisible)
     }
 
-    fun setPreferenceClickListener(listener: PreferenceClickListener) {
+    fun setPreferenceClickListener(clickIntervalTime: Long = 0, listener: PreferenceClickListener) {
+        this.clickIntervalTime = clickIntervalTime
         preferenceClickListener = listener
     }
 
-    fun updatePreference(preferenceState: PreferenceState) {
-        when (preferenceState) {
+    fun updatePreference(preference: Preference) {
+        myPreference = preference
+        when (preference.state) {
             PreferenceState.LIKE -> {
                 binding.ivPreferenceLike.isSelected = true
                 binding.ivPreferenceDislike.isSelected = false

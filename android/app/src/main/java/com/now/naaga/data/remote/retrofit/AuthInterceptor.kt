@@ -100,7 +100,7 @@ class AuthInterceptor : Interceptor {
         private const val AUTH_KEY = "Authorization"
         private const val AUTH_REFRESH_KEY = "refreshToken"
 
-        private const val AUTH_REFRESH_PATH = "/auth/refresh"
+        private const val AUTH_REFRESH_PATH = "auth/refresh"
 
         private const val BEARER = "Bearer "
 
