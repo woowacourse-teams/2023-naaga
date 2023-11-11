@@ -45,7 +45,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (!success) return@registerForActivityResult
         if (imageUri == null) {
-            showToast(getString(R.string.upload_image_orientation_error))
+            showToast(getString(R.string.upload_image_orientation_error_message))
             return@registerForActivityResult
         }
         setImage(requireNotNull(imageUri) { "imageUri가 null입니다" })
@@ -247,7 +247,7 @@ class UploadActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
 
     private fun openCamera() {
         imageUri = createImageUri().getOrElse {
-            Snackbar.make(binding.root, getString(R.string.upload_retry), Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, getString(R.string.upload_retry_message), Snackbar.LENGTH_SHORT).show()
             return
         }
         cameraLauncher.launch(imageUri)

@@ -17,8 +17,8 @@ class AuthInterceptor(
 
         if (response.code == 401) {
             response.closeQuietly()
-            runBlocking {
-                authRepository.refreshAccessToken()
+            runCatching {
+                runBlocking { authRepository.refreshAccessToken() }
             }
             return chain.proceed(
                 chain.request().newBuilder().addHeader(AUTH_KEY, authRepository.getAccessToken()!!).build(),

@@ -39,4 +39,8 @@ class SplashViewModel @Inject constructor(private val statisticsRepository: Stat
             is DataThrowable.AuthorizationThrowable -> { _throwable.value = throwable }
         }
     }
+
+    companion object {
+        const val EXPIRATION_AUTH_ERROR_CODE = 102
+    }
 }
