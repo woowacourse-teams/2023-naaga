@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -76,11 +75,7 @@ class OnAdventureActivity :
                 finish()
             } else {
                 backPressedTime = System.currentTimeMillis()
-                Toast.makeText(
-                    this@OnAdventureActivity,
-                    getString(R.string.OnAdventure_warning_back_pressed),
-                    Toast.LENGTH_SHORT,
-                ).show()
+                showToast(getString(R.string.OnAdventure_warning_back_pressed))
             }
         }
     }
@@ -177,7 +172,7 @@ class OnAdventureActivity :
             return
         }
 
-        Toast.makeText(this, getString(R.string.OnAdventure_continue_adventure), Toast.LENGTH_SHORT).show()
+        showToast(getString(R.string.OnAdventure_continue_adventure))
         viewModel.setAdventure(existingAdventure)
     }
 
