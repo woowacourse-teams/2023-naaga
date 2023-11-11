@@ -28,7 +28,8 @@ class DefaultAuthRepository(
     }
 
     override suspend fun withdrawalMember() {
-        authService.withdrawalMember(getAccessToken()!!)
+        val response = authService.withdrawalMember(getAccessToken()!!)
+        response.getValueOrThrow()
         unlinkWithKakao()
     }
 
