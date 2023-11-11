@@ -23,8 +23,8 @@ class DefaultAuthRepository(
 
     override suspend fun logout() {
         val response = authService.requestLogout(getAccessToken()!!)
-        authDataSource.resetToken()
         response.getValueOrThrow()
+        authDataSource.resetToken()
     }
 
     override suspend fun withdrawalMember() {
