@@ -1,15 +1,24 @@
 package com.now.naaga
 
+import android.content.Context
 import android.widget.EditText
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.google.firebase.FirebaseApp
+import com.now.naaga.data.local.AuthDataSource
+import com.now.naaga.di.DataSourceModule
 import com.now.naaga.presentation.upload.UploadActivity
 import com.now.naaga.presentation.upload.UploadViewModel
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
+import dagger.hilt.android.testing.UninstallModules
+import dagger.hilt.components.SingletonComponent
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -18,9 +27,11 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import javax.inject.Singleton
 
 @RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
+@UninstallModules(DataSourceModule::class)
 @Config(application = HiltTestApplication::class)
 class UploadViewModelTestWithRobolectric {
 
@@ -60,5 +71,37 @@ class UploadViewModelTestWithRobolectric {
 
         // then : EditText 값과 LiveData 값이 일치하는지 확인
         assertEquals(testInput, observedValue)
+    }
+}
+
+class TestAuthDataSource() : AuthDataSource {
+    override fun getAccessToken(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun setAccessToken(newToken: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRefreshToken(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun setRefreshToken(newToken: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun resetToken() {
+        TODO("Not yet implemented")
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class TestDataSourceModule {
+    @Singleton
+    @Provides
+    fun provideTestAuthDatasource(@ApplicationContext context: Context): AuthDataSource {
+        return TestAuthDataSource()
     }
 }
