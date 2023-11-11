@@ -16,10 +16,8 @@ class DefaultAuthRepository(
 
     override suspend fun logIn(platformAuth: PlatformAuth): Boolean {
         val response = authService.requestAuth(platformAuth.toDto())
-        runCatching {
-            val naagaAuthDto = response.getValueOrThrow()
-            storeToken(naagaAuthDto.accessToken, naagaAuthDto.refreshToken)
-        }
+        val naagaAuthDto = response.getValueOrThrow()
+        storeToken(naagaAuthDto.accessToken, naagaAuthDto.refreshToken)
         return true
     }
 
