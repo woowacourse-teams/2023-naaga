@@ -6,6 +6,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.internal.closeQuietly
+import java.io.IOException
 
 class AuthInterceptor(
     private val authRepository: AuthRepository,
@@ -18,9 +19,8 @@ class AuthInterceptor(
 
         if (response.isTokenInvalid()) {
             response.closeQuietly()
-            runCatching {
-                runBlocking { authRepository.refreshAccessToken() }
-            }
+            runCatching { runBlocking { authRepository.refreshAccessToken() } }
+                .onFailure { throw IOException(it) }
             return chain.proceed(chain.request().putToken(authRepository.getAccessToken()!!))
         }
         return response

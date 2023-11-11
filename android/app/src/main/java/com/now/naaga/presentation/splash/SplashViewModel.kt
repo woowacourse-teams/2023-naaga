@@ -35,8 +35,9 @@ class SplashViewModel @Inject constructor(private val statisticsRepository: Stat
 
     private fun setThrowable(throwable: Throwable) {
         when (throwable) {
-            is IOException -> { _throwable.value = DataThrowable.NetworkThrowable() }
-            is DataThrowable.AuthorizationThrowable -> { _throwable.value = throwable }
+            is IOException -> {
+                _throwable.value = DataThrowable.AuthorizationThrowable(EXPIRATION_AUTH_ERROR_CODE, "")
+            }
         }
     }
 
