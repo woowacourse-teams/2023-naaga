@@ -32,14 +32,14 @@ class DefaultAuthRepository(
 
     override suspend fun logout() {
         withContext(dispatcher) {
-            val response = authService.requestLogout(authDataSource.getAccessToken()!!)
+            val response = authService.requestLogout(getAccessToken()!!)
             authDataSource.resetToken()
             response.getValueOrThrow()
         }
     }
 
     override suspend fun withdrawalMember() {
-        authService.withdrawalMember(authDataSource.getAccessToken()!!)
+        authService.withdrawalMember(getAccessToken()!!)
         unlinkWithKakao()
     }
 
@@ -57,7 +57,7 @@ class DefaultAuthRepository(
     }
 
     override suspend fun refreshAccessToken() {
-        val response = authService.requestRefresh(RefreshTokenDto(authDataSource.getRefreshToken()!!))
+        val response = authService.requestRefresh(RefreshTokenDto(getRefreshToken()))
         val naagaAuthDto = response.getValueOrThrow()
         storeToken(naagaAuthDto.accessToken, naagaAuthDto.refreshToken)
     }
