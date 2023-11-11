@@ -8,34 +8,25 @@ import com.now.naaga.data.remote.dto.post.RefreshTokenDto
 import com.now.naaga.data.remote.retrofit.service.AuthService
 import com.now.naaga.util.extension.getValueOrThrow
 import com.now.naaga.util.unlinkWithKakao
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class DefaultAuthRepository(
     private val authDataSource: AuthDataSource,
     private val authService: AuthService,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AuthRepository {
 
     override suspend fun logIn(platformAuth: PlatformAuth): Boolean {
-        return withContext(dispatcher) {
-            val response = authService.requestAuth(platformAuth.toDto())
-            runCatching {
-                val naagaAuthDto = response.getValueOrThrow()
-                storeToken(naagaAuthDto.accessToken, naagaAuthDto.refreshToken)
-                return@withContext true
-            }
-            return@withContext false
+        val response = authService.requestAuth(platformAuth.toDto())
+        runCatching {
+            val naagaAuthDto = response.getValueOrThrow()
+            storeToken(naagaAuthDto.accessToken, naagaAuthDto.refreshToken)
         }
+        return true
     }
 
     override suspend fun logout() {
-        withContext(dispatcher) {
-            val response = authService.requestLogout(getAccessToken()!!)
-            authDataSource.resetToken()
-            response.getValueOrThrow()
-        }
+        val response = authService.requestLogout(getAccessToken()!!)
+        authDataSource.resetToken()
+        response.getValueOrThrow()
     }
 
     override suspend fun withdrawalMember() {
