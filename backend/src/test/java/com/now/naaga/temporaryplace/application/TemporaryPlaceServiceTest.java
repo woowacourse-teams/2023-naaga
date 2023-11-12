@@ -7,20 +7,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.now.naaga.common.ServiceTest;
-import com.now.naaga.common.infrastructure.AwsS3FileManager;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 class TemporaryPlaceServiceTest extends ServiceTest {
 
     @Autowired
     private TemporaryPlaceService temporaryPlaceService;
-
-    @MockBean
-    private AwsS3FileManager awsS3FileManager;
 
     @Test
     void 장소가_생성될_때_ID로_검수_장소_데이터만_삭제된다() {

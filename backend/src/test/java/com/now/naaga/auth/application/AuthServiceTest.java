@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import com.now.naaga.auth.application.dto.AuthCommand;
 import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
@@ -20,16 +19,12 @@ import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 class AuthServiceTest extends ServiceTest {
 
     @Autowired
     private AuthService authService;
-
-    @MockBean
-    private AuthClient authClient;
 
     @Test
     void 존재하지_않는_멤버는_저장_후_토큰을_발급한다() {

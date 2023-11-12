@@ -10,7 +10,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.MemberAuthMapper;
 import com.now.naaga.auth.infrastructure.dto.AuthInfo;
@@ -27,20 +26,12 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Date;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
 class AuthControllerTest extends ControllerTest {
-
-    @MockBean
-    private AuthClient authClient;
 
     @Test
     void 이미_존재하는_멤버_정보로_카카오_토큰을_통해서_로그인_요청을_하면_액세스_토큰을_발급한다() {

@@ -1,6 +1,6 @@
 package com.now.naaga.common;
 
-import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
+import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.persistence.AuthRepository;
 import com.now.naaga.common.builder.GameBuilder;
 import com.now.naaga.common.builder.GameResultBuilder;
@@ -13,6 +13,7 @@ import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.builder.ReadLetterLogBuilder;
 import com.now.naaga.common.builder.TemporaryPlaceBuilder;
 import com.now.naaga.common.builder.WriteLetterLogBuilder;
+import com.now.naaga.common.infrastructure.AwsS3FileManager;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.HintRepository;
 import com.now.naaga.gameresult.repository.GameResultRepository;
@@ -28,6 +29,7 @@ import com.now.naaga.temporaryplace.repository.TemporaryPlaceRepository;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -111,4 +113,12 @@ public abstract class AbstractTest {
 
     @Autowired
     protected WriteLetterLogRepository writeLetterLogRepository;
+
+    /*------------------------------------------------------------------*/
+
+    @MockBean
+    protected AuthClient authClient;
+
+    @MockBean
+    protected AwsS3FileManager awsS3FileManager;
 }
