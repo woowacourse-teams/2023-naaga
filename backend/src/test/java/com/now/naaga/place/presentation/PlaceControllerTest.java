@@ -1,13 +1,10 @@
 package com.now.naaga.place.presentation;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.common.ControllerTest;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
@@ -76,14 +73,9 @@ public class PlaceControllerTest extends ControllerTest {
         //given
         final Place place = placeBuilder.init()
                                         .build();
-
-        final AuthToken generate = authTokenGenerator.generate(place.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
         //when
-        final ExtractableResponse<Response> extract = given()
-                .log().all()
+        final ExtractableResponse<Response> extract = given(place.getRegisteredPlayer())
                 .pathParam("placeId", place.getId())
-                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .get("/places/{placeId}")
                 .then()
@@ -107,13 +99,8 @@ public class PlaceControllerTest extends ControllerTest {
         final Place place = placeBuilder.init()
                                         .build();
 
-        final AuthToken generate = authTokenGenerator.generate(place.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         //when
-        final ExtractableResponse<Response> extract = given()
-                .log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(place.getRegisteredPlayer())
                 .queryParam("sort-by", "time")
                 .queryParam("order", "descending")
                 .when()

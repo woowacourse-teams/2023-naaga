@@ -12,8 +12,6 @@ import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST_IN_PROGRE
 import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.common.ControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.domain.Game;
@@ -28,7 +26,6 @@ import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerResponse;
-import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
@@ -57,20 +54,16 @@ class LetterControllerTest extends ControllerTest {
                                             .position(잠실역_교보문고_110미터_앞_좌표)
                                             .build();
 
-        final AuthToken generate = authTokenGenerator.generate(destination.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
-        final ExtractableResponse<Response> extract = RestAssured.given().log().all()
-                                                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                                 .header("Authorization", "Bearer " + accessToken)
-                                                                 .param("latitude", 잠실역_교보문고_좌표.getLatitude())
-                                                                 .param("longitude", 잠실역_교보문고_좌표.getLongitude())
-                                                                 .when()
-                                                                 .get("/letters/nearby")
-                                                                 .then().log().all()
-                                                                 .statusCode(HttpStatus.OK.value())
-                                                                 .extract();
+        final ExtractableResponse<Response> extract = given(player)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("latitude", 잠실역_교보문고_좌표.getLatitude())
+                .param("longitude", 잠실역_교보문고_좌표.getLongitude())
+                .when()
+                .get("/letters/nearby")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
 
         // then
         final List<NearByLetterResponse> actual = extract.as(new TypeRef<>() {
@@ -107,12 +100,7 @@ class LetterControllerTest extends ControllerTest {
                                            .position(잠실_루터회관_정문_좌표)
                                            .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .when()
                 .get("/letters/{letterId}", letter.getId())
                 .then().log().all()
@@ -147,12 +135,7 @@ class LetterControllerTest extends ControllerTest {
                                            .position(잠실_루터회관_정문_좌표)
                                            .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .when()
                 .get("/letters/{letterId}", letter.getId())
                 .then().log().all()
@@ -183,18 +166,13 @@ class LetterControllerTest extends ControllerTest {
                                      .player(player)
                                      .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         String message = "날씨가 선선하네요";
         final LetterRequest letterRequest = new LetterRequest(message,
                                                               잠실_루터회관_정문_좌표.getLatitude().doubleValue(),
                                                               잠실_루터회관_정문_좌표.getLongitude().doubleValue());
 
         //when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .contentType(ContentType.JSON)
                 .body(letterRequest)
                 .when()
@@ -229,20 +207,13 @@ class LetterControllerTest extends ControllerTest {
     @Test
     void 쪽지_등록_요청시_쪽지를_등록한_플레이어가_존재하지_않으면_예외가_발생한다() {
         //given
-        final AuthToken generate = authTokenGenerator.generate(new Member(1L, "email", false),
-                                                               1L,
-                                                               AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         String message = "날씨가 선선하네요";
         final LetterRequest letterRequest = new LetterRequest(message,
                                                               잠실_루터회관_정문_좌표.getLatitude().doubleValue(),
                                                               잠실_루터회관_정문_좌표.getLongitude().doubleValue());
 
         //when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(new Member(1L, "email", false))
                 .contentType(ContentType.JSON)
                 .body(letterRequest)
                 .when()
@@ -276,10 +247,6 @@ class LetterControllerTest extends ControllerTest {
                                              .player(player)
                                              .gameStatus(DONE)
                                              .build();
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(),
-                                                               1L,
-                                                               AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
 
         String message = "날씨가 선선하네요";
         final LetterRequest letterRequest = new LetterRequest(message,
@@ -287,9 +254,7 @@ class LetterControllerTest extends ControllerTest {
                                                               잠실_루터회관_정문_좌표.getLongitude().doubleValue());
 
         //when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .contentType(ContentType.JSON)
                 .body(letterRequest)
                 .when()
@@ -350,12 +315,7 @@ class LetterControllerTest extends ControllerTest {
                                                                  .letter(letter)
                                                                  .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .param("gameId", game1.getId())
                 .param("logType", "READ")
                 .when()
@@ -406,12 +366,7 @@ class LetterControllerTest extends ControllerTest {
                                                                     .letter(letter)
                                                                     .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .param("gameId", game.getId())
                 .param("logType", "WRITE")
                 .when()
@@ -476,12 +431,7 @@ class LetterControllerTest extends ControllerTest {
                                                                     .letter(letter2)
                                                                     .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .param("gameId", game1.getId())
                 .param("logType", "잘못된enum")
                 .when()
@@ -517,17 +467,12 @@ class LetterControllerTest extends ControllerTest {
                                      .player(player)
                                      .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         final LetterRequest letterRequest = new LetterRequest(message,
                                                               잠실_루터회관_정문_좌표.getLatitude().doubleValue(),
                                                               잠실_루터회관_정문_좌표.getLongitude().doubleValue());
 
         //when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .contentType(ContentType.JSON)
                 .body(letterRequest)
                 .when()

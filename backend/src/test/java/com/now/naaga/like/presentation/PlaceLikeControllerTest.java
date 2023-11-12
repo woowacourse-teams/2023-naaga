@@ -7,8 +7,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.common.ControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.like.domain.MyPlaceLikeType;
@@ -18,7 +16,6 @@ import com.now.naaga.like.presentation.dto.ApplyPlaceLikeRequest;
 import com.now.naaga.like.presentation.dto.CheckMyPlaceLikeResponse;
 import com.now.naaga.like.presentation.dto.PlaceLikeCountResponse;
 import com.now.naaga.like.presentation.dto.PlaceLikeResponse;
-import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.PlaceStatistics;
 import com.now.naaga.place.exception.PlaceStatisticsExceptionType;
@@ -50,14 +47,8 @@ class PlaceLikeControllerTest extends ControllerTest {
 
         final ApplyPlaceLikeRequest applyPlaceLikeRequest = new ApplyPlaceLikeRequest(PlaceLikeType.LIKE);
 
-        final Member member = player.getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(applyPlaceLikeRequest)
                 .when()
@@ -101,14 +92,8 @@ class PlaceLikeControllerTest extends ControllerTest {
 
         final ApplyPlaceLikeRequest applyPlaceLikeRequest = new ApplyPlaceLikeRequest(PlaceLikeType.LIKE);
 
-        final Member member = player.getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(applyPlaceLikeRequest)
                 .when()
@@ -139,14 +124,9 @@ class PlaceLikeControllerTest extends ControllerTest {
         placeStatisticsBuilder.init()
                               .place(place)
                               .build();
-        final Member member = placeLike.getPlayer().getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
 
         //when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(placeLike.getPlayer())
                 .contentType(ContentType.JSON)
                 .pathParam("placeId", place.getId())
                 .when()
@@ -176,14 +156,8 @@ class PlaceLikeControllerTest extends ControllerTest {
                         .placeLikeType(myType)
                         .build();
 
-        final Member member = player.getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/places/{placeId}/likes/my", place.getId())
@@ -210,14 +184,8 @@ class PlaceLikeControllerTest extends ControllerTest {
         final Place place = placeBuilder.init()
                                         .build();
 
-        final Member member = player.getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = given(player)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/places/{placeId}/likes/my", place.getId())

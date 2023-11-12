@@ -4,8 +4,6 @@ import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.common.ControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.player.domain.Player;
@@ -38,17 +36,13 @@ public class PlayerControllerTest extends ControllerTest {
         playerBuilder.init()
                      .totalScore(new Score(30))
                      .build();
-
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                                                                  .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                                  .header("Authorization", "Bearer " + accessToken)
-                                                                  .when().get("/ranks/my")
-                                                                  .then().log().all()
-                                                                  .statusCode(HttpStatus.OK.value())
-                                                                  .extract();
+        final ExtractableResponse<Response> response = given(player)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/ranks/my")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
 
         // then
         final RankResponse rankResponse = response.as(RankResponse.class);

@@ -1,6 +1,5 @@
 package com.now.naaga.temporaryplace.presentation;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -85,14 +84,14 @@ class TemporaryPlaceControllerTest extends ControllerTest {
                                                                    .build();
 
         //when
-        final ExtractableResponse<Response> extract = given()
-                .log().all()
-                .auth().preemptive().basic(id, password)
-                .when()
-                .get("/temporary-places")
-                .then()
-                .log().all()
-                .extract();
+        final ExtractableResponse<Response> extract = RestAssured.given()
+                                                                 .log().all()
+                                                                 .auth().preemptive().basic(id, password)
+                                                                 .when()
+                                                                 .get("/temporary-places")
+                                                                 .then()
+                                                                 .log().all()
+                                                                 .extract();
         final int statusCode = extract.statusCode();
         final List<TemporaryPlaceResponse> actual = extract.as(new TypeRef<>() {
         });

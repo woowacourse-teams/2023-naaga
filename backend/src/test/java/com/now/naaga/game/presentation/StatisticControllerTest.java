@@ -4,8 +4,6 @@ import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_�
 import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.common.ControllerTest;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.dto.EndGameCommand;
@@ -16,7 +14,6 @@ import com.now.naaga.game.presentation.dto.StatisticResponse;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -69,17 +66,13 @@ public class StatisticControllerTest extends ControllerTest {
 
         final Statistic statistic = gameService.findStatistic(new PlayerRequest(player.getId()));
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                                                                  .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                                  .header("Authorization", "Bearer " + accessToken)
-                                                                  .when().get("/statistics/my")
-                                                                  .then().log().all()
-                                                                  .statusCode(HttpStatus.OK.value())
-                                                                  .extract();
+        final ExtractableResponse<Response> response = given(player)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/statistics/my")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
 
         // then
         final StatisticResponse actual = response.as(StatisticResponse.class);
