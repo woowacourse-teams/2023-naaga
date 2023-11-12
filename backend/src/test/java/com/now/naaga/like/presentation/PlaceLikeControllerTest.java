@@ -9,12 +9,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.PlaceBuilder;
-import com.now.naaga.common.builder.PlaceLikeBuilder;
-import com.now.naaga.common.builder.PlaceStatisticsBuilder;
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.ControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
@@ -32,38 +27,13 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class PlaceLikeControllerTest extends CommonControllerTest {
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
-
-    @Autowired
-    private PlaceBuilder placeBuilder;
-
-    @Autowired
-    private PlaceLikeBuilder placeLikeBuilder;
-
-    @Autowired
-    private PlaceStatisticsBuilder placeStatisticsBuilder;
-
-    @Autowired
-    private AuthTokenGenerator authTokenGenerator;
-
-    @BeforeEach
-    void setup() {
-        super.setUp();
-    }
+class PlaceLikeControllerTest extends ControllerTest {
 
     @Test
     void 좋아요_등록이_성공하면_201_응답을_반환한다() {
@@ -162,13 +132,13 @@ class PlaceLikeControllerTest extends CommonControllerTest {
     void 좋아요_삭제를_성공하면_204응답을_한다() {
         //given
         final Place place = placeBuilder.init()
-                .build();
+                                        .build();
         final PlaceLike placeLike = placeLikeBuilder.init()
-                .place(place)
-                .build();
+                                                    .place(place)
+                                                    .build();
         placeStatisticsBuilder.init()
-                .place(place)
-                .build();
+                              .place(place)
+                              .build();
         final Member member = placeLike.getPlayer().getMember();
         final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();

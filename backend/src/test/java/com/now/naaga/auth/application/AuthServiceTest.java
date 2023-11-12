@@ -12,40 +12,21 @@ import com.now.naaga.auth.infrastructure.AuthClient;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.ServiceTest;
 import com.now.naaga.member.domain.Member;
-import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.score.domain.Score;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@Sql("/truncate.sql")
-//@Transactional
-@SpringBootTest
-class AuthServiceTest {
+class AuthServiceTest extends ServiceTest {
 
     @Autowired
     private AuthService authService;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private PlayerRepository playerRepository;
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
 
     @MockBean
     private AuthClient authClient;
@@ -74,7 +55,7 @@ class AuthServiceTest {
     void 존재하는_멤버는_저장_후_토큰을_발급한다() {
         // given
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final AuthCommand authCommand = new AuthCommand("1234", AuthType.KAKAO);
 
         when(authClient.requestOauthInfo(any())).thenReturn(AuthInfo.of(player.getMember().getEmail(), player.getNickname()));
@@ -90,7 +71,7 @@ class AuthServiceTest {
     void 탈퇴한다() {
         // given
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final long authId = 1L;
         final MemberAuth memberAuth = new MemberAuth(player.getMember().getId(), authId, AuthType.KAKAO);
         doNothing().when(authClient).requestUnlink(authId);
@@ -111,7 +92,7 @@ class AuthServiceTest {
     void 로그아웃한다() {
         // given
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final long authId = 1L;
         final MemberAuth memberAuth = new MemberAuth(player.getMember().getId(), authId, AuthType.KAKAO);
         doNothing().when(authClient).requestUnlink(authId);

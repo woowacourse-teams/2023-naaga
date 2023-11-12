@@ -1,23 +1,30 @@
 package com.now.naaga.common;
 
+import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
+import com.now.naaga.auth.infrastructure.jwt.JwtProvider;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
-@ActiveProfiles("test")
-@Sql("/truncate.sql")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public abstract class CommonControllerTest {
+public abstract class ControllerTest extends AbstractTest {
+
+    @Autowired
+    protected AuthTokenGenerator authTokenGenerator;
+
+    @Autowired
+    protected JwtProvider jwtProvider;
 
     @LocalServerPort
     private int port;
 
-    protected void setUp() {
+    @BeforeEach
+    void setUp() {
         RestAssured.port = port;
     }
 
