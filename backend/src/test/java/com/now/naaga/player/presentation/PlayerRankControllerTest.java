@@ -29,7 +29,7 @@ import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-public class PlayerControllerTest extends CommonControllerTest {
+public class PlayerRankControllerTest extends CommonControllerTest {
 
     @Autowired
     private AuthTokenGenerator authTokenGenerator;

@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/ranks")
 @RestController
-public class PlayerController {
+public class PlayerRankController {
 
     private final PlayerService playerService;
 
-    public PlayerController(final PlayerService playerService) {
+    public PlayerRankController(final PlayerService playerService) {
         this.playerService = playerService;
     }
 
