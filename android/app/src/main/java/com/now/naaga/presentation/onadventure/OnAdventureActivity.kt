@@ -130,7 +130,7 @@ class OnAdventureActivity :
                 false -> binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail))
             }
         }
-        viewModel.letters.observe(this) {
+        viewModel.nearbyLetters.observe(this) {
             drawLetters(it)
         }
         viewModel.letter.observe(this) {

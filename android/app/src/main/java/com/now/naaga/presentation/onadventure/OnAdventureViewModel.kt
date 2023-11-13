@@ -46,8 +46,8 @@ class OnAdventureViewModel @Inject constructor(
     private var _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
-    private val _letters = MutableLiveData<List<LetterPreview>>()
-    val letters: LiveData<List<LetterPreview>> = _letters
+    private val _nearbyLetters = MutableLiveData<List<LetterPreview>>()
+    val nearbyLetters: LiveData<List<LetterPreview>> = _nearbyLetters
 
     private val _letter = MutableLiveData<LetterUiModel>()
     val letter: LiveData<LetterUiModel> = _letter
@@ -97,7 +97,7 @@ class OnAdventureViewModel @Inject constructor(
                 runCatching {
                     letterRepository.fetchNearbyLetters(coordinate.latitude, coordinate.longitude)
                 }.onSuccess {
-                    _letters.value = it
+                    _nearbyLetters.value = it
                 }.onFailure {
                     setThrowable(it)
                 }
