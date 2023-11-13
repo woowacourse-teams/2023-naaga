@@ -28,7 +28,7 @@ import static com.now.naaga.letter.exception.LetterExceptionType.NO_EXIST;
 @Service
 public class LetterService {
 
-    private static final double LETTER_RADIUS = 0.1;
+    private static final double LETTER_RADIUS = 0.05;
 
     private final LetterRepository letterRepository;
 
