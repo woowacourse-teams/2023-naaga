@@ -110,6 +110,7 @@ class OnAdventureActivity :
     private fun subscribe() {
         viewModel.startCoordinate.observe(this) {
             beginAdventure(it)
+            viewModel.fetchLetters()
         }
         viewModel.adventure.observe(this) {
             isAdventureDone(it.adventureStatus)
