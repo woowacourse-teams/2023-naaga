@@ -4,6 +4,8 @@ import static java.lang.Boolean.FALSE;
 
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.member.domain.Member;
+import com.now.naaga.player.exception.PlayerException;
+import com.now.naaga.player.exception.PlayerExceptionType;
 import com.now.naaga.score.domain.Score;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -16,8 +18,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.util.Objects;
+import java.util.regex.Pattern;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.data.domain.ExampleMatcher;
 
 @SQLDelete(sql = "UPDATE player SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")
@@ -51,11 +56,25 @@ public class Player extends BaseEntity {
     }
 
     public Player(final Long id, final String nickname, final Score totalScore, final Member member, final boolean deleted) {
+        validateNickname(nickname);
         this.id = id;
         this.nickname = nickname;
         this.totalScore = totalScore;
         this.member = member;
         this.deleted = deleted;
+    }
+
+    public void editNickname(final String newNickname) {
+        validateNickname(newNickname);
+        this.nickname = newNickname;
+    }
+
+    private void validateNickname(final String nickname) {
+        final boolean isUnavailableNickname = Pattern.matches("^.*[^가-힣a-zA-Z0-9\\s]+.*$", nickname);
+
+        if(isUnavailableNickname || nickname.length() < 2 || nickname.length() > 20) {
+            throw new PlayerException(PlayerExceptionType.UNAVAILABLE_NICKNAME);
+        }
     }
 
     public void addScore(Score score) {
