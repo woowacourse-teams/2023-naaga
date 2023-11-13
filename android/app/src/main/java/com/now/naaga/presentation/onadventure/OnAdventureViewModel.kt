@@ -50,14 +50,14 @@ class OnAdventureViewModel @Inject constructor(
     val letters: LiveData<List<LetterPreview>> = _letters
 
     private val _letter = MutableLiveData<LetterUiModel>()
-
     val letter: LiveData<LetterUiModel> = _letter
+
     private val _throwable = MutableLiveData<DataThrowable>()
-
     val throwable: LiveData<DataThrowable> = _throwable
-    private val _isSendLetterSuccess = MutableLiveData<Boolean>()
 
+    private val _isSendLetterSuccess = MutableLiveData<Boolean>()
     val isSendLetterSuccess: LiveData<Boolean> = _isSendLetterSuccess
+
     fun setAdventure(adventure: Adventure) {
         _adventure.value = adventure
     }
