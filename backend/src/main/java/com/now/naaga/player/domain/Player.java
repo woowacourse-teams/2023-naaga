@@ -71,7 +71,6 @@ public class Player extends BaseEntity {
 
     private void validateNickname(final String nickname) {
         final boolean isUnavailableNickname = Pattern.matches("^.*[^가-힣a-zA-Z0-9\\s]+.*$", nickname);
-
         if(isUnavailableNickname || nickname.length() < 2 || nickname.length() > 20) {
             throw new PlayerException(PlayerExceptionType.UNAVAILABLE_NICKNAME);
         }

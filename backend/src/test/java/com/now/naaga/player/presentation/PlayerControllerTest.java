@@ -1,24 +1,21 @@
 package com.now.naaga.player.presentation;
 
-import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
 import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.exception.CommonExceptionType;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.player.domain.Player;
+import com.now.naaga.player.presentation.dto.EditPlayerRequest;
+import com.now.naaga.player.presentation.dto.EditPlayerResponse;
 import com.now.naaga.player.presentation.dto.RankResponse;
 import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -26,6 +23,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -40,6 +44,71 @@ public class PlayerControllerTest extends CommonControllerTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
+    }
+
+    @Test
+    void 닉네임을_변경한다() {
+        // given
+        final String nickname = "변경된 닉네임";
+        final Player player = playerBuilder.init().build();
+        final EditPlayerRequest editPlayerRequest = new EditPlayerRequest(nickname);
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+        // when
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken)
+                .body(editPlayerRequest)
+                .when().patch("/profiles/my")
+                .then().log().all()
+                .extract();
+
+        // then
+        final EditPlayerResponse expected = new EditPlayerResponse(nickname);
+        final EditPlayerResponse actual = response.as(EditPlayerResponse.class);
+        final int statusCode = response.statusCode();
+
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .isEqualTo(expected);
+            softAssertions.assertThat(statusCode)
+                    .isEqualTo(HttpStatus.OK.value());
+        });
+    }
+
+    @Test
+    void 잘못된_닉네임을_입력하면_예외를_응답한다() {
+        // given
+        final String nickname = "변경된 닉네임!!";
+        final Player player = playerBuilder.init().build();
+        final EditPlayerRequest editPlayerRequest = new EditPlayerRequest(nickname);
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+        // when
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken)
+                .body(editPlayerRequest)
+                .when().patch("/profiles/my")
+                .then().log().all()
+                .extract();
+
+        // then
+        final CommonExceptionType exceptionType = CommonExceptionType.INVALID_REQUEST_BODY;
+        final ExceptionResponse expected = new ExceptionResponse(exceptionType.errorCode(), exceptionType.errorMessage());
+        final ExceptionResponse actual = response.as(ExceptionResponse.class);
+        final int statusCode = response.statusCode();
+
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .isEqualTo(expected);
+            softAssertions.assertThat(statusCode)
+                    .isEqualTo(HttpStatus.BAD_REQUEST.value());
+        });
     }
 
     @Test
