@@ -1,7 +1,5 @@
 package com.now.naaga.player.application;
 
-import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
-
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.application.dto.AddScoreCommand;
 import com.now.naaga.player.application.dto.CreatePlayerCommand;
@@ -13,10 +11,13 @@ import com.now.naaga.player.exception.PlayerException;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.score.domain.Score;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
 
 @Transactional
 @Service

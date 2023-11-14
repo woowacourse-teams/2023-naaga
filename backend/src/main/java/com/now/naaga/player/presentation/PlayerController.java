@@ -1,22 +1,24 @@
 package com.now.naaga.player.presentation;
 
-import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
-
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.player.application.PlayerService;
 import com.now.naaga.player.application.dto.EditPlayerNicknameCommand;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
-import com.now.naaga.player.presentation.dto.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.now.naaga.player.presentation.dto.EditPlayerRequest;
+import com.now.naaga.player.presentation.dto.EditPlayerResponse;
+import com.now.naaga.player.presentation.dto.PlayerRequest;
+import com.now.naaga.player.presentation.dto.RankResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
 
 @RestController
 public class PlayerController {
