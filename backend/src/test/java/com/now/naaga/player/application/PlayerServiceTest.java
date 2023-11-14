@@ -1,14 +1,17 @@
 package com.now.naaga.player.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.application.dto.AddScoreCommand;
+import com.now.naaga.player.application.dto.EditPlayerNicknameCommand;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
+import com.now.naaga.player.exception.PlayerException;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.score.domain.Score;
@@ -20,10 +23,13 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 
+@ActiveProfiles("test")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Transactional
 @SpringBootTest
@@ -99,5 +105,31 @@ class PlayerServiceTest {
         // then
         final Player afterPlayer = playerRepository.findById(player.getId()).get();
         assertThat(afterPlayer.getTotalScore()).isEqualTo(beforeScore.plus(addedScore));
+    }
+
+    @Test
+    void 플레이어의_닉네임을_변경한다() {
+        //given
+        final String expected = "변경 닉네임";
+        final Player player = playerBuilder.init().build();
+        final EditPlayerNicknameCommand editPlayerNicknameCommand = new EditPlayerNicknameCommand(player.getId(), expected);
+
+        //when
+        final Player actual = playerService.editPlayerNickname(editPlayerNicknameCommand);
+
+        //then
+        assertThat(actual.getNickname()).isEqualTo(expected);
+    }
+
+    @Test
+    void 플레이어의_닉네임을_변경_시_불가능한_닉네임을_입력하면_예외를_발생한다() {
+        //given
+        final String expected = "변경 닉네임!!";
+        final Player player = playerBuilder.init().build();
+        final EditPlayerNicknameCommand editPlayerNicknameCommand = new EditPlayerNicknameCommand(player.getId(), expected);
+
+        //when & then
+        assertThatThrownBy(() -> playerService.editPlayerNickname(editPlayerNicknameCommand))
+                .isInstanceOf(PlayerException.class);
     }
 }

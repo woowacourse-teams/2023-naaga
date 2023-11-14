@@ -5,6 +5,7 @@ import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUN
 import com.now.naaga.player.application.dto.AddScoreCommand;
 import com.now.naaga.player.application.dto.CreatePlayerCommand;
 import com.now.naaga.player.application.dto.DeletePlayerCommand;
+import com.now.naaga.player.application.dto.EditPlayerNicknameCommand;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.exception.PlayerException;
@@ -24,6 +25,14 @@ public class PlayerService {
 
     public PlayerService(final PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
+    }
+
+    public Player editPlayerNickname(final EditPlayerNicknameCommand editPlayerNicknameCommand) {
+        final Long playerId = editPlayerNicknameCommand.playerId();
+        final String newNickname = editPlayerNicknameCommand.nickname();
+        final Player player = playerRepository.findById(playerId).orElseThrow(() -> new PlayerException(PLAYER_NOT_FOUND));
+        player.editNickname(newNickname);
+        return player;
     }
 
     @Transactional(readOnly = true)
