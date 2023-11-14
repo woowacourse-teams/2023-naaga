@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.now.naaga.common.ControllerTest;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -74,7 +75,9 @@ public class PlaceControllerTest extends ControllerTest {
         final Place place = placeBuilder.init()
                                         .build();
         //when
-        final ExtractableResponse<Response> extract = given(place.getRegisteredPlayer())
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(place.getRegisteredPlayer()))
                 .pathParam("placeId", place.getId())
                 .when()
                 .get("/places/{placeId}")
@@ -100,7 +103,9 @@ public class PlaceControllerTest extends ControllerTest {
                                         .build();
 
         //when
-        final ExtractableResponse<Response> extract = given(place.getRegisteredPlayer())
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(place.getRegisteredPlayer()))
                 .queryParam("sort-by", "time")
                 .queryParam("order", "descending")
                 .when()

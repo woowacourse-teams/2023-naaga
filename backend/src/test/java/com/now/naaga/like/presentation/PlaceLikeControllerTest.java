@@ -48,7 +48,9 @@ class PlaceLikeControllerTest extends ControllerTest {
         final ApplyPlaceLikeRequest applyPlaceLikeRequest = new ApplyPlaceLikeRequest(PlaceLikeType.LIKE);
 
         // when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(applyPlaceLikeRequest)
                 .when()
@@ -93,7 +95,9 @@ class PlaceLikeControllerTest extends ControllerTest {
         final ApplyPlaceLikeRequest applyPlaceLikeRequest = new ApplyPlaceLikeRequest(PlaceLikeType.LIKE);
 
         // when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(applyPlaceLikeRequest)
                 .when()
@@ -126,7 +130,9 @@ class PlaceLikeControllerTest extends ControllerTest {
                               .build();
 
         //when
-        final ExtractableResponse<Response> extract = given(placeLike.getPlayer())
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(placeLike.getPlayer()))
                 .contentType(ContentType.JSON)
                 .pathParam("placeId", place.getId())
                 .when()
@@ -157,7 +163,9 @@ class PlaceLikeControllerTest extends ControllerTest {
                         .build();
 
         // when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/places/{placeId}/likes/my", place.getId())
@@ -185,7 +193,9 @@ class PlaceLikeControllerTest extends ControllerTest {
                                         .build();
 
         // when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/places/{placeId}/likes/my", place.getId())

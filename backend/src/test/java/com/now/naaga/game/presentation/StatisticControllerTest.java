@@ -14,6 +14,7 @@ import com.now.naaga.game.presentation.dto.StatisticResponse;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -67,7 +68,9 @@ public class StatisticControllerTest extends ControllerTest {
         final Statistic statistic = gameService.findStatistic(new PlayerRequest(player.getId()));
 
         // when
-        final ExtractableResponse<Response> response = given(player)
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/statistics/my")
                 .then().log().all()

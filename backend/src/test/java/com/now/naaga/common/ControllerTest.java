@@ -9,7 +9,6 @@ import com.now.naaga.player.domain.Player;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,21 +32,17 @@ public abstract class ControllerTest extends AbstractTest {
         RestAssured.port = port;
     }
 
-    protected RequestSpecification given(final Player player) {
+    protected String authorizationForBearer(final Player player) {
         final Member member = player.getMember();
         final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-        return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken);
+        return "Bearer " + accessToken;
     }
 
-    protected RequestSpecification given(final Member member) {
+    protected String authorizationForBearer(final Member member) {
         final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
         final String accessToken = generate.getAccessToken();
-        return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer " + accessToken);
+        return "Bearer " + accessToken;
     }
 
     protected Long getIdFromLocationHeader(ExtractableResponse<Response> extractableResponse) {

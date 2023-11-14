@@ -37,7 +37,9 @@ public class PlayerControllerTest extends ControllerTest {
                      .totalScore(new Score(30))
                      .build();
         // when
-        final ExtractableResponse<Response> response = given(player)
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/ranks/my")
                 .then().log().all()

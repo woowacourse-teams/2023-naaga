@@ -70,7 +70,9 @@ class GameControllerTest extends ControllerTest {
                                                                     잠실역_교보문고_좌표.getLongitude().doubleValue());
 
         // when
-        final ExtractableResponse<Response> extract = given(destination.getRegisteredPlayer())
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(destination.getRegisteredPlayer()))
                 .contentType(ContentType.JSON)
                 .body(coordinateRequest)
                 .when()
@@ -126,7 +128,9 @@ class GameControllerTest extends ControllerTest {
                                                                     잠실역_교보문고_좌표.getLongitude().doubleValue());
 
         // when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(coordinateRequest)
                 .when()
@@ -160,7 +164,9 @@ class GameControllerTest extends ControllerTest {
                                                                     역삼역_좌표.getLongitude().doubleValue());
 
         // when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(coordinateRequest)
                 .when()
@@ -198,7 +204,9 @@ class GameControllerTest extends ControllerTest {
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("GIVE_UP", new CoordinateRequest(37.515546, 127.102902)))// 역삼역 좌표
                 .when()
@@ -240,7 +248,9 @@ class GameControllerTest extends ControllerTest {
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
@@ -282,7 +292,9 @@ class GameControllerTest extends ControllerTest {
                                      .remainingAttempts(1)
                                      .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
                 .when()
@@ -324,7 +336,9 @@ class GameControllerTest extends ControllerTest {
 
         final int beforeRemainingAttempts = game.getRemainingAttempts();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
                 .when()
@@ -332,7 +346,9 @@ class GameControllerTest extends ControllerTest {
                 .then().log().all()
                 .extract();
 
-        final ExtractableResponse<Response> extractAfter = given(player)
+        final ExtractableResponse<Response> extractAfter = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .when()
                 .get("/games/{gameId}", game.getId())
                 .then().log().all()
@@ -432,7 +448,9 @@ class GameControllerTest extends ControllerTest {
         final CoordinateRequest coordinateRequest = new CoordinateRequest(잠실_루터회관_정문_근처_좌표.getLatitude().doubleValue(),
                                                                           잠실_루터회관_정문_근처_좌표.getLongitude().doubleValue());
 
-        final ExtractableResponse<Response> extract = given(player2)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player2))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", coordinateRequest))
                 .when()
@@ -466,7 +484,9 @@ class GameControllerTest extends ControllerTest {
                                      .player(player)
                                      .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
@@ -506,7 +526,9 @@ class GameControllerTest extends ControllerTest {
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .when()
                 .get("/games/{gameId}", game.getId())
                 .then().log().all()
@@ -533,7 +555,9 @@ class GameControllerTest extends ControllerTest {
         final Player player = playerBuilder.init()
                                            .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/games/{gameId}", 1L)
@@ -574,7 +598,9 @@ class GameControllerTest extends ControllerTest {
                                                        .build();
 
         // when
-        final ExtractableResponse<Response> response = given(player)
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .pathParam("gameId", game.getId())
                 .when()
@@ -625,7 +651,9 @@ class GameControllerTest extends ControllerTest {
                                                         .build();
 
         // when
-        final ExtractableResponse<Response> response = given(player)
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .param("sort-by", "time")
                 .param("order", "descending")
@@ -666,7 +694,9 @@ class GameControllerTest extends ControllerTest {
         final CoordinateRequest SEOUL_COORDINATE = new CoordinateRequest(서울_좌표.getLatitude().doubleValue(),
                                                                          서울_좌표.getLongitude().doubleValue());
 
-        final ExtractableResponse<Response> extract = given(game.getPlayer())
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(game.getPlayer()))
                 .contentType(ContentType.JSON)
                 .body(SEOUL_COORDINATE)
                 .when()
@@ -707,7 +737,9 @@ class GameControllerTest extends ControllerTest {
 
         final Hint hint = hintRepository.save(new Hint(서울_좌표, Direction.SOUTH, game));
 
-        final ExtractableResponse<Response> extract = given(game.getPlayer())
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(game.getPlayer()))
                 .when()
                 .get("/games/{gameId}/hints/{hintId}", game.getId(), hint.getId())
                 .then().log().all()
@@ -745,7 +777,9 @@ class GameControllerTest extends ControllerTest {
 
         hintRepository.delete(hint);
 
-        final ExtractableResponse<Response> extract = given(game.getPlayer())
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(game.getPlayer()))
                 .when()
                 .get("/games/{gameId}/hints/{hintId}", game.getId(), hint.getId())
                 .then().log().all()

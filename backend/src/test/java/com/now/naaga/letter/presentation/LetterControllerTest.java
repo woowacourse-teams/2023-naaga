@@ -26,6 +26,7 @@ import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.PlayerResponse;
+import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
@@ -55,7 +56,9 @@ class LetterControllerTest extends ControllerTest {
                                             .build();
 
         // when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .param("latitude", 잠실역_교보문고_좌표.getLatitude())
                 .param("longitude", 잠실역_교보문고_좌표.getLongitude())
@@ -100,7 +103,9 @@ class LetterControllerTest extends ControllerTest {
                                            .position(잠실_루터회관_정문_좌표)
                                            .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .when()
                 .get("/letters/{letterId}", letter.getId())
                 .then().log().all()
@@ -135,7 +140,9 @@ class LetterControllerTest extends ControllerTest {
                                            .position(잠실_루터회관_정문_좌표)
                                            .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .when()
                 .get("/letters/{letterId}", letter.getId())
                 .then().log().all()
@@ -172,7 +179,9 @@ class LetterControllerTest extends ControllerTest {
                                                               잠실_루터회관_정문_좌표.getLongitude().doubleValue());
 
         //when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(letterRequest)
                 .when()
@@ -213,7 +222,9 @@ class LetterControllerTest extends ControllerTest {
                                                               잠실_루터회관_정문_좌표.getLongitude().doubleValue());
 
         //when
-        final ExtractableResponse<Response> extract = given(new Member(1L, "email", false))
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(new Member(1L, "email", false)))
                 .contentType(ContentType.JSON)
                 .body(letterRequest)
                 .when()
@@ -254,7 +265,9 @@ class LetterControllerTest extends ControllerTest {
                                                               잠실_루터회관_정문_좌표.getLongitude().doubleValue());
 
         //when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(letterRequest)
                 .when()
@@ -315,7 +328,9 @@ class LetterControllerTest extends ControllerTest {
                                                                  .letter(letter)
                                                                  .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .param("gameId", game1.getId())
                 .param("logType", "READ")
                 .when()
@@ -366,7 +381,9 @@ class LetterControllerTest extends ControllerTest {
                                                                     .letter(letter)
                                                                     .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .param("gameId", game.getId())
                 .param("logType", "WRITE")
                 .when()
@@ -431,7 +448,9 @@ class LetterControllerTest extends ControllerTest {
                                                                     .letter(letter2)
                                                                     .build();
 
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .param("gameId", game1.getId())
                 .param("logType", "잘못된enum")
                 .when()
@@ -472,7 +491,9 @@ class LetterControllerTest extends ControllerTest {
                                                               잠실_루터회관_정문_좌표.getLongitude().doubleValue());
 
         //when
-        final ExtractableResponse<Response> extract = given(player)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(letterRequest)
                 .when()
