@@ -1,29 +1,29 @@
-package com.now.naaga.place.application;
+package com.now.naaga.like.application;
 
-import com.now.naaga.place.application.dto.PlusLikeCommand;
-import com.now.naaga.place.application.dto.SubtractLikeCommand;
+import com.now.naaga.like.application.dto.ApplyLikeCommand;
+import com.now.naaga.like.application.dto.CancelLikeCommand;
+import com.now.naaga.like.domain.PlaceLike;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PlaceStatisticsFacade {
+public class PlaceLikeFacade {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    private final PlaceStatisticsService placeStatisticsService;
+    private final PlaceLikeService placeLikeService;
 
-    public PlaceStatisticsFacade(final PlaceStatisticsService placeStatisticsService) {
-        this.placeStatisticsService = placeStatisticsService;
+    public PlaceLikeFacade(final PlaceLikeService placeLikeService) {
+        this.placeLikeService = placeLikeService;
     }
 
-    public void plusLike(final PlusLikeCommand plusLikeCommand) {
+    public PlaceLike applyLike(final ApplyLikeCommand applyLikeCommand) {
         int retryCnt = 0;
         while (true) {
             try {
-                placeStatisticsService.plusLike(plusLikeCommand);
-                break;
+                return placeLikeService.applyLike(applyLikeCommand);
             } catch (final OptimisticLockingFailureException e) {
                 retryCnt++;
                 log.info("낙관적 락 재시도 횟수: {}", retryCnt);
@@ -31,11 +31,11 @@ public class PlaceStatisticsFacade {
         }
     }
 
-    public void subtractLike(final SubtractLikeCommand subtractLikeCommand) {
+    public void cancelLike(final CancelLikeCommand cancelLikeCommand) {
         int retryCnt = 0;
         while (true) {
             try {
-                placeStatisticsService.subtractLike(subtractLikeCommand);
+                placeLikeService.cancelLike(cancelLikeCommand);
                 break;
             } catch (final OptimisticLockingFailureException e) {
                 retryCnt++;

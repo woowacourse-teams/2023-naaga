@@ -1,6 +1,7 @@
 package com.now.naaga.like.presentation;
 
 import com.now.naaga.auth.presentation.annotation.Auth;
+import com.now.naaga.like.application.PlaceLikeFacade;
 import com.now.naaga.like.application.PlaceLikeService;
 import com.now.naaga.like.application.dto.ApplyLikeCommand;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
@@ -28,9 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PlaceLikeController {
 
+    private final PlaceLikeFacade placeLikeFacade;
+
     private final PlaceLikeService placeLikeService;
 
-    public PlaceLikeController(final PlaceLikeService placeLikeService) {
+    public PlaceLikeController(final PlaceLikeFacade placeLikeFacade,
+                               final PlaceLikeService placeLikeService) {
+        this.placeLikeFacade = placeLikeFacade;
         this.placeLikeService = placeLikeService;
     }
 
@@ -41,7 +46,7 @@ public class PlaceLikeController {
         final ApplyLikeCommand command = ApplyLikeCommand.of(playerRequest,
                                                              placeId,
                                                              applyPlaceLikeRequest);
-        final PlaceLike placeLike = placeLikeService.applyLike(command);
+        final PlaceLike placeLike = placeLikeFacade.applyLike(command);
         final PlaceLikeResponse response = PlaceLikeResponse.from(placeLike);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -53,7 +58,7 @@ public class PlaceLikeController {
     public ResponseEntity<Void> cancelPlaceLike(@Auth PlayerRequest playerRequest,
                                                 @PathVariable Long placeId) {
         final CancelLikeCommand cancelLikeCommand = CancelLikeCommand.of(playerRequest, placeId);
-        placeLikeService.cancelLike(cancelLikeCommand);
+        placeLikeFacade.cancelLike(cancelLikeCommand);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

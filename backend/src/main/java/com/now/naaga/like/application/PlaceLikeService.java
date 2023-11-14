@@ -11,7 +11,6 @@ import com.now.naaga.like.exception.PlaceLikeException;
 import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.application.PlaceService;
-import com.now.naaga.place.application.PlaceStatisticsFacade;
 import com.now.naaga.place.application.PlaceStatisticsService;
 import com.now.naaga.place.application.dto.FindPlaceByIdCommand;
 import com.now.naaga.place.application.dto.FindPlaceStatisticsByPlaceIdCommand;
@@ -31,8 +30,6 @@ public class PlaceLikeService {
 
     private final PlaceLikeRepository placeLikeRepository;
 
-    private final PlaceStatisticsFacade placeStatisticsFacade;
-
     private final PlaceStatisticsService placeStatisticsService;
 
     private final PlayerService playerService;
@@ -40,12 +37,10 @@ public class PlaceLikeService {
     private final PlaceService placeService;
 
     public PlaceLikeService(final PlaceLikeRepository placeLikeRepository,
-                            final PlaceStatisticsFacade placeStatisticsFacade,
                             final PlaceStatisticsService placeStatisticsService,
                             final PlayerService playerService,
                             final PlaceService placeService) {
         this.placeLikeRepository = placeLikeRepository;
-        this.placeStatisticsFacade = placeStatisticsFacade;
         this.placeStatisticsService = placeStatisticsService;
         this.playerService = playerService;
         this.placeService = placeService;
@@ -57,7 +52,7 @@ public class PlaceLikeService {
         final PlaceLikeType placeLikeType = applyLikeCommand.placeLikeType();
 
         if (placeLikeType == PlaceLikeType.LIKE) {
-            placeStatisticsFacade.plusLike(new PlusLikeCommand(placeId));
+            placeStatisticsService.plusLike(new PlusLikeCommand(placeId));
         }
 
         final Optional<PlaceLike> maybePlaceLike = placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId);
@@ -76,7 +71,7 @@ public class PlaceLikeService {
             throw new PlaceLikeException(PlaceLikeExceptionType.ALREADY_APPLIED_TYPE);
         }
         if (toBeChanged == PlaceLikeType.DISLIKE) {
-            placeStatisticsFacade.subtractLike(new SubtractLikeCommand(target.getPlace().getId()));
+            placeStatisticsService.subtractLike(new SubtractLikeCommand(target.getPlace().getId()));
         }
         target.switchType();
         return target;
@@ -108,7 +103,7 @@ public class PlaceLikeService {
     private void subtractPlaceLikeCount(final Long placeId, final PlaceLike placeLike) {
         if (placeLike.getType() == PlaceLikeType.LIKE) {
             final SubtractLikeCommand subtractLikeCommand = new SubtractLikeCommand(placeId);
-            placeStatisticsFacade.subtractLike(subtractLikeCommand);
+            placeStatisticsService.subtractLike(subtractLikeCommand);
         }
     }
 
