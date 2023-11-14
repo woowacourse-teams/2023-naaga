@@ -4,6 +4,7 @@ import com.now.naaga.place.application.dto.PlusLikeCommand;
 import com.now.naaga.place.application.dto.SubtractLikeCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +24,7 @@ public class PlaceStatisticsFacade {
             try {
                 placeStatisticsService.plusLike(plusLikeCommand);
                 break;
-            } catch (final Exception e) {
+            } catch (final OptimisticLockingFailureException e) {
                 retryCnt++;
                 log.info("낙관적 락 재시도 횟수: {}", retryCnt);
             }
@@ -36,7 +37,7 @@ public class PlaceStatisticsFacade {
             try {
                 placeStatisticsService.subtractLike(subtractLikeCommand);
                 break;
-            } catch (final Exception e) {
+            } catch (final OptimisticLockingFailureException e) {
                 retryCnt++;
                 log.info("낙관적 락 재시도 횟수: {}", retryCnt);
             }
