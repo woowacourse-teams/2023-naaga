@@ -41,7 +41,7 @@ public class PlaceStatisticsService {
 
     public void plusLike(final PlusLikeCommand plusLikeCommand) {
         final Long placeId = plusLikeCommand.placeId();
-        final PlaceStatistics placeStatistics = placeStatisticsRepository.findByPlaceId(placeId)
+        final PlaceStatistics placeStatistics = placeStatisticsRepository.findByPlaceIdWithOptimisticLock(placeId)
                                                                          .orElseThrow(() -> new PlaceException(PlaceExceptionType.NO_EXIST));
         placeStatistics.plusLike();
     }
@@ -49,7 +49,7 @@ public class PlaceStatisticsService {
     public void subtractLike(final SubtractLikeCommand subtractLikeCommand) {
         final Long placeId = subtractLikeCommand.placeId();
 
-        final PlaceStatistics placeStatistics = placeStatisticsRepository.findByPlaceId(placeId)
+        final PlaceStatistics placeStatistics = placeStatisticsRepository.findByPlaceIdWithOptimisticLock(placeId)
                                                                          .orElseThrow(() -> new PlaceStatisticsException(PlaceStatisticsExceptionType.NOT_FOUND));
 
         placeStatistics.subtractLike();
