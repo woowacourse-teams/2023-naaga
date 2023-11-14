@@ -2,6 +2,7 @@ package com.now.naaga.player.application;
 
 import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
 
+import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.application.dto.AddScoreCommand;
 import com.now.naaga.player.application.dto.CreatePlayerCommand;
 import com.now.naaga.player.application.dto.DeletePlayerCommand;
@@ -91,7 +92,9 @@ public class PlayerService {
     }
 
     public Player create(final CreatePlayerCommand createPlayerCommand) {
-        final Player player = new Player(createPlayerCommand.nickname(), new Score(0), createPlayerCommand.member());
+        final String nickname = createPlayerCommand.nickname();
+        final Member member = createPlayerCommand.member();
+        final Player player = Player.create(nickname, new Score(0), member);
         return playerRepository.save(player);
     }
 

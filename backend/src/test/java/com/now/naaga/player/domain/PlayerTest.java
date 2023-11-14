@@ -70,6 +70,19 @@ class PlayerTest {
         assertThat(player.getNickname()).isEqualTo(nickname);
     }
 
+    @Test
+    void 잘못된_문자로_닉네임_입력이_들어오면_잘못된_문자_지우고_20글자로_잘라서_플레이어를_생성한다() {
+        // given
+        final String input = "루!#@!#@카".repeat(100);
+        final String expected ="루카".repeat(10);
+
+        // when
+        final Player player = Player.create(input, new Score(0), MemberFixture.MEMBER());
+
+        // then
+        assertThat(player.getNickname()).isEqualTo(expected);
+    }
+
     static Stream<String> unavailableNicknames() {
         return Stream.of(
                 "특수문자#$%@닉네임",

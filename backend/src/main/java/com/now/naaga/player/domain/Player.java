@@ -22,13 +22,13 @@ import java.util.regex.Pattern;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.data.domain.ExampleMatcher;
 
 @SQLDelete(sql = "UPDATE player SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")
 @Entity
 public class Player extends BaseEntity {
 
+    public static final int NICKNAME_MAX_SIZE = 20;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -55,13 +55,32 @@ public class Player extends BaseEntity {
         this(null, nickname, totalScore, member, FALSE);
     }
 
-    public Player(final Long id, final String nickname, final Score totalScore, final Member member, final boolean deleted) {
+    public Player(final Long id,
+                  final String nickname,
+                  final Score totalScore,
+                  final Member member,
+                  final boolean deleted) {
         validateNickname(nickname);
         this.id = id;
         this.nickname = nickname;
         this.totalScore = totalScore;
         this.member = member;
         this.deleted = deleted;
+    }
+
+    public static Player create(final String nickname,
+                                final Score score,
+                                final Member member) {
+        final String modifiedNickname = modifyWithValidNickname(nickname);
+        return new Player(modifiedNickname, score, member);
+    }
+
+    private static String modifyWithValidNickname(final String nickname) {
+        final String modifiedNickname = nickname.replaceAll("[^가-힣a-zA-Z0-9\\s]+", "");
+        if (modifiedNickname.length() > 20) {
+            return modifiedNickname.substring(0, NICKNAME_MAX_SIZE);
+        }
+        return modifiedNickname;
     }
 
     public void editNickname(final String newNickname) {
