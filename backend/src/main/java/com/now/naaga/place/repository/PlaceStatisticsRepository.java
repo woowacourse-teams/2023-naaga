@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface PlaceStatisticsRepository extends JpaRepository<PlaceStatistics, Long> {
 
@@ -13,5 +14,5 @@ public interface PlaceStatisticsRepository extends JpaRepository<PlaceStatistics
 
     @Lock(LockModeType.OPTIMISTIC)
     @Query("SELECT ps FROM PlaceStatistics ps WHERE ps.place.id = :placeId")
-    Optional<PlaceStatistics> findByPlaceIdWithOptimisticLock(final Long placeId);
+    Optional<PlaceStatistics> findByPlaceIdWithOptimisticLock(@Param("placeId") final Long placeId);
 }
