@@ -56,7 +56,7 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     private fun fetchData() {
-        viewModel.fetchRank()
+        viewModel.fetchProfile()
         viewModel.fetchStatistics()
         viewModel.fetchPlaces()
     }

@@ -39,7 +39,7 @@
                 android:ellipsize="end"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:text="@{viewModel.rank.player.nickname}"
+                android:text="@{viewModel.profile.nickname}"
                 android:textColor="@color/white"
                 android:textSize="52sp"
                 app:layout_constraintEnd_toEndOf="@id/g_mypage"
