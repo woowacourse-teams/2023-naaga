@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.now.naaga.presentation.profile.ProfileViewModel" />
 
     </data>
 
@@ -36,7 +39,8 @@
             android:ems="10"
             android:inputType="text"
             android:maxLines="1"
-            android:text="@string/profile_nickname_hint"
+            android:text="@={viewModel.nickname}"
+            android:hint="@string/profile_nickname_hint"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
