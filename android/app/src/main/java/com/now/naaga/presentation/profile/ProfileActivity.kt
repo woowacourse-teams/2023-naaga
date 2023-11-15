@@ -20,6 +20,7 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         subscribe()
         setClickListeners()
     }

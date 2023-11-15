@@ -37,6 +37,7 @@
             android:backgroundTint="@color/white"
             android:ellipsize="end"
             android:ems="10"
+            android:autofillHints="no"
             android:inputType="text"
             android:maxLines="1"
             android:text="@={viewModel.nickname}"
