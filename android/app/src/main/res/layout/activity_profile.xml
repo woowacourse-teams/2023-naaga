@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.profile.ProfileActivity">
+
+    <ImageView
+        android:id="@+id/iv_profile_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="@dimen/space_default_medium"
+        android:src="@drawable/ic_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_profile_nickname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_default_large"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="@dimen/space_default_large"
+        android:backgroundTint="@color/white"
+        android:ellipsize="end"
+        android:ems="10"
+        android:inputType="text"
+        android:maxLines="1"
+        android:text="@string/profile_nickname_hint"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_profile_back" />
+
+    <View
+        android:id="@+id/v_profile_nickname_manual_box"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/space_default_large"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="@dimen/space_default_large"
+        android:background="@drawable/rect_border"
+        app:layout_constraintBottom_toTopOf="@+id/gl_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_profile_nickname" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="280dp" />
+
+    <TextView
+        android:id="@+id/tv_profile_nickname_manual_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/profile_nickname_manual"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/v_profile_nickname_manual_box"
+        app:layout_constraintEnd_toEndOf="@+id/v_profile_nickname_manual_box"
+        app:layout_constraintStart_toStartOf="@+id/v_profile_nickname_manual_box"
+        app:layout_constraintTop_toTopOf="@+id/v_profile_nickname_manual_box" />
+
+    <com.now.naaga.presentation.custom.GameButton
+        android:id="@+id/btn_profile_nickname_modify"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_default_large"
+        android:layout_marginTop="@dimen/space_default_large"
+        android:layout_marginEnd="@dimen/space_default_large"
+        android:text="@string/profile_nickname_modify"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gl_profile" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
