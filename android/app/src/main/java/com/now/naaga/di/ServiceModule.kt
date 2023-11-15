@@ -7,6 +7,7 @@ import com.now.naaga.data.remote.retrofit.service.AdventureService
 import com.now.naaga.data.remote.retrofit.service.AuthService
 import com.now.naaga.data.remote.retrofit.service.LetterService
 import com.now.naaga.data.remote.retrofit.service.PlaceService
+import com.now.naaga.data.remote.retrofit.service.ProfileService
 import com.now.naaga.data.remote.retrofit.service.RankService
 import com.now.naaga.data.remote.retrofit.service.StatisticsService
 import dagger.Module
@@ -61,4 +62,8 @@ class ServiceModule {
     @Singleton
     @Provides
     fun provideLetterService(retrofit: Retrofit): LetterService = retrofit.create(LetterService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideProfileService(retrofit: Retrofit): ProfileService = retrofit.create(ProfileService::class.java)
 }
