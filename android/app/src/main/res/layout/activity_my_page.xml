@@ -55,7 +55,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:paddingVertical="16dp"
                 android:text="@string/mypage_adventure_record"
-                android:textSize="16sp"
+                android:textSize="24sp"
                 app:radius="8dp"
                 app:buttonColor="yellow"
                 app:layout_constraintTop_toBottomOf="@id/rv_mypage_statistics"

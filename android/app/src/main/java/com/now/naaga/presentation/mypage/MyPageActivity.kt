@@ -14,6 +14,7 @@ import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.databinding.ActivityMyPageBinding
 import com.now.naaga.presentation.adventurehistory.AdventureHistoryActivity
 import com.now.naaga.presentation.mypage.statistics.MyPageStatisticsAdapter
+import com.now.naaga.presentation.profile.ProfileActivity
 import com.now.naaga.presentation.uimodel.model.StatisticsUiModel
 import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +47,10 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         binding.btnMypageAdventureHistory.setOnClickListener {
             logClickEvent(getViewEntryName(it), MYPAGE_GO_RESULTS)
             val intent = AdventureHistoryActivity.getIntent(this)
+            startActivity(intent)
+        }
+        binding.ivMypageProfileModify.setOnClickListener {
+            val intent = ProfileActivity.getIntent(this)
             startActivity(intent)
         }
     }
