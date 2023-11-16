@@ -21,15 +21,7 @@ import static com.now.naaga.gameresult.domain.ResultType.FAIL;
 import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.GameBuilder;
-import com.now.naaga.common.builder.GameResultBuilder;
-import com.now.naaga.common.builder.MemberBuilder;
-import com.now.naaga.common.builder.PlaceBuilder;
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.ControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.domain.Direction;
 import com.now.naaga.game.domain.Game;
@@ -41,8 +33,6 @@ import com.now.naaga.game.presentation.dto.GameResponse;
 import com.now.naaga.game.presentation.dto.GameResultResponse;
 import com.now.naaga.game.presentation.dto.GameStatusResponse;
 import com.now.naaga.game.presentation.dto.HintResponse;
-import com.now.naaga.game.repository.GameRepository;
-import com.now.naaga.game.repository.HintRepository;
 import com.now.naaga.gameresult.domain.GameResult;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
@@ -59,46 +49,12 @@ import io.restassured.response.Response;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-class GameControllerTest extends CommonControllerTest {
-
-    @Autowired
-    private AuthTokenGenerator authTokenGenerator;
-
-    @Autowired
-    private GameRepository gameRepository;
-
-    @Autowired
-    private HintRepository hintRepository;
-
-    @Autowired
-    private GameResultBuilder gameResultBuilder;
-
-    @Autowired
-    private GameBuilder gameBuilder;
-
-    @Autowired
-    private PlaceBuilder placeBuilder;
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
-
-    @Autowired
-    private MemberBuilder memberBuilder;
-
-    @BeforeEach
-    protected void setUp() {
-        super.setUp();
-    }
+class GameControllerTest extends ControllerTest {
 
     @Test
     void 게임_생성_요청시_진행중인_게임이_없으면서_주변에_추천_장소가_있다면_게임을_정상적으로_생성한다() {
@@ -108,10 +64,7 @@ class GameControllerTest extends CommonControllerTest {
                                               .build();
 
         final Player player = playerBuilder.init()
-                .build();
-
-        final AuthToken generate = authTokenGenerator.generate(destination.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
+                                           .build();
 
         CoordinateRequest coordinateRequest = new CoordinateRequest(잠실역_교보문고_좌표.getLatitude().doubleValue(),
                                                                     잠실역_교보문고_좌표.getLongitude().doubleValue());
@@ -119,7 +72,7 @@ class GameControllerTest extends CommonControllerTest {
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(destination.getRegisteredPlayer()))
                 .contentType(ContentType.JSON)
                 .body(coordinateRequest)
                 .when()
@@ -171,16 +124,13 @@ class GameControllerTest extends CommonControllerTest {
                    .startPosition(잠실역_교보문고_좌표)
                    .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         CoordinateRequest coordinateRequest = new CoordinateRequest(잠실역_교보문고_좌표.getLatitude().doubleValue(),
                                                                     잠실역_교보문고_좌표.getLongitude().doubleValue());
 
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(coordinateRequest)
                 .when()
@@ -208,10 +158,7 @@ class GameControllerTest extends CommonControllerTest {
     void 게임_생성_요청시_주변에_추천_장소가_없다면_예외가_발생한다() {
         // given
         final Player player = playerBuilder.init()
-                .build();
-
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
+                                           .build();
 
         CoordinateRequest coordinateRequest = new CoordinateRequest(역삼역_좌표.getLatitude().doubleValue(),
                                                                     역삼역_좌표.getLongitude().doubleValue());
@@ -219,7 +166,7 @@ class GameControllerTest extends CommonControllerTest {
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(coordinateRequest)
                 .when()
@@ -257,14 +204,9 @@ class GameControllerTest extends CommonControllerTest {
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
 
-
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-        Thread.sleep(1000);
-
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("GIVE_UP", new CoordinateRequest(37.515546, 127.102902)))// 역삼역 좌표
                 .when()
@@ -306,13 +248,9 @@ class GameControllerTest extends CommonControllerTest {
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-        Thread.sleep(1000);
-
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
@@ -354,18 +292,15 @@ class GameControllerTest extends CommonControllerTest {
                                      .remainingAttempts(1)
                                      .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-        Thread.sleep(1000);
-
-        final ExtractableResponse<Response> extract = RestAssured.given().log().all()
-                                                                 .header("Authorization", "Bearer " + accessToken)
-                                                                 .contentType(ContentType.JSON)
-                                                                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
-                                                                 .when()
-                                                                 .patch("/games/{gameId}", game.getId())
-                                                                 .then().log().all()
-                                                                 .extract();
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
+                .contentType(ContentType.JSON)
+                .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
+                .when()
+                .patch("/games/{gameId}", game.getId())
+                .then().log().all()
+                .extract();
 
         // then
         final int statusCode = extract.statusCode();
@@ -399,14 +334,11 @@ class GameControllerTest extends CommonControllerTest {
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         final int beforeRemainingAttempts = game.getRemainingAttempts();
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.500845, 127.036953)))// 역삼역 좌표
                 .when()
@@ -416,7 +348,7 @@ class GameControllerTest extends CommonControllerTest {
 
         final ExtractableResponse<Response> extractAfter = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .when()
                 .get("/games/{gameId}", game.getId())
                 .then().log().all()
@@ -454,9 +386,6 @@ class GameControllerTest extends CommonControllerTest {
                                      .player(player)
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
-
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -516,15 +445,12 @@ class GameControllerTest extends CommonControllerTest {
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player2.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         final CoordinateRequest coordinateRequest = new CoordinateRequest(잠실_루터회관_정문_근처_좌표.getLatitude().doubleValue(),
                                                                           잠실_루터회관_정문_근처_좌표.getLongitude().doubleValue());
 
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player2))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", coordinateRequest))
                 .when()
@@ -558,12 +484,9 @@ class GameControllerTest extends CommonControllerTest {
                                      .player(player)
                                      .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .body(new EndGameRequest("ARRIVED", new CoordinateRequest(37.515546, 127.102902)))
                 .when()
@@ -603,12 +526,9 @@ class GameControllerTest extends CommonControllerTest {
                                      .startPosition(잠실역_교보문고_좌표)
                                      .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();;
-
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .when()
                 .get("/games/{gameId}", game.getId())
                 .then().log().all()
@@ -635,12 +555,9 @@ class GameControllerTest extends CommonControllerTest {
         final Player player = playerBuilder.init()
                                            .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();;
-
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/games/{gameId}", 1L)
@@ -680,19 +597,16 @@ class GameControllerTest extends CommonControllerTest {
                                                        .game(game)
                                                        .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
-        final ExtractableResponse<Response> response = RestAssured.given()
-                                                                  .log().all()
-                                                                  .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                                  .header("Authorization", "Bearer " + accessToken)
-                                                                  .pathParam("gameId", game.getId())
-                                                                  .when()
-                                                                  .get("/games/{gameId}/result", game.getId())
-                                                                  .then().log().all()
-                                                                  .extract();
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .pathParam("gameId", game.getId())
+                .when()
+                .get("/games/{gameId}/result", game.getId())
+                .then().log().all()
+                .extract();
 
         // then
         final GameResultResponse actual = response.as(GameResultResponse.class);
@@ -736,20 +650,18 @@ class GameControllerTest extends CommonControllerTest {
                                                         .game(game2)
                                                         .build();
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                                                                  .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                                  .header("Authorization", "Bearer " + accessToken)
-                                                                  .param("sort-by", "time")
-                                                                  .param("order", "descending")
-                                                                  .when()
-                                                                  .get("/games/results")
-                                                                  .then().log().all()
-                                                                  .statusCode(HttpStatus.OK.value())
-                                                                  .extract();
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("sort-by", "time")
+                .param("order", "descending")
+                .when()
+                .get("/games/results")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
 
         // then
         final List<GameResultResponse> actual = response.as(new TypeRef<>() {
@@ -779,20 +691,18 @@ class GameControllerTest extends CommonControllerTest {
                                      .startPosition(서울_좌표)
                                      .build();
 
-        final AuthToken generate = authTokenGenerator.generate(game.getPlayer().getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         final CoordinateRequest SEOUL_COORDINATE = new CoordinateRequest(서울_좌표.getLatitude().doubleValue(),
                                                                          서울_좌표.getLongitude().doubleValue());
 
-        final ExtractableResponse<Response> extract = RestAssured.given().log().all()
-                                                                 .header("Authorization", "Bearer " + accessToken)
-                                                                 .contentType(ContentType.JSON)
-                                                                 .body(SEOUL_COORDINATE)
-                                                                 .when()
-                                                                 .post("/games/{gameId}/hints", game.getId())
-                                                                 .then().log().all()
-                                                                 .extract();
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(game.getPlayer()))
+                .contentType(ContentType.JSON)
+                .body(SEOUL_COORDINATE)
+                .when()
+                .post("/games/{gameId}/hints", game.getId())
+                .then().log().all()
+                .extract();
 
         // then
         final int statusCode = extract.statusCode();
@@ -827,12 +737,9 @@ class GameControllerTest extends CommonControllerTest {
 
         final Hint hint = hintRepository.save(new Hint(서울_좌표, Direction.SOUTH, game));
 
-        final AuthToken generate = authTokenGenerator.generate(game.getPlayer().getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(game.getPlayer()))
                 .when()
                 .get("/games/{gameId}/hints/{hintId}", game.getId(), hint.getId())
                 .then().log().all()
@@ -858,24 +765,21 @@ class GameControllerTest extends CommonControllerTest {
     public void 힌트_id를_통해_힌트를_조회할때_힌트가_존재하지_않으면_예외를_발생시킨다() {
         // given & when
         final Place place = placeBuilder.init()
-                .position(제주_좌표)
-                .build();
+                                        .position(제주_좌표)
+                                        .build();
 
         final Game game = gameBuilder.init()
-                .place(place)
-                .startPosition(서울_좌표)
-                .build();
+                                     .place(place)
+                                     .startPosition(서울_좌표)
+                                     .build();
 
         final Hint hint = hintRepository.save(new Hint(서울_좌표, Direction.SOUTH, game));
 
         hintRepository.delete(hint);
 
-        final AuthToken generate = authTokenGenerator.generate(game.getPlayer().getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(game.getPlayer()))
                 .when()
                 .get("/games/{gameId}/hints/{hintId}", game.getId(), hint.getId())
                 .then().log().all()
@@ -890,10 +794,10 @@ class GameControllerTest extends CommonControllerTest {
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
             softAssertions.assertThat(actual)
-                    .usingRecursiveComparison()
-                    .ignoringExpectedNullFields()
-                    .ignoringFieldsOfTypes(LocalDateTime.class)
-                    .isEqualTo(expected);
+                          .usingRecursiveComparison()
+                          .ignoringExpectedNullFields()
+                          .ignoringFieldsOfTypes(LocalDateTime.class)
+                          .isEqualTo(expected);
         });
     }
 }

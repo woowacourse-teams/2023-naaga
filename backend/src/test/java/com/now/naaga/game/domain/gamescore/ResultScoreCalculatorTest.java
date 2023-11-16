@@ -10,23 +10,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
 import com.now.naaga.gameresult.domain.ResultType;
+import com.now.naaga.gameresult.domain.gamescore.FailResultScorePolicy;
 import com.now.naaga.gameresult.domain.gamescore.ResultScoreCalculator;
+import com.now.naaga.gameresult.domain.gamescore.SuccessResultScorePolicy;
 import com.now.naaga.score.domain.Score;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@SpringBootTest
 class ResultScoreCalculatorTest {
 
-    @Autowired
-    ResultScoreCalculator resultScoreCalculator;
+    ResultScoreCalculator resultScoreCalculator = new ResultScoreCalculator(List.of(new SuccessResultScorePolicy(),
+                                                                                    new FailResultScorePolicy()));
 
     @Test
     void 게임결과가_성공일_때_점수를_얻는다() {
