@@ -1,8 +1,13 @@
 package com.now.naaga.player.presentation;
 
+import com.now.naaga.auth.domain.AuthToken;
+import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.exception.CommonExceptionType;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.player.domain.Player;
+import com.now.naaga.player.presentation.dto.EditPlayerRequest;
+import com.now.naaga.player.presentation.dto.EditPlayerResponse;
 import com.now.naaga.player.presentation.dto.PlayerResponse;
 import com.now.naaga.player.presentation.dto.RankResponse;
 import com.now.naaga.score.domain.Score;
@@ -24,13 +29,79 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PlayerControllerTest extends ControllerTest {
-    
+
+    @Test
+    void 닉네임을_변경한다() {
+        // given
+        final String nickname = "변경된 닉네임";
+        final Player player = playerBuilder.init().build();
+        final EditPlayerRequest editPlayerRequest = new EditPlayerRequest(nickname);
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+        // when
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken)
+                .body(editPlayerRequest)
+                .when().patch("/profiles/my")
+                .then().log().all()
+                .extract();
+
+        // then
+        final EditPlayerResponse expected = new EditPlayerResponse(nickname);
+        final EditPlayerResponse actual = response.as(EditPlayerResponse.class);
+        final int statusCode = response.statusCode();
+
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .isEqualTo(expected);
+            softAssertions.assertThat(statusCode)
+                    .isEqualTo(HttpStatus.OK.value());
+        });
+    }
+
+    @Test
+    void 잘못된_닉네임을_입력하면_예외를_응답한다() {
+        // given
+        final String nickname = "변경된 닉네임!!";
+        final Player player = playerBuilder.init().build();
+        final EditPlayerRequest editPlayerRequest = new EditPlayerRequest(nickname);
+
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+        // when
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken)
+                .body(editPlayerRequest)
+                .when().patch("/profiles/my")
+                .then().log().all()
+                .extract();
+
+        // then
+        final CommonExceptionType exceptionType = CommonExceptionType.INVALID_REQUEST_BODY;
+        final ExceptionResponse expected = new ExceptionResponse(exceptionType.errorCode(), exceptionType.errorMessage());
+        final ExceptionResponse actual = response.as(ExceptionResponse.class);
+        final int statusCode = response.statusCode();
+
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .isEqualTo(expected);
+            softAssertions.assertThat(statusCode)
+                    .isEqualTo(HttpStatus.BAD_REQUEST.value());
+        });
+    }
+
+
     @Test
     void 플레이어_정보를_정상적으로_조회한다() {
         //given
         final Player player = playerBuilder.init()
                                            .build();
-        
+
         //when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
@@ -40,12 +111,12 @@ public class PlayerControllerTest extends ControllerTest {
                 .get("/profiles/my")
                 .then().log().all()
                 .extract();
-        
+
         //then
         final int statusCode = extract.statusCode();
         final PlayerResponse actual = extract.as(PlayerResponse.class);
         final PlayerResponse expected = PlayerResponse.from(player);
-        
+
         assertSoftly(softAssertions -> {
                     softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
                     softAssertions.assertThat(actual)
@@ -54,7 +125,7 @@ public class PlayerControllerTest extends ControllerTest {
                 }
         );
     }
-    
+
     @Test
     void 멤버의_랭크를_조회한다() {
         // given

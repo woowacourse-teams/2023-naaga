@@ -7,7 +7,7 @@ import com.now.naaga.score.domain.Score;
 
 public class PlayerFixture {
 
-    public static final String NICKNAME = "player_nickname";
+    public static final String NICKNAME = "player nickname";
 
     public static final Score SCORE = new Score(0);
 
