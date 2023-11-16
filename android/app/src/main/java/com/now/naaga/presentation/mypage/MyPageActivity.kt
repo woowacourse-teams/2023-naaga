@@ -3,6 +3,7 @@ package com.now.naaga.presentation.mypage
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.domain.model.Statistics
@@ -23,6 +24,14 @@ import dagger.hilt.android.AndroidEntryPoint
 class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalyticsDelegate() {
     private lateinit var binding: ActivityMyPageBinding
     private val viewModel: MyPageViewModel by viewModels()
+
+    private val myPageActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                val nickname = it.data?.getStringExtra(NICKNAME_KEY) ?: ""
+                binding.tvMypageNickname.text = nickname
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +60,7 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
         binding.ivMypageProfileModify.setOnClickListener {
             val intent = ProfileActivity.getIntent(this)
-            startActivity(intent)
+            myPageActivityLauncher.launch(intent)
         }
     }
 
@@ -87,8 +96,16 @@ class MyPageActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
     }
 
     companion object {
+        private const val NICKNAME_KEY = "nickname"
+
         fun getIntent(context: Context): Intent {
             return Intent(context, MyPageActivity::class.java)
+        }
+
+        fun getIntent(context: Context, nickname: String): Intent {
+            return Intent(context, MyPageActivity::class.java).apply {
+                putExtra(NICKNAME_KEY, nickname)
+            }
         }
     }
 }

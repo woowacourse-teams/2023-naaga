@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.now.naaga.R
 import com.now.naaga.databinding.ActivityProfileBinding
+import com.now.naaga.presentation.mypage.MyPageActivity
 import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,6 +30,7 @@ class ProfileActivity : AppCompatActivity() {
         viewModel.modifyStatus.observe(this) { status ->
             if (status) {
                 showToast(getString(R.string.profile_modify_success_message))
+                setResult(RESULT_OK, MyPageActivity.getIntent(this, viewModel.nickname.value.toString()))
                 finish()
             }
         }
