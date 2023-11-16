@@ -4,13 +4,7 @@ import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_�
 import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.GameBuilder;
-import com.now.naaga.common.builder.PlaceBuilder;
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.ControllerTest;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.domain.EndType;
@@ -23,37 +17,16 @@ import com.now.naaga.player.presentation.dto.PlayerRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-public class StatisticControllerTest extends CommonControllerTest {
+public class StatisticControllerTest extends ControllerTest {
 
     @Autowired
     private GameService gameService;
-
-    @Autowired
-    private AuthTokenGenerator authTokenGenerator;
-
-    @Autowired
-    private GameBuilder gameBuilder;
-
-    @Autowired
-    private PlaceBuilder placeBuilder;
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
-
-    @BeforeEach
-    protected void setUp() {
-        super.setUp();
-    }
 
     @Test
     void 맴버의_통계를_조회한다() {
@@ -94,17 +67,15 @@ public class StatisticControllerTest extends CommonControllerTest {
 
         final Statistic statistic = gameService.findStatistic(new PlayerRequest(player.getId()));
 
-        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                                                                  .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                                  .header("Authorization", "Bearer " + accessToken)
-                                                                  .when().get("/statistics/my")
-                                                                  .then().log().all()
-                                                                  .statusCode(HttpStatus.OK.value())
-                                                                  .extract();
+        final ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(player))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/statistics/my")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
 
         // then
         final StatisticResponse actual = response.as(StatisticResponse.class);

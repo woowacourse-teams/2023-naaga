@@ -3,44 +3,25 @@ package com.now.naaga.player.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.ServiceTest;
 import com.now.naaga.member.domain.Member;
-import com.now.naaga.member.persistence.repository.MemberRepository;
 import com.now.naaga.player.application.dto.AddScoreCommand;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
-import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.score.domain.Score;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@Transactional
-@SpringBootTest
-@Sql("/truncate.sql")
-class PlayerServiceTest {
+@SuppressWarnings("NonAsciiCharacters")
+class PlayerServiceTest extends ServiceTest {
 
     @Autowired
     private PlayerService playerService;
-
-    @Autowired
-    private PlayerRepository playerRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
 
     private List<Player> playerList = new ArrayList<>();
 

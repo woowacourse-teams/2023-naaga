@@ -1,60 +1,29 @@
 package com.now.naaga.place.presentation;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.PlaceBuilder;
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.ControllerTest;
 import com.now.naaga.place.domain.Place;
-import com.now.naaga.place.domain.Position;
-import com.now.naaga.place.presentation.dto.CoordinateResponse;
-import com.now.naaga.place.presentation.dto.CreatePlaceRequest;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
-import com.now.naaga.player.domain.Player;
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@ActiveProfiles("test")
-public class PlaceControllerTest extends CommonControllerTest {
-
-    @Autowired
-    private AuthTokenGenerator authTokenGenerator;
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
-
-    @Autowired
-    private PlaceBuilder placeBuilder;
+public class PlaceControllerTest extends ControllerTest {
 
     @Value("${manager.id}")
     private String id;
 
     @Value("${manager.password}")
     private String password;
-
-    @BeforeEach
-    protected void setUp() {
-        super.setUp();
-    }
 
 //    @Test
 //    void 장소_등록_요청이_성공하면_201_상태코드와_생성된_장소를_응답한다() {
@@ -105,14 +74,11 @@ public class PlaceControllerTest extends CommonControllerTest {
         //given
         final Place place = placeBuilder.init()
                                         .build();
-
-        final AuthToken generate = authTokenGenerator.generate(place.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
         //when
-        final ExtractableResponse<Response> extract = given()
-                .log().all()
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(place.getRegisteredPlayer()))
                 .pathParam("placeId", place.getId())
-                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .get("/places/{placeId}")
                 .then()
@@ -136,13 +102,10 @@ public class PlaceControllerTest extends CommonControllerTest {
         final Place place = placeBuilder.init()
                                         .build();
 
-        final AuthToken generate = authTokenGenerator.generate(place.getRegisteredPlayer().getMember(), 1L, AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         //when
-        final ExtractableResponse<Response> extract = given()
-                .log().all()
-                .header("Authorization", "Bearer " + accessToken)
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", authorizationForBearer(place.getRegisteredPlayer()))
                 .queryParam("sort-by", "time")
                 .queryParam("order", "descending")
                 .when()

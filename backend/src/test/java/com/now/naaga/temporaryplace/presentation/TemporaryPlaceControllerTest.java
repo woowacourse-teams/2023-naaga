@@ -1,65 +1,30 @@
 package com.now.naaga.temporaryplace.presentation;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.PlaceBuilder;
-import com.now.naaga.common.builder.PlayerBuilder;
-import com.now.naaga.common.builder.TemporaryPlaceBuilder;
+import com.now.naaga.common.ControllerTest;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
 import com.now.naaga.temporaryplace.presentation.dto.TemporaryPlaceResponse;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-
 import java.io.FileNotFoundException;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@ActiveProfiles("test")
-class TemporaryPlaceControllerTest extends CommonControllerTest {
-
-    @Autowired
-    private TemporaryPlaceBuilder temporaryPlaceBuilder;
-
-    @Autowired
-    private PlaceBuilder placeBuilder;
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
-
-    @Autowired
-    private AuthTokenGenerator authTokenGenerator;
-
-//    @SpyBean
-//    private FileManager<MultipartFile> fileManager;
+class TemporaryPlaceControllerTest extends ControllerTest {
 
     @Value("${manager.id}")
     private String id;
 
     @Value("${manager.password}")
     private String password;
-
-    @BeforeEach
-    void setup() {
-        super.setUp();
-    }
 
 //    @Test
 //    void 검수할_장소_등록_요청을_받으면_201_상태코드와_함께_추가된_검수할_장소_정보를_응답한다() throws FileNotFoundException {
@@ -116,17 +81,17 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
     void 검수할_장소_목록_조회_요청을_받으면_200_상태코드와_함께_검수할_장소_목록을_응답한다() throws FileNotFoundException, JsonProcessingException {
         //given
         final TemporaryPlace temporaryPlace = temporaryPlaceBuilder.init()
-                .build();
+                                                                   .build();
 
         //when
-        final ExtractableResponse<Response> extract = given()
-                .log().all()
-                .auth().preemptive().basic(id, password)
-                .when()
-                .get("/temporary-places")
-                .then()
-                .log().all()
-                .extract();
+        final ExtractableResponse<Response> extract = RestAssured.given()
+                                                                 .log().all()
+                                                                 .auth().preemptive().basic(id, password)
+                                                                 .when()
+                                                                 .get("/temporary-places")
+                                                                 .then()
+                                                                 .log().all()
+                                                                 .extract();
         final int statusCode = extract.statusCode();
         final List<TemporaryPlaceResponse> actual = extract.as(new TypeRef<>() {
         });
@@ -135,25 +100,25 @@ class TemporaryPlaceControllerTest extends CommonControllerTest {
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
             softAssertions.assertThat(expected)
-                    .usingRecursiveComparison()
-                    .isEqualTo(actual);
+                          .usingRecursiveComparison()
+                          .isEqualTo(actual);
         });
     }
 
     void ID를_통한_삭제_요청이_성공하면_204_응답코드를_반환한다() {
         // given
         final TemporaryPlace temporaryPlace = temporaryPlaceBuilder.init()
-                .build();
+                                                                   .build();
 
         // when
         final ExtractableResponse<Response> extract = RestAssured.given()
-                .log().all()
-                .auth().preemptive().basic(id, password)
-                .when()
-                .delete("/temporary-places/{temporaryPlaceId}", temporaryPlace.getId())
-                .then()
-                .log().all()
-                .extract();
+                                                                 .log().all()
+                                                                 .auth().preemptive().basic(id, password)
+                                                                 .when()
+                                                                 .delete("/temporary-places/{temporaryPlaceId}", temporaryPlace.getId())
+                                                                 .then()
+                                                                 .log().all()
+                                                                 .extract();
 
         // then
         final int statusCode = extract.statusCode();
