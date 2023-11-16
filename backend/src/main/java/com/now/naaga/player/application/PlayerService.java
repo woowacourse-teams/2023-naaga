@@ -32,7 +32,7 @@ public class PlayerService {
     public Player editPlayerNickname(final EditPlayerNicknameCommand editPlayerNicknameCommand) {
         final Long playerId = editPlayerNicknameCommand.playerId();
         final String newNickname = editPlayerNicknameCommand.nickname();
-        final Player player = playerRepository.findById(playerId).orElseThrow(() -> new PlayerException(PLAYER_NOT_FOUND));
+        final Player player = findPlayerById(playerId);
         player.editNickname(newNickname);
         return player;
     }
