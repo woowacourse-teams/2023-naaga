@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.now.naaga.databinding.DialogReadLetterBinding
+import com.now.naaga.presentation.uimodel.model.LetterUiModel
 import com.now.naaga.util.dpToPx
 import com.now.naaga.util.getWidthProportionalToDevice
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-class LetterReadDialog(private val content: String) : DialogFragment() {
+class LetterReadDialog(private val content: LetterUiModel) : DialogFragment() {
     private lateinit var binding: DialogReadLetterBinding
 
     override fun onCreateView(
@@ -39,10 +42,18 @@ class LetterReadDialog(private val content: String) : DialogFragment() {
 
     private fun setContent() {
         binding.letter = content
+        binding.tvDialogLetterDate.text = getFormattedDate()
+    }
+
+    private fun getFormattedDate(): String {
+        val serverLocalDateTime = LocalDateTime.parse(content.registerDate, DateTimeFormatter.ISO_DATE_TIME)
+        val outputFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)
+        return serverLocalDateTime.format(outputFormatter)
     }
 
     companion object {
         private const val WIDTH_RATE = 0.78f
         private const val HEIGHT = 430
+        private const val DATE_FORMAT_PATTERN = "yyyy-MM-dd"
     }
 }
