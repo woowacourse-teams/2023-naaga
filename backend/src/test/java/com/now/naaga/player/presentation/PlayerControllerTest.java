@@ -2,15 +2,8 @@ package com.now.naaga.player.presentation;
 
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.PlayerBuilder;
-import com.now.naaga.common.exception.CommonExceptionType;
-import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.exception.CommonExceptionType;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.presentation.dto.EditPlayerRequest;
@@ -21,8 +14,6 @@ import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

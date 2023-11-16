@@ -17,6 +17,8 @@ import com.now.naaga.score.domain.Score;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,14 +27,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-
-@ActiveProfiles("test")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@Transactional
-@SpringBootTest
-@Sql("/truncate.sql")
-class PlayerServiceTest {
-@SuppressWarnings("NonAsciiCharacters")
 class PlayerServiceTest extends ServiceTest {
 
     @Autowired
