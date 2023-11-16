@@ -19,7 +19,14 @@ import static java.lang.Boolean.FALSE;
 @Entity
 public class Player extends BaseEntity {
 
-    public static final int NICKNAME_MAX_SIZE = 20;
+    private static final int NICKNAME_MAX_SIZE = 20;
+
+    private static final int NICKNAME_MIN_SIZE = 2;
+
+    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^.*[^가-힣a-zA-Z0-9\\s]+.*$");
+
+    private static final String UNAVAILABLE_REGEX = "[^가-힣a-zA-Z0-9\\s]+";
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -62,12 +69,12 @@ public class Player extends BaseEntity {
     public static Player create(final String nickname,
                                 final Score score,
                                 final Member member) {
-        final String modifiedNickname = modifyWithValidNickname(nickname);
+        final String modifiedNickname = modifyToValidNickname(nickname);
         return new Player(modifiedNickname, score, member);
     }
 
-    private static String modifyWithValidNickname(final String nickname) {
-        final String modifiedNickname = nickname.replaceAll("[^가-힣a-zA-Z0-9\\s]+", "");
+    private static String modifyToValidNickname(final String nickname) {
+        final String modifiedNickname = nickname.replaceAll(UNAVAILABLE_REGEX, "");
         if (modifiedNickname.length() > 20) {
             return modifiedNickname.substring(0, NICKNAME_MAX_SIZE);
         }
@@ -80,8 +87,8 @@ public class Player extends BaseEntity {
     }
 
     private void validateNickname(final String nickname) {
-        final boolean isUnavailableNickname = Pattern.matches("^.*[^가-힣a-zA-Z0-9\\s]+.*$", nickname);
-        if(isUnavailableNickname || nickname.length() < 2 || nickname.length() > 20) {
+        final boolean isUnavailableNickname = NICKNAME_PATTERN.matcher(nickname).matches();
+        if(isUnavailableNickname || nickname.length() < NICKNAME_MIN_SIZE || nickname.length() > NICKNAME_MAX_SIZE) {
             throw new PlayerException(PlayerExceptionType.UNAVAILABLE_NICKNAME);
         }
     }
