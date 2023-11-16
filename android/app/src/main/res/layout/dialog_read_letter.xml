@@ -50,6 +50,8 @@
             android:text="@{letter.message}"
             android:textColor="@color/on_primary"
             android:textSize="16sp"
+            android:maxLines="10"
+            android:ellipsize="marquee"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
