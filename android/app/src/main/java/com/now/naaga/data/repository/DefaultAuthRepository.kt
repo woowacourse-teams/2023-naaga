@@ -37,11 +37,11 @@ class DefaultAuthRepository(
         return authDataSource.getAccessToken()
     }
 
-    override fun getRefreshToken(): String {
+    private fun getRefreshToken(): String {
         return requireNotNull(authDataSource.getRefreshToken()) { NO_REFRESH_TOKEN }
     }
 
-    override fun storeToken(accessToken: String, refreshToken: String) {
+    private fun storeToken(accessToken: String, refreshToken: String) {
         authDataSource.setAccessToken(accessToken)
         authDataSource.setRefreshToken(refreshToken)
     }
