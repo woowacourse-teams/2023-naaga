@@ -43,7 +43,7 @@ class OnAdventureViewModel @Inject constructor(
     val isNearby: LiveData<Boolean> =
         myCoordinate.map { adventure.value?.destination?.isNearBy(it) ?: return@map false }
 
-    private var _lastHint = MutableLiveData<Hint>()
+    private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
     private val _nearbyLetters = MutableLiveData<List<LetterPreview>>()
