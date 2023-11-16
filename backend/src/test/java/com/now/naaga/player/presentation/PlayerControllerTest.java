@@ -11,10 +11,12 @@ import com.now.naaga.common.CommonControllerTest;
 import com.now.naaga.common.builder.PlayerBuilder;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.player.domain.Player;
+import com.now.naaga.player.presentation.dto.PlayerResponse;
 import com.now.naaga.player.presentation.dto.RankResponse;
 import com.now.naaga.score.domain.Score;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
+import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
@@ -29,7 +31,7 @@ import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-public class PlayerRankControllerTest extends CommonControllerTest {
+public class PlayerControllerTest extends CommonControllerTest {
 
     @Autowired
     private AuthTokenGenerator authTokenGenerator;
@@ -41,7 +43,42 @@ public class PlayerRankControllerTest extends CommonControllerTest {
     protected void setUp() {
         super.setUp();
     }
-
+    
+    
+    @Test
+    void 플레이어_정보를_정상적으로_조회한다() {
+        //given
+        final Player player = playerBuilder.init()
+                                           .build();
+        
+        
+        final AuthToken generate = authTokenGenerator.generate(player.getMember(), 1L, AuthType.KAKAO);
+        final String accessToken = generate.getAccessToken();
+        
+        //when
+        final ExtractableResponse<Response> extract = RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/profiles/my")
+                .then().log().all()
+                .extract();
+        
+        //then
+        final int statusCode = extract.statusCode();
+        final PlayerResponse actual = extract.as(PlayerResponse.class);
+        final PlayerResponse expected = PlayerResponse.from(player);
+        
+        assertSoftly(softAssertions -> {
+                    softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.OK.value());
+                    softAssertions.assertThat(actual)
+                                  .usingRecursiveComparison()
+                                  .isEqualTo(expected);
+                }
+        );
+    }
+    
     @Test
     void 멤버의_랭크를_조회한다() {
         // given
