@@ -13,6 +13,6 @@ interface ProfileService {
 
     @PATCH("/profiles/my")
     suspend fun modifyNickname(
-        @Body nicknameDto: String,
+        @Body nicknameDto: NicknameDto,
     ): Response<NicknameDto>
 }
