@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
             name="letter"
-            type="String" />
+            type="com.now.naaga.presentation.uimodel.model.LetterUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,11 +32,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginVertical="20dp"
+            android:background="@color/primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/primary"
-            app:layout_constraintTop_toBottomOf="@id/iv_dialog_send_letter_icon"/>
+            app:layout_constraintTop_toBottomOf="@id/iv_dialog_send_letter_icon" />
 
         <TextView
             android:id="@+id/et_dialog_letter"
@@ -43,16 +44,47 @@
             android:layout_height="0dp"
             android:layout_marginHorizontal="40dp"
             android:layout_marginVertical="40dp"
+            android:backgroundTint="@android:color/transparent"
             android:fontFamily="@font/pretendard_medium"
             android:gravity="center"
+            android:text="@{letter.message}"
             android:textColor="@color/on_primary"
             android:textSize="16sp"
-            android:text="@{letter}"
-            android:backgroundTint="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_dialog_send_letter_icon"/>
+            app:layout_constraintTop_toBottomOf="@id/iv_dialog_send_letter_icon"
+            app:layout_constraintVertical_bias="0.475" />
+
+        <TextView
+            android:id="@+id/tv_dialog_letter_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/et_dialog_letter"
+            app:layout_constraintEnd_toEndOf="@+id/v_dialog_letter_background"
+            tools:text="2023.02.03" />
+
+        <TextView
+            android:id="@+id/tv_dialog_letter_nickname"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:text="@{letter.nickname}"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_dialog_letter_date"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dialog_letter_date"
+            tools:text="뽀또" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

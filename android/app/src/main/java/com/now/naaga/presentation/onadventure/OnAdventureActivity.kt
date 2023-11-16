@@ -34,6 +34,7 @@ import com.now.naaga.presentation.common.dialog.PolaroidDialog
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
+import com.now.naaga.presentation.uimodel.model.LetterUiModel
 import com.now.naaga.util.extension.getParcelableCompat
 import com.now.naaga.util.extension.showSnackbar
 import com.now.naaga.util.extension.showToast
@@ -134,7 +135,7 @@ class OnAdventureActivity :
             drawLetters(it)
         }
         viewModel.letter.observe(this) {
-            showLetterReadDialog(it.message)
+            showLetterReadDialog(it)
         }
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             logServerError(ON_ADVENTURE_GAME, throwable.code, throwable.message.toString())
@@ -248,7 +249,7 @@ class OnAdventureActivity :
         }
     }
 
-    private fun showLetterReadDialog(content: String) {
+    private fun showLetterReadDialog(content: LetterUiModel) {
         LetterReadDialog(content).show(supportFragmentManager, LETTER)
     }
 
