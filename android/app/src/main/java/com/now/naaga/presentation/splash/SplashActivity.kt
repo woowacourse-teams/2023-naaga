@@ -85,8 +85,8 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             when (throwable.code) {
-                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
-                EXPIRATION_AUTH_ERROR_CODE -> { showToast(getString(R.string.splash_re_login_message)) }
+                DataThrowable.NETWORK_THROWABLE_CODE -> showToast(getString(R.string.network_error_message))
+                EXPIRATION_AUTH_ERROR_CODE -> showToast(getString(R.string.splash_re_login_message))
             }
         }
     }
