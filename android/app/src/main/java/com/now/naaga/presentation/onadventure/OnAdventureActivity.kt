@@ -110,6 +110,7 @@ class OnAdventureActivity :
     private fun subscribe() {
         viewModel.startCoordinate.observe(this) {
             beginAdventure(it)
+            viewModel.fetchLetters()
         }
         viewModel.adventure.observe(this) {
             isAdventureDone(it.adventureStatus)
@@ -125,11 +126,11 @@ class OnAdventureActivity :
         viewModel.isSendLetterSuccess.observe(this) {
             supportFragmentManager.findFragmentByTag(LetterSendDialog.TAG)?.onDestroyView()
             when (it) {
-                true -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_success)) }
-                false -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail)) }
+                true -> binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_success))
+                false -> binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail))
             }
         }
-        viewModel.letters.observe(this) {
+        viewModel.nearbyLetters.observe(this) {
             drawLetters(it)
         }
         viewModel.letter.observe(this) {
@@ -149,8 +150,7 @@ class OnAdventureActivity :
                 }
 
                 OnAdventureViewModel.TRY_COUNT_OVER -> showToast(getString(R.string.onAdventure_try_count_over))
-
-                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+                DataThrowable.NETWORK_THROWABLE_CODE -> showToast(getString(R.string.network_error_message))
 
                 else -> shortSnackbar(throwable.message ?: return@observe)
             }

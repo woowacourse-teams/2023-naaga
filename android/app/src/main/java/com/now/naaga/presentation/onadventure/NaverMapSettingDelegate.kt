@@ -130,22 +130,12 @@ class DefaultNaverMapSettingDelegate() : NaverMapSettingDelegate, DefaultLifecyc
     override fun addLetter(letter: LetterPreview, action: (id: Long) -> Unit) {
         Marker().apply {
             position = LatLng(letter.coordinate.latitude, letter.coordinate.longitude)
-            icon = selectLetterIcon(letter.isNearBy)
-            if (letter.isNearBy) {
-                setOnSingleClickListener {
-                    action(letter.id)
-                }
+            icon = OverlayImage.fromResource(R.drawable.ic_letter)
+            setOnSingleClickListener {
+                action(letter.id)
             }
             map = naverMap
             letterMarkers.add(this)
-        }
-    }
-
-    private fun selectLetterIcon(isNearBy: Boolean): OverlayImage {
-        return if (isNearBy) {
-            OverlayImage.fromResource(R.drawable.ic_letter)
-        } else {
-            OverlayImage.fromResource(R.drawable.ic_letter_preview)
         }
     }
 
