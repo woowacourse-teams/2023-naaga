@@ -27,7 +27,7 @@ annotation class AuthRetrofit
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class NormalRetrofit
+annotation class CommonRetrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -49,7 +49,7 @@ class ServiceModule {
         .client(okHttpClient)
         .build()
 
-    @NormalRetrofit
+    @CommonRetrofit
     @Singleton
     @Provides
     fun provideNormalRetrofit(): Retrofit = Retrofit.Builder()
@@ -79,7 +79,7 @@ class ServiceModule {
 
     @Singleton
     @Provides
-    fun provideAuthService(@NormalRetrofit retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
+    fun provideAuthService(@CommonRetrofit retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
 
     @Singleton
     @Provides
