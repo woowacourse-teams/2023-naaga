@@ -8,8 +8,7 @@ import static com.now.naaga.game.exception.GameExceptionType.HINT_NOT_EXIST_IN_G
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.now.naaga.common.builder.GameBuilder;
-import com.now.naaga.common.builder.PlaceBuilder;
+import com.now.naaga.common.ServiceTest;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.game.application.dto.CreateHintCommand;
 import com.now.naaga.game.application.dto.FindHintByIdCommand;
@@ -19,31 +18,15 @@ import com.now.naaga.game.domain.Hint;
 import com.now.naaga.game.exception.GameException;
 import com.now.naaga.place.domain.Place;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@Sql("/truncate.sql")
-
-@ActiveProfiles("test")
-@SpringBootTest
-class HintServiceTest {
+class HintServiceTest extends ServiceTest {
 
     @Autowired
     private HintService hintService;
-
-    @Autowired
-    private GameBuilder gameBuilder;
-
-    @Autowired
-    private PlaceBuilder placeBuilder;
 
     @Transactional
     @Test

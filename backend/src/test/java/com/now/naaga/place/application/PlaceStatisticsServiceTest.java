@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.now.naaga.common.builder.PlaceBuilder;
-import com.now.naaga.common.builder.PlaceStatisticsBuilder;
+import com.now.naaga.common.ServiceTest;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.place.application.dto.CreatePlaceStatisticsCommand;
 import com.now.naaga.place.application.dto.FindPlaceStatisticsByPlaceIdCommand;
@@ -17,34 +16,15 @@ import com.now.naaga.place.exception.PlaceException;
 import com.now.naaga.place.exception.PlaceExceptionType;
 import com.now.naaga.place.exception.PlaceStatisticsException;
 import com.now.naaga.place.exception.PlaceStatisticsExceptionType;
-import com.now.naaga.place.repository.PlaceStatisticsRepository;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@Sql("/truncate.sql")
-@ActiveProfiles("test")
-@SpringBootTest
-class PlaceStatisticsServiceTest {
-
-    @Autowired
-    private PlaceStatisticsRepository placeStatisticsRepository;
+class PlaceStatisticsServiceTest extends ServiceTest {
 
     @Autowired
     private PlaceStatisticsService placeStatisticsService;
-
-    @Autowired
-    private PlaceStatisticsBuilder placeStatisticsBuilder;
-
-    @Autowired
-    private PlaceBuilder placeBuilder;
 
     @Transactional
     @Test
