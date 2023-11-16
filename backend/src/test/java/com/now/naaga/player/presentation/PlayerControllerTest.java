@@ -25,7 +25,6 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @SuppressWarnings("NonAsciiCharacters")
 public class PlayerControllerTest extends ControllerTest {
     
-    
     @Test
     void 플레이어_정보를_정상적으로_조회한다() {
         //given
