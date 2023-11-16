@@ -16,6 +16,7 @@ import com.now.naaga.data.throwable.DataThrowable
 import com.now.naaga.presentation.beginadventure.BeginAdventureActivity
 import com.now.naaga.presentation.common.dialog.NaagaAlertDialog
 import com.now.naaga.presentation.login.LoginActivity
+import com.now.naaga.presentation.splash.SplashViewModel.Companion.EXPIRATION_AUTH_ERROR_CODE
 import com.now.naaga.util.extension.getPackageInfoCompat
 import com.now.naaga.util.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,7 +85,8 @@ class SplashActivity : AppCompatActivity(), AnalyticsDelegate by DefaultAnalytic
         }
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             when (throwable.code) {
-                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+                DataThrowable.NETWORK_THROWABLE_CODE -> showToast(getString(R.string.network_error_message))
+                EXPIRATION_AUTH_ERROR_CODE -> showToast(getString(R.string.splash_re_login_message))
             }
         }
     }

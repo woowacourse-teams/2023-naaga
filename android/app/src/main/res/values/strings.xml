@@ -63,8 +63,11 @@
     <string name="upload_error_post_message">전송에 실패했어요! 다시 시도해주세요!</string>
     <string name="upload_error_insufficient_info_message">모든 정보를 입력해주세요.</string>
     <string name="upload_image_error_message">사진 가져오기에 실패했습니다</string>
-    <string name="upload_image_orientation_error">실패했습니다. 사진을 세로로 찍어보세요!</string>
-    <string name="upload_retry">다시 시도해 주세요!</string>
+    <string name="upload_image_orientation_error_message">실패했습니다. 사진을 세로로 찍어보세요!</string>
+    <string name="upload_retry_message">다시 시도해 주세요!</string>
+
+    <!-- SplashActivity -->
+    <string name="splash_re_login_message">인증 정보가 만료 되었어요!\n다시 로그인 해주세요!</string>
 
     <!-- AdventureHistoryActivity -->
     <string name="history_title">모험 기록</string>
@@ -108,7 +111,7 @@
 
     <!-- SettingActivity -->
     <string name="setting_withdrawal_success_message">"성공적으로 회원 탈퇴 되었습니다."</string>
-    <string name="setting_wrong_error_message">"인증 정보가 잘 못 되었어요!"</string>
+    <string name="setting_wrong_error_message">"인증 정보가 잘못 되었어요!"</string>
     <string name="setting_expiration_error_message">"인증 정보가 만료 되었어요!"</string>
     <string name="setting_logout_message">로그아웃 되었습니다.</string>
     <string name="setting_title">설정</string>

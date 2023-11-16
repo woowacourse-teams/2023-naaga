@@ -14,6 +14,7 @@ import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
 import com.now.naaga.data.throwable.DataThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
@@ -36,36 +37,16 @@ class MyPageViewModel @Inject constructor(
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
 
-    fun fetchRank() {
+    fun fetchData() {
         viewModelScope.launch {
             runCatching {
-                rankRepository.getMyRank()
-            }.onSuccess { rank ->
-                _rank.value = rank
-            }.onFailure {
-                setThrowable(it)
-            }
-        }
-    }
+                val statistics = statisticsRepository.getMyStatistics()
+                val rank = async { rankRepository.getMyRank() }
+                val places = async { placeRepository.fetchMyPlaces(SortType.TIME.name, OrderType.DESCENDING.name) }
 
-    fun fetchStatistics() {
-        viewModelScope.launch {
-            runCatching {
-                statisticsRepository.getMyStatistics()
-            }.onSuccess { statistics ->
                 _statistics.value = statistics
-            }.onFailure {
-                setThrowable(it)
-            }
-        }
-    }
-
-    fun fetchPlaces() {
-        viewModelScope.launch {
-            runCatching {
-                placeRepository.fetchMyPlaces(SortType.TIME.name, OrderType.DESCENDING.name)
-            }.onSuccess { places ->
-                _places.value = places
+                _rank.value = rank.await()
+                _places.value = places.await()
             }.onFailure {
                 setThrowable(it)
             }

@@ -1,6 +1,7 @@
 package com.now.naaga.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.now.domain.repository.AuthRepository
 import com.now.naaga.BuildConfig
 import com.now.naaga.data.remote.retrofit.AuthInterceptor
 import com.now.naaga.data.remote.retrofit.service.AdventureService
@@ -17,7 +18,16 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class AuthRetrofit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class CommonRetrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -26,39 +36,53 @@ class ServiceModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().apply {
-        addInterceptor(AuthInterceptor())
+    fun provideOkHttpClient(authRepository: AuthRepository): OkHttpClient = OkHttpClient.Builder().apply {
+        addInterceptor(AuthInterceptor(authRepository))
     }.build()
 
+    @AuthRetrofit
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+    fun provideAuthRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .client(okHttpClient)
         .build()
 
+    @CommonRetrofit
     @Singleton
     @Provides
-    fun provideRankService(retrofit: Retrofit): RankService = retrofit.create(RankService::class.java)
+    fun provideNormalRetrofit(): Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .build()
 
     @Singleton
     @Provides
-    fun provideStatisticsService(retrofit: Retrofit): StatisticsService = retrofit.create(StatisticsService::class.java)
+    fun provideRankService(@AuthRetrofit retrofit: Retrofit): RankService = retrofit.create(RankService::class.java)
 
     @Singleton
     @Provides
-    fun provideAdventureService(retrofit: Retrofit): AdventureService = retrofit.create(AdventureService::class.java)
+    fun provideStatisticsService(@AuthRetrofit retrofit: Retrofit): StatisticsService = retrofit.create(
+        StatisticsService::class.java,
+    )
 
     @Singleton
     @Provides
-    fun providePlaceService(retrofit: Retrofit): PlaceService = retrofit.create(PlaceService::class.java)
+    fun provideAdventureService(@AuthRetrofit retrofit: Retrofit): AdventureService = retrofit.create(
+        AdventureService::class.java,
+    )
 
     @Singleton
     @Provides
-    fun provideAuthService(retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
+    fun providePlaceService(@AuthRetrofit retrofit: Retrofit): PlaceService = retrofit.create(PlaceService::class.java)
 
     @Singleton
     @Provides
-    fun provideLetterService(retrofit: Retrofit): LetterService = retrofit.create(LetterService::class.java)
+    fun provideAuthService(@CommonRetrofit retrofit: Retrofit): AuthService = retrofit.create(AuthService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideLetterService(@AuthRetrofit retrofit: Retrofit): LetterService =
+        retrofit.create(LetterService::class.java)
 }
