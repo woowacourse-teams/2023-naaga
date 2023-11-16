@@ -7,14 +7,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.now.naaga.auth.domain.AuthToken;
-import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.PlaceBuilder;
-import com.now.naaga.common.builder.PlaceLikeBuilder;
-import com.now.naaga.common.builder.PlaceStatisticsBuilder;
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.ControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
@@ -23,7 +16,6 @@ import com.now.naaga.like.presentation.dto.ApplyPlaceLikeRequest;
 import com.now.naaga.like.presentation.dto.CheckMyPlaceLikeResponse;
 import com.now.naaga.like.presentation.dto.PlaceLikeCountResponse;
 import com.now.naaga.like.presentation.dto.PlaceLikeResponse;
-import com.now.naaga.member.domain.Member;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.PlaceStatistics;
 import com.now.naaga.place.exception.PlaceStatisticsExceptionType;
@@ -32,38 +24,13 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class PlaceLikeControllerTest extends CommonControllerTest {
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
-
-    @Autowired
-    private PlaceBuilder placeBuilder;
-
-    @Autowired
-    private PlaceLikeBuilder placeLikeBuilder;
-
-    @Autowired
-    private PlaceStatisticsBuilder placeStatisticsBuilder;
-
-    @Autowired
-    private AuthTokenGenerator authTokenGenerator;
-
-    @BeforeEach
-    void setup() {
-        super.setUp();
-    }
+class PlaceLikeControllerTest extends ControllerTest {
 
     @Test
     void 좋아요_등록이_성공하면_201_응답을_반환한다() {
@@ -80,14 +47,10 @@ class PlaceLikeControllerTest extends CommonControllerTest {
 
         final ApplyPlaceLikeRequest applyPlaceLikeRequest = new ApplyPlaceLikeRequest(PlaceLikeType.LIKE);
 
-        final Member member = player.getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(applyPlaceLikeRequest)
                 .when()
@@ -131,14 +94,10 @@ class PlaceLikeControllerTest extends CommonControllerTest {
 
         final ApplyPlaceLikeRequest applyPlaceLikeRequest = new ApplyPlaceLikeRequest(PlaceLikeType.LIKE);
 
-        final Member member = player.getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(applyPlaceLikeRequest)
                 .when()
@@ -162,21 +121,18 @@ class PlaceLikeControllerTest extends CommonControllerTest {
     void 좋아요_삭제를_성공하면_204응답을_한다() {
         //given
         final Place place = placeBuilder.init()
-                .build();
+                                        .build();
         final PlaceLike placeLike = placeLikeBuilder.init()
-                .place(place)
-                .build();
+                                                    .place(place)
+                                                    .build();
         placeStatisticsBuilder.init()
-                .place(place)
-                .build();
-        final Member member = placeLike.getPlayer().getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
+                              .place(place)
+                              .build();
 
         //when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(placeLike.getPlayer()))
                 .contentType(ContentType.JSON)
                 .pathParam("placeId", place.getId())
                 .when()
@@ -206,14 +162,10 @@ class PlaceLikeControllerTest extends CommonControllerTest {
                         .placeLikeType(myType)
                         .build();
 
-        final Member member = player.getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/places/{placeId}/likes/my", place.getId())
@@ -240,14 +192,10 @@ class PlaceLikeControllerTest extends CommonControllerTest {
         final Place place = placeBuilder.init()
                                         .build();
 
-        final Member member = player.getMember();
-        final AuthToken generate = authTokenGenerator.generate(member, member.getId(), AuthType.KAKAO);
-        final String accessToken = generate.getAccessToken();
-
         // when
         final ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", authorizationForBearer(player))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/places/{placeId}/likes/my", place.getId())

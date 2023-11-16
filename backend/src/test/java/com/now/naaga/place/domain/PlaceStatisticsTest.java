@@ -10,7 +10,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@ActiveProfiles("test")
 class PlaceStatisticsTest {
 
     @Test

@@ -10,7 +10,12 @@ public enum PlayerExceptionType implements BaseExceptionType {
             HttpStatus.NOT_FOUND,
             "해당 플레이어는 존재하지 않습니다."
     ),
-    ;
+
+    UNAVAILABLE_NICKNAME(
+            306,
+            HttpStatus.BAD_REQUEST,
+            "올바르지 않은 닉네임"
+    );
 
     private final int errorCode;
     private final HttpStatus httpStatus;
