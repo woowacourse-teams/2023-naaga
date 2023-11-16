@@ -1,7 +1,5 @@
 package com.now.naaga.player.presentation;
 
-import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
-
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.common.exception.CommonException;
 import com.now.naaga.player.application.PlayerService;
@@ -10,15 +8,15 @@ import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.player.presentation.dto.PlayerResponse;
 import com.now.naaga.player.presentation.dto.RankResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import static com.now.naaga.common.exception.CommonExceptionType.INVALID_REQUEST_PARAMETERS;
 
 @RestController
 public class PlayerController {
