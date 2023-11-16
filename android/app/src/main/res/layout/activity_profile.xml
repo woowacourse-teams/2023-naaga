@@ -88,6 +88,7 @@
             android:layout_marginEnd="@dimen/space_default_large"
             android:text="@string/profile_nickname_modify"
             android:textSize="24sp"
+            app:radius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/gl_profile" />
