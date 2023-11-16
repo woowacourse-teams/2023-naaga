@@ -4,6 +4,7 @@ import com.now.domain.repository.AdventureRepository
 import com.now.domain.repository.AuthRepository
 import com.now.domain.repository.LetterRepository
 import com.now.domain.repository.PlaceRepository
+import com.now.domain.repository.ProfileRepository
 import com.now.domain.repository.RankRepository
 import com.now.domain.repository.StatisticsRepository
 import com.now.naaga.data.local.AuthDataSource
@@ -11,12 +12,14 @@ import com.now.naaga.data.remote.retrofit.service.AdventureService
 import com.now.naaga.data.remote.retrofit.service.AuthService
 import com.now.naaga.data.remote.retrofit.service.LetterService
 import com.now.naaga.data.remote.retrofit.service.PlaceService
+import com.now.naaga.data.remote.retrofit.service.ProfileService
 import com.now.naaga.data.remote.retrofit.service.RankService
 import com.now.naaga.data.remote.retrofit.service.StatisticsService
 import com.now.naaga.data.repository.DefaultAdventureRepository
 import com.now.naaga.data.repository.DefaultAuthRepository
 import com.now.naaga.data.repository.DefaultLetterRepository
 import com.now.naaga.data.repository.DefaultPlaceRepository
+import com.now.naaga.data.repository.DefaultProfileRepository
 import com.now.naaga.data.repository.DefaultRankRepository
 import com.now.naaga.data.repository.DefaultStatisticsRepository
 import dagger.Module
@@ -55,4 +58,9 @@ class RepositoryModule {
     @Provides
     fun provideLetterRepository(letterService: LetterService): LetterRepository =
         DefaultLetterRepository(letterService)
+
+    @Singleton
+    @Provides
+    fun provideProfileRepository(profileService: ProfileService): ProfileRepository =
+        DefaultProfileRepository(profileService)
 }
