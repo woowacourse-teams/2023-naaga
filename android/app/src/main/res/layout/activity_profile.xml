@@ -42,8 +42,8 @@
             android:maxLines="1"
             android:text="@={viewModel.nickname}"
             android:hint="@string/profile_nickname_hint"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/light_gray"
+            android:textColorHint="@color/main_gray_opacity_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_profile_back" />
