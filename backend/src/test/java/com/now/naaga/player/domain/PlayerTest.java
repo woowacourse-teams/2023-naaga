@@ -4,6 +4,7 @@ import com.now.naaga.common.fixture.MemberFixture;
 import com.now.naaga.common.fixture.PlayerFixture;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.exception.PlayerException;
+import com.now.naaga.player.exception.PlayerExceptionType;
 import com.now.naaga.score.domain.Score;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -30,7 +31,10 @@ class PlayerTest {
         final Score totalScore = new Score(100);
 
         // when & then
-        assertThatThrownBy(() -> new Player(nickname, totalScore, member)).isInstanceOf(PlayerException.class);
+        assertAll(() -> {
+            final PlayerException playerException = assertThrows(PlayerException.class, () -> new Player(nickname, totalScore, member));
+            assertThat(playerException).usingRecursiveComparison().isEqualTo(new PlayerException(PlayerExceptionType.UNAVAILABLE_NICKNAME));
+        });
     }
 
     @MethodSource("availableNicknames")
@@ -54,7 +58,10 @@ class PlayerTest {
         final Player player = PlayerFixture.PLAYER();
 
         // when & then
-        assertThatThrownBy(() -> player.editNickname(nickname)).isInstanceOf(PlayerException.class);
+        assertAll(() -> {
+            final PlayerException playerException = assertThrows(PlayerException.class, () -> player.editNickname(nickname));
+            assertThat(playerException).usingRecursiveComparison().isEqualTo(new PlayerException(PlayerExceptionType.UNAVAILABLE_NICKNAME));
+        });
     }
 
     @MethodSource("availableNicknames")

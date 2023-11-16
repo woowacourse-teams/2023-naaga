@@ -3,6 +3,8 @@ package com.now.naaga.player.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.now.naaga.common.ServiceTest;
 import com.now.naaga.member.domain.Member;
@@ -11,15 +13,15 @@ import com.now.naaga.player.application.dto.EditPlayerNicknameCommand;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.exception.PlayerException;
+import com.now.naaga.player.exception.PlayerExceptionType;
 import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.score.domain.Score;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
+
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
@@ -113,7 +115,9 @@ class PlayerServiceTest extends ServiceTest {
         final EditPlayerNicknameCommand editPlayerNicknameCommand = new EditPlayerNicknameCommand(player.getId(), expected);
 
         //when & then
-        assertThatThrownBy(() -> playerService.editPlayerNickname(editPlayerNicknameCommand))
-                .isInstanceOf(PlayerException.class);
+        assertAll(() -> {
+            final PlayerException playerException = assertThrows(PlayerException.class, () -> playerService.editPlayerNickname(editPlayerNicknameCommand));
+            assertThat(playerException).usingRecursiveComparison().isEqualTo(new PlayerException(PlayerExceptionType.UNAVAILABLE_NICKNAME));
+        });
     }
 }
