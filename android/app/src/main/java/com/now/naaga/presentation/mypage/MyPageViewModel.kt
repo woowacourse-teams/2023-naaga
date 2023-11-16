@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Place
-import com.now.domain.model.Rank
+import com.now.domain.model.Player
 import com.now.domain.model.Statistics
 import com.now.domain.model.type.OrderType
 import com.now.domain.model.type.SortType
 import com.now.domain.repository.PlaceRepository
-import com.now.domain.repository.RankRepository
+import com.now.domain.repository.ProfileRepository
 import com.now.domain.repository.StatisticsRepository
 import com.now.naaga.data.throwable.DataThrowable
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,12 +20,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
-    private val rankRepository: RankRepository,
+    private val profileRepository: ProfileRepository,
     private val statisticsRepository: StatisticsRepository,
     private val placeRepository: PlaceRepository,
 ) : ViewModel() {
-    private val _rank = MutableLiveData<Rank>()
-    val rank: LiveData<Rank> = _rank
+    private val _profile = MutableLiveData<Player>()
+    val profile: LiveData<Player> = _profile
 
     private val _statistics = MutableLiveData<Statistics>()
     val statistics: LiveData<Statistics> = _statistics
@@ -36,12 +36,12 @@ class MyPageViewModel @Inject constructor(
     private val _throwable = MutableLiveData<DataThrowable>()
     val throwable: LiveData<DataThrowable> = _throwable
 
-    fun fetchRank() {
+    fun fetchProfile() {
         viewModelScope.launch {
             runCatching {
-                rankRepository.getMyRank()
-            }.onSuccess { rank ->
-                _rank.value = rank
+                profileRepository.fetchProfile()
+            }.onSuccess { profile ->
+                _profile.value = profile
             }.onFailure {
                 setThrowable(it)
             }

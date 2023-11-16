@@ -3,7 +3,6 @@ package com.now.naaga.presentation.onadventure
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.now.domain.model.Adventure
@@ -47,19 +46,8 @@ class OnAdventureViewModel @Inject constructor(
     private val _lastHint = MutableLiveData<Hint>()
     val lastHint: LiveData<Hint> = _lastHint
 
-    val letters: LiveData<List<LetterPreview>> = liveData {
-        while (true) {
-            myCoordinate.value?.let { coordinate ->
-                emit(
-                    letterRepository.fetchNearbyLetters(
-                        latitude = coordinate.latitude,
-                        longitude = coordinate.longitude,
-                    ).map { it.copy(isNearBy = coordinate.isNearBy(it.coordinate)) },
-                )
-            } ?: emit(emptyList())
-            delay(5000)
-        }
-    }
+    private val _nearbyLetters = MutableLiveData<List<LetterPreview>>()
+    val nearbyLetters: LiveData<List<LetterPreview>> = _nearbyLetters
 
     private val _letter = MutableLiveData<LetterUiModel>()
     val letter: LiveData<LetterUiModel> = _letter
@@ -98,6 +86,22 @@ class OnAdventureViewModel @Inject constructor(
                 _adventure.value = adventure.value?.copy(adventureStatus = status)
             }.onFailure {
                 setThrowable(it)
+            }
+        }
+    }
+
+    fun fetchLetters() {
+        viewModelScope.launch {
+            while (true) {
+                val coordinate = requireNotNull(myCoordinate.value) { "나의 좌표가 null 입니다." }
+                runCatching {
+                    letterRepository.fetchNearbyLetters(coordinate.latitude, coordinate.longitude)
+                }.onSuccess {
+                    _nearbyLetters.value = it
+                }.onFailure {
+                    setThrowable(it)
+                }
+                delay(5000L)
             }
         }
     }
@@ -148,11 +152,13 @@ class OnAdventureViewModel @Inject constructor(
                 _adventure.value = adventure.value?.copy(adventureStatus = AdventureStatus.DONE)
                 _throwable.value = throwable
             }
+
             NOT_ARRIVED -> {
                 val currentRemainingTryCount = adventure.value?.remainingTryCount ?: return
                 _adventure.value = adventure.value?.copy(remainingTryCount = currentRemainingTryCount - 1)
                 _throwable.value = throwable
             }
+
             else -> {
                 _throwable.value = throwable
             }
