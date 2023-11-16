@@ -42,10 +42,10 @@ class LetterReadDialog(private val content: LetterUiModel) : DialogFragment() {
 
     private fun setContent() {
         binding.letter = content
-        binding.tvDialogLetterDate.text = formatDate()
+        binding.tvDialogLetterDate.text = getFormattedDate()
     }
 
-    private fun formatDate(): String {
+    private fun getFormattedDate(): String {
         val serverLocalDateTime = LocalDateTime.parse(content.registerDate, DateTimeFormatter.ISO_DATE_TIME)
         val outputFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)
         return serverLocalDateTime.format(outputFormatter)
