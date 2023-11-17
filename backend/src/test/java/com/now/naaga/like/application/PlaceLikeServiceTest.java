@@ -2,6 +2,7 @@ package com.now.naaga.like.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -24,7 +25,12 @@ import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.PlaceStatistics;
 import com.now.naaga.place.repository.PlaceStatisticsRepository;
 import com.now.naaga.player.domain.Player;
+import com.now.naaga.player.persistence.repository.PlayerRepository;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -56,14 +62,12 @@ class PlaceLikeServiceTest {
 
     private final PlaceStatisticsRepository placeStatisticsRepository;
 
+    private PlayerRepository playerRepository;
+
     @Autowired
-    public PlaceLikeServiceTest(final PlaceLikeService placeLikeService,
-                                final PlaceBuilder placeBuilder,
-                                final PlayerBuilder playerBuilder,
-                                final PlaceLikeBuilder placeLikeBuilder,
+    public PlaceLikeServiceTest(final PlaceLikeService placeLikeService, final PlaceBuilder placeBuilder, final PlayerBuilder playerBuilder, final PlaceLikeBuilder placeLikeBuilder,
                                 final PlaceStatisticsBuilder placeStatisticsBuilder,
-                                final PlaceLikeRepository placeLikeRepository,
-                                final PlaceStatisticsRepository placeStatisticsRepository) {
+                                final PlaceLikeRepository placeLikeRepository, final PlaceStatisticsRepository placeStatisticsRepository, final PlayerRepository playerRepository) {
         this.placeLikeService = placeLikeService;
         this.placeBuilder = placeBuilder;
         this.playerBuilder = playerBuilder;
@@ -71,6 +75,7 @@ class PlaceLikeServiceTest {
         this.placeStatisticsBuilder = placeStatisticsBuilder;
         this.placeLikeRepository = placeLikeRepository;
         this.placeStatisticsRepository = placeStatisticsRepository;
+        this.playerRepository = playerRepository;
     }
 
     @Transactional
@@ -255,19 +260,19 @@ class PlaceLikeServiceTest {
     void 좋아요를_삭제하고_통계에서_좋아요를_1개_뺸다() {
         // given
         final Place place = placeBuilder.init()
-                .build();
+                                        .build();
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final PlaceLike placeLike = placeLikeBuilder.init()
-                .place(place)
-                .player(player)
-                .placeLikeType(PlaceLikeType.LIKE)
-                .build();
+                                                    .place(place)
+                                                    .player(player)
+                                                    .placeLikeType(PlaceLikeType.LIKE)
+                                                    .build();
         final long beforeLikeCount = 10L;
         placeStatisticsBuilder.init()
-                .place(place)
-                .likeCount(beforeLikeCount)
-                .build();
+                              .place(place)
+                              .likeCount(beforeLikeCount)
+                              .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when
@@ -286,19 +291,19 @@ class PlaceLikeServiceTest {
     void 싫어요를_삭제하면_통계가_줄어들지_않는다() {
         // given
         final Place place = placeBuilder.init()
-                .build();
+                                        .build();
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final PlaceLike placeLike = placeLikeBuilder.init()
-                .place(place)
-                .player(player)
-                .placeLikeType(PlaceLikeType.DISLIKE)
-                .build();
+                                                    .place(place)
+                                                    .player(player)
+                                                    .placeLikeType(PlaceLikeType.DISLIKE)
+                                                    .build();
         final long beforeLikeCount = 10L;
         placeStatisticsBuilder.init()
-                .place(place)
-                .likeCount(beforeLikeCount)
-                .build();
+                              .place(place)
+                              .likeCount(beforeLikeCount)
+                              .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when
@@ -317,19 +322,19 @@ class PlaceLikeServiceTest {
     void 좋아요가_0개일_때_좋아요를_삭제하면_통계에서_좋아요를_0개로_유지한다() {
         // given
         final Place place = placeBuilder.init()
-                .build();
+                                        .build();
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final PlaceLike placeLike = placeLikeBuilder.init()
-                .place(place)
-                .player(player)
-                .placeLikeType(PlaceLikeType.LIKE)
-                .build();
+                                                    .place(place)
+                                                    .player(player)
+                                                    .placeLikeType(PlaceLikeType.LIKE)
+                                                    .build();
         final long beforeLikeCount = 0L;
         placeStatisticsBuilder.init()
-                .place(place)
-                .likeCount(beforeLikeCount)
-                .build();
+                              .place(place)
+                              .likeCount(beforeLikeCount)
+                              .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when
@@ -348,9 +353,9 @@ class PlaceLikeServiceTest {
     void 좋아요를_삭제할_때_좋아요가_존재하지_않으면_아무_일도_일어나지_않는다() {
         // given
         final Place place = placeBuilder.init()
-                .build();
+                                        .build();
         final Player player = playerBuilder.init()
-                .build();
+                                           .build();
         final CancelLikeCommand cancelLikeCommand = new CancelLikeCommand(player.getId(), place.getId());
 
         // when & then
@@ -362,8 +367,8 @@ class PlaceLikeServiceTest {
         //given
         final Long expected = 123L;
         final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
-                .likeCount(expected)
-                .build();
+                                                                      .likeCount(expected)
+                                                                      .build();
         final Long placeId = placeStatistics.getPlace().getId();
 
         // when
@@ -421,5 +426,86 @@ class PlaceLikeServiceTest {
 
         // then
         assertThat(actual).isEqualTo(MyPlaceLikeType.NONE);
+    }
+
+    @Test
+    void 동시다발적인_좋아요_등록_요청으로부터_정확한_좋아요_수_집계를_처리한다() throws InterruptedException {
+        // given
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
+                                                                      .place(place)
+                                                                      .build();
+
+        final int threadCnt = 20;
+        final ExecutorService executorService = Executors.newFixedThreadPool(threadCnt);
+        final CountDownLatch countDownLatch = new CountDownLatch(threadCnt);
+
+        for (int i = 0; i < threadCnt - 1; i++) {
+            playerBuilder.init()
+                         .build();
+        }
+
+        // when
+        final List<Player> players = playerRepository.findAll();
+        for (final Player player : players) {
+            executorService.submit(() -> {
+                final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(), place.getId(), PlaceLikeType.LIKE);
+                placeLikeService.applyLike(command);
+                countDownLatch.countDown();
+            });
+        }
+        countDownLatch.await();
+
+        // then
+        final List<PlaceLike> actualPlaceLikes = placeLikeRepository.findAll();
+        final PlaceStatistics actualPlaceStatistics = placeStatisticsRepository.findById(placeStatistics.getId()).get();
+        assertAll(() -> assertThat(actualPlaceLikes).hasSize(threadCnt),
+                  () -> assertThat(actualPlaceStatistics.getLikeCount()).isEqualTo(threadCnt));
+    }
+
+    @Test
+    void 동시다발적인_좋아요_삭제_요청으로부터_정확한_좋아요_수_집계를_처리한다() throws InterruptedException {
+        // given
+        final int threadCnt = 20;
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
+                                                                      .place(place)
+                                                                      .likeCount((long) threadCnt)
+                                                                      .build();
+
+        final ExecutorService executorService = Executors.newFixedThreadPool(threadCnt);
+        final CountDownLatch countDownLatch = new CountDownLatch(threadCnt);
+
+        for (int i = 0; i < threadCnt; i++) {
+            final Player player = playerBuilder.init()
+                                               .build();
+            placeLikeBuilder.init()
+                            .placeLikeType(PlaceLikeType.LIKE)
+                            .place(place)
+                            .player(player)
+                            .build();
+        }
+
+        // when
+        final List<Player> players = playerRepository.findAll();
+        for (final Player player : players) {
+            executorService.submit(() -> {
+                final CancelLikeCommand command = new CancelLikeCommand(player.getId(), place.getId());
+                placeLikeService.cancelLike(command);
+                countDownLatch.countDown();
+            });
+        }
+        countDownLatch.await();
+
+        // then
+        final List<PlaceLike> actualPlaceLikes = placeLikeRepository.findAll();
+        final PlaceStatistics actualPlaceStatistics = placeStatisticsRepository.findById(placeStatistics.getId()).get();
+        assertAll(() -> assertThat(actualPlaceLikes).hasSize(0),
+                  () -> assertThat(actualPlaceStatistics.getLikeCount()).isEqualTo(0));
     }
 }

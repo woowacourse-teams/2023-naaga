@@ -12,7 +12,7 @@ public interface PlaceStatisticsRepository extends JpaRepository<PlaceStatistics
 
     Optional<PlaceStatistics> findByPlaceId(final Long placeId);
 
-    @Lock(LockModeType.OPTIMISTIC)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT ps FROM PlaceStatistics ps WHERE ps.place.id = :placeId")
-    Optional<PlaceStatistics> findByPlaceIdWithOptimisticLock(@Param("placeId") final Long placeId);
+    Optional<PlaceStatistics> findByPlaceIdForUpdate(@Param("placeId") final Long placeId);
 }

@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Version;
 import java.util.Objects;
 
 @Entity
@@ -19,9 +18,6 @@ public class PlaceStatistics extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-
-    @Version
-    private Long version;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
@@ -65,10 +61,6 @@ public class PlaceStatistics extends BaseEntity {
         return id;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
     public Place getPlace() {
         return place;
     }
@@ -98,7 +90,6 @@ public class PlaceStatistics extends BaseEntity {
     public String toString() {
         return "PlaceStatistics{" +
                 "id=" + id +
-                ", version=" + version +
                 ", placeId=" + place.getId() +
                 ", likeCount=" + likeCount +
                 '}';
