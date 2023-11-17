@@ -1,0 +1,31 @@
+name: merge current branch into dev branches CI
+
+on:
+  push:
+    branches:
+      - 'release/**'
+      - 'hotfix/**'
+
+jobs:
+  merge-branch:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: merge current branch -> dev_backend
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        target_branch: dev_backend
+        message: Merge release or hotfix into dev_backend
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: merge current branch -> dev_android
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        target_branch: dev_android
+        message: Merge release or hotfix into dev_android
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+    
