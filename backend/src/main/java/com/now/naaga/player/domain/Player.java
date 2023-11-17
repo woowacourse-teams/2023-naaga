@@ -1,28 +1,31 @@
 package com.now.naaga.player.domain;
 
-import static java.lang.Boolean.FALSE;
-
 import com.now.naaga.common.domain.BaseEntity;
 import com.now.naaga.member.domain.Member;
+import com.now.naaga.player.exception.PlayerException;
+import com.now.naaga.player.exception.PlayerExceptionType;
 import com.now.naaga.score.domain.Score;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import java.util.Objects;
+import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+
+import java.util.Objects;
+import java.util.regex.Pattern;
+
+import static java.lang.Boolean.FALSE;
 
 @SQLDelete(sql = "UPDATE player SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")
 @Entity
 public class Player extends BaseEntity {
+
+    private static final int NICKNAME_MAX_SIZE = 20;
+
+    private static final int NICKNAME_MIN_SIZE = 2;
+
+    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^.*[^가-힣a-zA-Z0-9\\s]+.*$");
+
+    private static final String UNAVAILABLE_REGEX = "[^가-힣a-zA-Z0-9\\s]+";
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -50,12 +53,44 @@ public class Player extends BaseEntity {
         this(null, nickname, totalScore, member, FALSE);
     }
 
-    public Player(final Long id, final String nickname, final Score totalScore, final Member member, final boolean deleted) {
+    public Player(final Long id,
+                  final String nickname,
+                  final Score totalScore,
+                  final Member member,
+                  final boolean deleted) {
+        validateNickname(nickname);
         this.id = id;
         this.nickname = nickname;
         this.totalScore = totalScore;
         this.member = member;
         this.deleted = deleted;
+    }
+
+    public static Player create(final String nickname,
+                                final Score score,
+                                final Member member) {
+        final String modifiedNickname = modifyToValidNickname(nickname);
+        return new Player(modifiedNickname, score, member);
+    }
+
+    private static String modifyToValidNickname(final String nickname) {
+        final String modifiedNickname = nickname.replaceAll(UNAVAILABLE_REGEX, "");
+        if (modifiedNickname.length() > 20) {
+            return modifiedNickname.substring(0, NICKNAME_MAX_SIZE);
+        }
+        return modifiedNickname;
+    }
+
+    public void editNickname(final String newNickname) {
+        validateNickname(newNickname);
+        this.nickname = newNickname;
+    }
+
+    private void validateNickname(final String nickname) {
+        final boolean isUnavailableNickname = NICKNAME_PATTERN.matcher(nickname).matches();
+        if(isUnavailableNickname || nickname.length() < NICKNAME_MIN_SIZE || nickname.length() > NICKNAME_MAX_SIZE) {
+            throw new PlayerException(PlayerExceptionType.UNAVAILABLE_NICKNAME);
+        }
     }
 
     public void addScore(Score score) {
