@@ -392,6 +392,8 @@ class PlaceLikeServiceTest extends ServiceTest {
         final Place place = placeBuilder.init()
                                         .build();
 
+        final Player registeredPlayer = place.getRegisteredPlayer();
+
         final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
                                                                       .place(place)
                                                                       .build();
@@ -400,7 +402,7 @@ class PlaceLikeServiceTest extends ServiceTest {
         final ExecutorService executorService = Executors.newFixedThreadPool(threadCnt);
         final CountDownLatch countDownLatch = new CountDownLatch(threadCnt);
 
-        for (int i = 0; i < threadCnt - 1; i++) {
+        for (int i = 0; i < threadCnt; i++) {
             playerBuilder.init()
                          .build();
         }
@@ -408,6 +410,9 @@ class PlaceLikeServiceTest extends ServiceTest {
         // when
         final List<Player> players = playerRepository.findAll();
         for (final Player player : players) {
+            if (player.equals(registeredPlayer)) {
+                continue;
+            }
             executorService.submit(() -> {
                 final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(), place.getId(), PlaceLikeType.LIKE);
                 placeLikeService.applyLike(command);
@@ -431,6 +436,8 @@ class PlaceLikeServiceTest extends ServiceTest {
         final Place place = placeBuilder.init()
                                         .build();
 
+        final Player registeredPlayer = place.getRegisteredPlayer();
+
         final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
                                                                       .place(place)
                                                                       .likeCount((long) threadCnt)
@@ -452,6 +459,9 @@ class PlaceLikeServiceTest extends ServiceTest {
         // when
         final List<Player> players = playerRepository.findAll();
         for (final Player player : players) {
+            if (player.equals(registeredPlayer)) {
+                continue;
+            }
             executorService.submit(() -> {
                 final CancelLikeCommand command = new CancelLikeCommand(player.getId(), place.getId());
                 placeLikeService.cancelLike(command);
