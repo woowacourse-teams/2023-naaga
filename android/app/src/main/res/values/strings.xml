@@ -152,6 +152,14 @@
     <string name="send_letter_dialog_warning">내용을 1자 이상 입력해주세요!</string>
     <string name="send_letter_dialog_submit">전송하기</string>
 
+    <!-- ProfileActivity -->
+    <string name="profile_nickname_hint">변경 할 닉네임을 입력하세요!</string>
+    <string name="profile_nickname_manual">한글 2~10 글자 사이\n영어 2~20 글자 사이\n공백 허용, 특수문자 사용 불가</string>
+    <string name="profile_nickname_modify">닉네임 변경</string>
+    <string name="profile_modify_success_message">변경 되었어요!</string>
+    <string name="profile_modify_fail_message">변경을 실패 했어요! 다시 시도해주세요</string>
+    <string name="profile_no_content_message">변경 할 닉네임을 2글자 이상 작성해주세요!</string>
+
     <!-- All -->
     <string name="network_error_message">문제가 발생했어요. 다시 시도해주세요!</string>
 
