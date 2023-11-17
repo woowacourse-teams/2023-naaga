@@ -6,39 +6,17 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.auth.infrastructure.jwt.AuthTokenGenerator;
-import com.now.naaga.common.CommonControllerTest;
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.ControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.player.persistence.repository.PlayerRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-public class PlayerArgumentResolverTest extends CommonControllerTest {
-
-    @Autowired
-    private PlayerRepository playerRepository;
-
-    @Autowired
-    private AuthTokenGenerator authTokenGenerator;
-
-    @Autowired
-    private PlayerBuilder playerBuilder;
-
-    @BeforeEach
-    protected void setUp() {
-        super.setUp();
-    }
+public class PlayerArgumentResolverTest extends ControllerTest {
 
     @Test
     void 인증_헤더의_토큰_정보가_존재하지_않는_멤버일_때_예외를_발생한다() {

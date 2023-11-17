@@ -6,10 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.now.naaga.common.builder.PlaceBuilder;
-import com.now.naaga.common.builder.PlaceLikeBuilder;
-import com.now.naaga.common.builder.PlaceStatisticsBuilder;
-import com.now.naaga.common.builder.PlayerBuilder;
+import com.now.naaga.common.ServiceTest;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.like.application.dto.ApplyLikeCommand;
 import com.now.naaga.like.application.dto.CancelLikeCommand;
@@ -20,63 +17,24 @@ import com.now.naaga.like.domain.PlaceLike;
 import com.now.naaga.like.domain.PlaceLikeType;
 import com.now.naaga.like.exception.PlaceLikeException;
 import com.now.naaga.like.exception.PlaceLikeExceptionType;
-import com.now.naaga.like.repository.PlaceLikeRepository;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.PlaceStatistics;
-import com.now.naaga.place.repository.PlaceStatisticsRepository;
 import com.now.naaga.player.domain.Player;
-import com.now.naaga.player.persistence.repository.PlayerRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@Sql("/truncate.sql")
-@ActiveProfiles("test")
-@SpringBootTest
-class PlaceLikeServiceTest {
-
-    private final PlaceLikeService placeLikeService;
-
-    private final PlaceBuilder placeBuilder;
-
-    private final PlayerBuilder playerBuilder;
-
-    private final PlaceLikeBuilder placeLikeBuilder;
-
-    private final PlaceStatisticsBuilder placeStatisticsBuilder;
-
-    private final PlaceLikeRepository placeLikeRepository;
-
-    private final PlaceStatisticsRepository placeStatisticsRepository;
-
-    private PlayerRepository playerRepository;
+class PlaceLikeServiceTest extends ServiceTest {
 
     @Autowired
-    public PlaceLikeServiceTest(final PlaceLikeService placeLikeService, final PlaceBuilder placeBuilder, final PlayerBuilder playerBuilder, final PlaceLikeBuilder placeLikeBuilder,
-                                final PlaceStatisticsBuilder placeStatisticsBuilder,
-                                final PlaceLikeRepository placeLikeRepository, final PlaceStatisticsRepository placeStatisticsRepository, final PlayerRepository playerRepository) {
-        this.placeLikeService = placeLikeService;
-        this.placeBuilder = placeBuilder;
-        this.playerBuilder = playerBuilder;
-        this.placeLikeBuilder = placeLikeBuilder;
-        this.placeStatisticsBuilder = placeStatisticsBuilder;
-        this.placeLikeRepository = placeLikeRepository;
-        this.placeStatisticsRepository = placeStatisticsRepository;
-        this.playerRepository = playerRepository;
-    }
+    private PlaceLikeService placeLikeService;
 
     @Transactional
     @Test

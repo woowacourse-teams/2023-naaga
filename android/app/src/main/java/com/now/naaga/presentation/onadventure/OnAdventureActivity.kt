@@ -34,6 +34,7 @@ import com.now.naaga.presentation.common.dialog.PolaroidDialog
 import com.now.naaga.presentation.uimodel.mapper.toDomain
 import com.now.naaga.presentation.uimodel.mapper.toUi
 import com.now.naaga.presentation.uimodel.model.AdventureUiModel
+import com.now.naaga.presentation.uimodel.model.LetterUiModel
 import com.now.naaga.util.extension.getParcelableCompat
 import com.now.naaga.util.extension.showSnackbar
 import com.now.naaga.util.extension.showToast
@@ -110,6 +111,7 @@ class OnAdventureActivity :
     private fun subscribe() {
         viewModel.startCoordinate.observe(this) {
             beginAdventure(it)
+            viewModel.fetchLetters()
         }
         viewModel.adventure.observe(this) {
             isAdventureDone(it.adventureStatus)
@@ -125,15 +127,15 @@ class OnAdventureActivity :
         viewModel.isSendLetterSuccess.observe(this) {
             supportFragmentManager.findFragmentByTag(LetterSendDialog.TAG)?.onDestroyView()
             when (it) {
-                true -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_success)) }
-                false -> { binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail)) }
+                true -> binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_success))
+                false -> binding.root.showSnackbar(getString(R.string.OnAdventure_send_letter_fail))
             }
         }
-        viewModel.letters.observe(this) {
+        viewModel.nearbyLetters.observe(this) {
             drawLetters(it)
         }
         viewModel.letter.observe(this) {
-            showLetterReadDialog(it.message)
+            showLetterReadDialog(it)
         }
         viewModel.throwable.observe(this) { throwable: DataThrowable ->
             logServerError(ON_ADVENTURE_GAME, throwable.code, throwable.message.toString())
@@ -149,8 +151,7 @@ class OnAdventureActivity :
                 }
 
                 OnAdventureViewModel.TRY_COUNT_OVER -> showToast(getString(R.string.onAdventure_try_count_over))
-
-                DataThrowable.NETWORK_THROWABLE_CODE -> { showToast(getString(R.string.network_error_message)) }
+                DataThrowable.NETWORK_THROWABLE_CODE -> showToast(getString(R.string.network_error_message))
 
                 else -> shortSnackbar(throwable.message ?: return@observe)
             }
@@ -248,7 +249,7 @@ class OnAdventureActivity :
         }
     }
 
-    private fun showLetterReadDialog(content: String) {
+    private fun showLetterReadDialog(content: LetterUiModel) {
         LetterReadDialog(content).show(supportFragmentManager, LETTER)
     }
 
