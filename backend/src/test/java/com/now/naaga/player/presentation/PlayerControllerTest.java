@@ -2,7 +2,7 @@ package com.now.naaga.player.presentation;
 
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import com.now.naaga.common.exception.CommonExceptionType;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.player.domain.Player;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PlayerControllerTest extends ControllerTest {
+public class PlayerControllerTest extends MySqlContainerControllerTest {
 
     @Test
     void 닉네임을_변경한다() {

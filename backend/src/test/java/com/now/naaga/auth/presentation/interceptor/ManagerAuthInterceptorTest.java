@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.now.naaga.auth.exception.AuthException;
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import java.util.Base64;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,7 +15,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.mvc.Controller;
 
 @SuppressWarnings("NonAsciiCharacters")
-class ManagerAuthInterceptorTest extends ControllerTest {
+class ManagerAuthInterceptorTest extends MySqlContainerControllerTest {
 
     @Value("${manager.id}")
     String id;

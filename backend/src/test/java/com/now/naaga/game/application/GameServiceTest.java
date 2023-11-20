@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.now.naaga.common.ServiceTest;
+import com.now.naaga.common.MySqlContainerServiceTest;
 import com.now.naaga.game.application.dto.CreateGameCommand;
 import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.application.dto.FindGameByIdCommand;
@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("NonAsciiCharacters")
-class GameServiceTest extends ServiceTest {
+class GameServiceTest extends MySqlContainerServiceTest {
 
     @Autowired
     private GameService gameService;

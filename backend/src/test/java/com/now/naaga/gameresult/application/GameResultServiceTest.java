@@ -6,7 +6,7 @@ import static com.now.naaga.game.domain.GameStatus.IN_PROGRESS;
 import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.now.naaga.common.ServiceTest;
+import com.now.naaga.common.MySqlContainerServiceTest;
 import com.now.naaga.game.application.dto.CreateGameResultCommand;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.exception.GameException;
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-class GameResultServiceTest extends ServiceTest {
+class GameResultServiceTest extends MySqlContainerServiceTest {
 
     @Autowired
     private GameResultService gameResultService;

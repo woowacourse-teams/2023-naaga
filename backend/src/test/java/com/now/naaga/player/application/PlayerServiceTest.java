@@ -6,7 +6,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.now.naaga.common.ServiceTest;
+import com.now.naaga.common.MySqlContainerServiceTest;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.application.dto.AddScoreCommand;
 import com.now.naaga.player.application.dto.EditPlayerNicknameCommand;
@@ -14,22 +14,15 @@ import com.now.naaga.player.domain.Player;
 import com.now.naaga.player.domain.Rank;
 import com.now.naaga.player.exception.PlayerException;
 import com.now.naaga.player.exception.PlayerExceptionType;
-import com.now.naaga.player.persistence.repository.PlayerRepository;
 import com.now.naaga.player.presentation.dto.PlayerRequest;
 import com.now.naaga.score.domain.Score;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
-class PlayerServiceTest extends ServiceTest {
+class PlayerServiceTest extends MySqlContainerServiceTest {
 
     @Autowired
     private PlayerService playerService;

@@ -8,21 +8,18 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.domain.Player;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class AuthInterceptorTest extends ControllerTest {
+public class AuthInterceptorTest extends MySqlContainerControllerTest {
 
     @Test
     void 인증_헤더_정보가_존재하지_않을_때_401_응답한다() {

@@ -7,7 +7,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.like.domain.MyPlaceLikeType;
 import com.now.naaga.like.domain.PlaceLike;
@@ -30,7 +30,7 @@ import org.springframework.http.MediaType;
 
 
 @SuppressWarnings("NonAsciiCharacters")
-class PlaceLikeControllerTest extends ControllerTest {
+class PlaceLikeControllerTest extends MySqlContainerControllerTest {
 
     @Test
     void 좋아요_등록이_성공하면_201_응답을_반환한다() {
