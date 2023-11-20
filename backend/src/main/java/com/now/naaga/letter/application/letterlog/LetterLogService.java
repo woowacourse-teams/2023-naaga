@@ -46,7 +46,6 @@ public class LetterLogService {
     @Async
     public void logReadLetter(final Player player,
                               final Letter letter) {
-        System.out.println("함수 잘 실행됨");
         final FindGameInProgressCommand findGameByStatusCommand = new FindGameInProgressCommand(player.getId());
         final Game gameInProgress = gameService.findGameInProgress(findGameByStatusCommand);
         if (!isAlreadyReadLetter(gameInProgress.getId(), letter.getId())) {

@@ -51,9 +51,7 @@ public class LetterService {
         final Letter foundLetter = letterRepository.findById(letterReadCommand.letterId())
                 .orElseThrow(() -> new LetterException(NO_EXIST));
 
-        System.out.println("주기능 마침");
         letterLogService.logReadLetter(player, foundLetter);
-        System.out.println("비동기 실행시킴");
         return foundLetter;
     }
 
