@@ -2,6 +2,7 @@ package com.now.naaga.like.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -19,7 +20,11 @@ import com.now.naaga.like.exception.PlaceLikeExceptionType;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.domain.PlaceStatistics;
 import com.now.naaga.player.domain.Player;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -379,5 +384,96 @@ class PlaceLikeServiceTest extends ServiceTest {
 
         // then
         assertThat(actual).isEqualTo(MyPlaceLikeType.NONE);
+    }
+
+    @Test
+    void 동시다발적인_좋아요_등록_요청으로부터_정확한_좋아요_수_집계를_처리한다() throws InterruptedException {
+        // given
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        final Player registeredPlayer = place.getRegisteredPlayer();
+
+        final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
+                                                                      .place(place)
+                                                                      .build();
+
+        final int threadCnt = 20;
+        final ExecutorService executorService = Executors.newFixedThreadPool(threadCnt);
+        final CountDownLatch countDownLatch = new CountDownLatch(threadCnt);
+
+        for (int i = 0; i < threadCnt; i++) {
+            playerBuilder.init()
+                         .build();
+        }
+
+        // when
+        final List<Player> players = playerRepository.findAll();
+        for (final Player player : players) {
+            if (player.equals(registeredPlayer)) {
+                continue;
+            }
+            executorService.submit(() -> {
+                final ApplyLikeCommand command = new ApplyLikeCommand(player.getId(), place.getId(), PlaceLikeType.LIKE);
+                placeLikeService.applyLike(command);
+                countDownLatch.countDown();
+            });
+        }
+        countDownLatch.await();
+
+        // then
+        final List<PlaceLike> actualPlaceLikes = placeLikeRepository.findAll();
+        final PlaceStatistics actualPlaceStatistics = placeStatisticsRepository.findById(placeStatistics.getId()).get();
+        assertAll(() -> assertThat(actualPlaceLikes).hasSize(threadCnt),
+                  () -> assertThat(actualPlaceStatistics.getLikeCount()).isEqualTo(threadCnt));
+    }
+
+    @Test
+    void 동시다발적인_좋아요_삭제_요청으로부터_정확한_좋아요_수_집계를_처리한다() throws InterruptedException {
+        // given
+        final int threadCnt = 20;
+
+        final Place place = placeBuilder.init()
+                                        .build();
+
+        final Player registeredPlayer = place.getRegisteredPlayer();
+
+        final PlaceStatistics placeStatistics = placeStatisticsBuilder.init()
+                                                                      .place(place)
+                                                                      .likeCount((long) threadCnt)
+                                                                      .build();
+
+        final ExecutorService executorService = Executors.newFixedThreadPool(threadCnt);
+        final CountDownLatch countDownLatch = new CountDownLatch(threadCnt);
+
+        for (int i = 0; i < threadCnt; i++) {
+            final Player player = playerBuilder.init()
+                                               .build();
+            placeLikeBuilder.init()
+                            .placeLikeType(PlaceLikeType.LIKE)
+                            .place(place)
+                            .player(player)
+                            .build();
+        }
+
+        // when
+        final List<Player> players = playerRepository.findAll();
+        for (final Player player : players) {
+            if (player.equals(registeredPlayer)) {
+                continue;
+            }
+            executorService.submit(() -> {
+                final CancelLikeCommand command = new CancelLikeCommand(player.getId(), place.getId());
+                placeLikeService.cancelLike(command);
+                countDownLatch.countDown();
+            });
+        }
+        countDownLatch.await();
+
+        // then
+        final List<PlaceLike> actualPlaceLikes = placeLikeRepository.findAll();
+        final PlaceStatistics actualPlaceStatistics = placeStatisticsRepository.findById(placeStatistics.getId()).get();
+        assertAll(() -> assertThat(actualPlaceLikes).hasSize(0),
+                  () -> assertThat(actualPlaceStatistics.getLikeCount()).isEqualTo(0));
     }
 }

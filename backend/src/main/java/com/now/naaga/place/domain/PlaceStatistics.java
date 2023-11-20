@@ -26,7 +26,6 @@ public class PlaceStatistics extends BaseEntity {
     private Long likeCount;
 
     protected PlaceStatistics() {
-
     }
 
     public PlaceStatistics(final Place place,
@@ -48,7 +47,7 @@ public class PlaceStatistics extends BaseEntity {
     }
 
     public void subtractLike() {
-        if(isDefaultValue()) {
+        if (isDefaultValue()) {
             return;
         }
         likeCount--;

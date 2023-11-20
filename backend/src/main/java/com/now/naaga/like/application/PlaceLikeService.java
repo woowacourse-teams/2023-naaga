@@ -113,9 +113,9 @@ public class PlaceLikeService {
         final Long placeId = checkMyPlaceLikeCommand.placeId();
 
         return placeLikeRepository.findByPlaceIdAndPlayerId(placeId, playerId)
-                .map(PlaceLike::getType)
-                .map(MyPlaceLikeType::from)
-                .orElse(MyPlaceLikeType.NONE);
+                                  .map(PlaceLike::getType)
+                                  .map(MyPlaceLikeType::from)
+                                  .orElse(MyPlaceLikeType.NONE);
     }
 
     @Transactional(readOnly = true)
