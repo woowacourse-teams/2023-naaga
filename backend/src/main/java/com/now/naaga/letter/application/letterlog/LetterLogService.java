@@ -42,7 +42,6 @@ public class LetterLogService {
         writeLetterLogRepository.save(writeLetterLog);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async
     public void logReadLetter(final Player player,
                               final Letter letter) {
