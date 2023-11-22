@@ -2,7 +2,7 @@ name: NAAGA BACKEND MERGE CI
 on:
   push:
     branches:
-      - refactor/#577
+      - dev_backend
 
 jobs:
   github_actions_setting:
