@@ -42,7 +42,7 @@ public class LetterLogService {
         writeLetterLogRepository.save(writeLetterLog);
     }
 
-    @Async
+    //@Async
     public void logReadLetter(final Player player,
                               final Letter letter) {
         final FindGameInProgressCommand findGameByStatusCommand = new FindGameInProgressCommand(player.getId());
