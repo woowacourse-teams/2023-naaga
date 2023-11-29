@@ -11,5 +11,4 @@ public class NaagaApplication {
     public static void main(String[] args) {
         SpringApplication.run(NaagaApplication.class, args);
     }
-
 }
