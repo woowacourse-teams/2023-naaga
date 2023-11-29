@@ -50,6 +50,7 @@ jobs:
         run: docker push ${{ secrets.DOCKERHUB_REPOSITORY }}/${{ secrets.DOCKERHUB_APPNAME }}
 
       - name: 🙏 쉘 스크립트 실행 중 ... 🙏
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_SSH_ID }}
