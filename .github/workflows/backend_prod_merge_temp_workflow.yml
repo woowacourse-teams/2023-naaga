@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main_temp
-    paths:
-      - backend/**
       
 jobs:
   github_actions_setting:
@@ -58,4 +56,4 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             cd /home/ubuntu/naaga/prod
-            sudo ./deploy.sh
+            sudo sh ./deploy.sh
