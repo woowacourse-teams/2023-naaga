@@ -29,7 +29,7 @@ import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
+ 
 @SuppressWarnings("NonAsciiCharacters")
 class AuthControllerTest extends ControllerTest {
 
