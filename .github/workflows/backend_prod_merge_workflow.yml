@@ -44,17 +44,18 @@ jobs:
       - name: 🐳 도커 이미지 빌드 중... 🐳
         run: |
           cd backend
-          docker build --platform linux/arm64/v8 -t ${{ secrets.DOCKERHUB_REPOSITORY }}/${{ secrets.DOCKERHUB_APPNAME }} -f Dockerfile-prod .
+          docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_REPOSITORY }}/${{ secrets.DOCKERHUB_APPNAME }} -f Dockerfile-prod .
 
       - name: 🐳 도커 허브에 Push 중... 🐳
         run: docker push ${{ secrets.DOCKERHUB_REPOSITORY }}/${{ secrets.DOCKERHUB_APPNAME }}
 
-  naaga_prod_ec2_deploy:
-    needs: github_actions_setting
-    runs-on: naaga
-
-    steps:
       - name: 🙏 쉘 스크립트 실행 중 ... 🙏
-        run: |
-          cd /home/ubuntu/prod
-          sudo ./deploy_prod.sh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_SSH_ID }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT }}
+          script: |
+            cd /home/ubuntu/naaga/prod
+            sudo ./deploy.sh
