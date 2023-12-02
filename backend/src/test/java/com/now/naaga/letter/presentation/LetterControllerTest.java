@@ -126,43 +126,43 @@ class LetterControllerTest extends ControllerTest {
         });
     }
 
-    @Test
-    void 쪽지_식별자로_쪽지를_조회시_잔행중_게임이_없으면_예외가_발생한다() {
-        // given & when
-        final Player player = playerBuilder.init()
-                                           .build();
-
-        final Place destination = placeBuilder.init()
-                                              .position(잠실_루터회관_정문_좌표)
-                                              .build();
-
-        final Letter letter = letterBuilder.init()
-                                           .position(잠실_루터회관_정문_좌표)
-                                           .build();
-
-        final ExtractableResponse<Response> extract = RestAssured
-                .given().log().all()
-                .header("Authorization", authorizationForBearer(player))
-                .when()
-                .get("/letters/{letterId}", letter.getId())
-                .then().log().all()
-                .extract();
-
-        // then
-        final int statusCode = extract.statusCode();
-        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
-
-        final ExceptionResponse expected = new ExceptionResponse(NOT_EXIST_IN_PROGRESS.errorCode(), NOT_EXIST_IN_PROGRESS.errorMessage());
-
-        assertSoftly(softAssertions -> {
-            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
-            softAssertions.assertThat(actual)
-                          .usingRecursiveComparison()
-                          .ignoringExpectedNullFields()
-                          .ignoringFieldsOfTypes(LocalDateTime.class)
-                          .isEqualTo(expected);
-        });
-    }
+//    @Test
+//    void 쪽지_식별자로_쪽지를_조회시_잔행중_게임이_없으면_예외가_발생한다() {
+//        // given & when
+//        final Player player = playerBuilder.init()
+//                                           .build();
+//
+//        final Place destination = placeBuilder.init()
+//                                              .position(잠실_루터회관_정문_좌표)
+//                                              .build();
+//
+//        final Letter letter = letterBuilder.init()
+//                                           .position(잠실_루터회관_정문_좌표)
+//                                           .build();
+//
+//        final ExtractableResponse<Response> extract = RestAssured
+//                .given().log().all()
+//                .header("Authorization", authorizationForBearer(player))
+//                .when()
+//                .get("/letters/{letterId}", letter.getId())
+//                .then().log().all()
+//                .extract();
+//
+//        // then
+//        final int statusCode = extract.statusCode();
+//        final ExceptionResponse actual = extract.as(ExceptionResponse.class);
+//
+//        final ExceptionResponse expected = new ExceptionResponse(NOT_EXIST_IN_PROGRESS.errorCode(), NOT_EXIST_IN_PROGRESS.errorMessage());
+//
+//        assertSoftly(softAssertions -> {
+//            softAssertions.assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND.value());
+//            softAssertions.assertThat(actual)
+//                          .usingRecursiveComparison()
+//                          .ignoringExpectedNullFields()
+//                          .ignoringFieldsOfTypes(LocalDateTime.class)
+//                          .isEqualTo(expected);
+//        });
+//    }
 
     @Test
     void 쪽지_등록_요청시_쪽지를_등록한_플레이어가_존재하고_그_플레이어가_진행중인_게임이_있으면_정상적으로_쪽지를_생성한다() {

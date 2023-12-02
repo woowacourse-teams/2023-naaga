@@ -14,6 +14,7 @@ import com.now.naaga.common.builder.ReadLetterLogBuilder;
 import com.now.naaga.common.builder.TemporaryPlaceBuilder;
 import com.now.naaga.common.builder.WriteLetterLogBuilder;
 import com.now.naaga.common.infrastructure.AwsS3FileManager;
+import com.now.naaga.config.AsyncTestConfig;
 import com.now.naaga.game.repository.GameRepository;
 import com.now.naaga.game.repository.HintRepository;
 import com.now.naaga.gameresult.repository.GameResultRepository;
@@ -31,11 +32,13 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @Sql("/truncate.sql")
 @ActiveProfiles("test")
+@ContextConfiguration(classes = AsyncTestConfig.class)
 public abstract class AbstractTest {
 
     /*------------------------------------------------------------------*/

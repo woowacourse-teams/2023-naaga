@@ -3,6 +3,7 @@ package com.now.naaga.letter.presentation;
 import com.now.naaga.auth.presentation.annotation.Auth;
 import com.now.naaga.letter.application.LetterService;
 import com.now.naaga.letter.application.dto.CreateLetterCommand;
+import com.now.naaga.letter.application.letterlog.LetterLogService;
 import com.now.naaga.letter.domain.Letter;
 import com.now.naaga.letter.domain.letterlog.LetterLogType;
 import com.now.naaga.letter.presentation.dto.*;
@@ -21,8 +22,12 @@ public class LetterController {
 
     private final LetterService letterService;
 
-    public LetterController(final LetterService letterService) {
+    private final LetterLogService letterLogService;
+
+    public LetterController(final LetterService letterService,
+                            final LetterLogService letterLogService) {
         this.letterService = letterService;
+        this.letterLogService = letterLogService;
     }
 
     @PostMapping("/letters")
@@ -64,7 +69,7 @@ public class LetterController {
                                                                  @RequestParam final Long gameId,
                                                                  @RequestParam final LetterLogType logType) {
         final FindLetterLogByGameCommand findLetterLogByGameCommand = FindLetterLogByGameCommand.of(playerRequest, gameId, logType);
-        final List<Letter> letters = letterService.findLetterLogInGame(findLetterLogByGameCommand);
+        final List<Letter> letters = letterLogService.findLetterLogInGame(findLetterLogByGameCommand);
 
         final List<LetterResponse> writeLetterResponses = letters.stream()
                 .map(LetterResponse::from)
