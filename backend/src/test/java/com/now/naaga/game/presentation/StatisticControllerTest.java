@@ -4,7 +4,7 @@ import static com.now.naaga.common.fixture.PositionFixture.잠실_루터회관_�
 import static com.now.naaga.common.fixture.PositionFixture.잠실역_교보문고_좌표;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import com.now.naaga.game.application.GameService;
 import com.now.naaga.game.application.dto.EndGameCommand;
 import com.now.naaga.game.domain.EndType;
@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class StatisticControllerTest extends ControllerTest {
+public class StatisticControllerTest extends MySqlContainerControllerTest {
 
     @Autowired
     private GameService gameService;

@@ -6,13 +6,13 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.now.naaga.common.ServiceTest;
+import com.now.naaga.common.MySqlContainerServiceTest;
 import com.now.naaga.temporaryplace.domain.TemporaryPlace;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("NonAsciiCharacters")
-class TemporaryPlaceServiceTest extends ServiceTest {
+class TemporaryPlaceServiceTest extends MySqlContainerServiceTest {
 
     @Autowired
     private TemporaryPlaceService temporaryPlaceService;

@@ -5,7 +5,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import com.now.naaga.place.domain.Place;
 import com.now.naaga.place.presentation.dto.PlaceResponse;
 import io.restassured.RestAssured;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PlaceControllerTest extends ControllerTest {
+public class PlaceControllerTest extends MySqlContainerControllerTest {
 
     @Value("${manager.id}")
     private String id;

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.now.naaga.common.ServiceTest;
+import com.now.naaga.common.MySqlContainerServiceTest;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.place.application.dto.CreatePlaceStatisticsCommand;
 import com.now.naaga.place.application.dto.FindPlaceStatisticsByPlaceIdCommand;
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-class PlaceStatisticsServiceTest extends ServiceTest {
+class PlaceStatisticsServiceTest extends MySqlContainerServiceTest {
 
     @Autowired
     private PlaceStatisticsService placeStatisticsService;

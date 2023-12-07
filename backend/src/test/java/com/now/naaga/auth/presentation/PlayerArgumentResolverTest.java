@@ -6,7 +6,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.player.domain.Player;
 import io.restassured.RestAssured;
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PlayerArgumentResolverTest extends ControllerTest {
+public class PlayerArgumentResolverTest extends MySqlContainerControllerTest {
 
     @Test
     void 인증_헤더의_토큰_정보가_존재하지_않는_멤버일_때_예외를_발생한다() {

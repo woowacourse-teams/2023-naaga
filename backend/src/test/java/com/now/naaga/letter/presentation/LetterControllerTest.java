@@ -12,7 +12,7 @@ import static com.now.naaga.game.exception.GameExceptionType.NOT_EXIST_IN_PROGRE
 import static com.now.naaga.player.exception.PlayerExceptionType.PLAYER_NOT_FOUND;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.presentation.dto.CoordinateResponse;
@@ -40,7 +40,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-class LetterControllerTest extends ControllerTest {
+class LetterControllerTest extends MySqlContainerControllerTest {
 
     @Test
     void 주변_쪽지를_모두_조회한다() {

@@ -13,7 +13,7 @@ import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.now.naaga.common.ServiceTest;
+import com.now.naaga.common.MySqlContainerServiceTest;
 import com.now.naaga.common.exception.BaseExceptionType;
 import com.now.naaga.game.domain.Game;
 import com.now.naaga.game.domain.GameStatus;
@@ -35,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-class LetterServiceTest extends ServiceTest {
+class LetterServiceTest extends MySqlContainerServiceTest {
 
     @Autowired
     private LetterService letterService;

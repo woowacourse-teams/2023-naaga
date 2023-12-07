@@ -21,7 +21,7 @@ import static com.now.naaga.gameresult.domain.ResultType.FAIL;
 import static com.now.naaga.gameresult.domain.ResultType.SUCCESS;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.game.domain.Direction;
 import com.now.naaga.game.domain.Game;
@@ -54,7 +54,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-class GameControllerTest extends ControllerTest {
+class GameControllerTest extends MySqlContainerControllerTest {
 
     @Test
     void 게임_생성_요청시_진행중인_게임이_없으면서_주변에_추천_장소가_있다면_게임을_정상적으로_생성한다() {

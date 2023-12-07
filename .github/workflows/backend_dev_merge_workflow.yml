@@ -1,9 +1,10 @@
-name: NAAGA BACKEND MERGE CI
+name: NAAGA BACKEND PRODUCT SERVER MERGE CI/CD
+
 on:
   push:
     branches:
       - dev_backend
-
+      
 jobs:
   github_actions_setting:
     runs-on: ubuntu-latest
@@ -41,18 +42,17 @@ jobs:
       - name: 🐳 도커 이미지 빌드 중... 🐳
         run: |
           cd backend
-          docker build --platform linux/arm64/v8 -t ${{ secrets.DOCKERHUB_REPOSITORY }}/${{ secrets.DOCKERHUB_APPNAME }} -f Dockerfile-dev .
+          docker build --platform linux/arm64/v8 -t ${{ secrets.DOCKERHUB_REPOSITORY }}/${{ secrets.DOCKERHUB_APPNAME }} -f Dockerfile-prod .
 
       - name: 🐳 도커 허브에 Push 중... 🐳
         run: docker push ${{ secrets.DOCKERHUB_REPOSITORY }}/${{ secrets.DOCKERHUB_APPNAME }}
 
-  naaga_dev_ec2_deploy:
+  naaga_prod_ec2_deploy:
     needs: github_actions_setting
     runs-on: naaga
 
     steps:
       - name: 🙏 쉘 스크립트 실행 중 ... 🙏
         run: |
-          cd /home/ubuntu
-          sudo ./deploy_new.sh
-
+          cd /home/ubuntu/prod
+          sudo ./deploy_prod.sh

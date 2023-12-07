@@ -11,7 +11,7 @@ import com.now.naaga.auth.domain.AuthToken;
 import com.now.naaga.auth.infrastructure.AuthType;
 import com.now.naaga.auth.infrastructure.dto.AuthInfo;
 import com.now.naaga.auth.infrastructure.dto.MemberAuth;
-import com.now.naaga.common.ServiceTest;
+import com.now.naaga.common.MySqlContainerServiceTest;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.domain.Player;
 import com.now.naaga.score.domain.Score;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("NonAsciiCharacters")
-class AuthServiceTest extends ServiceTest {
+class AuthServiceTest extends MySqlContainerServiceTest {
 
     @Autowired
     private AuthService authService;

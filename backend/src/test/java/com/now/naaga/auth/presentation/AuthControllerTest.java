@@ -17,7 +17,7 @@ import com.now.naaga.auth.infrastructure.dto.MemberAuth;
 import com.now.naaga.auth.presentation.dto.AuthRequest;
 import com.now.naaga.auth.presentation.dto.AuthResponse;
 import com.now.naaga.auth.presentation.dto.RefreshTokenRequest;
-import com.now.naaga.common.ControllerTest;
+import com.now.naaga.common.MySqlContainerControllerTest;
 import com.now.naaga.common.exception.ExceptionResponse;
 import com.now.naaga.member.domain.Member;
 import com.now.naaga.player.domain.Player;
@@ -31,7 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-class AuthControllerTest extends ControllerTest {
+class AuthControllerTest extends MySqlContainerControllerTest {
 
     @Test
     void 이미_존재하는_멤버_정보로_카카오_토큰을_통해서_로그인_요청을_하면_액세스_토큰을_발급한다() {
